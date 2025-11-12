@@ -12,20 +12,41 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #000; /* darker to match image contrast */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Brand color tokens */
+  --color-primary: #ff5f24; /* base: bright orange */
+  --color-primary-hover: #f34a0a; /* richer, deeper orange */
+  --color-primary-active: #d83e00; /* strong press feedback */
+  --color-primary-focus: #ff713d; /* lighter focus ring accent */
+
+  /* Secondary grayscale / black tokens*/
+  --color-secondary-light-gray: #f0e8e5;
+  --color-secondary-light-gray-active: #eeecea;
+  --color-secondary-border: #d6d3d2;
+  --color-secondary-border-strong: #ccc8c7;
+  --color-secondary-dark-gray: #5c5856;
+  --color-secondary-black: #0e0603;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* Background image */
+  background-image: url("./assets/background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  /* Use flex to center initial content */
+  display: flex;
+  align-items: flex-start; /* start to allow content stacking */
+  justify-content: center;
 }
 
 h1 {

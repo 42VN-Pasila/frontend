@@ -1,13 +1,11 @@
-import { Button } from "./ui/components";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
 
 const App = () => {
   return (
-    <>
-      <div>Hello, Hive!</div>
-      <Button size="large" variant="primary" emphasis="high">
-        Play
-      </Button>
-    </>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+    </Routes>
   );
 };
 

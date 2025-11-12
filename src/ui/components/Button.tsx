@@ -1,6 +1,6 @@
 import React from "react";
 
-type ButtonVariant = "primary" | "secondary" | "danger";
+type ButtonVariant = "primary" | "secondary";
 type ButtonSize = "small" | "medium" | "large";
 type Emphasis = "high" | "low";
 
@@ -9,16 +9,41 @@ const VARIANT_EMPHASIS_CLASSES: Record<
   Record<Emphasis, string>
 > = {
   primary: {
-    high: "inline-flex items-center justify-center rounded-md cursor-pointer bg-[#FF5F24] hover:bg-[#ff6f3a] text-[#0E0603] shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50 disabled:cursor-not-allowed",
-    low: "inline-flex items-center justify-center rounded-md cursor-pointer border border-[#FF5F24] bg-transparent hover:bg-[#FF5F24] hover:text-[#0E0603] text-[#FF5F24] shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50 disabled:cursor-not-allowed",
+    high: [
+      "inline-flex items-center justify-center rounded-md cursor-pointer",
+      "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] active:bg-[var(--color-primary-active)]",
+      "text-[var(--color-secondary-black)] font-medium",
+      "shadow-sm transition-colors duration-150",
+      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary-focus)]",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
+    ].join(" "),
+    low: [
+      "inline-flex items-center justify-center rounded-md cursor-pointer",
+      "border border-[var(--color-primary)] text-[var(--color-primary)]",
+      "hover:bg-[var(--color-primary)]/10 active:bg-[var(--color-primary)]/20",
+      "hover:text-[var(--color-primary-hover)]",
+      "shadow-sm transition-colors duration-150",
+      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary-focus)]",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
+    ].join(" "),
   },
   secondary: {
-    high: "inline-flex items-center justify-center rounded-md cursor-pointer bg-[#CCC8C7] hover:bg-[#ff6f3a] text-[#0E0603] shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50 disabled:cursor-not-allowed",
-    low: "inline-flex items-center justify-center rounded-md cursor-pointer border border-[#CCC8C7] bg-transparent hover:bg-[#ff6f3a] hover:text-[#0E0603] text-[#CCC8C7] shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50 disabled:cursor-not-allowed",
-  },
-  danger: {
-    high: "inline-flex items-center justify-center rounded-md cursor-pointer bg-red-600 hover:bg-red-500 text-white shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:opacity-50 disabled:cursor-not-allowed",
-    low: "inline-flex items-center justify-center rounded-md cursor-pointer border border-red-600 bg-transparent hover:bg-red-600 hover:text-white text-red-600 shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:opacity-50 disabled:cursor-not-allowed",
+    high: [
+      "inline-flex items-center justify-center rounded-md cursor-pointer",
+      "bg-[var(--color-secondary-light-gray)] hover:bg-[var(--color-secondary-border)] active:bg-[var(--color-secondary-border-strong)]",
+      "text-[var(--color-secondary-black)]",
+      "shadow-sm transition-colors duration-150",
+      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-secondary-border-strong)]",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
+    ].join(" "),
+    low: [
+      "inline-flex items-center justify-center rounded-md cursor-pointer",
+      "border border-[var(--color-secondary-border-strong)] text-[var(--color-secondary-light-gray)] hover:text-[var(--color-secondary-dark-gray)]",
+      "hover:bg-[var(--color-secondary-light-gray)] active:bg-[var(--color-secondary-light-gray-active)]",
+      "shadow-sm transition-colors duration-150",
+      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-secondary-border-strong)]",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
+    ].join(" "),
   },
 };
 
