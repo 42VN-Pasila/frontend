@@ -39,10 +39,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
   /* Background image */
-  background-image: url("./assets/background.jpg");
-  background-size: cover;
+  /* background-image: url("./assets/background.jpg"); */
+  /* background-size: cover;
   background-repeat: no-repeat;
-  background-position: center center;
+  background-position: center center; */
   /* Use flex to center initial content */
   display: flex;
   align-items: flex-start; /* start to allow content stacking */

@@ -2,6 +2,7 @@ import { rudexClient } from "@/shared/api/rudexClient";
 import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
 import React from "react";
+import { Link } from "react-router-dom";
 
 export const LoginForm = () => {
   const [username, setUsername] = React.useState("");
@@ -25,10 +26,10 @@ export const LoginForm = () => {
           Welcome to Cosmos Pong
         </Form.Title>
         <p className="text-center">
-          Don’t have an account?
-          <span className="text-[var(--color-primary)] hover:underline cursor-pointer">
+          Don’t have an account?{" "}
+          <Link to="/register" className="text-[var(--color-primary)] hover:underline cursor-pointer">
             Sign up
-          </span>
+          </Link>
         </p>
       </div>
       <Form.Input
