@@ -18,7 +18,7 @@ export const LoginForm = () => {
 
   return (
     <Form.Root
-      className="max-w-md mx-auto p-6 bg-[var(--color-neutral-900)] rounded-lg shadow-md"
+      className="mx-auto bg-[var(--color-neutral-900)] rounded-lg shadow-md"
       gap={30}
     >
       <div className="flex flex-col gap-2">
@@ -27,7 +27,10 @@ export const LoginForm = () => {
         </Form.Title>
         <p className="text-center">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-[var(--color-primary)] hover:underline cursor-pointer">
+          <Link
+            to="/register"
+            className="text-[var(--color-primary)] hover:underline cursor-pointer"
+          >
             Sign up
           </Link>
         </p>

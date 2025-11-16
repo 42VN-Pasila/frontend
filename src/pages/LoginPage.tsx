@@ -1,8 +1,10 @@
+import { AuthNavBar } from "@/components/Auth/AuthNavBar";
 import { LoginForm } from "../components/Auth/LoginForm";
 
 const LoginPage = () => {
   return (
-	<main className="w-full max-w-[1200px] mx-auto py-16 px-6 text-[#CCC8C7]">
+	<main className="flex flex-col gap-20 w-full max-w-[1200px] mx-auto py-2 px-6">
+	  <AuthNavBar />
 	  <LoginForm />
 	</main>
   );

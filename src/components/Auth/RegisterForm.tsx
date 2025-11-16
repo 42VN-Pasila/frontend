@@ -18,7 +18,7 @@ export const RegisterForm = () => {
     });
   };
   return (
-    <Form.Root className="max-w-md mx-auto p-6 bg-[var(--color-neutral-900)] rounded-lg shadow-md" gap={30}>
+    <Form.Root className="mx-auto bg-[var(--color-neutral-900)] rounded-lg shadow-md" gap={30}>
 		
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
