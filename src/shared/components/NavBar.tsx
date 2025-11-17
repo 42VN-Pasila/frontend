@@ -23,8 +23,8 @@ export const MainNavBar = () => {
 
 export const AuthNavBar = () => {
   return (
-    <nav className="w-full max-w-[1200px]">
-      <Logo withText size="large" />
+    <nav className="w-full max-w-[1200px] flex items-center justify-center">
+      <Logo withText size="medium" />
     </nav>
   );
 };

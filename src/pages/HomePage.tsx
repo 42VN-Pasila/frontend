@@ -1,7 +1,7 @@
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 // import { Form } from "@/shared/components/Form";
 import Footer from "@/shared/components/Footer";
-import { MainNavBar } from "../components/Auth/NavBar";
+import { MainNavBar } from "../shared/components/NavBar";
 import { Button } from "@/shared/components";
 
 const HomePage = () => {
@@ -13,13 +13,15 @@ const HomePage = () => {
         Welcome to Pong!
       </p>
 
-      <h2 className="text-center tracking-[0.1vw] mt-8 text-lg md:text-lg lg:text-lg text-[#DDD6D4] font-medium  mx-auto">
+      <h2 className="text-center tracking-[0.1vw] mt-8 text-lg md:text-lg lg:text-lg text-[#DDD6D4] mx-auto">
         Launch into the cosmic arena and prove your ping pong power among the
         stars.
       </h2>
 
       <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-10 mt-16 mb-20">
-        <Button className="min-w-[180px]">Play now!</Button>
+        <Link to="/login">
+		<Button className="min-w-[180px] ">Play now!</Button>
+        </Link>
         <Button className="min-w-[180px] border border-[#FF5F24] bg-transparent !text-[#F0E8E5]">
           Learn more!
         </Button>

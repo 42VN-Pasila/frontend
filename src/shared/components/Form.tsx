@@ -22,7 +22,7 @@ export type FormButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Root = React.forwardRef<HTMLFormElement, FormRootProps>(
   ({ gap = 16, backgroundColor, className, style, children, ...rest }, ref) => {
-    const composed = ["flex flex-col py-8 px-16 rounded-[10px]", className]
+    const composed = ["flex flex-col py-8 px-10 rounded-[10px]", className]
       .filter(Boolean)
       .join(" ");
     return (

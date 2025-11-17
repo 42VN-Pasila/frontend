@@ -19,7 +19,7 @@ export const LoginForm = () => {
   return (
     <Form.Root
       className="mx-auto bg-[var(--color-neutral-900)] rounded-lg shadow-md"
-      gap={30}
+      gap={20}
     >
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">

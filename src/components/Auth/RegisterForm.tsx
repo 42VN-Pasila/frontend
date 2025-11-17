@@ -18,8 +18,10 @@ export const RegisterForm = () => {
     });
   };
   return (
-    <Form.Root className="mx-auto bg-[var(--color-neutral-900)] rounded-lg shadow-md" gap={30}>
-		
+    <Form.Root
+      className="mx-auto bg-[var(--color-neutral-900)] rounded-lg shadow-md"
+      gap={20}
+    >
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
           Create a New Account
@@ -46,16 +48,18 @@ export const RegisterForm = () => {
         placeholder="Email"
         onChange={(e) => setEmail(e.target.value)}
       />
-      <Form.Input
-        label="Password"
-        type="password"
-        required
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <p className="text-xs">
-        Password has to be at least 6 character. No special symbols: * / & @
-      </p>
+      <div className="flex flex-col gap-1">
+        <Form.Input
+          label="Password"
+          type="password"
+          required
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <p className="text-xs">
+          Password has to be at least 6 character. No special symbols: * / & @
+        </p>
+      </div>
       <Button
         type="submit"
         className="w-full"
