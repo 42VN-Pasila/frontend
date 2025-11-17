@@ -6,19 +6,13 @@ const HomePage = () => {
   return (
     <main className="w-full  text-[#CCC8C7]">
       <MainNavBar />
-      <h1
-        className="
-	text-[25vw]           /* ~10% chiều rộng màn hình, rất to trên 27'' */
-    leading-[0.6]         /* line-height gọn */
-    tracking-[0.5vw]      /* letter-spacing rộng kiểu game */
-    font-[700]
-    text-[#F0E8E5]
-    text-center
-    font-chakraBold
-    " 
-	>
+      <p className="text-[5vw] leading-[0.9] tracking-[0.9vw] font-[700] text-[#F0E8E5] text-center font-chakraBold mt-[15vh]">
         Welcome to Pong!
-      </h1>
+      </p>
+      <h2 className="text-center tracking-[0.2vw] mt-8 mx-4 text-lg md:text-lg lg:text-lg text-[#DDD6D4] font-medium  mx-auto">
+        Launch into the cosmic arena and prove your ping pong power among the
+        stars.
+      </h2>
     </main>
   );
 };
