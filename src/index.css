@@ -44,9 +44,9 @@ body {
   background-repeat: no-repeat;
   background-position: center center; */
   /* Use flex to center initial content */
-  display: flex;
+  /* display: flex;
   align-items: flex-start; /* start to allow content stacking */
-  justify-content: center;
+  /* justify-content: center; */
 }
 
 h1 {

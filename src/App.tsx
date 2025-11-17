@@ -13,16 +13,15 @@ const App: React.FC = () => {
         muted
         loop
         playsInline
-        
       >
         <source src="/src/assets/bg.mp4" type="video/mp4" />
       </video>
 
-      <div className="relative z-10 min-h-screen w-full">
+      <div>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
-		  <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </div>
     </>
