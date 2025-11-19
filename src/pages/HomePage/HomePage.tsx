@@ -20,11 +20,11 @@ const HomePage = () => {
         stars.
       </h2>
 
-      <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-10 mt-16 mb-20">
+      <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-10 mt-25 mb-30">
         <Link to="/login">
-          <Button className="min-w-[180px] ">Play now!</Button>
+          <Button className="min-w-[200px] !text-lg">Play now!</Button>
         </Link>
-        <Button className="min-w-[180px] border border-[#FF5F24] bg-transparent !text-[#F0E8E5]">
+        <Button className="min-w-[200px] border border-[#FF5F24] bg-transparent !text-[#F0E8E5] !text-lg">
           Learn more!
         </Button>
       </div>

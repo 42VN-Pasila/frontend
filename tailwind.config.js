@@ -11,19 +11,6 @@ export default {
           orange: "#FF5F24",
         },
       },
-    },
-  },
-  plugins: [],
-};
-
-
-module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
       keyframes: {
         leftWall: {
           "0%": { top: "0px" },
