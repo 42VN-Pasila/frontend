@@ -39,9 +39,9 @@ paths:
         "500":
           $ref: "#/components/responses/APIErrorResponse"
 
-  /resgister:
+  /register:
     post:
-      summary: Resgister an user
+      summary: Register a user
       description: >
         Create a new user with provided input.
       tags:
