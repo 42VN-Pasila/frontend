@@ -11,7 +11,7 @@ const HomePage = () => {
     <main className="w-full  text-[#CCC8C7]">
       <HomePageNavBar />
 
-      <p className="text-[5vw] leading-[0.9] tracking-[0.9vw] font-[700] text-[#F0E8E5] text-center font-chakraBold mt-[12vh]">
+      <p className="text-[5vw] leading-[0.9] tracking-[0.9vw] font-[700] text-[#F0E8E5] text-center font-chakraBold mt-[10vh]">
         Welcome to Pong!
       </p>
 
@@ -20,7 +20,7 @@ const HomePage = () => {
         stars.
       </h2>
 
-      <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-10 mt-25 mb-30">
+      <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-10 mt-15 mb-20">
         <Link to="/login">
           <Button className="min-w-[200px] !text-lg">Play now!</Button>
         </Link>
