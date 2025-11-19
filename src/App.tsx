@@ -1,4 +1,4 @@
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/HomePage/HomePage";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import RegisterPage from "./pages/RegisterPage";
@@ -8,7 +8,7 @@ const App: React.FC = () => {
   return (
     <>
       <video
-        className="fixed inset-0 w-full h-full object-cover -z-10 opacity-75"
+        className="fixed inset-0 w-full h-full object-cover -z-10 opacity-40"
         autoPlay
         muted
         loop
