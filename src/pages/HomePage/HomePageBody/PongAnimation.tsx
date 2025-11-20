@@ -4,9 +4,7 @@ const PongAnimation: React.FC = () => {
   return (
     <div className="relative mx-auto w-[600px] h-[300px] rounded-[5px] border-[#2f4858] border-opacity-50">
       <div className="absolute top-0 left-0 w-[7px] h-[90px] bg-[#ff315b] rounded-full animate-left-wall" />
-
       <div className="absolute top-0 right-0 w-[7px] h-[90px] bg-[#6855d0] rounded-full  animate-right-wall" />
-
       <div
         className="
           absolute
