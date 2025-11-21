@@ -1,5 +1,6 @@
-	import { Button } from "@/shared/components";
-	import { Link } from "react-router-dom";
+import { Button } from "@/shared/components";
+import { Link } from "react-router-dom";
+
 
 const HomePageButton: React.FC = () => {
   return (
