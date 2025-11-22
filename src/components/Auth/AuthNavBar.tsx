@@ -15,12 +15,10 @@ const AuthNavBar = () => {
           px-4 sm:px-6
         "
       >
-        {/* MOBILE LOGO (nhỏ hơn) */}
         <div className="sm:hidden">
           <Logo withText={true} size="small" />
         </div>
 
-        {/* TABLET + DESKTOP LOGO (to hơn) */}
         <div className="hidden sm:block">
           <Logo withText size="medium" />
         </div>

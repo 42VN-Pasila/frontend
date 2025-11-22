@@ -13,7 +13,6 @@ const ResonsiveButtonWrapper = ({ children }: ResonsiveButtonWrapperProps) => {
         sm:w-[160px]            
         lg:w-[200px]
         rounded-full
-        gap-0
       "
     >
       {children}
