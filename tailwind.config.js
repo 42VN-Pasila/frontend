@@ -36,6 +36,13 @@ export default {
         "bounce-ball": "bounceBall 3s linear infinite",
       },
     },
+    screens: {
+      sm: "640px", // mobile large / tablet herizontal
+      md: "768px", // tablet vertical / small laptop
+      lg: "1024px", // laptop
+      xl: "1280px", // desktop
+      "2xl": "1536px",
+    },
   },
   plugins: [],
 };

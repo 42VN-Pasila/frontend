@@ -4,3 +4,4 @@ export * from "./Logo";
 export * from "./Footer";
 export * from "./NavigationItemUnderline";
 export * from "./FloatingPanel";
+export * from "./ResponsiveButtonWrapper";

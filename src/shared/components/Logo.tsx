@@ -11,7 +11,7 @@ const LOGO_IMG: Record<LogoSize, string> = {
 };
 
 const LOGO_TEXT: Record<LogoSize, string> = {
-  small: "text-xl",
+  small: "text-4xl",
   medium: "text-5xl ",
   large: "text-6xl",
 };
