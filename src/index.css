@@ -61,7 +61,7 @@ h1 {
   @keyframes pong-bounce-ball {
     0%   { left: 0px;   top: 30px; }
     25%  { left: 250px; top: 252px; }
-    50%  { left: 564px; top: 30px; }
+    50%  { left: 575px; top: 30px; }
     75%  { left: 250px; top: 252px; }
     100% { left: 0px;   top: 30px; }
   }
