@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { ValidateUser } from "./ValidationUtils";
 
-export const UseValidation = () => {
+export const useValidation = () => {
     const [errors, setErrors] = useState({
         usernameRegister: '',
         usernameLogin: '',
-        email: '',
-        password: ''
+        usernameEmail: '',
+        usernamePassword: ''
     })
 
-    const Validate = (field: string, form: string, value: string) => {
-        const validators = {
+    const validate = (field: string, value: string) => {
+        const validators: Record<string, (value: string) => void> = {
             usernameRegister: ValidateUser.validateUsernameRegister,
             usernameLogin: ValidateUser.validateUsernameLogin,
             usernameEmail: ValidateUser.validateEmail,
@@ -22,8 +22,12 @@ export const UseValidation = () => {
 
         try {
             validator(value);
-            setErrors(prev => ({...prev, }))
+            setErrors(prev => ({...prev, [field]: ''}));
+        }
+        catch (error: any)
+        {
+            setErrors(prev => ({...prev, [field]: error}));
         }
     }
-
+    return {errors, validate};
 };
