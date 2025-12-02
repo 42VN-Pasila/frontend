@@ -88,8 +88,10 @@ export const RegisterForm = () => {
       </div>
       <button
         type="button"
-        className="flex items-center justify-center bg-white/80 gap-5"
-        onClick={console.log("Login GG")}
+        className="flex items-center justify-center rounded-md bg-white/80 gap-5
+             hover:bg-white/70 active:bg-gray-200 transition-colors duration-150
+             cursor-pointer"
+        onClick={() => console.log("Login GG")}
       >
         <GoogleIcon className="w-6 h-10" />
         <span className="text-sm font-medium text-black">
