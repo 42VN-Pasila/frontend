@@ -4,6 +4,7 @@ import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useValidation } from "@/shared/components/features/Validations/UseValdiation";
+import { GoogleIcon } from "@/shared/components/features/Validations/GoogleIcon";
 
 export const RegisterForm = () => {
   const [username, setUsername] = React.useState("");
@@ -80,6 +81,21 @@ export const RegisterForm = () => {
       >
         Register
       </Button>
+      <div className="flex items-center gap-4">
+        <div className="flex-1 h-px bg-gray-500"></div>
+        <span className="test-xs">OR</span>
+        <div className="flex-1 h-px bg-gray-500"></div>
+      </div>
+      <button
+        type="button"
+        className="flex items-center justify-center bg-white/80 gap-5"
+        onClick={console.log("Login GG")}
+      >
+        <GoogleIcon className="w-6 h-10" />
+        <span className="text-sm font-medium text-black">
+          Continue with Google
+        </span>
+      </button>
       <p className="text-xs text-center">
         By continuing, you agree to the Pong Terms of Service and Privacy Policy
       </p>
