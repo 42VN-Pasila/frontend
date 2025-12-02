@@ -3,11 +3,14 @@ import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useValidation } from "@/shared/components/features/Validations/UseValdiation";
 
 export const RegisterForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
+
+  const { errors, validate } = useValidation();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,13 +43,19 @@ export const RegisterForm = () => {
         label="Username"
         required
         placeholder="Username"
+        value={username}
         onChange={(e) => setUsername(e.target.value)}
+        onBlur={(e) => validate("usernameRegister", e.target.value)}
+        error={errors.usernameRegister}
       />
       <Form.Input
         label="Email"
         required
         placeholder="Email"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
+        onBlur={(e) => validate("email", e.target.value)}
+        error={errors.email}
       />
       <div className="flex flex-col gap-1">
         <Form.Input
@@ -54,7 +63,10 @@ export const RegisterForm = () => {
           type="password"
           required
           placeholder="Password"
+          value={[password]}
           onChange={(e) => setPassword(e.target.value)}
+          onBlur={(e) => validate("password", e.target.value)}
+          error={errors.password}
         />
         <p className="text-xs">
           Password has to be at least 6 character. No special symbols: * / & @
