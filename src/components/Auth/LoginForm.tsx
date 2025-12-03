@@ -4,10 +4,13 @@ import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
 import { GoogleIcon } from "@/shared/components/features/Validations/GoogleIcon";
+import { useValidation } from "@/shared/components/features/Validations/UseValdiation";
 
 export const LoginForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const { errors, validate } = useValidation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +43,10 @@ export const LoginForm = () => {
         label="Username"
         required
         placeholder="Username"
+        value={username}
         onChange={(e) => setUsername(e.target.value)}
+        onBlur={(e) => validate("usernameLogin", e.target.value)}
+        error={errors.usernameLogin}
       />
       <div className="flex flex-col gap-1">
         <Form.Input
