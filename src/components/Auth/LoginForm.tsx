@@ -3,6 +3,7 @@ import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
+import { GoogleIcon } from "@/shared/components/features/Validations/GoogleIcon";
 
 export const LoginForm = () => {
   const [username, setUsername] = React.useState("");
@@ -62,6 +63,23 @@ export const LoginForm = () => {
       >
         Login
       </Button>
+      <div className="flex items-center gap-4">
+        <div className="flex-1 h-px bg-gray-500"></div>
+        <span className="test-xs">OR</span>
+        <div className="flex-1 h-px bg-gray-500"></div>
+      </div>
+      <button
+        type="button"
+        className="flex items-center justify-center rounded-md bg-white/80 gap-5
+                   hover:bg-white/70 active:bg-gray-200 transition-colors duration-150
+                   cursor-pointer"
+        onClick={() => console.log("Login GG")}
+      >
+        <GoogleIcon className="w-6 h-10" />
+        <span className="text-sm font-medium text-black">
+          Continue with Google
+        </span>
+      </button>
       <p className="text-xs text-center">
         By continuing, you agree to the Pong Terms of Service and Privacy Policy
       </p>
