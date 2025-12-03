@@ -24,10 +24,9 @@ export const useValidation = () => {
       validator(value);
       setErrors((prev) => ({ ...prev, [field]: "" }));
     } catch (error: any) {
-      console.log("Error type:", typeof error);
-      console.log("Error value:", error);
       setErrors((prev) => ({ ...prev, [field]: error }));
     }
   };
   return { errors, validate };
 };
+
