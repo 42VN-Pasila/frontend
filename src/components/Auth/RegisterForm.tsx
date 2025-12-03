@@ -15,6 +15,7 @@ export const RegisterForm = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (errors.usernameRegister || errors.email || errors.password)
     await rudexClient.register({
       username,
       password,
