@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { ValidateUser } from "./ValidationUtils";
 
+type ValidationField = "usernameRegister" | "usernameLogin" | "email" | "password";
+
 export const useValidation = () => {
   const [errors, setErrors] = useState({
     usernameRegister: "",
