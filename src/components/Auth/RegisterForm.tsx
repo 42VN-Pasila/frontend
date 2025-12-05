@@ -110,10 +110,3 @@ export const RegisterForm = () => {
     </Form.Root>
   );
 };
-function valdiateAll(arg0: {
-  usernameRegister: string;
-  email: string;
-  password: string;
-}) {
-  throw new Error("Function not implemented.");
-}
