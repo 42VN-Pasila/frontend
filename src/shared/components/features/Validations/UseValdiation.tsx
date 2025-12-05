@@ -29,9 +29,31 @@ export const useValidation = () => {
     try {
       validator(value);
       setErrors((prev) => ({ ...prev, [field]: "" }));
+      return true;
     } catch (error: any) {
       setErrors((prev) => ({ ...prev, [field]: error }));
+      return false;
     }
   };
-  return { errors, validate };
+
+  const validateAll = (fields: Partial<Record<ValidationField, string>>): boolean => {
+    const newErrors: Record<string, string> = {};
+    let isValid = true;
+
+    Object.entries(fields).forEach(([field, value]) => {
+      const validator = validators[field as ValidationField];
+      if (!validator) return;
+
+      try {
+        validator(value);
+        newErrors[field] = "";
+      } catch (error: any) {
+        newErrors[field] = error;
+        isValid = false;
+      }
+    });
+    return isValid;
+  };
+
+  return { errors, validate, validateAll };
 };

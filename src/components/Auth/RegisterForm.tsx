@@ -11,11 +11,16 @@ export const RegisterForm = () => {
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
 
-  const { errors, validate } = useValidation();
+  const { errors, validate, validateAll } = useValidation();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (errors.usernameRegister || errors.email || errors.password)
+    const isValid = validateAll({
+      usernameRegister: username,
+      email: email,
+      password: password,
+    });
+    if (!isValid) return;
     await rudexClient.register({
       username,
       password,
@@ -105,3 +110,10 @@ export const RegisterForm = () => {
     </Form.Root>
   );
 };
+function valdiateAll(arg0: {
+  usernameRegister: string;
+  email: string;
+  password: string;
+}) {
+  throw new Error("Function not implemented.");
+}
