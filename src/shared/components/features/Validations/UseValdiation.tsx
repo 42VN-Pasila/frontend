@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { ValidateUser } from "./ValidationUtils";
 
-type ValidationField = "usernameRegister" | "usernameLogin" | "email" | "password";
+type ValidationField =
+  | "usernameRegister"
+  | "usernameLogin"
+  | "email"
+  | "password";
 
 export const useValidation = () => {
   const [errors, setErrors] = useState({
@@ -11,14 +15,14 @@ export const useValidation = () => {
     password: "",
   });
 
-  const validate = (field: string, value: string) => {
-    const validators: Record<string, (value: string) => void> = {
-      usernameRegister: ValidateUser.validateUsernameRegister.bind(ValidateUser),
-      usernameLogin: ValidateUser.validateUsernameLogin.bind(ValidateUser),
-      email: ValidateUser.validateEmail.bind(ValidateUser),
-      password: ValidateUser.validatePassword.bind(ValidateUser),
-    };
+  const validators: Record<string, (value: string) => void> = {
+    usernameRegister: ValidateUser.validateUsernameRegister.bind(ValidateUser),
+    usernameLogin: ValidateUser.validateUsernameLogin.bind(ValidateUser),
+    email: ValidateUser.validateEmail.bind(ValidateUser),
+    password: ValidateUser.validatePassword.bind(ValidateUser),
+  };
 
+  const validate = (field: string, value: string) => {
     const validator = validators[field];
     if (!validator) return;
 
@@ -31,4 +35,3 @@ export const useValidation = () => {
   };
   return { errors, validate };
 };
-
