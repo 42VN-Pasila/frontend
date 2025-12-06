@@ -10,10 +10,14 @@ export const LoginForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const { errors, validate } = useValidation();
+  const { errors, validate, validateAll } = useValidation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    const isValid = validateAll({
+      usernameLogin: username,
+    });
+    if (!isValid) return;
     await rudexClient.login({
       username,
       password,
