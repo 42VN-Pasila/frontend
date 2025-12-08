@@ -1,10 +1,12 @@
 import React from "react";
 
-type ResonsiveButtonWrapperProps = {
+type ResponsiveButtonWrapperProps = {
   children: React.ReactNode;
 };
 
-const ResonsiveButtonWrapper = ({ children }: ResonsiveButtonWrapperProps) => {
+const ResponsiveButtonWrapper = ({
+  children,
+}: ResponsiveButtonWrapperProps) => {
   return (
     <div
       className="
@@ -19,4 +21,4 @@ const ResonsiveButtonWrapper = ({ children }: ResonsiveButtonWrapperProps) => {
     </div>
   );
 };
-export default ResonsiveButtonWrapper;
+export default ResponsiveButtonWrapper;

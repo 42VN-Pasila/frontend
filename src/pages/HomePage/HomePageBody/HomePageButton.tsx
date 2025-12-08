@@ -1,6 +1,6 @@
 import { Button } from "@/shared/components";
 import { Link } from "react-router-dom";
-import ResonsiveButtonWrapper from "@/shared/components/ResponsiveButtonWrapper";
+import ResponsiveButtonWrapper from "@/shared/components/ResponsiveButtonWrapper";
 const HomePageButton: React.FC = () => {
   return (
     <div
@@ -15,7 +15,7 @@ const HomePageButton: React.FC = () => {
         mt-12 mb-15
       "
     >
-      <ResonsiveButtonWrapper>
+      <ResponsiveButtonWrapper>
         <Link to="/login" className="block">
           <Button
             className="w-full
@@ -26,9 +26,9 @@ const HomePageButton: React.FC = () => {
             Play now!
           </Button>
         </Link>
-      </ResonsiveButtonWrapper>
+      </ResponsiveButtonWrapper>
 
-      <ResonsiveButtonWrapper>
+      <ResponsiveButtonWrapper>
         <Link to="/login" className="block">
           <Button
             className="
@@ -44,7 +44,26 @@ const HomePageButton: React.FC = () => {
             Learn more!
           </Button>
         </Link>
-      </ResonsiveButtonWrapper>
+      </ResponsiveButtonWrapper>
+
+      <ResponsiveButtonWrapper>
+        <Link to="/login" className="block">
+          <Button
+            className="
+              inline-flex
+              w-full
+              text-sm sm:text-base md:text-lg
+              py-1.5 sm:py-3
+              rounded-full
+              border border-[#FF5F24]
+              bg-transparent
+              !text-[#F0E8E5]
+            "
+          >
+            Test Dashboard
+          </Button>
+        </Link>
+      </ResponsiveButtonWrapper>
     </div>
   );
 };
