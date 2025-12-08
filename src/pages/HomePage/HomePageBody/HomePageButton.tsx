@@ -47,7 +47,7 @@ const HomePageButton: React.FC = () => {
       </ResponsiveButtonWrapper>
 
       <ResponsiveButtonWrapper>
-        <Link to="/login" className="block">
+        <Link to="/dashboard" className="block">
           <Button
             className="
               inline-flex
