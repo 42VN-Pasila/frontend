@@ -78,18 +78,18 @@ export const LoginForm = () => {
         <span className="test-xs">OR</span>
         <div className="flex-1 h-px bg-gray-500"></div>
       </div>
-      <button
+      <Button
         type="button"
-        className="flex items-center justify-center rounded-md bg-white/80 gap-5
-                   hover:bg-white/70 active:bg-gray-200 transition-colors duration-150
-                   cursor-pointer"
-        onClick={() => console.log("Login GG")}
+        size="large"
+        variant="secondary"
+        emphasis="high"
+        onClick={() => console.log("LoginGg")}
       >
         <GoogleIcon className="w-6 h-10" />
         <span className="text-sm font-medium text-black">
           Continue with Google
         </span>
-      </button>
+      </Button>
       <p className="text-xs text-center">
         By continuing, you agree to the Pong Terms of Service and Privacy Policy
       </p>
