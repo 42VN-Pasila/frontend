@@ -1,5 +1,5 @@
 import React from "react";
-import logoSrc from "../../assets/ponglogo.png";
+import logoSrc from "../../assets/jokercard.png";
 import { Link } from "react-router-dom";
 
 type LogoSize = "small" | "medium" | "large";

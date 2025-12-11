@@ -5,11 +5,10 @@ export const HeroText = () => {
         className="
           text-center 
           font-chakraBold 
-          font-[700] 
+          font-[700]
           block sm:hidden 
           text-[28px] leading-[0.9] 
           tracking-[0.7vw] text-[#F0E8E5] mt-[15vh]"
-          
       >
         Welcome to
       </p>
@@ -24,7 +23,7 @@ export const HeroText = () => {
           text-[#F0E8E5] 
           mb-0
           text-transparent"
-          style={{ WebkitTextStroke: "1px white" }}
+        style={{ WebkitTextStroke: "1px white" }}
       >
         Cosmos Pong!
       </h5>
@@ -42,6 +41,7 @@ export const HeroText = () => {
           text-[#F0E8E5]
           text-center
           font-chakraBold
+          
           mt-[10vh]
       "
       >
@@ -64,6 +64,7 @@ export const HeroSubTitle = () => {
         lg:text-lg
         text-[#DDD6D4]
         mx-auto
+        
         max-w-[80%]
       "
     >

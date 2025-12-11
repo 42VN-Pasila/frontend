@@ -7,8 +7,8 @@ import LoginPage from "./pages/LoginPage";
 
 const App: React.FC = () => {
   return (
-    <div className="relative h-[100dvh] text-[#F0E8E5]">
-      <video
+    <div className="relative h-[100dvh] text-[#F0E8E5] bg-gray-500">
+      {/* <video
         className="fixed inset-0 w-full h-full object-cover -z-10 opacity-40 pointer-events-none"
         autoPlay
         muted
@@ -16,7 +16,7 @@ const App: React.FC = () => {
         playsInline
       >
         <source src="/src/assets/bg.mp4" type="video/mp4" />
-      </video>
+      </video> */}
 
       <main className="relative min-h-screen flex flex-col">
         <Routes>
