@@ -1,8 +1,7 @@
 import React from "react";
 
-type ButtonVariant = "web" | "game";
+type ButtonVariant = "landing" | "game";
 type ButtonSize = "small" | "medium" | "large";
-type ButtonShape = "pill" | "normal";
 type Emphasis = "high" | "low";
 
 const BASE_CLASSES = [
@@ -14,17 +13,21 @@ const BASE_CLASSES = [
 
 const VARIANT_EMPHASIS_CLASSES: Record<
   ButtonVariant,
-  Record<Emphasis, string>
+  Partial<Record<Emphasis, string>>
 > = {
-  web: {
+  landing: {
     high: [
-      "bg-[var(--color-teal)] hover:bg-[var(--color-teal-hover)] active:bg-[var(--color-teal-active)]",
+      "bg-[var(--color-landing)] hover:bg-[var(--color-landing-hover)] active:bg-[var(--color-landing-active)]",
       "text-[var(--color-secondary-light-gray)] font-medium",
+      "shadow-[0_0_15px_rgba(0,221,170,0.6),0_0_30px_rgba(0,221,170,0.3)]",
+      "hover:shadow-[0_0_20px_rgba(0,221,170,0.8),0_0_40px_rgba(0,221,170,0.5)]",
     ].join(" "),
     low: [
-      "border border-[var(--color-teal)] text-[var(--color-teal)]",
-      "hover:bg-[var(--color-teal)]/10 active:bg-[var(--color-teal-active)]/20",
-      "hover:text-[var(--color-teal-hover)]",
+      "border-2 border-[var(--color-landing)] text-[var(--color-secondary-light-gray)]",
+      "hover:bg-[var(--color-landing)]/10 active:bg-[var(--color-landing-active)]/20",
+      "hover:text-[var(--color-landing-hover)]",
+      "shadow-[0_0_15px_rgba(0,221,170,0.6),0_0_30px_rgba(0,221,170,0.3)]",
+      "hover:shadow-[0_0_20px_rgba(0,221,170,0.8),0_0_40px_rgba(0,221,170,0.5)]",
     ].join(" "),
   },
   game: {
@@ -34,38 +37,30 @@ const VARIANT_EMPHASIS_CLASSES: Record<
       "font-[m6x11plus] uppercase",
       " shadow-[6px_6px_0_#000] hover:shadow-[4px_4px_0_#000] active:shadow-[3px_3px_0_#000]",
     ].join(" "),
-    low: "",
   },
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {
   small:
-    "text-sm px-[18px] h-[48px] gap-2 font-semibold tracking-wide font-[m6x11plus] uppercase",
+    "text-md px-[18px] h-[48px] gap-2 font-semibold tracking-wide font-[m6x11plus] uppercase",
   medium:
-    "text-lg px-[22px] h-[68px] gap-2 font-semibold tracking-wide font-[m6x11plus] uppercase",
+    "text-xl px-[22px] h-[60px] gap-2 font-semibold tracking-wide font-[m6x11plus] uppercase",
   large:
-    "text-2xl px-[25px] h-[120px] gap-3 font-semibold tracking-wide font-[m6x11plus] uppercase",
-};
-
-const SHAPE_CLASSES: Record<ButtonShape, string> = {
-  pill: "rounded-md",
-  normal: "rounded-none",
+    "text-4xl px-[25px] h-[100px] gap-3 font-semibold tracking-wide font-[m6x11plus] uppercase",
 };
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  shape?: ButtonShape;
   emphasis?: Emphasis;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      variant = "web",
+      variant = "landing",
       size = "medium",
-      shape = "pill",
       emphasis = "high",
       disabled = false,
       children,
@@ -76,10 +71,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const isDisabled = disabled;
-    const base = VARIANT_EMPHASIS_CLASSES[variant][emphasis];
+    const base = VARIANT_EMPHASIS_CLASSES[variant]?.[emphasis] || "";
     const sizeClasses = SIZE_CLASSES[size];
-    const shapeClasses = SHAPE_CLASSES[shape];
-    const composed = [BASE_CLASSES, base, sizeClasses, shapeClasses, className]
+    const composed = [BASE_CLASSES, base, sizeClasses, className]
       .filter(Boolean)
       .join(" ");
 

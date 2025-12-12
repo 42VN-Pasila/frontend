@@ -7,7 +7,7 @@ import LoginPage from "./pages/LoginPage";
 
 const App: React.FC = () => {
   return (
-    <div className="relative h-[100dvh] text-[#F0E8E5] bg-gray-500">
+    <div className="relative h-[100dvh] text-[#F0E8E5] bg-black">
       {/* <video
         className="fixed inset-0 w-full h-full object-cover -z-10 opacity-40 pointer-events-none"
         autoPlay

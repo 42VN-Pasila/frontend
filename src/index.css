@@ -20,19 +20,19 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Brand color tokens */
-  --color-primary: #ff5f24; /* base: bright orange */
-  --color-primary-hover: #f34a0a; /* richer, deeper orange */
-  --color-primary-active: #d83e00; /* strong press feedback */
-  --color-primary-focus: #ff713d; /* lighter focus ring accent */
+  /*Landing button color*/
+  --color-landing: #1ecf94; 
+  --color-landing-hover: #1ae7a3;
+  --color-landing-active: #15e29e;
 
   /* Secondary grayscale / black tokens*/
-  --color-secondary-light-gray: #f0e8e5;
-  --color-secondary-light-gray-active: #eeecea;
-  --color-secondary-border: #d6d3d2;
-  --color-secondary-border-strong: #ccc8c7;
-  --color-secondary-dark-gray: #5c5856;
-  --color-secondary-black: #0e0603;
+  --color-light-gray: #f0e8e5;
+  --color-light-gray-active: #eeecea;
+  --color-border: #d6d3d2;
+  --color-border-strong: #ccc8c7;
+  --color-dark-gray: #5c5856;
+  --color-black: #0e0603;
+
   /* Red */
   --color-red: #ff4444;
   --color-red-hover: #ff2222;
@@ -43,9 +43,7 @@
   --color-gold-hover: #ffcc00;
   --color-gold-active: #e6b800;
 
-  --color-teal: #1ecf94; /* bright cyan/aqua */
-  --color-teal-hover: #1ae7a3;
-  --color-teal-active: #15e29e;
+
 }
 
 body {

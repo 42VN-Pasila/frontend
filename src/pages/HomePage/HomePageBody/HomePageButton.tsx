@@ -19,6 +19,7 @@ const HomePageButton: React.FC = () => {
         <ResponsiveButtonWrapper>
           <Link to="/login" className="block">
             <Button
+              variant="landing"
               className="w-full
               text-sm sm:text-base md:text-lg
               py-1.5 sm:py-3
@@ -66,38 +67,27 @@ const HomePageButton: React.FC = () => {
           </Link>
         </ResponsiveButtonWrapper>
       </div>
+
       <div className="flex justify-center gap-5">
-        <Button type="button" variant="game" size="small">
+        <Button type="button" variant="landing" size="small">
           Register
         </Button>
-        <Button type="button" variant="game" size="medium">
+        <Button type="button" variant="landing" size="medium">
           Flip
         </Button>
-        <Button type="button" variant="game" size="large">
+        <Button type="button" variant="landing" size="large">
           Play Now
         </Button>
       </div>
 
       <div className="flex justify-center gap-5">
-        <Button type="button" variant="web" size="small">
+        <Button type="button" variant="landing" emphasis="low" size="small">
           Register
         </Button>
-        <Button type="button" variant="web" size="medium">
+        <Button type="button" variant="landing" emphasis="low" size="medium">
           Flip
         </Button>
-        <Button type="button" variant="web" size="large">
-          Play Now
-        </Button>
-      </div>
-
-      <div className="flex justify-center gap-5">
-        <Button type="button" variant="web" emphasis="low" size="small">
-          Register
-        </Button>
-        <Button type="button" variant="web" emphasis="low" size="medium">
-          Flip
-        </Button>
-        <Button type="button" variant="web" emphasis="low" size="large">
+        <Button type="button" variant="landing" emphasis="low" size="large">
           Play Now
         </Button>
       </div>
