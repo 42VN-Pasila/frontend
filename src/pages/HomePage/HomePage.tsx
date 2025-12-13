@@ -12,7 +12,6 @@ const HomePage = () => {
       <HeroText />
       <HeroSubTitle />
       <HomePageButton />
-      <PongAnimation />
       <Footer />
     </main>
   );

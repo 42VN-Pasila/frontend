@@ -31,21 +31,21 @@ export const HeroText = () => {
         className="
           hidden sm:block
           text-[48px]
-          sm:text-[24px]
-          md:text-[60px]
-          lg:text-[90px]
+          sm:text-[34px]
+          md:text-[70px]
+          lg:text-[100px]
           leading-[0.9]
           tracking-[0.5vw]
           md:tracking-[0.3vw]
           font-[700]
           text-[#F0E8E5]
           text-center
-          font-chakraBold
+          font-['Permanent_Marker']
           
           mt-[10vh]
       "
       >
-        Welcome to Pong!
+        JokerFace
       </p>
     </div>
   );

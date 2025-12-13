@@ -25,7 +25,7 @@ const VARIANT_EMPHASIS_CLASSES: Record<
     low: [
       "border-2 border-[var(--color-landing)] text-[var(--color-secondary-light-gray)]",
       "hover:bg-[var(--color-landing)]/10 active:bg-[var(--color-landing-active)]/20",
-      "hover:text-[var(--color-landing-hover)]",
+      "hover:text-[var(--color-secondary-light-gray)]",
       "shadow-[0_0_15px_rgba(0,221,170,0.6),0_0_30px_rgba(0,221,170,0.3)]",
       "hover:shadow-[0_0_20px_rgba(0,221,170,0.8),0_0_40px_rgba(0,221,170,0.5)]",
     ].join(" "),

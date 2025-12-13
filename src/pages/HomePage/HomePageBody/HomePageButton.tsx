@@ -21,9 +21,8 @@ const HomePageButton: React.FC = () => {
             <Button
               variant="landing"
               className="w-full
-              text-sm sm:text-base md:text-lg
-              py-1.5 sm:py-3
-              rounded-full"
+              text-4xl sm:text-lg md:text-xl
+              py-1.5 sm:py-3"
             >
               Play now!
             </Button>
@@ -33,14 +32,12 @@ const HomePageButton: React.FC = () => {
         <ResponsiveButtonWrapper>
           <Link to="/login" className="block">
             <Button
+              variant="landing"
+              emphasis="low"
               className="
               w-full
-              text-sm sm:text-base md:text-lg
+              text-4xl sm:text-lg md:text-xl
               py-1.5 sm:py-3
-              rounded-full
-              border border-[#FF5F24]
-              bg-transparent
-              !text-[#F0E8E5]
             "
             >
               Learn more!
@@ -51,45 +48,19 @@ const HomePageButton: React.FC = () => {
         <ResponsiveButtonWrapper>
           <Link to="/dashboard" className="block">
             <Button
+              variant="landing"
+              emphasis="low"
               className="
               inline-flex
               w-full
-              text-sm sm:text-base md:text-lg
+              text-4xl sm:text-lg md:text-xl
               py-1.5 sm:py-3
-              rounded-full
-              border border-[#FF5F24]
-              bg-transparent
-              !text-[#F0E8E5]
             "
             >
               Test Dashboard
             </Button>
           </Link>
         </ResponsiveButtonWrapper>
-      </div>
-
-      <div className="flex justify-center gap-5">
-        <Button type="button" variant="landing" size="small">
-          Register
-        </Button>
-        <Button type="button" variant="landing" size="medium">
-          Flip
-        </Button>
-        <Button type="button" variant="landing" size="large">
-          Play Now
-        </Button>
-      </div>
-
-      <div className="flex justify-center gap-5">
-        <Button type="button" variant="landing" emphasis="low" size="small">
-          Register
-        </Button>
-        <Button type="button" variant="landing" emphasis="low" size="medium">
-          Flip
-        </Button>
-        <Button type="button" variant="landing" emphasis="low" size="large">
-          Play Now
-        </Button>
       </div>
     </div>
   );
