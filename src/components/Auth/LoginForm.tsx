@@ -67,8 +67,8 @@ export const LoginForm = () => {
 
       <Button
         type="submit"
-        className="w-full"
-        size="large"
+        className="w-full w-full text-4xl sm:text-lg md:text-xl"
+        size="small"
         onClick={handleLogin}
       >
         Login
@@ -80,13 +80,13 @@ export const LoginForm = () => {
       </div>
       <Button
         type="button"
-        size="large"
-        variant="secondary"
+        size="small"
+        variant="landing"
         emphasis="high"
         onClick={() => console.log("LoginGg")}
       >
         <GoogleIcon className="w-6 h-10" />
-        <span className="text-sm font-medium text-black">
+        <span className="text-4xl sm:text-lg md:text-xl font-medium text-white">
           Continue with Google
         </span>
       </Button>

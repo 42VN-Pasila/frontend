@@ -81,8 +81,9 @@ export const RegisterForm = () => {
       </div>
       <Button
         type="submit"
-        className="w-full"
-        size="large"
+        className="w-full text-4xl sm:text-lg md:text-xl"
+        size="small"
+        
         onClick={handleRegister}
       >
         Register
@@ -94,13 +95,14 @@ export const RegisterForm = () => {
       </div>
       <Button
         type="button"
-        size="large"
-        variant="secondary"
-        emphasis="high"
+        size="small"
+        variant="landing"
+        emphasis="low"
+        className="text-4xl sm:text-lg md:text-xl"
         onClick={() => console.log("LoginGg")}
       >
         <GoogleIcon className="w-6 h-10" />
-        <span className="text-sm font-medium text-black">
+        <span className="text-4xl sm:text-lg md:text-xl font-medium text-white">
           Continue with Google
         </span>
       </Button>
