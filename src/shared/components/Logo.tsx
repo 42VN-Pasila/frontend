@@ -29,10 +29,10 @@ const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
 
           {withText && (
             <span
-              className={`${LOGO_TEXT[size]} text-transparent tracking-wide font-bold`}
+              className={`${LOGO_TEXT[size]} font-['Permanent_Marker'] tracking-wide font-bold`}
               style={{ WebkitTextStroke: "1px white" }}
             >
-              Cosmos Pong
+              JokerFace
             </span>
           )}
         </Link>

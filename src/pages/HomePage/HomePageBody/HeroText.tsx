@@ -30,10 +30,10 @@ export const HeroText = () => {
       <p
         className="
           hidden sm:block
-          text-[48px]
-          sm:text-[34px]
-          md:text-[70px]
-          lg:text-[100px]
+          text-[28px]
+          sm:text-[24px]
+          md:text-[60px]
+          lg:text-[80px]
           leading-[0.9]
           tracking-[0.5vw]
           md:tracking-[0.3vw]
@@ -45,7 +45,7 @@ export const HeroText = () => {
           mt-[10vh]
       "
       >
-        JokerFace
+        Welcome to JokerFace
       </p>
     </div>
   );
