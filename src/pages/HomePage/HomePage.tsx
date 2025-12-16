@@ -1,9 +1,8 @@
 import Footer from "@/shared/components/Footer";
-import HomePageNavBar from "./NavBar/HomePageNavBar";
-import PongAnimation from "./HomePageBody/PongAnimation";
-import { HeroText } from "./HomePageBody/HeroText";
-import { HeroSubTitle } from "./HomePageBody/HeroText";
-import HomePageButton from "./HomePageBody/HomePageButton";
+import HomePageNavBar from "./HomePageNavBar";
+import { HeroText } from "./HeroText";
+import { HeroSubTitle } from "./HeroText";
+import HomePageButton from "./HomePageButton";
 
 const HomePage = () => {
   return (

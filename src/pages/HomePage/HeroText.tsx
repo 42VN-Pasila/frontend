@@ -24,7 +24,7 @@ export const HeroText = () => {
           text-transparent"
         style={{ WebkitTextStroke: "1px white" }}
       >
-        Cosmos Pong!
+        Joker Face!
       </h5>
       <p
         className="

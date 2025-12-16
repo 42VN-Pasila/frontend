@@ -31,7 +31,7 @@ export const LoginForm = () => {
     >
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
-          Welcome to Cosmos Pong
+          Welcome to Joker Face
         </Form.Title>
         <p className="text-center">
           Don’t have an account?{" "}
