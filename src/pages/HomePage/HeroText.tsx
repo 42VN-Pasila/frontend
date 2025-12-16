@@ -38,12 +38,12 @@ export const HeroText = () => {
           md:tracking-[0.3vw]
           font-[700]
           text-center
-          font-['Permanent_Marker']
+          font-chakraBold
           
           mt-[10vh]
       "
       >
-        Welcome to JokerFace
+        Welcome to Joker Face
       </p>
     </div>
   );

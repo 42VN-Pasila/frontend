@@ -33,7 +33,6 @@ const VARIANT_EMPHASIS_CLASSES: Record<
     high: [
       "bg-[var(--color-red)] hover:bg-[var( --color-red-hover)] active:bg-[var(--color-red-active)]",
       "text-[var(--color-secondary-light-gray)]",
-      "font-[m6x11plus] uppercase",
       " shadow-[6px_6px_0_#000] hover:shadow-[4px_4px_0_#000] active:shadow-[3px_3px_0_#000]",
     ].join(" "),
   },
@@ -41,11 +40,11 @@ const VARIANT_EMPHASIS_CLASSES: Record<
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {
   small:
-    "text-md px-[18px] h-[48px] gap-2 font-semibold tracking-wide font-[m6x11plus] uppercase",
+    "text-md px-[18px] h-[48px] gap-2 font-semibold tracking-wide font-chakraBold ",
   medium:
-    "text-xl px-[22px] h-[60px] gap-2 font-semibold tracking-wide font-[m6x11plus] uppercase",
+    "text-xl px-[22px] h-[60px] gap-2 font-semibold tracking-wide font-chakraBold ",
   large:
-    "text-4xl px-[25px] h-[100px] gap-3 font-semibold tracking-wide font-[m6x11plus] uppercase",
+    "text-2xl px-[25px] h-[100px] gap-3 font-semibold tracking-wide font-chakraBold ",
 };
 
 export interface ButtonProps
