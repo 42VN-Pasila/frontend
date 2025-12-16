@@ -1,5 +1,6 @@
-import  AuthNavBar  from "@/components/Auth/AuthNavBar";
-import { LoginForm } from "../components/Auth/LoginForm";
+import AuthNavBar from "@/components/Auth/AuthNavBar";
+import { LoginForm } from "@/components/Auth/LoginForm";
+
 
 const LoginPage = () => {
   return (
