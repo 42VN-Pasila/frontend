@@ -22,9 +22,9 @@
   -moz-osx-font-smoothing: grayscale;
 
   /*Landing button color*/
-  --color-landing: #1ecf94cb; 
-  --color-landing-hover: #1ae7a3c5;
-  --color-landing-active: #15e29ec4;
+  --color-primary: #1ecf94cb; 
+  --color-primary-hover: #1ae7a3c5;
+  --color-primary-active: #15e29ec4;
 
   /* Secondary grayscale / black tokens*/
   --color-light-gray: #f0e8e5;
