@@ -18,13 +18,7 @@ const HomePageButton: React.FC = () => {
       >
         <ResponsiveButtonWrapper>
           <Link to="/login" className="block">
-            <Button
-              variant="primary"
-              glow="primary"
-              className="w-full
-              text-4xl sm:text-lg md:text-xl
-              py-1.5 sm:py-3"
-            >
+            <Button variant="primary" glow="primary" size="medium">
               Play now!
             </Button>
           </Link>
@@ -36,34 +30,13 @@ const HomePageButton: React.FC = () => {
               variant="primary"
               emphasis="low"
               glow="primary"
-              className="
-              w-full
-              text-4xl sm:text-lg md:text-xl
-              py-1.5 sm:py-3
-            "
+              size="medium"
             >
               Learn more!
             </Button>
           </Link>
         </ResponsiveButtonWrapper>
 
-        <ResponsiveButtonWrapper>
-          <Link to="/dashboard" className="block">
-            <Button
-              variant="primary"
-              emphasis="low"
-              glow="primary"
-              className="
-              inline-flex
-              w-full
-              text-4xl sm:text-lg md:text-xl
-              py-1.5 sm:py-3
-            "
-            >
-              Test Dashboard
-            </Button>
-          </Link>
-        </ResponsiveButtonWrapper>
       </div>
     </div>
   );

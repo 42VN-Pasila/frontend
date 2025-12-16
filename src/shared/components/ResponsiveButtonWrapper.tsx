@@ -10,7 +10,7 @@ const ResponsiveButtonWrapper = ({
   return (
     <div
       className="
-        w-[160px]                 
+        w-[180px]                 
         mx-auto                 
         sm:w-[160px]            
         lg:w-[200px]

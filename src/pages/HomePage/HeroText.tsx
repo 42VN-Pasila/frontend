@@ -39,7 +39,6 @@ export const HeroText = () => {
           font-[700]
           text-center
           font-chakraBold
-          
           mt-[10vh]
       "
       >

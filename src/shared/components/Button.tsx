@@ -7,7 +7,7 @@ type ButtonShadow = "on" | "off";
 type Emphasis = "high" | "low";
 
 const BASE_CLASSES = [
-  "inline-flex items-center justify-center rounded-md cursor-pointer",
+  "w-full inline-flex items-center justify-center rounded-md cursor-pointer",
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary-focus)]",
   "disabled:opacity-50 disabled:cursor-not-allowed",
   "shadow-sm transition-colors duration-150",
@@ -30,14 +30,10 @@ const VARIANT_EMPHASIS_CLASSES: Record<
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {
-  small:
-    "text-md px-[18px] h-[48px] gap-2 font-semibold tracking-wide font-chakraBold ",
-  medium:
-    "text-xl px-[22px] h-[60px] gap-2 font-semibold tracking-wide font-chakraBold ",
-  large:
-    "text-2xl px-[25px] h-[100px] gap-3 font-semibold tracking-wide font-chakraBold ",
+  small: "text-md px-[18px] h-[48px] gap-2 font-semibold tracking-wide font-chakraBold",
+  medium: "text-xl px-[25px] h-[60px] gap-4 font-semibold tracking-wide font-chakraBold",
+  large: "text-2xl px-[40px] h-[100px] gap-5 font-semibold tracking-wide font-chakraBold",
 };
-
 const GLOW_CLASSES: Record<ButtonGlow, string> = {
   primary: [
     "shadow-[0_0_15px_var(--color-primary-glow-inner),0_0_30px_var(--color-primary-glow-outer)]",
