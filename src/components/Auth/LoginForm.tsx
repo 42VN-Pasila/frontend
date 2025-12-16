@@ -82,7 +82,7 @@ export const LoginForm = () => {
         type="button"
         size="small"
         variant="primary"
-        emphasis="high"
+        emphasis="low"
         onClick={() => console.log("LoginGg")}
       >
         <GoogleIcon className="w-6 h-10" />

@@ -20,6 +20,7 @@ const HomePageButton: React.FC = () => {
           <Link to="/login" className="block">
             <Button
               variant="primary"
+              glow="primary"
               className="w-full
               text-4xl sm:text-lg md:text-xl
               py-1.5 sm:py-3"
@@ -34,6 +35,7 @@ const HomePageButton: React.FC = () => {
             <Button
               variant="primary"
               emphasis="low"
+              glow="primary"
               className="
               w-full
               text-4xl sm:text-lg md:text-xl
@@ -50,6 +52,7 @@ const HomePageButton: React.FC = () => {
             <Button
               variant="primary"
               emphasis="low"
+              glow="primary"
               className="
               inline-flex
               w-full

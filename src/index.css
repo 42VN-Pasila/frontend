@@ -23,6 +23,10 @@
   --color-primary: #1ecf94cb;
   --color-primary-hover: #1ae7a3c5;
   --color-primary-active: #15e29ec4;
+  --color-primary-glow-inner: #00ddaa99;
+  --color-primary-glow-outer: #00ddaa4d;
+  --color-primary-glow-inner-hover: #00ddaacc;
+  --color-primary-glow-outer-hover: #00ddaa80;
 
   /* Secondary grayscale / black tokens*/
   --color-light-gray: #f0e8e5;

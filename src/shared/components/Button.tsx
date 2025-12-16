@@ -1,7 +1,9 @@
 import React from "react";
 
-type ButtonVariant = "primary" | "game";
+type ButtonVariant = "primary";
 type ButtonSize = "small" | "medium" | "large";
+type ButtonGlow = "primary" | "none";
+type ButtonShadow = "on" | "off";
 type Emphasis = "high" | "low";
 
 const BASE_CLASSES = [
@@ -19,21 +21,10 @@ const VARIANT_EMPHASIS_CLASSES: Record<
     high: [
       "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] active:bg-[var(--color-primary-active)]",
       "text-[var(--color-secondary-light-gray)] font-medium",
-      "hover:shadow-[0_0_20px_rgba(0,221,170,0.8),0_0_40px_rgba(0,221,170,0.5)]",
     ].join(" "),
     low: [
       "border-2 border-[var(--color-primary)] text-[var(--color-secondary-light-gray)]",
       "hover:bg-[var(--color-primary)]/10 active:bg-[var(--color-primary-active)]/20",
-      "hover:text-[var(--color-secondary-light-gray)]",
-      "shadow-[0_0_15px_rgba(0,221,170,0.6),0_0_30px_rgba(0,221,170,0.3)]",
-      "hover:shadow-[0_0_20px_rgba(0,221,170,0.8),0_0_40px_rgba(0,221,170,0.5)]",
-    ].join(" "),
-  },
-  game: {
-    high: [
-      "bg-[var(--color-red)] hover:bg-[var( --color-red-hover)] active:bg-[var(--color-red-active)]",
-      "text-[var(--color-secondary-light-gray)]",
-      " shadow-[6px_6px_0_#000] hover:shadow-[4px_4px_0_#000] active:shadow-[3px_3px_0_#000]",
     ].join(" "),
   },
 };
@@ -47,11 +38,30 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
     "text-2xl px-[25px] h-[100px] gap-3 font-semibold tracking-wide font-chakraBold ",
 };
 
+const GLOW_CLASSES: Record<ButtonGlow, string> = {
+  primary: [
+    "shadow-[0_0_15px_var(--color-primary-glow-inner),0_0_30px_var(--color-primary-glow-outer)]",
+    "hover:shadow-[0_0_20px_var(--color-primary-glow-inner-hover),0_0_40px_var(--color-primary-glow-outer-hover)]",
+  ].join(" "),
+  none: "",
+};
+
+const SHADOW_CLASSES: Record<ButtonShadow, string> = {
+  on: [
+    "shadow-[6px_6px_0_var(--color-black)]",
+    "hover:shadow-[4px_4px_0_var(--color-black)]",
+    "active:shadow-[3px_3px_0_var(--color-black)]",
+  ].join(" "),
+  off: "",
+};
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   emphasis?: Emphasis;
+  glow?: ButtonGlow;
+  shadow?: ButtonShadow;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -64,6 +74,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       className,
       type = "button",
+      glow = "none",
+      shadow = "off",
       ...rest
     },
     ref
@@ -71,7 +83,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled;
     const base = VARIANT_EMPHASIS_CLASSES[variant]?.[emphasis] || "";
     const sizeClasses = SIZE_CLASSES[size];
-    const composed = [BASE_CLASSES, base, sizeClasses, className]
+    const glowClasses = GLOW_CLASSES[glow];
+    const shadowClasses = SHADOW_CLASSES[shadow];
+    const composed = [
+      BASE_CLASSES,
+      base,
+      sizeClasses,
+      glowClasses,
+      shadowClasses,
+      className,
+    ]
       .filter(Boolean)
       .join(" ");
 
