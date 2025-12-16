@@ -24,7 +24,7 @@ export const HeroText = () => {
           text-transparent"
         style={{ WebkitTextStroke: "1px white" }}
       >
-        Joker Face!
+        Blank!
       </h5>
       <p
         className="
@@ -43,7 +43,7 @@ export const HeroText = () => {
           mt-[10vh]
       "
       >
-        Welcome to Joker Face
+        Welcome to Blank
       </p>
     </div>
   );
@@ -61,7 +61,6 @@ export const HeroSubTitle = () => {
         md:text-sm
         lg:text-lg
         mx-auto
-        
         max-w-[80%]
       "
     >
