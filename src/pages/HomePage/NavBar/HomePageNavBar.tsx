@@ -36,7 +36,7 @@ const HomePageNavBar = () => {
           <Logo withText={true} size="medium" />
         </div>
 
-        <div className="hidden lg:flex items-center gap-6 text-[#CCC8C7] tracking-wide">
+        <div className="hidden lg:flex items-center gap-6 tracking-wide">
           <Link
             to="/contact"
             className="tracking-[0.1vw] hover:text-white transition"
@@ -53,7 +53,7 @@ const HomePageNavBar = () => {
         </div>
 
         <button
-          className="text-[#CCC8C7] lg:hidden"
+          className="lg:hidden"
           onClick={() => setOpen((prev) => !prev)}
         >
           {open ? <X size={26} /> : <Menu size={26} />}
@@ -78,7 +78,7 @@ const HomePageNavBar = () => {
             <Link
               to="/contact"
               onClick={() => setOpen(false)}
-              className="px-4 py-2 hover:bg-white/5 hover:text-[#FF5F24] transition flex items-center"
+              className="px-4 py-2 hover:bg-white/5 transition flex items-center"
             >
               Contact
             </Link>
@@ -86,7 +86,7 @@ const HomePageNavBar = () => {
             <Link
               to="/about-us"
               onClick={() => setOpen(false)}
-              className="px-4 py-2 hover:bg-white/5 hover:text-[#FF5F24] transition flex items-center"
+              className="px-4 py-2 hover:bg-white/5 transition flex items-center"
             >
               About Us
             </Link>

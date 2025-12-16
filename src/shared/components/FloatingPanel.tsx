@@ -29,7 +29,6 @@ const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({
           border border-white/10
           shadow-[0_18px_45px_rgba(0,0,0,0.65)]
           backdrop-blur-md
-          text-[#F5F3F2]
           pointer-events-auto
           overflow-hidden
           animate-[fadeIn_0.18s_ease-out]

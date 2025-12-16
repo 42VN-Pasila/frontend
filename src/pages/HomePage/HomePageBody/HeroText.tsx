@@ -8,7 +8,7 @@ export const HeroText = () => {
           font-[700]
           block sm:hidden 
           text-[28px] leading-[0.9] 
-          tracking-[0.7vw] text-[#F0E8E5] mt-[15vh]"
+          tracking-[0.7vw] mt-[15vh]"
       >
         Welcome to
       </p>
@@ -17,10 +17,9 @@ export const HeroText = () => {
           block sm:hidden 
           text-center 
           font-chakraBold 
-          font-[700] text-[48px] 
+          font-[700]
           leading-[0.9] 
           tracking-[0.7vw] 
-          text-[#F0E8E5] 
           mb-0
           text-transparent"
         style={{ WebkitTextStroke: "1px white" }}
@@ -38,7 +37,6 @@ export const HeroText = () => {
           tracking-[0.5vw]
           md:tracking-[0.3vw]
           font-[700]
-          text-[#F0E8E5]
           text-center
           font-['Permanent_Marker']
           
@@ -62,7 +60,6 @@ export const HeroSubTitle = () => {
         sm:text-base
         md:text-sm
         lg:text-lg
-        text-[#DDD6D4]
         mx-auto
         
         max-w-[80%]
