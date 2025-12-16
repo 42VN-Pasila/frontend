@@ -3,8 +3,8 @@ import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
-import { useValidation } from "@/shared/components/features/Validations/UseValdiation";
-import { GoogleIcon } from "@/shared/components/features/Validations/GoogleIcon";
+import { useValidation } from "@/components/Auth/useValdiation";
+import { GoogleIcon } from "@/components/Auth/GoogleIcon";
 
 export const RegisterForm = () => {
   const [username, setUsername] = React.useState("");
@@ -83,7 +83,6 @@ export const RegisterForm = () => {
         type="submit"
         className="w-full text-4xl sm:text-lg md:text-xl"
         size="small"
-        
         onClick={handleRegister}
       >
         Register
@@ -96,7 +95,7 @@ export const RegisterForm = () => {
       <Button
         type="button"
         size="small"
-        variant="landing"
+        variant="primary"
         emphasis="low"
         className="text-4xl sm:text-lg md:text-xl"
         onClick={() => console.log("LoginGg")}

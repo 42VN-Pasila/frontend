@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ValidateUser } from "./ValidationUtils";
+import { ValidateUser } from "./validation.utils";
 
 type ValidationField =
   | "usernameRegister"

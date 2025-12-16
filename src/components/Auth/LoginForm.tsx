@@ -3,8 +3,8 @@ import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
-import { GoogleIcon } from "@/shared/components/features/Validations/GoogleIcon";
-import { useValidation } from "@/shared/components/features/Validations/UseValdiation";
+import { GoogleIcon } from "@/components/Auth/GoogleIcon";
+import { useValidation } from "@/components/Auth/useValdiation";
 
 export const LoginForm = () => {
   const [username, setUsername] = React.useState("");
@@ -81,7 +81,7 @@ export const LoginForm = () => {
       <Button
         type="button"
         size="small"
-        variant="landing"
+        variant="primary"
         emphasis="high"
         onClick={() => console.log("LoginGg")}
       >

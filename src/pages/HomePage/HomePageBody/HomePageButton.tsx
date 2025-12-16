@@ -19,7 +19,7 @@ const HomePageButton: React.FC = () => {
         <ResponsiveButtonWrapper>
           <Link to="/login" className="block">
             <Button
-              variant="landing"
+              variant="primary"
               className="w-full
               text-4xl sm:text-lg md:text-xl
               py-1.5 sm:py-3"
@@ -32,7 +32,7 @@ const HomePageButton: React.FC = () => {
         <ResponsiveButtonWrapper>
           <Link to="/login" className="block">
             <Button
-              variant="landing"
+              variant="primary"
               emphasis="low"
               className="
               w-full
@@ -48,7 +48,7 @@ const HomePageButton: React.FC = () => {
         <ResponsiveButtonWrapper>
           <Link to="/dashboard" className="block">
             <Button
-              variant="landing"
+              variant="primary"
               emphasis="low"
               className="
               inline-flex

@@ -1,6 +1,6 @@
 import React from "react";
 
-type ButtonVariant = "landing" | "game";
+type ButtonVariant = "primary" | "game";
 type ButtonSize = "small" | "medium" | "large";
 type Emphasis = "high" | "low";
 
@@ -15,15 +15,15 @@ const VARIANT_EMPHASIS_CLASSES: Record<
   ButtonVariant,
   Partial<Record<Emphasis, string>>
 > = {
-  landing: {
+  primary: {
     high: [
-      "bg-[var(--color-landing)] hover:bg-[var(--color-landing-hover)] active:bg-[var(--color-landing-active)]",
+      "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] active:bg-[var(--color-primary-active)]",
       "text-[var(--color-secondary-light-gray)] font-medium",
       "hover:shadow-[0_0_20px_rgba(0,221,170,0.8),0_0_40px_rgba(0,221,170,0.5)]",
     ].join(" "),
     low: [
-      "border-2 border-[var(--color-landing)] text-[var(--color-secondary-light-gray)]",
-      "hover:bg-[var(--color-landing)]/10 active:bg-[var(--color-landing-active)]/20",
+      "border-2 border-[var(--color-primary)] text-[var(--color-secondary-light-gray)]",
+      "hover:bg-[var(--color-primary)]/10 active:bg-[var(--color-primary-active)]/20",
       "hover:text-[var(--color-secondary-light-gray)]",
       "shadow-[0_0_15px_rgba(0,221,170,0.6),0_0_30px_rgba(0,221,170,0.3)]",
       "hover:shadow-[0_0_20px_rgba(0,221,170,0.8),0_0_40px_rgba(0,221,170,0.5)]",
@@ -58,7 +58,7 @@ export interface ButtonProps
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      variant = "landing",
+      variant = "primary",
       size = "medium",
       emphasis = "high",
       disabled = false,
