@@ -63,7 +63,7 @@ const HomePageNavBar = () => {
           ref={dropdownRef}
           className={`
           absolute right-6 top-[100%] -mt-7 w-40 md:hidden
-          bg-[#111111]/95 border border-white/10 rounded-xl
+          bg-[var(--color-black)]/95 border border-white/10 rounded-xl
           shadow-lg shadow-black/40
           overflow-hidden
           transition-all duration-200 origin-top-right
