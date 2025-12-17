@@ -1,48 +1,14 @@
 export const HeroText = () => {
   return (
-    <div>
-      <p
-        className="
-          text-center 
-          font-chakraBold 
-          font-[700]
-          block sm:hidden 
-          text-[28px] leading-[0.9] 
-          tracking-[0.7vw] mt-[15vh]"
-      >
-        Welcome to
-      </p>
-      <h5
-        className="
-          block sm:hidden 
-          text-center 
-          font-chakraBold 
-          font-[700]
-          leading-[0.9] 
-          tracking-[0.7vw] 
-          mb-0
-          text-transparent"
-        style={{ WebkitTextStroke: "1px white" }}
-      >
-        Blank!
-      </h5>
-      <p
-        className="
-          hidden sm:block
-          text-[28px]
-          sm:text-[24px]
-          md:text-[60px]
-          lg:text-[80px]
-          leading-[0.9]
-          tracking-[0.5vw]
-          md:tracking-[0.3vw]
-          font-[700]
-          text-center
-          font-chakraBold
-          mt-[10vh]
-      "
-      >
-        Welcome to Blank
+    <div className="text-center mt-[10vh] sm:mt-[12vh] lg:mt-[15vh]">
+      <p className="
+        font-chakraBold font-bold
+        text-4xl sm:text-5xl md:text-6xl lg:text-7xl
+        tracking-wider sm:tracking-wide
+        leading-tight
+        mb-2 sm:mb-3
+      ">
+        Welcome to Blank!
       </p>
     </div>
   );
@@ -50,21 +16,16 @@ export const HeroText = () => {
 
 export const HeroSubTitle = () => {
   return (
-    <h2
-      className="
-        text-center
-        tracking-wide
-        mt-6 md:mt-3
-        text-sm
-        sm:text-base
-        md:text-sm
-        lg:text-lg
-        mx-auto
-        max-w-[80%]
-      "
-    >
-      Launch into the cosmic arena and prove your ping pong power among the
-      stars.
+    <h2 className="
+      text-center
+      tracking-normal sm:tracking-wide
+      mt-4 sm:mt-6 md:mt-8
+      text-sm sm:text-base md:text-lg lg:text-xl
+      mx-auto
+      max-w-[90%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%]
+      leading-relaxed
+    ">
+      Launch into the cosmic arena and prove your ping pong power among the stars.
     </h2>
   );
 };

@@ -42,13 +42,31 @@ const VARIANT_EMPHASIS_CLASSES: Record<
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {
-  small:
-    "text-md px-[18px] h-[48px] gap-2 font-semibold tracking-wide font-chakraBold",
-  medium:
-    "text-xl px-[25px] h-[60px] gap-4 font-semibold tracking-wide font-chakraBold",
-  large:
-    "text-2xl px-[40px] h-[100px] gap-5 font-semibold tracking-wide font-chakraBold",
+  small: [
+    "text-sm sm:text-md",
+    "px-[15px] sm:px-[18px]",
+    "h-[40px] sm:h-[48px]",
+    "gap-2",
+    "font-semibold tracking-wide font-chakraBold"
+  ].join(" "),
+  
+  medium: [
+    "text-base sm:text-lg lg:text-xl",
+    "px-[18px] sm:px-[22px] lg:px-[25px]",
+    "h-[50px] sm:h-[56px] lg:h-[60px]",
+    "gap-3 sm:gap-4",
+    "font-semibold tracking-wide font-chakraBold"
+  ].join(" "),
+  
+  large: [
+    "text-xl sm:text-2xl lg:text-3xl",
+    "px-[25px] sm:px-[35px] lg:px-[40px]",
+    "h-[70px] sm:h-[85px] lg:h-[100px]",
+    "gap-4 sm:gap-5",
+    "font-semibold tracking-wide font-chakraBold"
+  ].join(" "),
 };
+
 const GLOW_CLASSES: Record<ButtonGlow, string> = {
   primary: [
     "shadow-[0_0_15px_var(--color-primary-glow-inner),0_0_30px_var(--color-primary-glow-outer)]",

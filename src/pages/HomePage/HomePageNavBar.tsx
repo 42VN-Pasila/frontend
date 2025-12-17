@@ -1,5 +1,5 @@
 import Logo from "@/shared/components/Logo";
-import NavigationItemUnderline from "@/shared/components/NavigationItemUnderline";
+import NavigationItemUnderline from "@/components/Auth/NavigationItemUnderline";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
@@ -52,10 +52,7 @@ const HomePageNavBar = () => {
           </Link>
         </div>
 
-        <button
-          className="lg:hidden"
-          onClick={() => setOpen((prev) => !prev)}
-        >
+        <button className="lg:hidden" onClick={() => setOpen((prev) => !prev)}>
           {open ? <X size={26} /> : <Menu size={26} />}
         </button>
 

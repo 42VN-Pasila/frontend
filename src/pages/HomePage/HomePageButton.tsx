@@ -1,6 +1,5 @@
 import { Button } from "@/shared/components";
 import { Link } from "react-router-dom";
-import ResponsiveButtonWrapper from "@/shared/components/ResponsiveButtonWrapper";
 const HomePageButton: React.FC = () => {
   return (
     <div className="flex flex-col gap-5">
@@ -16,15 +15,12 @@ const HomePageButton: React.FC = () => {
         mt-12 mb-15
       "
       >
-        <ResponsiveButtonWrapper>
           <Link to="/login" className="block">
             <Button variant="primary" glow="primary" size="medium">
               Play now!
             </Button>
           </Link>
-        </ResponsiveButtonWrapper>
 
-        <ResponsiveButtonWrapper>
           <Link to="/login" className="block">
             <Button
               variant="primary"
@@ -35,8 +31,6 @@ const HomePageButton: React.FC = () => {
               Learn more!
             </Button>
           </Link>
-        </ResponsiveButtonWrapper>
-
       </div>
     </div>
   );
