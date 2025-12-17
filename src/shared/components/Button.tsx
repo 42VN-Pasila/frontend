@@ -1,6 +1,6 @@
 import React from "react";
 
-type ButtonVariant = "primary";
+type ButtonVariant = "primary" | "inverse";
 type ButtonSize = "small" | "medium" | "large";
 type ButtonGlow = "primary" | "none";
 type ButtonShadow = "on" | "off";
@@ -20,19 +20,34 @@ const VARIANT_EMPHASIS_CLASSES: Record<
   primary: {
     high: [
       "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] active:bg-[var(--color-primary-active)]",
-      "text-[var(--color-secondary-light-gray)] font-medium",
+      "text-[var(--color-light-gray)] font-medium",
     ].join(" "),
     low: [
-      "border-2 border-[var(--color-primary)] text-[var(--color-secondary-light-gray)]",
+      "border-2 border-[var(--color-primary)] text-[var(--color-light-gray)]",
       "hover:bg-[var(--color-primary)]/10 active:bg-[var(--color-primary-active)]/20",
+    ].join(" "),
+  },
+  inverse: {
+    high: [
+      "bg-[var(--color-light-gray)] hover:bg-[var(--color-light-gray-active)]",
+      "text-[var(--color-black)] font-medium",
+      "border border-[var(--color-border)]",
+    ].join(" "),
+    low: [
+      "border-2 border-[var(--color-border-strong)]",
+      "text-[var(--color-light-gray)]",
+      "hover:bg-[var(--color-dark-gray)]/10 active:bg-[var(--color-dark-gray)]/20",
     ].join(" "),
   },
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {
-  small: "text-md px-[18px] h-[48px] gap-2 font-semibold tracking-wide font-chakraBold",
-  medium: "text-xl px-[25px] h-[60px] gap-4 font-semibold tracking-wide font-chakraBold",
-  large: "text-2xl px-[40px] h-[100px] gap-5 font-semibold tracking-wide font-chakraBold",
+  small:
+    "text-md px-[18px] h-[48px] gap-2 font-semibold tracking-wide font-chakraBold",
+  medium:
+    "text-xl px-[25px] h-[60px] gap-4 font-semibold tracking-wide font-chakraBold",
+  large:
+    "text-2xl px-[40px] h-[100px] gap-5 font-semibold tracking-wide font-chakraBold",
 };
 const GLOW_CLASSES: Record<ButtonGlow, string> = {
   primary: [
@@ -76,7 +91,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const isDisabled = disabled;
     const base = VARIANT_EMPHASIS_CLASSES[variant]?.[emphasis] || "";
     const sizeClasses = SIZE_CLASSES[size];
     const glowClasses = GLOW_CLASSES[glow];
@@ -96,8 +110,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={composed}
-        disabled={isDisabled}
-        aria-disabled={isDisabled || undefined}
+        disabled={disabled}
+        aria-disabled={disabled || undefined}
         type={type}
         {...rest}
       >
