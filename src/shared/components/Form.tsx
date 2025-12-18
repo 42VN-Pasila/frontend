@@ -69,7 +69,6 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
     { label, description, error, className, required, type = "text", ...rest },
     ref
   ) => {
-    console.log(error);
     return (
       <div className="flex flex-col" data-field>
         {label && (
