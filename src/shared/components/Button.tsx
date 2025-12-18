@@ -54,7 +54,7 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
     "text-base sm:text-lg lg:text-xl",
     "px-[18px] sm:px-[22px] lg:px-[25px]",
     "h-[50px] sm:h-[56px] lg:h-[60px]",
-    "max-w-[150px] md:max-w-[180px] lg:max-w-[200px]",
+    "w-[150px] md:w-[180px] lg:w-[200px]",
     "gap-3 sm:gap-4",
     "font-semibold tracking-wide font-chakraBold"
   ].join(" "),
@@ -92,6 +92,7 @@ export interface ButtonProps
   emphasis?: Emphasis;
   glow?: ButtonGlow;
   shadow?: ButtonShadow;
+  fullWidth?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -106,6 +107,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       type = "button",
       glow = "none",
       shadow = "off",
+      fullWidth = false,
       ...rest
     },
     ref
@@ -121,6 +123,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       glowClasses,
       shadowClasses,
       className,
+      fullWidth && "!w-full",
     ]
       .filter(Boolean)
       .join(" ");

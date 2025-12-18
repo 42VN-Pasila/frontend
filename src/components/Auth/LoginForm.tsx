@@ -74,8 +74,8 @@ export const LoginForm = () => {
 
       <Button
         type="submit"
-        className="w-full w-full text-4xl sm:text-lg md:text-xl"
-        size="small"
+        size="medium"
+        fullWidth
         onClick={handleLogin}
       >
         Login
@@ -87,15 +87,14 @@ export const LoginForm = () => {
       </div>
       <Button
         type="button"
-        size="small"
+        size="medium"
         variant="primary"
         emphasis="low"
+        fullWidth
         onClick={() => console.log("LoginGg")}
       >
         <GoogleIcon className="w-6 h-10" />
-        <span className="text-4xl sm:text-lg md:text-xl font-medium text-white">
           Continue with Google
-        </span>
       </Button>
       <p className="text-xs text-center">
         By continuing, you agree to the Pong Terms of Service and Privacy Policy

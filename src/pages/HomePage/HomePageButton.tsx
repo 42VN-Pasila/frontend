@@ -21,7 +21,7 @@ const HomePageButton: React.FC = () => {
             </Button>
           </Link>
 
-          <Link to="/login" className="block">
+          <Link to="/login">
             <Button
               variant="primary"
               emphasis="low"
