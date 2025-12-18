@@ -5,12 +5,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { GoogleIcon } from "@/components/Auth/GoogleIcon";
 import { useValidation } from "@/components/Auth/useValdiation";
+import { validateAll } from "./validation.services";
 
 export const LoginForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const { errors, validate, validateAll } = useValidation();
+  const { errors, validate } = useValidation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
