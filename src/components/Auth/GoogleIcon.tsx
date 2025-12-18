@@ -1,11 +1,7 @@
-interface GoogleIconProps {
-  className?: string;
-}
-
-export const GoogleIcon = ({ className }: GoogleIconProps) => {
+export const GoogleIcon = () => {
   return (
     <svg 
-      className={className}
+      className="w-4 h-4 sm:w-[18px] sm:h-[18px] lg:w-5 lg:h-5"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >

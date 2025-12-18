@@ -115,7 +115,7 @@ export const RegisterForm = () => {
 
         onClick={() => console.log("LoginGg")}
       >
-        <GoogleIcon className="w-6 h-10" />
+        <GoogleIcon />
           Continue with Google
       </Button>
 
