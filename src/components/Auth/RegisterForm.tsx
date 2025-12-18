@@ -5,13 +5,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useValidation } from "@/components/Auth/useValdiation";
 import { GoogleIcon } from "@/components/Auth/GoogleIcon";
+import { validateAll } from "./validation.services";
 
 export const RegisterForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
 
-  const { errors, validate, validateAll } = useValidation();
+  const { errors, validate } = useValidation();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
