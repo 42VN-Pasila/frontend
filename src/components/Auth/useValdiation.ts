@@ -10,10 +10,10 @@ export enum ValidationField {
 export const useFormInputValidation = (inputField: ValidationField, value: string) : string | null => {
 
   const validators: Record<string, (value: string) => void> = {
-    usernameRegister: ValidateUser.validateUsernameRegister.bind(ValidateUser),
-    usernameLogin: ValidateUser.validateUsernameLogin.bind(ValidateUser),
-    email: ValidateUser.validateEmail.bind(ValidateUser),
-    password: ValidateUser.validatePassword.bind(ValidateUser)
+    usernameRegister: ValidateUser.validateUsernameRegister,
+    usernameLogin: ValidateUser.validateUsernameLogin,
+    email: ValidateUser.validateEmail,
+    password: ValidateUser.validatePassword
   };
 
     try {
