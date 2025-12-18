@@ -7,7 +7,7 @@ type ButtonShadow = "on" | "off";
 type Emphasis = "high" | "low";
 
 const BASE_CLASSES = [
-  "w-full inline-flex items-center justify-center rounded-md cursor-pointer",
+  "inline-flex items-center justify-center rounded-md cursor-pointer",
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary-focus)]",
   "disabled:opacity-50 disabled:cursor-not-allowed",
   "shadow-sm transition-colors duration-150",
@@ -54,6 +54,7 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
     "text-base sm:text-lg lg:text-xl",
     "px-[18px] sm:px-[22px] lg:px-[25px]",
     "h-[50px] sm:h-[56px] lg:h-[60px]",
+    "max-w-[150px] md:max-w-[180px] lg:max-w-[200px]",
     "gap-3 sm:gap-4",
     "font-semibold tracking-wide font-chakraBold"
   ].join(" "),

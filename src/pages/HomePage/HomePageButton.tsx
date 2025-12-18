@@ -15,7 +15,7 @@ const HomePageButton: React.FC = () => {
         mt-12 mb-15
       "
       >
-          <Link to="/login" className="block">
+          <Link to="/login">
             <Button variant="primary" glow="primary" size="medium">
               Play now!
             </Button>

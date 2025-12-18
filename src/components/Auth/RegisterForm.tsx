@@ -3,31 +3,28 @@ import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
-import { useValidation } from "@/components/Auth/useValdiation";
 import { GoogleIcon } from "@/components/Auth/GoogleIcon";
-import { validateAll } from "./validation.services";
+import { useFormInputValidation, ValidationField } from "./useValdiation";
 
 export const RegisterForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
 
-  const { errors, validate } = useValidation();
+  const [usernameError, setUsernameError] = React.useState<string | null>(null);
+  const [passwordError, setPasswordError] = React.useState<string | null>(null);
+  const [emailError, setEmailError] = React.useState<string | null>(null);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    const isValid = validateAll({
-      usernameRegister: username,
-      email: email,
-      password: password,
-    });
-    if (!isValid) return;
+    if (usernameError || passwordError || emailError) return;
     await rudexClient.register({
       username,
       password,
       email,
     });
   };
+
   return (
     <Form.Root
       className="mx-auto bg-[var(--color-neutral-900)] rounded-lg shadow-md"
@@ -53,8 +50,15 @@ export const RegisterForm = () => {
         placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        onBlur={(e) => validate("usernameRegister", e.target.value)}
-        error={errors.usernameRegister}
+        onBlur={(e) =>
+          setUsernameError(
+            useFormInputValidation(
+              ValidationField.usernameRegister,
+              e.target.value
+            )
+          )
+        }
+        error={usernameError}
       />
       <Form.Input
         label="Email"
@@ -62,8 +66,12 @@ export const RegisterForm = () => {
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        onBlur={(e) => validate("email", e.target.value)}
-        error={errors.email}
+        onBlur={(e) =>
+          setEmailError(
+            useFormInputValidation(ValidationField.email, e.target.value)
+          )
+        }
+        error={emailError}
       />
       <div className="flex flex-col gap-1">
         <Form.Input
@@ -73,8 +81,12 @@ export const RegisterForm = () => {
           placeholder="Password"
           value={[password]}
           onChange={(e) => setPassword(e.target.value)}
-          onBlur={(e) => validate("password", e.target.value)}
-          error={errors.password}
+          onBlur={(e) =>
+            setPasswordError(
+              useFormInputValidation(ValidationField.password, e.target.value)
+            )
+          }
+          error={passwordError}
         />
         <p className="text-xs">
           Password has to be at least 6 character. No special symbols: * / & @
@@ -102,7 +114,7 @@ export const RegisterForm = () => {
         onClick={() => console.log("LoginGg")}
       >
         <GoogleIcon className="w-6 h-10" />
-        <span className="text-4xl sm:text-lg md:text-xl font-medium text-white">
+        <span className="text-base sm:text-lg lg:text-xl font-medium text-white">
           Continue with Google
         </span>
       </Button>

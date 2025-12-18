@@ -16,7 +16,7 @@ export interface FormInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   description?: string;
-  error?: string;
+  error?: string | null;
 }
 
 export type FormButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
@@ -69,6 +69,7 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
     { label, description, error, className, required, type = "text", ...rest },
     ref
   ) => {
+    console.log(error);
     return (
       <div className="flex flex-col" data-field>
         {label && (

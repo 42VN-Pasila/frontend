@@ -4,21 +4,20 @@ import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
 import { GoogleIcon } from "@/components/Auth/GoogleIcon";
-import { useValidation } from "@/components/Auth/useValdiation";
-import { validateAll } from "./validation.services";
+import {
+  useFormInputValidation,
+  ValidationField,
+} from "@/components/Auth/useValdiation";
 
 export const LoginForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const { errors, validate } = useValidation();
+  const [usernameError, setUsernameError] = React.useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const isValid = validateAll({
-      usernameLogin: username,
-    });
-    if (!isValid) return;
+    if (usernameError) return;
     await rudexClient.login({
       username,
       password,
@@ -50,8 +49,15 @@ export const LoginForm = () => {
         placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        onBlur={(e) => validate("usernameLogin", e.target.value)}
-        error={errors.usernameLogin}
+        onBlur={(e) =>
+          setUsernameError(
+            useFormInputValidation(
+              ValidationField.usernameLogin,
+              e.target.value
+            )
+          )
+        }
+        error={usernameError}
       />
       <div className="flex flex-col gap-1">
         <Form.Input
