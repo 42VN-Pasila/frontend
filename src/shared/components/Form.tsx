@@ -83,11 +83,11 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
           className={[
             "px-3 py-2 rounded-md bg-black/50 border",
             error
-              ? "border-red-500"
+              ? "border-[var(--color-red)]"
               : "border-[var(--color-neutral-300)] text-[var(--color-neutral-50)]",
             "placeholder:text-[var(--color-neutral-300)] opacity-50",
             error
-              ? "focus-visible:ring-red-500"
+              ? "focus-visible:ring-[var(--color-red)]"
               : "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]",
             "transition-colors",
             className,
@@ -97,7 +97,7 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
           {...rest}
         />
         {error && (
-         <p className="mt-1 text-xs text-red-500">
+         <p className="mt-1 text-xs text-[var(--color-red)]">
           {error}
          </p> 
         )}

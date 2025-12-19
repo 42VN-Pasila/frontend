@@ -7,7 +7,7 @@ import LoginPage from "./pages/Auth/LoginPage";
 
 const App: React.FC = () => {
   return (
-    <div className="relative h-[100dvh] bg-black">
+    <div className="relative h-[100dvh] background-color">
       <main className="relative min-h-screen flex flex-col">
         <Routes>
           <Route path="/" element={<HomePage />} />
