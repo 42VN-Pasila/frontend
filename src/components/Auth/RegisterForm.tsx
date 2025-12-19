@@ -4,7 +4,7 @@ import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
 import { GoogleIcon } from "@/components/Auth/GoogleIcon";
-import { useFormInputValidation, ValidationField } from "./useValdiation";
+import { useFormInputValidation, ValidationField } from "./useFormInputValdiation";
 
 export const RegisterForm = () => {
   const [username, setUsername] = React.useState("");

@@ -7,7 +7,7 @@ import { GoogleIcon } from "@/components/Auth/GoogleIcon";
 import {
   useFormInputValidation,
   ValidationField,
-} from "@/components/Auth/useValdiation";
+} from "@/components/Auth/useFormInputValdiation";
 
 export const LoginForm = () => {
   const [username, setUsername] = React.useState("");
