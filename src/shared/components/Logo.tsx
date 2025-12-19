@@ -26,7 +26,6 @@ const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
       <div ref={ref}>
         <Link to="/" className="inline-flex items-center">
           <img src={logoSrc} alt="Logo" className={`${LOGO_IMG[size]}`} />
-
           {withText && (
             <span
               className={`${LOGO_TEXT[size]} font-chakraBold tracking-wide font-bold`}

@@ -6,7 +6,7 @@ export const HeroText = () => {
         text-4xl sm:text-5xl md:text-6xl lg:text-7xl
         tracking-wider sm:tracking-wide
         leading-tight
-        mb-2 sm:mb-3
+        mb-10 sm:mb-3
       ">
         Welcome to Blank!
       </p>

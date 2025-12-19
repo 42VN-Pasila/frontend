@@ -26,7 +26,7 @@ export const LoginForm = () => {
 
   return (
     <Form.Root
-      className="mx-auto bg-[var(--color-neutral-900)] rounded-lg shadow-md"
+      className="mx-auto bg-[var(--color-neutral-900)]"
       gap={20}
     >
       <div className="flex flex-col gap-2">
