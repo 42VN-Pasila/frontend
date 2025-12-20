@@ -1,43 +1,25 @@
-import React from "react";
 import logoSrc from "../../assets/jokercard.png";
 import { Link } from "react-router-dom";
 
-type LogoSize = "small" | "medium" | "large";
+const Logo = () => {
+  return (
+    <div>
+      <Link to="/" className="inline-flex items-center gap-2">
+        <img src={logoSrc} alt="Logo" className="h-23 xs:h-24 py-2" />
 
-const LOGO_IMG: Record<LogoSize, string> = {
-  small: "h-10", // 40px
-  medium: "h-16", // 64px
-  large: "h-24", // 96px
+        <span
+          className="
+                hidden sm:inline
+                text-4xl sm:text-5xl 
+                font-chakraBold tracking-wide font-bold
+              "
+          style={{ WebkitTextStroke: "1px white" }}
+        >
+          Blank
+        </span>
+      </Link>
+    </div>
+  );
 };
-
-const LOGO_TEXT: Record<LogoSize, string> = {
-  small: "text-4xl",
-  medium: "text-5xl ",
-  large: "text-6xl",
-};
-
-interface LogoProps {
-  size?: LogoSize;
-  withText?: boolean;
-}
-const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
-  ({ size = "medium", withText = false }, ref) => {
-    return (
-      <div ref={ref}>
-        <Link to="/" className="inline-flex items-center">
-          <img src={logoSrc} alt="Logo" className={`${LOGO_IMG[size]}`} />
-          {withText && (
-            <span
-              className={`${LOGO_TEXT[size]} font-chakraBold tracking-wide font-bold`}
-              style={{ WebkitTextStroke: "1px white" }}
-            >
-              Blank
-            </span>
-          )}
-        </Link>
-      </div>
-    );
-  }
-);
 
 export default Logo;
