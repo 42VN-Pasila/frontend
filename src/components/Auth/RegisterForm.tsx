@@ -4,7 +4,10 @@ import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
 import { GoogleIcon } from "@/components/Auth/GoogleIcon";
-import { useFormInputValidation, ValidationField } from "./useFormInputValdiation";
+import {
+  useFormInputValidation,
+  ValidationField,
+} from "./useFormInputValdiation";
 
 export const RegisterForm = () => {
   const [username, setUsername] = React.useState("");
@@ -26,10 +29,7 @@ export const RegisterForm = () => {
   };
 
   return (
-    <Form.Root
-      className="mx-auto bg-[var(--color-neutral-900)]"
-      gap={20}
-    >
+    <Form.Root className="mx-auto bg-[var(--color-neutral-900)]" gap={20}>
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
           Create a New Account
@@ -54,8 +54,8 @@ export const RegisterForm = () => {
           setUsernameError(
             useFormInputValidation(
               ValidationField.usernameRegister,
-              e.target.value
-            )
+              e.target.value,
+            ),
           )
         }
         error={usernameError}
@@ -68,7 +68,7 @@ export const RegisterForm = () => {
         onChange={(e) => setEmail(e.target.value)}
         onBlur={(e) =>
           setEmailError(
-            useFormInputValidation(ValidationField.email, e.target.value)
+            useFormInputValidation(ValidationField.email, e.target.value),
           )
         }
         error={emailError}
@@ -83,7 +83,7 @@ export const RegisterForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           onBlur={(e) =>
             setPasswordError(
-              useFormInputValidation(ValidationField.password, e.target.value)
+              useFormInputValidation(ValidationField.password, e.target.value),
             )
           }
           error={passwordError}
@@ -92,18 +92,13 @@ export const RegisterForm = () => {
           Password has to be at least 6 character. No special symbols: * / & @
         </p>
       </div>
-      <Button
-        type="submit"
-        fullWidth
-        size="medium"
-        onClick={handleRegister}
-      >
+      <Button type="submit" fullWidth size="medium" onClick={handleRegister}>
         Register
       </Button>
       <div className="flex items-center gap-4">
-        <div className="flex-1 h-px bg-gray-500"></div>
+        <div className="flex-1 h-px bg-[var(--color-light-gray-active)]"></div>
         <span className="test-xs">OR</span>
-        <div className="flex-1 h-px bg-gray-500"></div>
+        <div className="flex-1 h-px bg-[var(--color-light-gray-active)]"></div>
       </div>
       <Button
         type="button"
@@ -112,11 +107,10 @@ export const RegisterForm = () => {
         emphasis="low"
         fullWidth
         className="w-full"
-
         onClick={() => console.log("LoginGg")}
       >
         <GoogleIcon />
-          Continue with Google
+        Continue with Google
       </Button>
 
       <p className="text-xs text-center">

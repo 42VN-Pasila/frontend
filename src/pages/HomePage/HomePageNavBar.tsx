@@ -2,7 +2,8 @@ import Logo from "@/shared/components/Logo";
 import NavigationItemUnderline from "@/components/Auth/NavigationItemUnderline";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { Menu, X } from "lucide-react";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
 const HomePageNavBar = () => {
   const [open, setOpen] = useState(false);
@@ -29,11 +30,11 @@ const HomePageNavBar = () => {
     <nav className="relative w-full">
       <div className="max-w-[1200px] mx-auto flex items-center justify-between py-1 px-6 md:px-40">
         <div className="lg:hidden">
-          <Logo withText={false} size="medium" />
+          <Logo />
         </div>
 
         <div className="hidden lg:block">
-          <Logo withText={true} size="medium" />
+          <Logo />
         </div>
 
         <div className="hidden lg:flex items-center gap-6 tracking-wide">
@@ -52,8 +53,16 @@ const HomePageNavBar = () => {
           </Link>
         </div>
 
-        <button className="lg:hidden" onClick={() => setOpen((prev) => !prev)}>
-          {open ? <X size={26} /> : <Menu size={26} />}
+        <button
+          className="lg:hidden"
+          onClick={() => setOpen((prev) => !prev)}
+          aria-label="Toggle menu"
+        >
+          {open ? (
+            <CloseIcon sx={{ fontSize: 26 }} />
+          ) : (
+            <MenuIcon sx={{ fontSize: 26 }} />
+          )}
         </button>
 
         <div
