@@ -29,7 +29,7 @@ export const RegisterForm = () => {
   };
 
   return (
-    <Form.Root className="mx-auto bg-[var(--color-neutral-900)]" gap={20}>
+    <Form.Root className="mx-auto bg-[var(--color-form-gray)]" gap={20}>
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
           Create a New Account

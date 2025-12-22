@@ -20,7 +20,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   /*Primary button color*/
-  --color-primary: #1ecf94cb;
+  --color-primary: #1ecf94ab;
   --color-primary-hover: #1ae7a3c5;
   --color-primary-active: #15e29ec4;
   --color-primary-glow-inner: #00ddaa99;
@@ -34,6 +34,7 @@
   --color-border: #d6d3d2;
   --color-border-strong: #ccc8c7;
   --color-dark-gray: #5c5856;
+  --color-form-gray: #6464644b;
   --color-black: #0e0603;
 
   /* Red */

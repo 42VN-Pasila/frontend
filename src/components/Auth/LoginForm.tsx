@@ -25,7 +25,10 @@ export const LoginForm = () => {
   };
 
   return (
-    <Form.Root className="mx-auto bg-[var(--color-neutral-900)]" gap={20}>
+    <Form.Root
+      className="mx-auto bg-[var(--color-form-gray)]"
+      gap={20}
+    >
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
           Welcome to Blank
@@ -50,8 +53,8 @@ export const LoginForm = () => {
           setUsernameError(
             useFormInputValidation(
               ValidationField.usernameLogin,
-              e.target.value,
-            ),
+              e.target.value
+            )
           )
         }
         error={usernameError}
@@ -69,7 +72,12 @@ export const LoginForm = () => {
         </p>
       </div>
 
-      <Button type="submit" size="medium" fullWidth onClick={handleLogin}>
+      <Button
+        type="submit"
+        size="medium"
+        fullWidth
+        onClick={handleLogin}
+      >
         Login
       </Button>
       <div className="flex items-center gap-4">
@@ -86,7 +94,7 @@ export const LoginForm = () => {
         onClick={() => console.log("LoginGg")}
       >
         <GoogleIcon />
-        Continue with Google
+          Continue with Google
       </Button>
       <p className="text-xs text-center">
         By continuing, you agree to the Pong Terms of Service and Privacy Policy
