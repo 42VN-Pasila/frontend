@@ -13,10 +13,7 @@ const BASE_CLASSES = [
   "shadow-sm transition-colors duration-150",
 ];
 
-const VARIANT_EMPHASIS_CLASSES: Record<
-  ButtonVariant,
-  Partial<Record<Emphasis, string>>
-> = {
+const VARIANT_EMPHASIS_CLASSES: Record<ButtonVariant, Record<Emphasis, string>> = {
   primary: {
     high: [
       "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] active:bg-[var(--color-primary-active)]",
@@ -112,7 +109,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const base = VARIANT_EMPHASIS_CLASSES[variant]?.[emphasis] || "";
+    const base = VARIANT_EMPHASIS_CLASSES[variant][emphasis];
     const sizeClasses = SIZE_CLASSES[size];
     const glowClasses = GLOW_CLASSES[glow];
     const shadowClasses = SHADOW_CLASSES[shadow];
