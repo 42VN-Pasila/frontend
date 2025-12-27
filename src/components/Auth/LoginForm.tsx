@@ -81,9 +81,9 @@ export const LoginForm = () => {
         Login
       </Button>
       <div className="flex items-center gap-4">
-        <div className="flex-1 h-px bg-[var(--color-light-gray-active)]"></div>
+        <div className="flex-1 h-px bg-[var(--color-light-gray)]"></div>
         <span className="test-xs">OR</span>
-        <div className="flex-1 h-px bg-[var(--color-light-gray-active)]"></div>
+        <div className="flex-1 h-px bg-[var(--color-light-gray)]"></div>
       </div>
       <Button
         type="button"
