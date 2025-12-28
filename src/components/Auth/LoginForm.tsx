@@ -1,13 +1,14 @@
 import { rudexClient } from "@/shared/api/rudexClient";
 import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
+import GoogleLoginButton from "./googleLogin/GoogleLoginButton";
 import React from "react";
 import { Link } from "react-router-dom";
+
 import {
   useFormInputValidation,
   ValidationField,
 } from "@/components/Auth/useFormInputValdiation";
-import GoogleLoginButton from "./googleLogin/GoogleLoginButton";
 
 export const LoginForm = () => {
   const [username, setUsername] = React.useState("");
@@ -77,7 +78,7 @@ export const LoginForm = () => {
         <span className="test-xs">OR</span>
         <div className="flex-1 h-px bg-[var(--color-light-gray)]"></div>
       </div>
-        <GoogleLoginButton/>
+      <GoogleLoginButton/>
       <p className="text-xs text-center">
         By continuing, you agree to the Pong Terms of Service and Privacy Policy
       </p>
