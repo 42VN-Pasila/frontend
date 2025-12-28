@@ -3,11 +3,11 @@ import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
-import { GoogleIcon } from "@/components/Auth/GoogleIcon";
 import {
   useFormInputValidation,
   ValidationField,
 } from "@/components/Auth/useFormInputValdiation";
+import GoogleLoginButton from "./googleLogin/GoogleLoginButton";
 
 export const LoginForm = () => {
   const [username, setUsername] = React.useState("");
@@ -25,10 +25,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <Form.Root
-      className="mx-auto bg-[var(--color-form-gray)]"
-      gap={20}
-    >
+    <Form.Root className="mx-auto bg-[var(--color-form-gray)]" gap={20}>
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
           Welcome to Blank
@@ -53,8 +50,8 @@ export const LoginForm = () => {
           setUsernameError(
             useFormInputValidation(
               ValidationField.usernameLogin,
-              e.target.value
-            )
+              e.target.value,
+            ),
           )
         }
         error={usernameError}
@@ -72,12 +69,7 @@ export const LoginForm = () => {
         </p>
       </div>
 
-      <Button
-        type="submit"
-        size="medium"
-        fullWidth
-        onClick={handleLogin}
-      >
+      <Button type="submit" size="medium" fullWidth onClick={handleLogin}>
         Login
       </Button>
       <div className="flex items-center gap-4">
@@ -85,17 +77,7 @@ export const LoginForm = () => {
         <span className="test-xs">OR</span>
         <div className="flex-1 h-px bg-[var(--color-light-gray)]"></div>
       </div>
-      <Button
-        type="button"
-        size="medium"
-        variant="primary"
-        emphasis="low"
-        fullWidth
-        onClick={() => console.log("LoginGg")}
-      >
-        <GoogleIcon />
-          Continue with Google
-      </Button>
+        <GoogleLoginButton/>
       <p className="text-xs text-center">
         By continuing, you agree to the Pong Terms of Service and Privacy Policy
       </p>

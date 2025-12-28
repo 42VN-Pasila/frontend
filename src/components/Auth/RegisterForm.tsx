@@ -3,7 +3,7 @@ import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
-import { GoogleIcon } from "@/components/Auth/GoogleIcon";
+import { GoogleIcon } from "@/components/Auth/googleLogin/GoogleIcon";
 import {
   useFormInputValidation,
   ValidationField,
