@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Logo from "@/shared/components/Logo";
 import NavigationItemUnderline from "@/components/Auth/NavigationItemUnderline";
 import { Link } from "react-router-dom";
@@ -6,6 +7,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
 const HomePageNavBar = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -38,19 +40,21 @@ const HomePageNavBar = () => {
         </div>
 
         <div className="hidden lg:flex items-center gap-6 tracking-wide">
-          <Link
-            to="/contact"
+          <button
+            onClick={() => navigate("/contact")}
             className="tracking-[0.1vw] hover:text-white transition"
           >
-            <NavigationItemUnderline text="Contact" />
-          </Link>
+           <NavigationItemUnderline text="Contact" />
+          </button>
 
-          <Link
-            to="/about-us"
+
+          <button
+            onClick={() => navigate("/about-us")}
             className="tracking-[0.1vw] hover:text-white transition"
           >
             <NavigationItemUnderline text="About Us" />
-          </Link>
+          </button>
+
         </div>
 
         <button
@@ -81,21 +85,26 @@ const HomePageNavBar = () => {
         `}
         >
           <div className="flex flex-col py-2 text-sm text-white">
-            <Link
-              to="/contact"
-              onClick={() => setOpen(false)}
-              className="px-4 py-2 hover:bg-white/5 transition flex items-center"
+            <button
+              onClick={() => {
+                navigate("/contact");
+                setOpen(false);
+              }}
+              className="px-4 py-2 hover:bg-white/5 transition flex items-center text-left w-full"
             >
               Contact
-            </Link>
+            </button>
 
-            <Link
-              to="/about-us"
-              onClick={() => setOpen(false)}
-              className="px-4 py-2 hover:bg-white/5 transition flex items-center"
+
+            <button
+              onClick={() => {
+                navigate("/about-us");
+                setOpen(false);
+              }}
+              className="px-4 py-2 hover:bg-white/5 transition flex items-center text-left w-full"
             >
               About Us
-            </Link>
+            </button>
           </div>
         </div>
       </div>
