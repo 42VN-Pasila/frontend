@@ -3,23 +3,33 @@ import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
 import React from "react";
 import { Link } from "react-router-dom";
+import { GoogleIcon } from "@/components/Auth/GoogleIcon";
+import {
+  useFormInputValidation,
+  ValidationField,
+} from "./useFormInputValdiation";
 
 export const RegisterForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
 
+  const [usernameError, setUsernameError] = React.useState<string | null>(null);
+  const [passwordError, setPasswordError] = React.useState<string | null>(null);
+  const [emailError, setEmailError] = React.useState<string | null>(null);
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (usernameError || passwordError || emailError) return;
     await rudexClient.register({
       username,
       password,
       email,
     });
   };
+
   return (
-    <Form.Root className="mx-auto bg-[var(--color-neutral-900)] rounded-lg shadow-md" gap={30}>
-		
+    <Form.Root className="mx-auto bg-[var(--color-form-gray)]" gap={20}>
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
           Create a New Account
@@ -38,32 +48,71 @@ export const RegisterForm = () => {
         label="Username"
         required
         placeholder="Username"
+        value={username}
         onChange={(e) => setUsername(e.target.value)}
+        onBlur={(e) =>
+          setUsernameError(
+            useFormInputValidation(
+              ValidationField.usernameRegister,
+              e.target.value,
+            ),
+          )
+        }
+        error={usernameError}
       />
       <Form.Input
         label="Email"
         required
         placeholder="Email"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
+        onBlur={(e) =>
+          setEmailError(
+            useFormInputValidation(ValidationField.email, e.target.value),
+          )
+        }
+        error={emailError}
       />
-      <Form.Input
-        label="Password"
-        type="password"
-        required
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <p className="text-xs">
-        Password has to be at least 6 character. No special symbols: * / & @
-      </p>
-      <Button
-        type="submit"
-        className="w-full"
-        size="large"
-        onClick={handleRegister}
-      >
+      <div className="flex flex-col gap-1">
+        <Form.Input
+          label="Password"
+          type="password"
+          required
+          placeholder="Password"
+          value={[password]}
+          onChange={(e) => setPassword(e.target.value)}
+          onBlur={(e) =>
+            setPasswordError(
+              useFormInputValidation(ValidationField.password, e.target.value),
+            )
+          }
+          error={passwordError}
+        />
+        <p className="text-xs">
+          Password has to be at least 6 character. No special symbols: * / & @
+        </p>
+      </div>
+      <Button type="submit" fullWidth size="medium" onClick={handleRegister}>
         Register
       </Button>
+      <div className="flex items-center gap-4">
+        <div className="flex-1 h-px bg-[var(--color-light-gray)]"></div>
+        <span className="test-xs">OR</span>
+        <div className="flex-1 h-px bg-[var(--color-light-gray)]"></div>
+      </div>
+      <Button
+        type="button"
+        size="medium"
+        variant="primary"
+        emphasis="low"
+        fullWidth
+        className="w-full"
+        onClick={() => console.log("LoginGg")}
+      >
+        <GoogleIcon />
+        Continue with Google
+      </Button>
+
       <p className="text-xs text-center">
         By continuing, you agree to the Pong Terms of Service and Privacy Policy
       </p>

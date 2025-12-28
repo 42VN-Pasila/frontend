@@ -2,15 +2,13 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {
-      fontFamily: {
-        chakra: ['"Chakra Petch"', "system-ui", "sans-serif"],
-      },
-      colors: {
-        brand: {
-          orange: "#FF5F24",
-        },
-      },
+    screens: {
+      xs: "375px",
+      sm: "640px", // mobile large / tablet herizontal
+      md: "768px", // tablet vertical / small laptop
+      lg: "1024px", // laptop
+      xl: "1280px", // desktop
+      "2xl": "1536px",
     },
   },
   plugins: [],

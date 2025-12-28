@@ -1,30 +1,22 @@
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/HomePage/HomePage";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/Auth/RegisterPage";
+import LoginPage from "./pages/Auth/LoginPage";
+// import DashBoard from "./pages/DashBoard/DashBoard";
 
 const App: React.FC = () => {
   return (
-    <>
-      <video
-        className="fixed inset-0 w-full h-full object-cover -z-10 opacity-75"
-        autoPlay
-        muted
-        loop
-        playsInline
-      >
-        <source src="/src/assets/bg.mp4" type="video/mp4" />
-      </video>
-
-      <div>
+    <div className="relative h-[100dvh] background-color">
+      <main className="relative min-h-screen flex flex-col">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
         </Routes>
-      </div>
-    </>
+      </main>
+    </div>
   );
 };
 

@@ -16,13 +16,14 @@ export interface FormInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   description?: string;
+  error?: string | null;
 }
 
 export type FormButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Root = React.forwardRef<HTMLFormElement, FormRootProps>(
   ({ gap = 16, backgroundColor, className, style, children, ...rest }, ref) => {
-    const composed = ["flex flex-col py-8 px-16 rounded-[10px]", className]
+    const composed = ["flex flex-col py-8 px-10 rounded-[10px]", className]
       .filter(Boolean)
       .join(" ");
     return (
@@ -65,7 +66,7 @@ Label.displayName = "Form.Label";
 
 const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
   (
-    { label, description, className, required, type = "text", ...rest },
+    { label, description, error, className, required, type = "text", ...rest },
     ref
   ) => {
     return (
@@ -80,10 +81,14 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
           required={required}
           type={type}
           className={[
-            "px-3 py-2 rounded-md bg-black/40 border",
-            "border-[var(--color-neutral-300)] text-[var(--color-neutral-50)]",
-            "placeholder:text-[var(--color-neutral-300)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]",
+            "px-3 py-2 rounded-md bg-black/50 border",
+            error
+              ? "border-[var(--color-red)]"
+              : "border-[var(--color-neutral-300)] text-[var(--color-neutral-50)]",
+            "placeholder:text-[var(--color-neutral-300)] opacity-50",
+            error
+              ? "focus-visible:ring-[var(--color-red)]"
+              : "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]",
             "transition-colors",
             className,
           ]
@@ -91,7 +96,12 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
             .join(" ")}
           {...rest}
         />
-        {description && (
+        {error && (
+         <p className="mt-1 text-xs text-[var(--color-red)]">
+          {error}
+         </p> 
+        )}
+        {!error && description && (
           <p className="mt-1 text-xs text-[var(--color-neutral-300)]">
             {description}
           </p>
