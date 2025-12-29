@@ -5,38 +5,37 @@ import HomePageNavBar from "./HomePageNavBar";
 import { HeroText } from "./HeroText";
 import { HeroSubTitle } from "./HeroText";
 import HomePageButton from "./HomePageButton";
-import React from "react";
+import Landing from "./Landing";
+import About from "./About";
 
 export enum HomePageBody {
-  Homepage,
-  AboutUs,
+  Landing,
+  About,
   Contact,
 }
 
-const HomePage = () => {
-  const [currentBody, setCurrentBody] = React.useState<HomePageBody>(
-    HomePageBody.Homepage,
-  );
-  return (
-    <>
-      <HeroText />
-      <HeroSubTitle />
-      <HomePageButton />
-    </>
-  );
-}
+const PATH_TO_BODY: Record<string, HomePageBody> = {
+  "/": HomePageBody.Landing,
+  "/about": HomePageBody.About,
+  "/contact": HomePageBody.Contact,
+};
 
-const AboutUs = () => {
-  return (
-    <>
-      <HeroText />
-      <HeroSubTitle />
-      <HomePageButton />
-    </>
-  );
-}
+const useHomePageBody = (): HomePageBody => {
+  const { pathname } = useLocation();
+  return PATH_TO_BODY[pathname] ?? HomePageBody.Landing;
+};
 
-const ContactUs = () => {
+// const AboutUs = () => {
+//   return (
+//     <>
+//       <HeroText />
+//       <HeroSubTitle />
+//       <HomePageButton />
+//     </>
+//   );
+// }
+
+const Contact = () => {
   return (
     <>
       <HeroText />
@@ -48,14 +47,15 @@ const ContactUs = () => {
 
 const HomePage = () => {
   const activeBody = useHomePageBody();
+  console.log(activeBody);
 
   return (
     <main className="h-[100dvh] flex flex-col">
       <HomePageNavBar />
 
       {activeBody === HomePageBody.Landing && <Landing />}
-      {activeBody === HomePageBody.AboutUs && <AboutUs />}
-      {activeBody === HomePageBody.ContactUs && <ContactUs />}
+      {activeBody === HomePageBody.About && <About />}
+      {activeBody === HomePageBody.Contact && <Contact />}
 
       <Footer />
     </main>
