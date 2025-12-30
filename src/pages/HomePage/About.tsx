@@ -113,25 +113,37 @@ const TEAM: TeamMember[] = [
 
 
 export const About = () => {
-  const [flipped, setFlipped] = useState(false);
+  // const [flipped, setFlipped] = useState(false);
+  const [flippedIndex, setFlippedIndex] = useState(-1);
+
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setFlipped(true);
-    }, 1000);
+    const timers: number[] = [];
 
-    return () => clearTimeout(timer);
+    TEAM.forEach((_, i) => {
+      const timer = window.setTimeout(() => {
+        setFlippedIndex(i);
+      }, 700 + i * 150);
+
+      timers.push(timer);
+    });
+
+    return () => {
+      timers.forEach(clearTimeout);
+    };
   }, []);
 
   return (
     <main className="flex flex-col min-h-[100dvh]">
       <section className="flex-1 flex items-center justify-center px-6">
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          {TEAM.map((member) => (
+          {TEAM.map((member, i) => (
             <AboutCard
               key={member.id}
               {...member}
-              flipped={flipped}
+              // flipped={flipped}
+              flipped={i <= flippedIndex}
+
             />
           ))}
         </div>
