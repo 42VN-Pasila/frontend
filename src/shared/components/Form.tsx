@@ -175,6 +175,7 @@ Title.displayName = "Form.Title";
 export const Form = Object.assign(Root, {
   Root,
   Input,
+  Label,
   Button: FormButton,
   Title,
 });
