@@ -25,16 +25,6 @@ const useHomePageBody = (): HomePageBody => {
   return PATH_TO_BODY[pathname] ?? HomePageBody.Landing;
 };
 
-// const AboutUs = () => {
-//   return (
-//     <>
-//       <HeroText />
-//       <HeroSubTitle />
-//       <HomePageButton />
-//     </>
-//   );
-// }
-
 const Contact = () => {
   return (
     <>
