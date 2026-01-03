@@ -1,10 +1,10 @@
 import React, { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
-import ContactExperience from "./ContactExperience";
 import HomePageNavBar from "../HomePageNavBar";
 import Form from "@/shared/components/Form";
 import Footer from "@/shared/components/Footer";
+import SupportWorker from "./SupportWorker.png";
 
+import emailjs from "@emailjs/browser";
 
 type ContactFormData = {
   name: string;
@@ -37,7 +37,7 @@ const ContactUs: React.FC = () => {
 
     setLoading(true);
     setStatus("idle");
-
+    const minDelay = new Promise((resolve) => setTimeout(resolve, 2000));
     try {
       await emailjs.sendForm(
         import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
@@ -45,7 +45,7 @@ const ContactUs: React.FC = () => {
         formRef.current,
         import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY,
       );
-
+      await minDelay;
       setStatus("success");
       setFormData({ name: "", email: "", message: "" });
       formRef.current.reset();
@@ -61,38 +61,26 @@ const ContactUs: React.FC = () => {
     <section className="w-full">
       <HomePageNavBar />
 
-      <div className="mx-auto w-full max-w-6xl px-4 py-10">
-        {/* Header */}
-        <div className="mb-5 text-center">
-          <h2
-            className="font-chakraBold font-bold
-        text-4xl sm:text-5xl md:text-6xl lg:text-7xl
-        tracking-wider sm:tracking-wide
-        leading-tight
-        mb-10 sm:mb-3"
-          >
-            Contact Us
-          </h2>
+      <div className="mx-auto w-full max-w-6xl px-3">
+        <div className="text-center mt-[8vh] sm:mt-[12vh] lg:mt-[10vh] mb-10">
           <p
-            className="text-center
-      tracking-normal sm:tracking-wide
-      mt-4 sm:mt-6 md:mt-8
-      text-sm sm:text-base md:text-lg lg:text-xl
-      mx-auto
-      max-w-[90%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%]
-      leading-relaxed"
+            className="
+                      font-chakraBold font-bold
+                      text-4xl sm:text-5xl md:text-6xl lg:text-7xl
+                      tracking-wider sm:tracking-wide
+                      leading-tight
+                      mb-10 sm:mb-3
+                    "
           >
-            Have a question or an idea? Send a message and we’ll reply soon.
+            Contact Us!
           </p>
         </div>
 
-        {/* Layout */}
-        <div className="grid gap-8 lg:grid-cols-12">
-          {/* Left */}
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-5">
             <Form.Root
               className="mx-auto bg-[var(--color-form-gray)]"
-              gap={20}
+              gap={10}
               onSubmit={handleSubmit}
               ref={formRef}
             >
@@ -103,6 +91,7 @@ const ContactUs: React.FC = () => {
                 onChange={handleChange}
                 required
                 placeholder="What's your name?"
+                autoComplete="name"
               />
 
               <Form.Input
@@ -112,7 +101,8 @@ const ContactUs: React.FC = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder="@example.com"
+                placeholder="name@example.com"
+                autoComplete="email"
               />
 
               <div>
@@ -129,44 +119,63 @@ const ContactUs: React.FC = () => {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  rows={5}
-                  className="px-3 py-2 rounded-md bg-black/50 border border-neutral-300 text-(--color-neutral-50) placeholder:text--neutral-300 opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-primary) transition-colors w-full"
-                  placeholder="How can I help?"
+                  rows={4}
+                  className="w-full rounded-md border border-neutral-300 bg-black/50 px-3 py-2
+                          text-[var(--color-neutral-50)] placeholder:text-neutral-300/70
+                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                          transition"
+                  placeholder="How can we help?"
                   required
                 />
               </div>
 
-              {status === "success" && (
-                <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-                  Sent! Thanks — We’ll get back to you soon.
-                </div>
-              )}
+              <div role="status" aria-live="polite">
+                {status === "success" && (
+                  <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                    Sent! Thanks — We’ll get back to you soon.
+                  </div>
+                )}
 
-              {status === "error" && (
-                <div className="rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-(--color-red)">
-                  Something went wrong. Please try again.
-                </div>
-              )}
+                {status === "error" && (
+                  <div className="rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-[var(--color-red)]">
+                    Something went wrong. Please try again.
+                  </div>
+                )}
+              </div>
 
               <Form.Button
                 type="submit"
                 disabled={loading}
-                className="min-w-full my-1.5"
+                className="min-w-full"
+                aria-busy={loading}
               >
-                {loading ? "Sending..." : "Send message"}
+                {loading ? (
+                  <>
+                    <span>Sending</span>
+                    <span
+                      className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"
+                      aria-hidden="true"
+                    />
+                  </>
+                ) : (
+                  "Send message"
+                )}
               </Form.Button>
             </Form.Root>
           </div>
 
           {/* Right */}
-          <div className="lg:col-span-7">
-            <div className="h-[500px] overflow-hidden rounded-md border:transparent ">
-                <ContactExperience />
-            </div>
+          <div className="lg:col-span-7 flex items-center justify-center">
+            <img
+              src={SupportWorker}
+              alt="Customer support illustration"
+              className="w-full max-w-[720px] h-auto object-contain"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>
-            <Footer />
+      <Footer />
     </section>
   );
 };
