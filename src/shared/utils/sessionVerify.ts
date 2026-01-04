@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 const decodedToken = (token: string): any | null => {
   try {
@@ -23,15 +23,14 @@ export const refreshSession = async (): Promise<string | null> => {
   if (!refreshToken) return null;
 
   try {
-    const response = await axios.post('/api/auth/refresh', { refreshToken});
+    const response = await axios.post('/api/auth/refresh', { refreshToken });
 
     const newAcessToken = response.data.accessToken;
 
     localStorage.setItem('accessToken', newAcessToken);
 
     return newAcessToken;
-  }
-  catch(error){
+  } catch (error) {
     return null;
   }
 };
