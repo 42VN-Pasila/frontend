@@ -1,28 +1,28 @@
-// import { useState } from 'react';
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Footer from "@/shared/components/Footer";
 import HomePageNavBar from "./HomePageNavBar";
 import { HeroText } from "./HeroText";
 import { HeroSubTitle } from "./HeroText";
 import HomePageButton from "./HomePageButton";
-import Landing from "./Landing";
+// import Landing from "./Landing";
 import About from "./About";
 
 export enum HomePageBody {
-  Landing,
+  HomePage,
   About,
   Contact,
 }
 
 const PATH_TO_BODY: Record<string, HomePageBody> = {
-  "/": HomePageBody.Landing,
+  "/": HomePageBody.HomePage,
   "/about": HomePageBody.About,
   "/contact": HomePageBody.Contact,
 };
 
 const useHomePageBody = (): HomePageBody => {
   const { pathname } = useLocation();
-  return PATH_TO_BODY[pathname] ?? HomePageBody.Landing;
+  return PATH_TO_BODY[pathname] ?? HomePageBody.HomePage;
 };
 
 const Contact = () => {
@@ -36,18 +36,27 @@ const Contact = () => {
 }
 
 const HomePage = () => {
-  const activeBody = useHomePageBody();
-  console.log(activeBody);
+  const bodyFromRoute = useHomePageBody();
+  const [currentBody, setCurrentBody] = useState<HomePageBody>(bodyFromRoute);
+
+  useEffect(() => {
+    setCurrentBody(bodyFromRoute);
+  }, [bodyFromRoute]);
 
   return (
     <main className="h-[100dvh] flex flex-col">
-      <HomePageNavBar />
 
-      {activeBody === HomePageBody.Landing && <Landing />}
-      {activeBody === HomePageBody.About && <About />}
-      {activeBody === HomePageBody.Contact && <Contact />}
-
-      <Footer />
+      {currentBody === HomePageBody.HomePage && (
+        <>
+          <HomePageNavBar />
+          <HeroText />
+          <HeroSubTitle />
+          <HomePageButton />
+          <Footer />
+        </>
+      )}
+      {currentBody === HomePageBody.About && (<About />)}
+      {currentBody === HomePageBody.Contact && <Contact />}
     </main>
   );
 };

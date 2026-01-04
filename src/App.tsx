@@ -6,6 +6,8 @@ import LoginPage from "./pages/Auth/LoginPage";
 // import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage"
 // import DashBoard from "./pages/DashBoard/DashBoard";
+import About from "./pages/HomePage/About";
+import Contact from "./pages/HomePage/Contact"
 
 const App: React.FC = () => {
   return (
@@ -24,8 +26,8 @@ const App: React.FC = () => {
             }
           /> */}
           {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
-          <Route path="/about" element={<HomePage />} />
-          <Route path="/contact" element={<HomePage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </main>
     </div>

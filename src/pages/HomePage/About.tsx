@@ -1,5 +1,7 @@
-import cardSrc from "../../assets/card-back 1.png";
+import cardSrc from "../../assets/card-back-2.png";
 import { useEffect, useState } from "react";
+import HomePageNavBar from "./HomePageNavBar";
+import Footer from "@/shared/components/Footer";
 
 type AboutCardProps = {
   name: string;
@@ -134,21 +136,24 @@ export const About = () => {
   }, []);
 
   return (
-    <main className="flex flex-col min-h-[100dvh]">
-      <section className="flex-1 flex items-center justify-center px-6">
-        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          {TEAM.map((member, i) => (
-            <AboutCard
-              key={member.id}
-              {...member}
-              // flipped={flipped}
-              flipped={i <= flippedIndex}
+    <>
+      <HomePageNavBar />
+        <main className="flex flex-col min-h-[100dvh]">
+          <section className="flex-1 flex items-center justify-center px-6">
+            <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+              {TEAM.map((member, i) => (
+                <AboutCard
+                  key={member.id}
+                  {...member}
+                  flipped={i <= flippedIndex}
 
-            />
-          ))}
-        </div>
-      </section>
-    </main>
+                />
+              ))}
+            </div>
+          </section>
+        </main>
+      <Footer />
+    </>
   );
 };
 
