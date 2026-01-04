@@ -28,7 +28,7 @@ const HomePageNavBar = () => {
 
   return (
     <nav className="relative w-full">
-      <div className=" mx-auto flex items-center justify-between py-1 px-6 md:px-95">
+      <div className=" mx-auto flex items-center justify-between py-1 px-6 md:px-30 z-100">
         <div className="lg:hidden">
           <Logo />
         </div>

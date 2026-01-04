@@ -16,9 +16,9 @@ const ContactUs: React.FC = () => {
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const [formData, setFormData] = useState<ContactFormData>({
+    message: "",
     name: "",
     email: "",
-    message: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -60,9 +60,8 @@ const ContactUs: React.FC = () => {
   return (
     <section className="w-full">
       <HomePageNavBar />
-
-      <div className="mx-auto w-full max-w-6xl px-3">
-        <div className="text-center mt-[8vh] sm:mt-[12vh] lg:mt-[10vh] mb-10">
+      <div className="mx-auto w-full max-w-6xl px-3  ">
+        <div className="text-center mt-[4vh] sm:mt-[8vh] lg:mt-[5vh] mb-10">
           <p
             className="
                       font-chakraBold font-bold
@@ -76,10 +75,10 @@ const ContactUs: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
-          <div className="lg:col-span-5">
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-center ">
+          <div className="lg:col-span-5 max-w-[1200px] flex justify-center py-2 px-4">
             <Form.Root
-              className="mx-auto bg-[var(--color-form-gray)]"
+              className="w-full max-w-[480px] bg-[var(--color-form-gray)]"
               gap={10}
               onSubmit={handleSubmit}
               ref={formRef}
@@ -121,9 +120,9 @@ const ContactUs: React.FC = () => {
                   onChange={handleChange}
                   rows={4}
                   className="w-full rounded-md border border-neutral-300 bg-black/50 px-3 py-2
-                          text-[var(--color-neutral-50)] placeholder:text-neutral-300/70
-                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
-                          transition"
+                text-[var(--color-neutral-50)] placeholder:text-neutral-300/70
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]
+                transition"
                   placeholder="How can we help?"
                   required
                 />
@@ -146,7 +145,7 @@ const ContactUs: React.FC = () => {
               <Form.Button
                 type="submit"
                 disabled={loading}
-                className="min-w-full"
+                className="w-full"
                 aria-busy={loading}
               >
                 {loading ? (
@@ -165,7 +164,7 @@ const ContactUs: React.FC = () => {
           </div>
 
           {/* Right */}
-          <div className="lg:col-span-7 flex items-center justify-center">
+          <div className="lg:col-span-7 hidden lg:flex items-center justify-center">
             <img
               src={SupportWorker}
               alt="Customer support illustration"
