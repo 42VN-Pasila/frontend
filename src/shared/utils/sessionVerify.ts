@@ -20,7 +20,7 @@ export const isExpired = (token: string): boolean => {
 export const refreshSession = async (): Promise<string | null> => {
   const refreshToken = localStorage.getItem('refreshToken');
 
-  if (!refreshToken) return null;
+  if (!refreshToken || isExpired(refreshToken)) return null;
 
   try {
     const response = await axios.post('/api/auth/refresh', { refreshToken });
@@ -34,3 +34,26 @@ export const refreshSession = async (): Promise<string | null> => {
     return null;
   }
 };
+
+export const logOut  = () =>
+{
+  localStorage.clear();
+  return false;
+}
+
+export const sessionVerify = async(): Promise<boolean> => {
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (!accessToken) return logOut();
+
+  if (isExpired(accessToken))
+  {
+    const newAcessToken = await refreshSession();
+    
+    if (!newAcessToken) return logOut();
+
+    localStorage.setItem('accessToken', newAcessToken);
+  }
+
+  return true;
+}
