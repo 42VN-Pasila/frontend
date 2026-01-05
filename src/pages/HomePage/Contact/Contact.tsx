@@ -145,7 +145,7 @@ const ContactUs: React.FC = () => {
               <Form.Button
                 type="submit"
                 disabled={loading}
-                className="w-full"
+                className="min-w-full"
                 aria-busy={loading}
               >
                 {loading ? (
