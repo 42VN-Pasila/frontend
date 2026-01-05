@@ -26,6 +26,7 @@ export const LoginForm = () => {
       });
 
       localStorage.setItem('accessToken', response.accessToken);
+      localStorage.setItem('accessTokenExpiryDate', response.accessTokenExpiryDate);
       localStorage.setItem('refreshToken', response.refreshToken);
 
     } catch (error) {
