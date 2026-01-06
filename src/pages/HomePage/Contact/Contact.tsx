@@ -129,7 +129,7 @@ const ContactUs: React.FC = () => {
                 />
               </div>
 
-              <div role="status" aria-live="polite">
+              <div role="status">
                 {status === "success" && (
                   <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
                     Sent! Thanks — We’ll get back to you soon.
