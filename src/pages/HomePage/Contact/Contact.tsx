@@ -164,7 +164,6 @@ const ContactUs: React.FC = () => {
             </Form.Root>
           </div>
 
-          {/* Right */}
           <div className="lg:col-span-7 hidden lg:flex items-center justify-center">
             <img
               src={SupportWorker}
