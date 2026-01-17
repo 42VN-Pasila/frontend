@@ -57,6 +57,32 @@ const ContactUs: React.FC = () => {
     }
   };
 
+  const maxCharactor = 1000;
+
+  function pasteWithLimit(
+    current: string,
+    pasted: string,
+    start: number,
+    end: number,
+    limit: number,
+  ) {
+    const before = current.slice(0, start);
+    const after = current.slice(end);
+    const next = before + pasted + after;
+    return next.slice(0, limit);
+  }
+
+  const handleMessagePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text");
+    const { value, selectionStart, selectionEnd } = e.currentTarget;
+
+    const start = selectionStart ?? value.length;
+    const end = selectionEnd ?? value.length;
+    const clipped = pasteWithLimit(value, pasted, start, end, maxCharactor);
+    setFormData((prev) => ({ ...prev, message: clipped }));
+  };
+
   return (
     <section className="w-full">
       <HomePageNavBar />
@@ -118,6 +144,9 @@ const ContactUs: React.FC = () => {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
+                  maxLength={maxCharactor}
+                  onPaste={handleMessagePaste}
+                  onDrop={(e) => e.preventDefault()}
                   rows={4}
                   placeholder="How can we help?"
                   required
@@ -127,6 +156,9 @@ const ContactUs: React.FC = () => {
                     "placeholder:text-[var(--color-neutral-300)] opacity-50",
                   ].join(" ")}
                 />
+                <p className="mt-1 text-xs text-[var(--color-neutral-300)]">
+                  {formData.message.length}/{maxCharactor}
+                </p>
               </div>
 
               <div role="status">
