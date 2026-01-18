@@ -5,7 +5,6 @@ import HomePageNavBar from "./HomePageNavBar";
 import { HeroText } from "./HeroText";
 import { HeroSubTitle } from "./HeroText";
 import HomePageButton from "./HomePageButton";
-// import Landing from "./Landing";
 import About from "./About";
 
 export enum HomePageBody {
