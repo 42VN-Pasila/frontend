@@ -3,7 +3,8 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import LoginPage from "./pages/Auth/LoginPage";
-// import DashBoard from "./pages/DashBoard/DashBoard";
+import Dashboard from "./pages/Dashboard/Dashboard";
+
 
 const App: React.FC = () => {
   return (
@@ -13,7 +14,7 @@ const App: React.FC = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
+          <Route path="/dashboard" element={<Dashboard/>}/>
         </Routes>
       </main>
     </div>
