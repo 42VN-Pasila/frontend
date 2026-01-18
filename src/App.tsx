@@ -4,7 +4,6 @@ import { Routes, Route } from "react-router-dom";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import LoginPage from "./pages/Auth/LoginPage";
 // import { ProtectedRoute } from "./shared/components/ProtectedRoute";
-import AboutUsPage from "./pages/AboutUsPage/AboutUsPage"
 // import DashBoard from "./pages/DashBoard/DashBoard";
 import About from "./pages/HomePage/About";
 import Contact from "./pages/HomePage/Contact"
