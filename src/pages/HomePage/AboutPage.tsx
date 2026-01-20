@@ -94,9 +94,9 @@ const AboutCard = ({
           <div className="mt-auto pb-6 flex gap-5 justify-center">
             <a
               href={github}
-              target="_blank" // if no github -> no icon so this's not needed
-              rel="noopener noreferrer" // same as above
-              aria-label={`${name} on GitHub`} // no need?
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${name} on GitHub`}
               className="text-white/70 hover:text-white transition-colors"
             >
               <GitHubIcon fontSize="medium" />
@@ -189,7 +189,7 @@ const TEAM: TeamMember[] = [
 ];
 
 
-export const About = () => {
+export const AboutPage = () => {
   const [flippedIndex, setFlippedIndex] = useState(-1);
 
 
@@ -237,4 +237,4 @@ export const About = () => {
   );
 };
 
-export default About;
+export default AboutPage;

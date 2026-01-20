@@ -5,47 +5,35 @@ import HomePageNavBar from "./HomePageNavBar";
 import { HeroText } from "./HeroText";
 import { HeroSubTitle } from "./HeroText";
 import HomePageButton from "./HomePageButton";
-import About from "./About";
+import AboutPage from "./AboutPage";
 
-export enum HomePages { // endpoint changes -> do not call it body, call it page :)
+export enum Pages {
   HomePage,
-  About,
-  Contact,
+  AboutPage,
 }
 
-const PATH_TO_BODY: Record<string, HomePages> = {
-  "/": HomePages.HomePage,
-  "/about": HomePages.About,
-  "/contact": HomePages.Contact,
+const PATH_TO_PAGE: Record<string, Pages> = {
+  "/": Pages.HomePage,
+  "/about": Pages.AboutPage,
 };
 
-const useHomePageBody = (): HomePages => {
+const usePage = (): Pages => {
   const { pathname } = useLocation();
-  return PATH_TO_BODY[pathname] ?? HomePages.HomePage;
+  return PATH_TO_PAGE[pathname] ?? Pages.HomePage;
 };
-
-const Contact = () => {
-  return (
-    <>
-      <HeroText />
-      <HeroSubTitle />
-      <HomePageButton />
-    </>
-  );
-}
 
 const HomePage = () => {
-  const bodyFromRoute = useHomePageBody();
-  const [currentBody, setCurrentBody] = useState<HomePages>(bodyFromRoute);
+  const pageFromRoute = usePage();
+  const [currentPage, setCurrentPage] = useState<Pages>(pageFromRoute);
 
   useEffect(() => {
-    setCurrentBody(bodyFromRoute);
-  }, [bodyFromRoute]);
+    setCurrentPage(pageFromRoute);
+  }, [pageFromRoute]);
 
   return (
     <main className="h-[100dvh] flex flex-col">
 
-      {currentBody === HomePages.HomePage && (
+      {currentPage === Pages.HomePage && (
         <>
           <HomePageNavBar />
           <HeroText />
@@ -54,8 +42,7 @@ const HomePage = () => {
           <Footer />
         </>
       )}
-      {currentBody === HomePages.About && (<About />)}
-      {currentBody === HomePages.Contact && <Contact />}
+      {currentPage === Pages.AboutPage && (<AboutPage />)}
     </main>
   );
 };
