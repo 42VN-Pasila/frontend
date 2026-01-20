@@ -92,39 +92,33 @@ const AboutCard = ({
 
           {/* Bottom */}
           <div className="mt-auto pb-6 flex gap-5 justify-center">
-            {github && (
-              <a
-                href={github}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${name} on GitHub`}
-                className="text-white/70 hover:text-white transition-colors"
-              >
-                <GitHubIcon fontSize="medium" />
-              </a>
-            )}
+            <a
+              href={github}
+              target="_blank" // if no github -> no icon so this's not needed
+              rel="noopener noreferrer" // same as above
+              aria-label={`${name} on GitHub`} // no need?
+              className="text-white/70 hover:text-white transition-colors"
+            >
+              <GitHubIcon fontSize="medium" />
+            </a>
 
-            {linkedin && (
-              <a
-                href={linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${name} on LinkedIn`}
-                className="text-white/70 hover:text-white transition-colors"
-              >
-                <LinkedInIcon fontSize="medium" />
-              </a>
-            )}
+            <a
+              href={linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${name} on LinkedIn`}
+              className="text-white/70 hover:text-white transition-colors"
+            >
+              <LinkedInIcon fontSize="medium" />
+            </a>
 
-            {email && (
-              <a
-                href={`mailto:${email}`}
-                aria-label={`Email ${name}`}
-                className="text-white/70 hover:text-white transition-colors"
-              >
-                <EmailIcon fontSize="medium" />
-              </a>
-            )}
+            <a
+              href={`mailto:${email}`}
+              aria-label={`Email ${name}`}
+              className="text-white/70 hover:text-white transition-colors"
+            >
+              <EmailIcon fontSize="medium" />
+            </a>
           </div>
 
         </div>
@@ -196,7 +190,6 @@ const TEAM: TeamMember[] = [
 
 
 export const About = () => {
-  // const [flipped, setFlipped] = useState(false);
   const [flippedIndex, setFlippedIndex] = useState(-1);
 
 

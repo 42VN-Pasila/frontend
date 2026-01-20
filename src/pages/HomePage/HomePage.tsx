@@ -7,21 +7,21 @@ import { HeroSubTitle } from "./HeroText";
 import HomePageButton from "./HomePageButton";
 import About from "./About";
 
-export enum HomePageBody {
+export enum HomePages { // endpoint changes -> do not call it body, call it page :)
   HomePage,
   About,
   Contact,
 }
 
-const PATH_TO_BODY: Record<string, HomePageBody> = {
-  "/": HomePageBody.HomePage,
-  "/about": HomePageBody.About,
-  "/contact": HomePageBody.Contact,
+const PATH_TO_BODY: Record<string, HomePages> = {
+  "/": HomePages.HomePage,
+  "/about": HomePages.About,
+  "/contact": HomePages.Contact,
 };
 
-const useHomePageBody = (): HomePageBody => {
+const useHomePageBody = (): HomePages => {
   const { pathname } = useLocation();
-  return PATH_TO_BODY[pathname] ?? HomePageBody.HomePage;
+  return PATH_TO_BODY[pathname] ?? HomePages.HomePage;
 };
 
 const Contact = () => {
@@ -36,7 +36,7 @@ const Contact = () => {
 
 const HomePage = () => {
   const bodyFromRoute = useHomePageBody();
-  const [currentBody, setCurrentBody] = useState<HomePageBody>(bodyFromRoute);
+  const [currentBody, setCurrentBody] = useState<HomePages>(bodyFromRoute);
 
   useEffect(() => {
     setCurrentBody(bodyFromRoute);
@@ -45,7 +45,7 @@ const HomePage = () => {
   return (
     <main className="h-[100dvh] flex flex-col">
 
-      {currentBody === HomePageBody.HomePage && (
+      {currentBody === HomePages.HomePage && (
         <>
           <HomePageNavBar />
           <HeroText />
@@ -54,8 +54,8 @@ const HomePage = () => {
           <Footer />
         </>
       )}
-      {currentBody === HomePageBody.About && (<About />)}
-      {currentBody === HomePageBody.Contact && <Contact />}
+      {currentBody === HomePages.About && (<About />)}
+      {currentBody === HomePages.Contact && <Contact />}
     </main>
   );
 };
