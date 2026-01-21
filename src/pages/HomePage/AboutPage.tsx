@@ -18,7 +18,7 @@ type AboutCardProps = {
   github: string;
   linkedin: string;
   email: string;
-  imagePosition?: string;
+  imagePosition: string;
   flipped: boolean;
 };
 
@@ -80,7 +80,7 @@ const AboutCard = ({
             <img
               src={image}
               alt={name}
-              className={`w-24 h-24 rounded-full mb-4 object-cover ${imagePosition ?? "object-center"}`}
+              className={`w-24 h-24 rounded-full mb-4 object-cover ${imagePosition}`}
             />
             <h3 className="text-lg font-semibold">{name}</h3>
             <p className="text-md text-white/60 mb-1">{role}</p>
@@ -130,7 +130,6 @@ const AboutCard = ({
 
 
 type TeamMember = {
-  id: string;
   name: string;
   image: string;
   role: string;
@@ -138,12 +137,11 @@ type TeamMember = {
   github: string;
   linkedin: string;
   email: string;
-  imagePosition?: string;
+  imagePosition: string;
 };
 
 const TEAM: TeamMember[] = [
   {
-    id: "huong",
     name: "Huong",
     image: Ed,
     role: "Some role",
@@ -154,7 +152,6 @@ const TEAM: TeamMember[] = [
     imagePosition: "object-top",
   },
   {
-    id: "member-2",
     name: "Kha",
     image: Edd,
     role: "Some role",
@@ -165,7 +162,6 @@ const TEAM: TeamMember[] = [
     imagePosition: "object-top"
   },
   {
-    id: "member-3",
     name: "Tan",
     image: Eddy,
     role: "Some role",
@@ -176,7 +172,6 @@ const TEAM: TeamMember[] = [
     imagePosition: "object-top",
   },
   {
-    id: "member-4",
     name: "Triet",
     image: Plank,
     role: "Some role",
@@ -184,7 +179,7 @@ const TEAM: TeamMember[] = [
     github: "https://github.com/huong",
     linkedin: "https://linkedin.com",
     email: "huongemail@gmail.com",
-    imagePosition: "object-top",
+    imagePosition: "object-center",
   },
 ];
 
@@ -223,7 +218,6 @@ export const AboutPage = () => {
             ">
                 {TEAM.map((member, i) => (
                   <AboutCard
-                    key={member.id}
                     {...member}
                     flipped={i <= flippedIndex}
                   />
