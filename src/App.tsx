@@ -3,6 +3,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import LoginPage from "./pages/Auth/LoginPage";
+import GameMonitor from "./pages/Game/GameMonitor";
 // import DashBoard from "./pages/DashBoard/DashBoard";
 
 const App: React.FC = () => {
@@ -13,6 +14,7 @@ const App: React.FC = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/game" element={<GameMonitor/>}/>
           {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
         </Routes>
       </main>
