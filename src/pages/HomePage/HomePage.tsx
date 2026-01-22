@@ -7,13 +7,14 @@ import HomePageButton from "./HomePageButton";
 const HomePage = () => {
   return (
     <main className="h-[100dvh] flex flex-col">
-      <HomePageNavBar />
-      <HeroText />
-      <HeroSubTitle />
-      <HomePageButton />
-      <Footer />
+        <HomePageNavBar />
+        <HeroText />
+        <HeroSubTitle />
+        <HomePageButton />
+        <Footer />
     </main>
   );
 };
 
 export default HomePage;
+

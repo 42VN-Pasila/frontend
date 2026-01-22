@@ -3,8 +3,9 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import LoginPage from "./pages/Auth/LoginPage";
-import GameMonitor from "./pages/Game/GameMonitor";
+// import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 // import DashBoard from "./pages/DashBoard/DashBoard";
+import AboutPage from "./pages/HomePage/AboutPage";
 
 const App: React.FC = () => {
   return (
@@ -14,8 +15,16 @@ const App: React.FC = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/game" element={<GameMonitor/>}/>
+          {/* <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashBoard />
+              </ProtectedRoute>
+            }
+          /> */}
           {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>
     </div>
