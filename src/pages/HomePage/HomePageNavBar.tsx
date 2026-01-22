@@ -42,17 +42,15 @@ const HomePageNavBar = () => {
             to="/contact"
             className="tracking-[0.1vw] hover:text-white transition"
           >
-           <NavigationItemUnderline text="Contact" />
+            <NavigationItemUnderline text="Contact" />
           </Link>
-
 
           <Link
-            to="/about"
+            to="/about-us"
             className="tracking-[0.1vw] hover:text-white transition"
           >
-            <NavigationItemUnderline text="About" />
+            <NavigationItemUnderline text="About Us" />
           </Link>
-
         </div>
 
         <button
@@ -85,19 +83,18 @@ const HomePageNavBar = () => {
           <div className="flex flex-col py-2 text-sm text-white">
             <Link
               to="/contact"
-              onClick={() => { setOpen(false); }}
-              className="px-4 py-2 hover:bg-white/5 transition flex items-center text-left w-full"
+              onClick={() => setOpen(false)}
+              className="px-4 py-2 hover:bg-white/5 transition flex items-center"
             >
               Contact
             </Link>
 
-
             <Link
-              to="/about"
-              onClick={() => { setOpen(false); }}
-              className="px-4 py-2 hover:bg-white/5 transition flex items-center text-left w-full"
+              to="/about-us"
+              onClick={() => setOpen(false)}
+              className="px-4 py-2 hover:bg-white/5 transition flex items-center"
             >
-              About
+              About Us
             </Link>
           </div>
         </div>

@@ -5,7 +5,6 @@ import RegisterPage from "./pages/Auth/RegisterPage";
 import LoginPage from "./pages/Auth/LoginPage";
 // import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 // import DashBoard from "./pages/DashBoard/DashBoard";
-import AboutPage from "./pages/HomePage/AboutPage";
 
 const App: React.FC = () => {
   return (
@@ -23,8 +22,6 @@ const App: React.FC = () => {
               </ProtectedRoute>
             }
           /> */}
-          {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
-          <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>
     </div>
