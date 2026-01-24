@@ -14,3 +14,8 @@ export const DEAL_ANIMATION: Record<string, number> = {
   DEAL_FLIGHT_DUR: 0.6,
   ARC_HEIGHT: 1.0
 };
+
+export const CARD_SIZE = {
+  WIDTH: 2,
+  HEIGHT: 3
+};
