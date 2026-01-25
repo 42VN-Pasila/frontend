@@ -1,9 +1,11 @@
+import { GameTable } from "./components/GameTable";
+
 const GameMonitor = () => {
-    return (
-        <main>
-            console.log("Start Here")
-        </main>
-    )
-}
+  return (
+    <main>
+      <GameTable />
+    </main>
+  );
+};
 
 export default GameMonitor;
