@@ -6,6 +6,7 @@ import LoginPage from "./pages/Auth/LoginPage";
 // import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 // import DashBoard from "./pages/DashBoard/DashBoard";
 import AboutPage from "./pages/HomePage/AboutPage";
+import GameMonitor from "./pages/Game/GameMonitor";
 
 const App: React.FC = () => {
   return (
@@ -25,6 +26,7 @@ const App: React.FC = () => {
           /> */}
           {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/game" element={<GameMonitor />} />
         </Routes>
       </main>
     </div>
