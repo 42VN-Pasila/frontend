@@ -13,7 +13,7 @@ export function shuffleDeck(): Card[] {
         id: `${suit}-${rank}`,
         suit: suit,
         rank: rank,
-        position: DECK_POSITION,
+        position: {...DECK_POSITION},
         rotation: { x: 0, y: 0, z: 0 },
         owner: 0,
         isFlipped: false,
