@@ -25,4 +25,14 @@ export function calculateHandPositions(playerId: number, cardIndex: number): Pos
   };
 }
 
-export function createArcPath(start: Position, end: Position, arcHeight: number): Position[] {}
+export function createArcPath(start: Position, end: Position, arcHeight: number): Position[] {
+  const peakX = (start.x + end.x) / 2;
+  const peakY = (start.y + end.y) / 2;
+  const peakZ = Math.max(start.z, end.z) + arcHeight;
+
+  return [
+    start,
+    {x: peakX, y: peakY, z: peakZ},
+    end
+  ]
+}

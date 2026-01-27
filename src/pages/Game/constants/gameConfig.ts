@@ -17,5 +17,6 @@ export const DEAL_ANIMATION: Record<string, number> = {
 
 export const CARD_SIZE = {
   WIDTH: 2,
-  HEIGHT: 3
+  HEIGHT: 3,
+  DEPTH: 0.52
 };
