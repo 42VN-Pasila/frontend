@@ -12,7 +12,10 @@ export const Card = (card: CardType) => {
       rotation={[card.rotation.x, card.rotation.y, card.rotation.z]}
     >
       <planeGeometry args={[CARD_SIZE.WIDTH, CARD_SIZE.HEIGHT]} />
-      <meshStandardMaterial map={card.isFlipped ? cardBack : cardFront} />
+      <meshBasicMaterial map={card.isFlipped ? cardBack : cardFront}
+      transparent={true}
+      alphaTest={0.5}
+      />
     </mesh>
   );
 };

@@ -9,7 +9,10 @@ export const Deck = () => {
       <boxGeometry
         args={[CARD_SIZE.WIDTH, CARD_SIZE.HEIGHT, CARD_SIZE.DEPTH]}
       />
-      <meshStandardMaterial map={backCard} />
+      <meshBasicMaterial map={backCard} 
+        transparent={true}
+        alphaTest={0.5}
+      />
     </mesh>
   );
 };

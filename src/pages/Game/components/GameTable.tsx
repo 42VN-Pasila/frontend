@@ -35,8 +35,8 @@ export const GameTable = () => {
       backgroundRepeat: "no-repeat"
     }}>
       <Canvas camera={{ position: [0, -4, 10], fov: 75 }}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[0, 10, 10]} intensity={4} />
+        <ambientLight intensity={0} />
+        <pointLight position={[0, 10, 10]} intensity={0} />
         
         <Deck />
         
