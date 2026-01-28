@@ -1,5 +1,5 @@
 import { PLAYER_POSITIONS } from '../constants/gameConfig';
-import type { Position } from '../types/Card';
+import type { Position } from '../types/CardType';
 
 export function calculateHandPositions(playerId: number, cardIndex: number): Position {
   const basePosition = PLAYER_POSITIONS[playerId];
@@ -30,9 +30,5 @@ export function createArcPath(start: Position, end: Position, arcHeight: number)
   const peakY = (start.y + end.y) / 2;
   const peakZ = Math.max(start.z, end.z) + arcHeight;
 
-  return [
-    start,
-    {x: peakX, y: peakY, z: peakZ},
-    end
-  ]
+  return [start, { x: peakX, y: peakY, z: peakZ }, end];
 }
