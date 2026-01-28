@@ -9,7 +9,7 @@ export const Card = (card: CardType) => {
   return (
     <mesh
       position={[card.position.x, card.position.y, card.position.z]}
-      rotation={[card.rotation.x, card.rotation.y, card.position.z]}
+      rotation={[card.rotation.x, card.rotation.y, card.rotation.z]}
     >
       <planeGeometry args={[CARD_SIZE.WIDTH, CARD_SIZE.HEIGHT]} />
       <meshStandardMaterial map={card.isFlipped ? cardBack : cardFront} />

@@ -1,11 +1,11 @@
-import { PLAYER_POSITIONS } from '../constants/gameConfig';
+import { CARD_SIZE, PLAYER_POSITIONS } from '../constants/gameConfig';
 import type { Position } from '../types/CardType';
 
 export function calculateHandPositions(playerId: number, cardIndex: number): Position {
   const basePosition = PLAYER_POSITIONS[playerId];
 
-  const cardWidth = 2;
-  const gap = 0.2;
+  const cardWidth = CARD_SIZE.WIDTH;
+  const gap = 0.1;
   const cardSpacing = cardWidth + gap;
   let offsetIndex = cardIndex - 6;
 
