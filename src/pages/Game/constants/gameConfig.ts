@@ -1,7 +1,7 @@
 import type { Position } from '../types/CardType';
 
 export const PLAYER_POSITIONS: Record<number, Position> = {
-  1: { x: 0, y: -4, z: 0 },
+  1: { x: 0, y: -6, z: 0 },
   2: { x: 0, y: 4, z: 0 },
   3: { x: 6, y: 0, z: 0 },
   4: { x: -6, y: 0, z: 0 }
@@ -16,7 +16,7 @@ export const DEAL_ANIMATION: Record<string, number> = {
 };
 
 export const CARD_SIZE = {
-  WIDTH: 1.25,
-  HEIGHT: 1.5,
+  WIDTH: 1.5,
+  HEIGHT: 2.15,
   DEPTH: 0.52
 };

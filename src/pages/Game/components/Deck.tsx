@@ -12,6 +12,7 @@ export const Deck = () => {
       <meshBasicMaterial map={backCard} 
         transparent={true}
         alphaTest={0.5}
+        color="#b0b0b0"
       />
     </mesh>
   );
