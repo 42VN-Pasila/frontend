@@ -1,8 +1,13 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
-import type { Position } from '../types/CardType';
+import type { CardType, Position } from '../types/CardType';
 import { createArcPath } from '../utils/cardPositions';
 import { DEAL_ANIMATION } from '../constants/gameConfig';
+
+export interface CardProp{
+  cardData: CardType;
+  shouldDeal?: boolean;
+}
 
 export function DealCard(
   cardMesh: THREE.Mesh,

@@ -15,6 +15,7 @@ export interface CardType {
   owner: 0 | 1 | 2 | 3 | 4;
   isFlipped: boolean;
   inDeck: boolean;
+  cardIndex: number;
 }
 
 export interface Position {
