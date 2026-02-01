@@ -3,38 +3,37 @@ import tableCover from "../../../assets/TableCover.png";
 import { Deck } from "./Deck";
 import { Card } from "./Card";
 import { calculateHandPositions } from "../utils/cardPositions";
+import { useState } from "react";
+import type { CardType } from "../types/CardType";
+import { shuffleDeck } from "../utils/shuffleDeck";
+import { Button } from "@/shared/components";
 
 export const GameTable = () => {
-  const ranks = [
-    "A",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "J",
-    "Q",
-    "K",
-  ] as const;
+  const [cardDeck, setCardDeck] = useState<CardType[]>([]);
+  const [isDealing, setDealing] = useState(false);
 
-  const testCards = ranks.map((rank, index) => {
-    const position = calculateHandPositions(1, index);
+  const handleDeal = () => {
+    if (isDealing) return;
 
-    return {
-      id: `${rank}-hearts`,
-      suit: "hearts" as const,
-      rank: rank,
-      position: position,
-      rotation: { x: 0, y: 0, z: 0 },
-      owner: 1 as const,
-      isFlipped: false,
-      inDeck: false,
-    };
-  });
+    setDealing(true);
+    const deck = shuffleDeck();
+
+    const fullDeck = deck.map((card, index) => {
+      const playerId = ((index % 4) + 1) as 0 | 1 | 2 | 3 | 4;
+      const cardIndex = Math.floor(index / 4);
+      const position = calculateHandPositions(playerId, cardIndex);
+
+      return {
+        ...card,
+        owner: playerId,
+        cardIndex: cardIndex,
+        position: position,
+        inDeck: true,
+      };
+    });
+
+    setCardDeck(fullDeck);
+  };
 
   return (
     <div
@@ -50,12 +49,23 @@ export const GameTable = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
+      {!isDealing && (
+        <Button
+          onClick={handleDeal}
+          variant="primary"
+          glow="primary"
+          size="medium"
+        >
+          Deal Test!
+          {isDealing ? "Dealing..." : "DealCards"}
+        </Button>
+      )}
       <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
         <ambientLight intensity={-5} />
         <pointLight position={[0, 10, 10]} intensity={0} />
-        <Deck />
-        {testCards.map((card) => (
-          <Card key={card.id} {...card} />
+        {isDealing && <Deck />}
+        {cardDeck.map((card) => (
+          <Card key={card.id} card={card} shouldDeal={isDealing} />
         ))}
       </Canvas>
     </div>
