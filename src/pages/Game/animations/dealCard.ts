@@ -3,6 +3,9 @@ import gsap from 'gsap';
 import type { CardType, Position } from '../types/CardType';
 import { createArcPath } from '../utils/cardPositions';
 import { DEAL_ANIMATION } from '../constants/gameConfig';
+import { MotionPathPlugin } from 'gsap/src/all';
+
+gsap.registerPlugin(MotionPathPlugin);
 
 export interface CardProp{
   cardData: CardType;

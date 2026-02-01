@@ -20,3 +20,10 @@ export const CARD_SIZE = {
   HEIGHT: 2.15,
   DEPTH: 0.52
 };
+
+export const PLAYER_ROTATION = {
+  1: { x: 0, y: 0, z: 0 },
+  2: { x: 0, y: 0, z: Math.PI / 2 },
+  3: { x: 0, y: 0, z: Math.PI },
+  4: { x: 0, y: 0, z: -Math.PI / 2 }
+};

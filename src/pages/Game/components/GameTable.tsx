@@ -7,6 +7,7 @@ import { useState } from "react";
 import type { CardType } from "../types/CardType";
 import { shuffleDeck } from "../utils/shuffleDeck";
 import { Button } from "@/shared/components";
+import { PLAYER_ROTATION } from "../constants/gameConfig";
 
 export const GameTable = () => {
   const [cardDeck, setCardDeck] = useState<CardType[]>([]);
@@ -19,7 +20,7 @@ export const GameTable = () => {
     const deck = shuffleDeck();
 
     const fullDeck = deck.map((card, index) => {
-      const playerId = ((index % 4) + 1) as 0 | 1 | 2 | 3 | 4;
+      const playerId = ((index % 4) + 1) as  1 | 2 | 3 | 4;
       const cardIndex = Math.floor(index / 4);
       const position = calculateHandPositions(playerId, cardIndex);
 
@@ -28,6 +29,7 @@ export const GameTable = () => {
         owner: playerId,
         cardIndex: cardIndex,
         position: position,
+        rotation: PLAYER_ROTATION[playerId],
         inDeck: true,
       };
     });

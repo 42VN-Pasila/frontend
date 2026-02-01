@@ -33,6 +33,9 @@ export const Card = ({ card, shouldDeal = false }: CardProps) => {
         DECK_POSITION.z,
       );
 
+      if (shouldDeal && meshRef.current)
+        console.log("Animation starting for:", card.id);
+
       const targetPosition = calculateHandPositions(
         card.owner,
         card.cardIndex || 0,
