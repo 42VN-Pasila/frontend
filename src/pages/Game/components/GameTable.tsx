@@ -7,20 +7,26 @@ import { useState } from "react";
 import type { CardType } from "../types/CardType";
 import { shuffleDeck } from "../utils/shuffleDeck";
 import { Button } from "@/shared/components";
-import { PLAYER_ROTATION } from "../constants/gameConfig";
+import {
+  GAME_PHASES,
+  type GamePhase,
+  PLAYER_ROTATION,
+} from "../constants/gameConfig";
 
 export const GameTable = () => {
   const [cardDeck, setCardDeck] = useState<CardType[]>([]);
   const [isDealing, setDealing] = useState(false);
+  const [gamePhase, setGamePhase] = useState<GamePhase>(GAME_PHASES.WAITING);
 
   const handleDeal = () => {
     if (isDealing) return;
 
     setDealing(true);
+    setGamePhase(GAME_PHASES.DEALING);
     const deck = shuffleDeck();
 
     const fullDeck = deck.map((card, index) => {
-      const playerId = ((index % 4) + 1) as  1 | 2 | 3 | 4;
+      const playerId = ((index % 4) + 1) as 1 | 2 | 3 | 4;
       const cardIndex = Math.floor(index / 4);
       const position = calculateHandPositions(playerId, cardIndex);
 
@@ -37,6 +43,9 @@ export const GameTable = () => {
     setCardDeck(fullDeck);
   };
 
+  const handleDealComplete = () => {
+    setGamePhase(GAME_PHASES.PLAYING);
+  };
   return (
     <div
       style={{
@@ -51,7 +60,7 @@ export const GameTable = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {!isDealing && (
+      {gamePhase === GAME_PHASES.WAITING && (
         <Button
           onClick={handleDeal}
           variant="primary"
@@ -59,16 +68,25 @@ export const GameTable = () => {
           size="medium"
         >
           Deal Test!
-          {isDealing ? "Dealing..." : "DealCards"}
         </Button>
       )}
       <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
         <ambientLight intensity={-5} />
         <pointLight position={[0, 10, 10]} intensity={0} />
-        {isDealing && <Deck />}
-        {cardDeck.map((card) => (
-          <Card key={card.id} card={card} shouldDeal={isDealing} />
-        ))}
+        {gamePhase === GAME_PHASES.DEALING && <Deck />}
+        {cardDeck.map((card) => {
+          const cardDeckIndex = (card.cardIndex || 0) * 4 + (card.owner - 1);
+          const isLastCard = cardDeckIndex === 51;
+
+          return (
+            <Card
+              key={card.id}
+              card={card}
+              shouldDeal={gamePhase === GAME_PHASES.DEALING}
+              onAnimationComplete={isLastCard ? handleDealComplete : undefined}
+            />
+          );
+        })}
       </Canvas>
     </div>
   );

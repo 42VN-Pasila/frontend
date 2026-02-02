@@ -14,9 +14,10 @@ import { DealCard } from "../animations/dealCard";
 interface CardProps {
   card: CardType;
   shouldDeal?: boolean;
+  onAnimationComplete?: () => void;
 }
 
-export const Card = ({ card, shouldDeal = false }: CardProps) => {
+export const Card = ({ card, shouldDeal = false, onAnimationComplete }: CardProps) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
   const cardFront = useTexture(`/src/assets/game/${card.id}.png`);
@@ -44,9 +45,12 @@ export const Card = ({ card, shouldDeal = false }: CardProps) => {
       const cardDeckIndex = (card.cardIndex || 0) * 4 + (card.owner - 1);
       const delay = cardDeckIndex * DEAL_ANIMATION.CARD_SPAWN_DELAY;
 
-      DealCard(meshRef.current, DECK_POSITION, targetPosition, delay);
+      const timeline = DealCard(meshRef.current, DECK_POSITION, targetPosition, delay);
+    
+      if (onAnimationComplete)
+        timeline.eventCallback("onComplete", onAnimationComplete);
     }
-  }, [shouldDeal, card]);
+  }, [shouldDeal, card, onAnimationComplete]);
 
   return (
     <mesh

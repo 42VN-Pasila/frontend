@@ -5,7 +5,7 @@ export function calculateHandPositions(playerId: number, cardIndex: number): Pos
   const basePosition = PLAYER_POSITIONS[playerId];
 
   const cardWidth = CARD_SIZE.WIDTH;
-  const gap = 0.1;
+  const gap = 0.025;
   const cardSpacing = cardWidth + gap;
   let offsetIndex = cardIndex - 6;
 
