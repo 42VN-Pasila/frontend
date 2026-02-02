@@ -16,7 +16,8 @@ export function DealCard(
   cardMesh: THREE.Mesh,
   startPosition: Position,
   endPosition: Position,
-  delay: number
+  delay: number,
+  rotation: Position
 ): gsap.core.Timeline {
   const cardFlightPath = createArcPath(startPosition, endPosition, DEAL_ANIMATION.ARC_HEIGHT);
 
@@ -26,10 +27,17 @@ export function DealCard(
     duration: DEAL_ANIMATION.DEAL_FLIGHT_DUR,
     motionPath: {
       path: cardFlightPath.map((p) => ({ x: p.x, y: p.y, z: p.z })),
-      autoRotate: false
+      autoRotate: true
     },
     ease: 'power2.inOut'
   });
+    timeline.to(cardMesh.rotation, {
+    duration: DEAL_ANIMATION.DEAL_FLIGHT_DUR,
+    x: rotation.x,
+    y: rotation.y,
+    z: rotation.z,
+    ease: 'power2.inOut'
+  }, 0);
 
   return timeline;
 }

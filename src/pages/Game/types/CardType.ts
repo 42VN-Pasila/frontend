@@ -13,7 +13,6 @@ export interface CardType {
     z: number;
   };
   owner: 0 | 1 | 2 | 3 | 4;
-  isFlipped: boolean;
   inDeck: boolean;
   cardIndex: number;
 }

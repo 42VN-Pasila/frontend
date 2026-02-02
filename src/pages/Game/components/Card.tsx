@@ -7,7 +7,7 @@ import {
 } from "../constants/gameConfig";
 import { SRGBColorSpace } from "three";
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { calculateHandPositions } from "../utils/cardPositions";
 import { DealCard } from "../animations/dealCard";
 
@@ -17,8 +17,13 @@ interface CardProps {
   onAnimationComplete?: () => void;
 }
 
-export const Card = ({ card, shouldDeal = false, onAnimationComplete }: CardProps) => {
+export const Card = ({
+  card,
+  shouldDeal = false,
+  onAnimationComplete,
+}: CardProps) => {
   const meshRef = useRef<THREE.Mesh>(null);
+  const [isFlipped, setIsFlipped] = useState(false);
 
   const cardFront = useTexture(`/src/assets/game/${card.id}.png`);
   const cardBack = useTexture(`/src/assets/game/game-card-back.png`);
@@ -45,10 +50,21 @@ export const Card = ({ card, shouldDeal = false, onAnimationComplete }: CardProp
       const cardDeckIndex = (card.cardIndex || 0) * 4 + (card.owner - 1);
       const delay = cardDeckIndex * DEAL_ANIMATION.CARD_SPAWN_DELAY;
 
-      const timeline = DealCard(meshRef.current, DECK_POSITION, targetPosition, delay);
-    
-      if (onAnimationComplete)
-        timeline.eventCallback("onComplete", onAnimationComplete);
+      const timeline = DealCard(
+        meshRef.current,
+        DECK_POSITION,
+        targetPosition,
+        delay,
+        card.rotation,
+      );
+
+      timeline.eventCallback("onComplete", () => {
+        setIsFlipped(true);
+
+        if (cardDeckIndex === 50 && onAnimationComplete) {
+          onAnimationComplete();
+        }
+      });
     }
   }, [shouldDeal, card, onAnimationComplete]);
 
@@ -56,11 +72,11 @@ export const Card = ({ card, shouldDeal = false, onAnimationComplete }: CardProp
     <mesh
       ref={meshRef}
       position={[card.position.x, card.position.y, card.position.z]}
-      rotation={[card.rotation.x, card.rotation.y, card.rotation.z]}
+      rotation={[0, 0, 0]}
     >
       <planeGeometry args={[CARD_SIZE.WIDTH, CARD_SIZE.HEIGHT]} />
       <meshBasicMaterial
-        map={card.isFlipped ? cardBack : cardFront}
+        map={!isFlipped ? cardBack : cardFront}
         transparent={true}
         alphaTest={0.5}
         color="#a6a6a6"

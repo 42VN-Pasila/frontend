@@ -76,7 +76,7 @@ export const GameTable = () => {
         {gamePhase === GAME_PHASES.DEALING && <Deck />}
         {cardDeck.map((card) => {
           const cardDeckIndex = (card.cardIndex || 0) * 4 + (card.owner - 1);
-          const isLastCard = cardDeckIndex === 51;
+          const isLastCard = cardDeckIndex === 50;
 
           return (
             <Card
