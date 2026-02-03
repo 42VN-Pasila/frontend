@@ -10,6 +10,7 @@ import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import { calculateHandPositions } from "../utils/cardPositions";
 import { DealCard } from "../animations/dealCard";
+import { playSound } from "../utils/playSound";
 
 interface CardProps {
   card: CardType;
@@ -59,6 +60,7 @@ export const Card = ({
       );
 
       timeline.eventCallback("onComplete", () => {
+        playSound("/src/assets/sounds/a.mp3", 0.1);
         setIsFlipped(true);
 
         if (cardDeckIndex === 50 && onAnimationComplete) {
