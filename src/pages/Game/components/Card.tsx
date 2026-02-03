@@ -10,7 +10,7 @@ import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import { calculateHandPositions } from "../utils/cardPositions";
 import { DealCard } from "../animations/dealCard";
-import { playSound } from "../utils/playSound";
+import { soundManager } from "@/shared/utils/soundManager";
 
 interface CardProps {
   card: CardType;
@@ -51,6 +51,9 @@ export const Card = ({
       const cardDeckIndex = (card.cardIndex || 0) * 4 + (card.owner - 1);
       const delay = cardDeckIndex * DEAL_ANIMATION.CARD_SPAWN_DELAY;
 
+      setTimeout(() => {
+        soundManager.play("/src/assets/sounds/deal-card-sound.mp3", 0.1);
+      }, delay * 1000);
       const timeline = DealCard(
         meshRef.current,
         DECK_POSITION,
@@ -60,7 +63,6 @@ export const Card = ({
       );
 
       timeline.eventCallback("onComplete", () => {
-        playSound("/src/assets/sounds/a.mp3", 0.1);
         setIsFlipped(true);
 
         if (cardDeckIndex === 50 && onAnimationComplete) {
