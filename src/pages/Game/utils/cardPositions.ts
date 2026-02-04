@@ -32,3 +32,4 @@ export function createArcPath(start: Position, end: Position, arcHeight: number)
 
   return [start, { x: peakX, y: peakY, z: peakZ }, end];
 }
+
