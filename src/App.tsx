@@ -25,6 +25,7 @@ const App: React.FC = () => {
           /> */}
           {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/dev/modal" element={<CardSelectionModal />} />
         </Routes>
       </main>
     </div>
