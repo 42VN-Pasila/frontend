@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
 import type { CardType, Position } from '../types/CardType';
-import { createArcPath } from '../utils/cardPositions';
+import { createArcPath } from '../utils/calculatePositions';
 import { DEAL_ANIMATION } from '../constants/gameConfig';
 import { MotionPathPlugin } from 'gsap/src/all';
 
 gsap.registerPlugin(MotionPathPlugin);
 
-export interface CardProp{
+export interface CardProp {
   cardData: CardType;
   shouldDeal?: boolean;
 }
@@ -31,13 +31,17 @@ export function DealCard(
     },
     ease: 'power2.inOut'
   });
-    timeline.to(cardMesh.rotation, {
-    duration: DEAL_ANIMATION.DEAL_FLIGHT_DUR,
-    x: rotation.x,
-    y: rotation.y,
-    z: rotation.z,
-    ease: 'power2.inOut'
-  }, 0);
+  timeline.to(
+    cardMesh.rotation,
+    {
+      duration: DEAL_ANIMATION.DEAL_FLIGHT_DUR,
+      x: rotation.x,
+      y: rotation.y,
+      z: rotation.z,
+      ease: 'power2.inOut'
+    },
+    0
+  );
 
   return timeline;
 }

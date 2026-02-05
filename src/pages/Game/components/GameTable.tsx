@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import tableCover from "../../../assets/TableCover.png";
 import { Deck } from "./Deck";
 import { Card } from "./Card";
-import { calculateHandPositions } from "../utils/cardPositions";
+import { calculateHandPositions } from "../utils/calculatePositions";
 import { useState } from "react";
 import type { CardType } from "../types/CardType";
 import { shuffleDeck } from "../utils/shuffleDeck";

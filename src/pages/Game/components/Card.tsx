@@ -8,7 +8,7 @@ import {
 import { SRGBColorSpace } from "three";
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
-import { calculateHandPositions } from "../utils/cardPositions";
+import { calculateHandPositions } from "../utils/calculatePositions";
 import { DealCard } from "../animations/dealCard";
 import { soundManager } from "@/shared/utils/soundManager";
 
