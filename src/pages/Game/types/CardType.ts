@@ -12,7 +12,7 @@ export interface CardType {
     y: number;
     z: number;
   };
-  owner: 0 | 1 | 2 | 3 | 4;
+  owner: 1 | 2 | 3 | 4;
   inDeck: boolean;
   cardIndex: number;
 }
