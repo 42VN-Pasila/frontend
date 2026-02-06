@@ -11,10 +11,17 @@ interface Opponent {
 }
 
 const MOCK_OPPONENTS: Opponent[] = [
-  { id: 2, username: "Tan", avatarUrl:Edd },
-  { id: 3, username: "Triet", avatarUrl:Eddy },
-  { id: 4, username: "Kha", avatarUrl:Plank },
+  { id: 4, username: "Huong", avatarUrl: Edd },
+  { id: 2, username: "Tan", avatarUrl: Edd },
+  { id: 3, username: "Triet", avatarUrl: Eddy },
+  { id: 1, username: "Kha", avatarUrl: Plank },
 ];
+
+type Positions = {
+  left: Opponent;
+  top: Opponent;
+  right: Opponent;
+};
 
 interface OpponentOptionProps {
   username: string;
@@ -37,12 +44,14 @@ const OpponentOption = ({
     <div
       className={`
         w-16 h-16 rounded-full
-        border-2 overflow-hidden
+        overflow-hidden
         bg-slate-700
         transition-all duration-150
-        ${selected
-          ? "border-[--color-gold] opacity-100"
-          : "border-transparent opacity-50 hover:opacity-80 hover:border-[--color-gold]"}
+        ${
+          selected
+            ? "border-(--color-primary) ring-4 ring-(--color-primary) scale-[1.1] transition-all duration-200 ease-out"
+            : "border-2 border-transparent opacity-50 hover:opacity-80 hover:border-[--color-gold]"
+        }
       `}
     >
       {avatarUrl && (
@@ -65,166 +74,190 @@ const OpponentOption = ({
   </button>
 );
 
-
-
-
-
 interface CardSelectionModalProps {
   activePlayerId: number | null;
   localPlayerId: number;
   onSelect: (choice: string) => void;
 }
 
-export const CardSelectionModal = ({ 
-  activePlayerId, 
-  localPlayerId, 
-  onSelect 
-}: CardSelectionModalProps) => {
-    const [selectedOpponentId, setSelectedOpponentId] = useState<number | null>(null);
-    const [timeLeft, setTimeLeft] = useState(10);
-    const [top, bottomLeft, bottomRight] = MOCK_OPPONENTS;
 
-    // 2. LOGIC BRANCH: Determine the view type
-    const isMyTurn = activePlayerId === localPlayerId;
+function getPositions(opponents: Opponent[], localId: number): Positions {
+  const sorted = [...opponents].sort((a, b) => a.id - b.id);
 
-    useEffect(() => {
-        // Only run timer when it's your turn
-        if (!isMyTurn) return;
+  if (sorted.length !== 4) {
+    throw new Error(`Expected 4 players, got ${sorted.length}`);
+  }
 
-        // Reset timer when modal opens
-        setTimeLeft(10);
+  let idx = sorted.findIndex((o) => o.id === localId);
+  if (idx === -1) idx = 0;
 
-        const intervalId = setInterval(() => {
-            setTimeLeft((prev) => Math.max(prev - 1, 0));
-        }, 1000);
+  const right = sorted[(idx + 3) % 4] ;
+  const top = sorted[(idx + 2) % 4];
+  const left = sorted[(idx + 1) % 4];
 
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, [isMyTurn]);
-
-    useEffect(() => {
-        if (timeLeft <= 0) {
-            window.location.reload();
-        }
-        }, [timeLeft]);
-
-    // 1. EARLY RETURN: If no turn is active, the modal is "turned off"
-    if (activePlayerId === null) return null;
-
-    return (
-        /* THE OVERLAY (Shared by both views) */
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/10 backdrop-blur-sm">
-        
-        {/* THE MODAL CONTAINER */}
-        <div className="bg-[var(--color-dark-gray)] border-[5px] border-[var(--color-gold)]-700 p-10 rounded-2xl shadow-2xl max-w-6xl w-[90%] min-h-[400px] flex flex-col justify-between">
-        
-            {isMyTurn ? (
-            /* --- VIEW A: LOCAL PLAYER TURN --- */
-            <div className="flex flex-col items-center gap-6">
-                <header className="text-center">
-                <h2 className="text-2xl font-bold text-white uppercase tracking-wider">Your Turn</h2>
-                <p className="text-white-400 mt-2">Make your selections below</p>
-                </header>
-
-                {/* The Interaction Area Container */}
-                <div className="w-full bg-slate-900/50 border-2 border-dashed border-slate-600 rounded-lg p-6 flex flex-row items-start justify-between gap-8">
-                
-                {/* 1. LEFT: Opponent Selection (Take up 40% width) */}
-                <div className="flex-1 flex flex-col gap-4 border-r border-slate-700 pr-8">
-                    <h3 className="text-white uppercase text-sm tracking-widest font-bold">
-                        Ask Opponent:
-                    </h3>
-
-                    <div className="flex justify-center">
-                        <div className="grid grid-cols-3 grid-rows-2 gap-6 place-items-center">
-                        <div className="col-start-2">
-                            <OpponentOption
-                                username={top.username}
-                                avatarUrl={top.avatarUrl}
-                                selected={selectedOpponentId === top.id}
-                                onClick={() => setSelectedOpponentId(top.id)}
-                            />
-                        </div>
-
-                        <div className="col-start-1 row-start-2">
-                            <OpponentOption
-                                username={bottomLeft.username}
-                                avatarUrl={bottomLeft.avatarUrl}
-                                selected={selectedOpponentId === bottomLeft.id}
-                                onClick={() => setSelectedOpponentId(bottomLeft.id)}
-                            />
-                        </div>
-
-                        <div className="col-start-3 row-start-2">
-                            <OpponentOption
-                                username={bottomRight.username}
-                                avatarUrl={bottomRight.avatarUrl}
-                                selected={selectedOpponentId === bottomRight.id}
-                                onClick={() => setSelectedOpponentId(bottomRight.id)}
-                            />
-                        </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                {/* 3. CENTER: Card Selection (Stays in the middle) */}
-                <div className="flex-1 flex flex-col gap-4 border-l border-slate-700 pl-8">
-                    <h3 className="text-white uppercase text-sm tracking-widest font-bold">Pick a Card:</h3>
-                    <div className="flex gap-3">
-                    {/* Value Selector */}
-                    <div className="w-14 h-20 bg-slate-700 rounded-md border border-slate-600 flex items-center justify-center text-xs text-slate-500">Value</div>
-                    {/* Suit Selector */}
-                    <div className="w-14 h-20 bg-slate-700 rounded-md border border-slate-600 flex items-center justify-center text-xs text-slate-500">Suit</div>
-                    </div>
-                </div>
-
-                {/* 3. RIGHT: THE TIMER (Take up 40% width) */}
-                <div className="flex flex-col items-center justify-center self-center px-4">
-                    <div className="text-4xl font-mono text-[--color-red] animate-pulse">
-                        00:{String(timeLeft).padStart(2, "0")}
-                    </div>
-
-                    <span className="text-[10px] text-slate-500 uppercase mt-1">Time Left</span>
-                </div>
-
-                </div>
-                <p className="text-white-400 mt-1">If the selections are not completed, a random choice of card will be sent to a random opponent.</p>
-                <Button 
-                    onClick={() => onSelect("mock_choice")}
-                    color="purple"
-                >
-                    REQUEST
-                </Button>
-            </div>
-            ) : (
-            /* --- VIEW B: WAITING FOR OPPONENT --- */
-            <div className="flex flex-col items-center py-8 gap-6 text-center">
-                {/* Visual indicator that things are happening */}
-                <div className="relative flex items-center justify-center">
-                <div className="absolute animate-ping h-8 w-8 rounded-full bg-amber-500/20"></div>
-                <div className="h-4 w-4 rounded-full bg-amber-500"></div>
-                </div>
-
-                <div>
-                <h2 className="text-xl font-semibold text-white">
-                    Player {activePlayerId} is thinking...
-                </h2>
-                <p className="text-white-400 mt-2 italic">
-                    Please wait for the opponent to finish their turn.
-                </p>
-                <p className="text-white-400 mt-2 italic">
-                    Refresh page to go back to the UI test
-                </p>
-                </div>
-            </div>
-            )}
-
-        </div>
-        </div>
-    );
+  return { top, left, right };
 }
+
+
+export const CardSelectionModal = ({
+  activePlayerId,
+  localPlayerId,
+  onSelect,
+}: CardSelectionModalProps) => {
+  const [selectedOpponentId, setSelectedOpponentId] = useState<number | null>(
+    null,
+  );
+  const [timeLeft, setTimeLeft] = useState(10);
+  //   const [top, bottomLeft, bottomRight] = MOCK_OPPONENTS;
+  const { top, left, right } = getPositions(
+    MOCK_OPPONENTS,
+    localPlayerId,
+  );
+
+  // 2. LOGIC BRANCH: Determine the view type
+  const isMyTurn = activePlayerId === localPlayerId;
+
+  useEffect(() => {
+    // Only run timer when it's your turn
+    if (!isMyTurn) return;
+
+    // Reset timer when modal opens
+    setTimeLeft(10);
+
+    const intervalId = setInterval(() => {
+      setTimeLeft((prev) => Math.max(prev - 1, 0));
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isMyTurn]);
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      window.location.reload();
+    }
+  }, [timeLeft]);
+
+  // 1. EARLY RETURN: If no turn is active, the modal is "turned off"
+  if (activePlayerId === null) return null;
+
+  return (
+    /* THE OVERLAY (Shared by both views) */
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/10 backdrop-blur-sm">
+      {/* THE MODAL CONTAINER */}
+      <div className="bg-(--color-dark-gray) border-[5px] border-[var(--color-gold)]-700 p-10 rounded-2xl shadow-2xl max-w-6xl w-[90%] min-h-[400px] flex flex-col justify-between">
+        {isMyTurn ? (
+          /* --- VIEW A: LOCAL PLAYER TURN --- */
+          <div className="flex flex-col items-center gap-6">
+            <header className="text-center">
+              <h2 className="text-2xl font-bold text-white uppercase tracking-wider">
+                Your Turn
+              </h2>
+              <p className="text-white-400 mt-2">Make your selections below</p>
+            </header>
+
+            {/* The Interaction Area Container */}
+            <div className="w-full bg-slate-900/50 border-2 border-dashed border-slate-600 rounded-lg p-6 flex flex-row items-start justify-between gap-8">
+              {/* 1. LEFT: Opponent Selection (Take up 40% width) */}
+              <div className="flex-1 flex flex-col gap-4 border-r border-slate-700 pr-8">
+                <h3 className="text-white uppercase text-sm tracking-widest font-bold">
+                  Ask Opponent:
+                </h3>
+
+                <div className="flex justify-center">
+                  <div className="grid grid-cols-3 grid-rows-2 gap-6 place-items-center">
+                    <div className="col-start-2">
+                      <OpponentOption
+                        username={top.username}
+                        avatarUrl={top.avatarUrl}
+                        selected={selectedOpponentId === top.id}
+                        onClick={() => setSelectedOpponentId(top.id)}
+                      />
+                    </div>
+
+                    <div className="col-start-1 row-start-2">
+                      <OpponentOption
+                        username={left.username}
+                        avatarUrl={left.avatarUrl}
+                        selected={selectedOpponentId === left.id}
+                        onClick={() => setSelectedOpponentId(left.id)}
+                      />
+                    </div>
+
+                    <div className="col-start-3 row-start-2">
+                      <OpponentOption
+                        username={right.username}
+                        avatarUrl={right.avatarUrl}
+                        selected={selectedOpponentId === right.id}
+                        onClick={() => setSelectedOpponentId(right.id)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. CENTER: Card Selection (Stays in the middle) */}
+              <div className="flex-1 flex flex-col gap-4 border-l border-slate-700 pl-8">
+                <h3 className="text-white uppercase text-sm tracking-widest font-bold">
+                  Pick a Card:
+                </h3>
+                <div className="flex gap-3">
+                  {/* Value Selector */}
+                  <div className="w-14 h-20 bg-slate-700 rounded-md border border-slate-600 flex items-center justify-center text-xs text-slate-500">
+                    Value
+                  </div>
+                  {/* Suit Selector */}
+                  <div className="w-14 h-20 bg-slate-700 rounded-md border border-slate-600 flex items-center justify-center text-xs text-slate-500">
+                    Suit
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. RIGHT: THE TIMER (Take up 40% width) */}
+              <div className="flex flex-col items-center justify-center self-center px-4">
+                <div className="text-4xl font-mono text-[--color-red] animate-pulse">
+                  00:{String(timeLeft).padStart(2, "0")}
+                </div>
+
+                <span className="text-[10px] text-slate-500 uppercase mt-1">
+                  Time Left
+                </span>
+              </div>
+            </div>
+            <p className="text-white-400 mt-1">
+              If the selections are not completed, a random choice of card will
+              be sent to a random opponent.
+            </p>
+            <Button onClick={() => onSelect("mock_choice")} color="primary">
+              REQUEST
+            </Button>
+          </div>
+        ) : (
+          /* --- VIEW B: WAITING FOR OPPONENT --- */
+          <div className="flex flex-col items-center py-8 gap-6 text-center">
+            {/* Visual indicator that things are happening */}
+            <div className="relative flex items-center justify-center">
+              <div className="absolute animate-ping h-8 w-8 rounded-full bg-amber-500/20"></div>
+              <div className="h-4 w-4 rounded-full bg-amber-500"></div>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-semibold text-white">
+                Player {activePlayerId} is thinking...
+              </h2>
+              <p className="text-white-400 mt-2 italic">
+                Please wait for the opponent to finish their turn.
+              </p>
+              <p className="text-white-400 mt-2 italic">
+                Refresh page to go back to the UI test
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default CardSelectionModal;
