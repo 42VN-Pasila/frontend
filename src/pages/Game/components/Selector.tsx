@@ -1,31 +1,54 @@
-import React, { SVGProps } from 'react'
-import SpadeIcon from "../../../assets/game/symbols-svg/Spade-icon.svg?react";
-import HeartIcon from "../../../assets/game/symbols-svg/Heart-icon.svg?react";
-import DiamondIcon from "../../../assets/game/symbols-svg/Diamond-icon.svgreact";
-import ClubIcon from "../../../assets/game/symbols-svg/Club-icon.svg?react";
-
-export interface SelectorItem<T extends string | number = string> {
-  value: T;
-  label?: string;
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-}
+import type { SelectorItem } from "./selectorData";
 
 export interface SelectorProps<T extends string | number = string> {
   items: SelectorItem<T>[];
-
   value: T | null;
   onChange: (value: T) => void;
-
   disabled?: boolean;
-
-  columns?: number;   // grid layout control
+  columns?: number;
   className?: string;
 }
 
-const suits: SelectorItem<CardSuit>[] = [
-  { value: "spades", label: "Spades", Icon: SpadeIcon },
-  { value: "hearts", label: "Hearts", Icon: HeartIcon },
-  { value: "diamonds", label: "Diamonds", Icon: DiamondIcon },
-  { value: "clubs", label: "Clubs", Icon: ClubIcon },
-];
+function Selector<T extends string | number>({
+  items,
+  value,
+  onChange,
+  disabled = false,
+  columns = 4,
+  className = "",
+}: SelectorProps<T>) {
+  return (
+    <div
+      className={className}
+      style={{
+        display: "flex",
+        gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+        gap: 14,
+      }}
+    >
+      {items.map((it) => {
+        const Icon = it.Icon;
+        const isActive = value === it.value;
 
+        return (
+          <button
+            key={String(it.value)}
+            type="button"
+            disabled={disabled}
+            onClick={() => onChange(it.value)}
+            className={[
+              "flex items-center justify-center gap-2 rounded-lg border px-3 py-2",
+              disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50",
+              isActive ? "bg-white border-(--color-primary) ring-4 ring-(--color-primary) scale-[1.1] transition-all duration-200 ease-out" : "border-gray-300",
+            ].join(" ")}
+          >
+            <Icon width={20} height={20} />
+            {it.label && <span className="hidden">{it.label}</span>}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+export default Selector;

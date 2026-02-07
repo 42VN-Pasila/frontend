@@ -4,7 +4,8 @@ import Ed from "../../../assets/Ed.png";
 import Edd from "../../../assets/Edd.png";
 import Eddy from "../../../assets/Eddy.png";
 import Plank from "../../../assets/Plank 1.png";
-
+import Selector from "./Selector";
+import CenterSelection from "./CenterSelection";
 interface Opponent {
   id: number;
   username: string;
@@ -198,21 +199,7 @@ export const CardSelectionModal = ({
               </div>
 
               {/* 3. CENTER: Card Selection (Stays in the middle) */}
-              <div className="flex-2 flex flex-col gap-4 border-r border-slate-700 pl-8">
-                <h3 className="text-white uppercase text-sm tracking-widest font-bold">
-                  Pick a Card:
-                </h3>
-                <div className="flex gap-3">
-                  {/* Value Selector */}
-                  <div className="w-14 h-20 bg-slate-700 rounded-md border border-slate-600 flex items-center justify-center text-xs text-slate-500">
-                    Value
-                  </div>
-                  {/* Suit Selector */}
-                  <div className="w-14 h-20 bg-slate-700 rounded-md border border-slate-600 flex items-center justify-center text-xs text-slate-500">
-                    Suit
-                  </div>
-                </div>
-              </div>
+              <CenterSelection/>
 
               {/* 3. RIGHT: THE TIMER (Take up 40% width) */}
               <div className="flex flex-col items-center justify-center self-center px-4">
