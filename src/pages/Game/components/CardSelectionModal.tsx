@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/shared/components";
+import Ed from "../../../assets/Ed.png";
 import Edd from "../../../assets/Edd.png";
 import Eddy from "../../../assets/Eddy.png";
 import Plank from "../../../assets/Plank 1.png";
@@ -11,7 +12,7 @@ interface Opponent {
 }
 
 const MOCK_OPPONENTS: Opponent[] = [
-  { id: 4, username: "Huong", avatarUrl: Edd },
+  { id: 4, username: "Huong", avatarUrl: Ed },
   { id: 2, username: "Tan", avatarUrl: Edd },
   { id: 3, username: "Triet", avatarUrl: Eddy },
   { id: 1, username: "Kha", avatarUrl: Plank },
@@ -98,7 +99,6 @@ function getPositions(opponents: Opponent[], localId: number): Positions {
   return { top, left, right };
 }
 
-
 export const CardSelectionModal = ({
   activePlayerId,
   localPlayerId,
@@ -122,7 +122,7 @@ export const CardSelectionModal = ({
     if (!isMyTurn) return;
 
     // Reset timer when modal opens
-    setTimeLeft(10);
+    setTimeLeft(100);
 
     const intervalId = setInterval(() => {
       setTimeLeft((prev) => Math.max(prev - 1, 0));
@@ -198,7 +198,7 @@ export const CardSelectionModal = ({
               </div>
 
               {/* 3. CENTER: Card Selection (Stays in the middle) */}
-              <div className="flex-1 flex flex-col gap-4 border-l border-slate-700 pl-8">
+              <div className="flex-2 flex flex-col gap-4 border-r border-slate-700 pl-8">
                 <h3 className="text-white uppercase text-sm tracking-widest font-bold">
                   Pick a Card:
                 </h3>

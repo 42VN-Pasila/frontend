@@ -37,7 +37,7 @@ const ModalTestPage = () => {
           variant="inverse"
           size="large"
         >
-          Mock: Opponent Turn (ID 2)
+          Mock: Opponent (ID 2)
         </Button>
       </div>
 
