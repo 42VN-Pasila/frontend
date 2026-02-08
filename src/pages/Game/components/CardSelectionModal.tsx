@@ -5,7 +5,9 @@ import Edd from "../../../assets/Edd.png";
 import Eddy from "../../../assets/Eddy.png";
 import Plank from "../../../assets/Plank 1.png";
 import CenterSelection from "./CenterSelection";
-import HourGlass from "../../../assets/hourglass.gif"; 
+import HourGlass from "../../../assets/hourglass.gif";
+import CardReview from "./CardReview";
+import type { CardSuit } from "./selectorData";
 
 interface Opponent {
   id: number;
@@ -111,7 +113,7 @@ export const CardSelectionModal = ({
   const [timeLeft, setTimeLeft] = useState(10);
   //   const [top, bottomLeft, bottomRight] = MOCK_OPPONENTS;
   const { top, left, right } = getPositions(MOCK_OPPONENTS, localPlayerId);
-
+  const [selectedSuit, setSelectedSuit] = useState<CardSuit | null>(null);
   // 2. LOGIC BRANCH: Determine the view type
   const isMyTurn = activePlayerId === localPlayerId;
 
@@ -156,9 +158,13 @@ export const CardSelectionModal = ({
             </header>
 
             {/* The Interaction Area Container */}
-            <div className="w-full bg-slate-900/50 border-2 border-dashed border-slate-600 rounded-lg p-6 flex flex-row items-start justify-between gap-8">
+            <div
+              className="w-full bg-slate-900/50 border-2 border-dashed border-slate-600 rounded-lg p-6
+                        grid items-start gap-8
+                        grid-cols-[320px_minmax(0,1fr)_220px_140px]"
+            >
               {/* 1. LEFT: Opponent Selection (Take up 40% width) */}
-              <div className="flex-1 flex flex-col gap-4 border-r border-slate-700 pr-8">
+              <div className="min-w-0 flex flex-col gap-4 border-r border-slate-700 pr-8">
                 <h3 className="text-white uppercase text-sm tracking-widest font-bold">
                   Ask Opponent:
                 </h3>
@@ -196,10 +202,19 @@ export const CardSelectionModal = ({
               </div>
 
               {/* 3. CENTER: Card Selection (Stays in the middle) */}
-              <CenterSelection />
+              <div className="min-w-0">
+                <CenterSelection
+                  suit={selectedSuit}
+                  onSuitChange={setSelectedSuit}
+                />
+              </div>
 
+              {/* PREVIEW */}
+              <div className="min-w-0 min-h-65 flex items-center justify-center align">
+                <CardReview suit={selectedSuit} />
+              </div>
               {/* 3. RIGHT: THE TIMER (Take up 40% width) */}
-              <div className="flex flex-col items-center justify-center self-center px-4">
+              <div className="min-w-0 flex flex-col items-center justify-center self-center px-4 border-l border-slate-700">
                 <img
                   src={HourGlass}
                   alt=""
