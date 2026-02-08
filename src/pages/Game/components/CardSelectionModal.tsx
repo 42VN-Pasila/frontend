@@ -4,8 +4,9 @@ import Ed from "../../../assets/Ed.png";
 import Edd from "../../../assets/Edd.png";
 import Eddy from "../../../assets/Eddy.png";
 import Plank from "../../../assets/Plank 1.png";
-import Selector from "./Selector";
 import CenterSelection from "./CenterSelection";
+import HourGlass from "../../../assets/hourglass.gif"; 
+
 interface Opponent {
   id: number;
   username: string;
@@ -82,7 +83,6 @@ interface CardSelectionModalProps {
   onSelect: (choice: string) => void;
 }
 
-
 function getPositions(opponents: Opponent[], localId: number): Positions {
   const sorted = [...opponents].sort((a, b) => a.id - b.id);
 
@@ -93,7 +93,7 @@ function getPositions(opponents: Opponent[], localId: number): Positions {
   let idx = sorted.findIndex((o) => o.id === localId);
   if (idx === -1) idx = 0;
 
-  const right = sorted[(idx + 3) % 4] ;
+  const right = sorted[(idx + 3) % 4];
   const top = sorted[(idx + 2) % 4];
   const left = sorted[(idx + 1) % 4];
 
@@ -110,10 +110,7 @@ export const CardSelectionModal = ({
   );
   const [timeLeft, setTimeLeft] = useState(10);
   //   const [top, bottomLeft, bottomRight] = MOCK_OPPONENTS;
-  const { top, left, right } = getPositions(
-    MOCK_OPPONENTS,
-    localPlayerId,
-  );
+  const { top, left, right } = getPositions(MOCK_OPPONENTS, localPlayerId);
 
   // 2. LOGIC BRANCH: Determine the view type
   const isMyTurn = activePlayerId === localPlayerId;
@@ -199,10 +196,17 @@ export const CardSelectionModal = ({
               </div>
 
               {/* 3. CENTER: Card Selection (Stays in the middle) */}
-              <CenterSelection/>
+              <CenterSelection />
 
               {/* 3. RIGHT: THE TIMER (Take up 40% width) */}
               <div className="flex flex-col items-center justify-center self-center px-4">
+                <img
+                  src={HourGlass}
+                  alt=""
+                  aria-hidden="true"
+                  className="w-30 h-30 mb-2"
+                />
+
                 <div className="text-4xl font-mono text-[--color-red] animate-pulse">
                   00:{String(timeLeft).padStart(2, "0")}
                 </div>
