@@ -6,8 +6,8 @@ import Eddy from "../../../assets/Eddy.png";
 import Plank from "../../../assets/Plank 1.png";
 import CenterSelection from "./CenterSelection";
 import HourGlass from "../../../assets/hourglass.gif";
-import CardReview from "./CardReview";
-import type { CardSuit } from "./selectorData";
+import CardPreview from "./CardPreview";
+import type { CardSuit, CardRank } from "./selectorData";
 
 interface Opponent {
   id: number;
@@ -113,7 +113,15 @@ export const CardSelectionModal = ({
   const [timeLeft, setTimeLeft] = useState(10);
   //   const [top, bottomLeft, bottomRight] = MOCK_OPPONENTS;
   const { top, left, right } = getPositions(MOCK_OPPONENTS, localPlayerId);
-  const [selectedSuit, setSelectedSuit] = useState<CardSuit | null>(null);
+  // const [selectedSuit, setSelectedSuit] = useState<CardSuit | null>(null);
+  const [selection, setSelection] = useState<{
+    suit: CardSuit | null;
+    rank: CardRank | null;
+  }>({
+    suit: null,
+    rank: null,
+  });
+
   // 2. LOGIC BRANCH: Determine the view type
   const isMyTurn = activePlayerId === localPlayerId;
 
@@ -204,14 +212,17 @@ export const CardSelectionModal = ({
               {/* 3. CENTER: Card Selection (Stays in the middle) */}
               <div className="min-w-0">
                 <CenterSelection
-                  suit={selectedSuit}
-                  onSuitChange={setSelectedSuit}
+                  selection={selection}
+                  onChange={setSelection}
                 />
               </div>
 
               {/* PREVIEW */}
               <div className="min-w-0 min-h-65 flex items-center justify-center align">
-                <CardReview suit={selectedSuit} />
+                <CardPreview
+                  suit={selection.suit}
+                  rank={selection.rank}
+                />
               </div>
               {/* 3. RIGHT: THE TIMER (Take up 40% width) */}
               <div className="min-w-0 flex flex-col items-center justify-center self-center px-4 border-l border-slate-700">

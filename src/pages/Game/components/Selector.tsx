@@ -22,8 +22,9 @@ function Selector<T extends string | number>({
       className={className}
       style={{
         display: "flex",
+        flexWrap: "wrap",
         gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-        gap: 14,
+        gap: 12,
       }}
     >
       {items.map((it) => {
@@ -43,7 +44,7 @@ function Selector<T extends string | number>({
             ].join(" ")}
           >
             <Icon width={20} height={20} />
-            {it.label && <span className="hidden">{it.label}</span>}
+            {it.label && <span className="sr-only">{it.label}</span>}
           </button>
         );
       })}
