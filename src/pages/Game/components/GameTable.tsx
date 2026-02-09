@@ -17,6 +17,7 @@ export const GameTable = () => {
   const [cardDeck, setCardDeck] = useState<CardType[]>([]);
   const [isDealing, setDealing] = useState(false);
   const [gamePhase, setGamePhase] = useState<GamePhase>(GAME_PHASES.WAITING);
+  const screenPosition = calculateScreenPosition(1); //playerId from BE
 
   const handleDeal = () => {
     if (isDealing) return;
@@ -28,8 +29,7 @@ export const GameTable = () => {
     const fullDeck = deck.map((card, index) => {
       const playerId = ((index % 4) + 1) as 1 | 2 | 3 | 4;
       const cardIndex = Math.floor(index / 4);
-      const screenPosition = calculateScreenPosition(1);
-      const position = calculateHandPositions(playerId, cardIndex);
+      const position = calculateHandPositions(screenPosition[playerId], cardIndex);
 
       return {
         ...card,
