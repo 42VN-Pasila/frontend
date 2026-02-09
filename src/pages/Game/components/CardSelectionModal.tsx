@@ -7,7 +7,7 @@ import Plank from "../../../assets/Plank 1.png";
 import CenterSelection from "./CenterSelection";
 import HourGlass from "../../../assets/hourglass.gif";
 import CardPreview from "./CardPreview";
-import type { CardSuit, CardRank } from "./selectorData";
+import type { CardSelection, CardRequestPayload } from "./CenterSelection";
 
 interface Opponent {
   id: number;
@@ -82,7 +82,7 @@ const OpponentOption = ({
 interface CardSelectionModalProps {
   activePlayerId: number | null;
   localPlayerId: number;
-  onSelect: (choice: string) => void;
+  onSelect: (payload: CardRequestPayload) => void;
 }
 
 function getPositions(opponents: Opponent[], localId: number): Positions {
@@ -111,16 +111,35 @@ export const CardSelectionModal = ({
     null,
   );
   const [timeLeft, setTimeLeft] = useState(10);
-  //   const [top, bottomLeft, bottomRight] = MOCK_OPPONENTS;
   const { top, left, right } = getPositions(MOCK_OPPONENTS, localPlayerId);
-  // const [selectedSuit, setSelectedSuit] = useState<CardSuit | null>(null);
-  const [selection, setSelection] = useState<{
-    suit: CardSuit | null;
-    rank: CardRank | null;
-  }>({
+  const [selection, setSelection] = useState<CardSelection>({
     suit: null,
     rank: null,
   });
+  const handleRequest = () => {
+    if (!selection.suit || !selection.rank || !selectedOpponentId) return;
+
+    const payload = {
+    suit: selection.suit,
+    rank: selection.rank,
+    opponentId: selectedOpponentId,
+  };
+
+  onSelect(payload); // later: API call
+  setSelection({ suit: null, rank: null }); // UI reset
+  setSelectedOpponentId(null);
+};
+
+
+  useEffect(() => {
+  if (selection.suit && selection.rank === null) {
+    setSelection((prev) => ({
+      ...prev,
+      rank: 1,
+    }));
+  }
+}, [selection.suit]);
+
 
   // 2. LOGIC BRANCH: Determine the view type
   const isMyTurn = activePlayerId === localPlayerId;
@@ -209,7 +228,7 @@ export const CardSelectionModal = ({
                 </div>
               </div>
 
-              {/* 3. CENTER: Card Selection (Stays in the middle) */}
+              {/* 2. CENTER: Card Selection (Stays in the middle) */}
               <div className="min-w-0">
                 <CenterSelection
                   selection={selection}
@@ -243,10 +262,9 @@ export const CardSelectionModal = ({
               </div>
             </div>
             <p className="text-white-400 mt-1">
-              If the selections are not completed, a random choice of card will
-              be sent to a random opponent.
+              If the selections are not completed within the time. You lost this turn.
             </p>
-            <Button onClick={() => onSelect("mock_choice")} color="primary">
+            <Button onClick={handleRequest} color="primary">
               REQUEST
             </Button>
           </div>

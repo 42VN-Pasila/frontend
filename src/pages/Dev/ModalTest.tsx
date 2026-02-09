@@ -12,7 +12,7 @@ const ModalTestPage = () => {
   const [LOCAL_PLAYER_ID] = useState(() => Math.floor(Math.random() * 4) + 1);
 
   // This state controls the modal:
-  // null = hidden, 1 = My Turn, 2 = Opponent Turn
+  // null = hidden, else = Sb's Turn
   const [activeId, setActiveId] = useState<number | null>(null);
   return (
     <div className="h-screen w-full bg-slate-900 flex flex-col items-center justify-center">
@@ -28,7 +28,7 @@ const ModalTestPage = () => {
           size="large"
           color="purple"
         >
-          Mock: My Turn ({LOCAL_PLAYER_ID})
+          Mock: My Turn (ID: {LOCAL_PLAYER_ID})
         </Button>
 
         {/* Click this to see the "Waiting" version */}
@@ -37,16 +37,16 @@ const ModalTestPage = () => {
           variant="inverse"
           size="large"
         >
-          Mock: Opponent (ID 2)
+          Mock: Opponent (not ID: ({LOCAL_PLAYER_ID}))
         </Button>
       </div>
 
-      {/* The component you are building */}
+      {/* The modal that renders different versions for player's turn and their opponents */}
       <CardSelectionModal
         activePlayerId={activeId}
         localPlayerId={LOCAL_PLAYER_ID}
-        onSelect={(choice) => {
-          console.log("Mock choice received:", choice);
+        onSelect={(payload) => {
+          console.log("Mock choice received, send to backend:", payload);
           setActiveId(null); // Close modal on choice
         }}
       />

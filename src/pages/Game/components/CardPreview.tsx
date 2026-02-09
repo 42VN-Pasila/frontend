@@ -123,27 +123,16 @@ type CardPreviewProps = {
   rank: CardRank | null;
 };
 
-export default function CardReview({ suit, rank }: CardPreviewProps) {
-  // if (!suit) return null;
-
-  const previewRank: CardRank = rank ?? 1;
-
+export default function CardPreview({ suit, rank }: CardPreviewProps) {
   return (
     <div className="px-8">
-      {suit ? (
-        <img
-          src={CARD_IMAGES[suit][previewRank]}
-          alt={`${previewRank} of ${suit}`}
-          className="w-40 rounded-xl shadow"
-        />
-      ) : (
+      {!suit && !rank ? (
         <div
           className="
             w-40 h-[224px]
             rounded-xl
-            color-primary
             border-2 border-dashed
-            border-[var(--semantic-bg-color)]
+            border-[var(--color-primary)]
             bg-slate-700/40
             flex items-center justify-center
             text-slate-400 text-sm
@@ -151,7 +140,14 @@ export default function CardReview({ suit, rank }: CardPreviewProps) {
         >
           Select a suit
         </div>
+      ) : (
+        <img
+          src={CARD_IMAGES[suit!][rank!]}
+          alt={`${rank} of ${suit}`}
+          className="w-40 rounded-xl shadow"
+        />
       )}
     </div>
   );
 }
+
