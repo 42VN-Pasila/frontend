@@ -72,8 +72,6 @@ export const GameTable = () => {
         </Button>
       )}
       <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
-        <ambientLight intensity={-5} />
-        <pointLight position={[0, 10, 10]} intensity={0} />
         {gamePhase === GAME_PHASES.DEALING && <Deck />}
         {cardDeck.map((card) => {
           const cardDeckIndex = (card.cardIndex || 0) * 4 + (card.owner - 1);
