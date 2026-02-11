@@ -60,7 +60,7 @@ import QueenClubIcon from "../../../assets/game/symbols-svg/Club-icons/Q-club-ic
 import KingClubIcon from "../../../assets/game/symbols-svg/Club-icons/K-club-icon.svg?react";
 import AceClubIcon from "../../../assets/game/symbols-svg/Club-icons/A-club-icon.svg?react";
 
-export interface SelectorItem<T extends string | number = string> {
+export interface SelectorItem<T extends string | number> {
   value: T;
   label?: string;
   Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -148,3 +148,4 @@ export const CARD_ICONS: Record<
     13: KingClubIcon,
   },
 };
+

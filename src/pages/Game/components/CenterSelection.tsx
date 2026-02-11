@@ -2,21 +2,28 @@ import Selector from "./Selector";
 import { suits, ALL_CARD_RANKS, CARD_ICONS } from "./selectorData";
 import type { CardSuit, CardRank } from "./selectorData";
 
-export type CardSelection = {
+export type CardSelectionProps = {
   suit: CardSuit | null;
   rank: CardRank | null;
 };
 
 type CenterSelectionProps = {
-  selection: CardSelection;
+  selection: CardSelectionProps;
   // onChange: (selection: CardSelection) => void;
-  onChange: React.Dispatch<React.SetStateAction<CardSelection>>;
+  onChange: React.Dispatch<React.SetStateAction<CardSelectionProps>>;
 };
 
 export type CardRequestPayload = {
   suit: CardSuit;
   rank: CardRank;
   opponentId: number;
+};
+
+const RANK_NAMES: Record<number, string> = {
+  1: "Ace",
+  11: "Jack",
+  12: "Queen",
+  13: "King",
 };
 
 export default function CenterSelection({
@@ -41,13 +48,12 @@ export default function CenterSelection({
           items={suits}
           value={suit}
           onChange={(suit) =>
-            // onChange({ ...selection, suit })
             onChange((prev) => ({
               ...prev,
               suit,
             }))
           }
-          columns={2}
+          columns={4}
         />
 
         <h3 className="text-slate-400 text-sm">
@@ -58,12 +64,12 @@ export default function CenterSelection({
           <Selector<CardRank>
             items={ALL_CARD_RANKS.map((rank) => ({
               value: rank,
+              label: `${RANK_NAMES[rank] ?? rank} of ${suit}`,
               Icon: CARD_ICONS[suit][rank],
               })
             )}
             value={rank}
             onChange={(rank) =>
-              // onChange({ ...selection, rank })
               onChange((prev) => ({
               ...prev,
               rank,

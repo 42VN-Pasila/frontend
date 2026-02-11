@@ -1,4 +1,6 @@
 import type { CardSuit, CardRank } from "./selectorData";
+import type { CardSelectionProps } from "./CenterSelection";
+
 import ASpade from "../../../assets/game/A-spade.png";
 import TwoSpade from "../../../assets/game/2-spade.png";
 import ThreeSpade from "../../../assets/game/3-spade.png";
@@ -118,12 +120,7 @@ const CARD_IMAGES: Record<CardSuit, Record<CardRank, string>> = {
   }
 };
 
-type CardPreviewProps = {
-  suit: CardSuit | null;
-  rank: CardRank | null;
-};
-
-export default function CardPreview({ suit, rank }: CardPreviewProps) {
+export default function CardPreview({ suit, rank }: CardSelectionProps) {
   return (
     <div className="px-8">
       {!suit && !rank ? (

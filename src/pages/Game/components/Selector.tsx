@@ -35,6 +35,7 @@ function Selector<T extends string | number>({
           <button
             key={String(it.value)}
             type="button"
+            aria-label={it.label}
             disabled={disabled}
             onClick={() => onChange(it.value)}
             className={[

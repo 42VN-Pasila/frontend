@@ -7,7 +7,7 @@ import Plank from "../../../assets/Plank 1.png";
 import CenterSelection from "./CenterSelection";
 import HourGlass from "../../../assets/hourglass.gif";
 import CardPreview from "./CardPreview";
-import type { CardSelection, CardRequestPayload } from "./CenterSelection";
+import type { CardSelectionProps, CardRequestPayload } from "./CenterSelection";
 
 interface Opponent {
   id: number;
@@ -112,7 +112,7 @@ export const CardSelectionModal = ({
   );
   const [timeLeft, setTimeLeft] = useState(10);
   const { top, left, right } = getPositions(MOCK_OPPONENTS, localPlayerId);
-  const [selection, setSelection] = useState<CardSelection>({
+  const [selection, setSelection] = useState<CardSelectionProps>({
     suit: null,
     rank: null,
   });
