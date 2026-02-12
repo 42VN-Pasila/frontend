@@ -244,7 +244,7 @@ const isSelectionComplete = !!(selection.suit && selection.rank && selectedOppon
               </div>
 
               {/* PREVIEW */}
-              <div className="min-w-0 min-h-65 flex items-center justify-center align">
+              <div className="min-w-0 min-h-65 flex items-center justify-center align pt-10">
                 <CardPreview
                   suit={selection.suit}
                   rank={selection.rank}
