@@ -116,6 +116,7 @@ export const CardSelectionModal = ({
     suit: null,
     rank: null,
   });
+
   const handleUpdate = (updates: Partial<CardSelectionProps>) => {
     setSelection(prev => ({ ...prev, ...updates }));
   };
@@ -123,6 +124,7 @@ export const CardSelectionModal = ({
     if (!selection.suit || !selection.rank || !selectedOpponentId) return;
 
     const payload = {
+      //userId: the one who request card.
     suit: selection.suit,
     rank: selection.rank,
     opponentId: selectedOpponentId,
@@ -133,16 +135,16 @@ export const CardSelectionModal = ({
   setSelectedOpponentId(null);
 };
 
-const isSelectionComplete = !!(selection.suit && selection.rank && selectedOpponentId);
+const isSelectionComplete: boolean = !!(selection.suit && selection.rank && selectedOpponentId);
 
 
   useEffect(() => {
   if (selection.suit && selection.rank === null) {
     // setSelection((prev) => ({
     //   ...prev,
-    //   rank: 1,
+    //   rank: selection.rank,
     // }));
-    handleUpdate({ rank: 1 });
+    handleUpdate({ rank: null });
   }
 }, [selection.suit, selection.rank]);
 
@@ -244,7 +246,7 @@ const isSelectionComplete = !!(selection.suit && selection.rank && selectedOppon
               </div>
 
               {/* PREVIEW */}
-              <div className="min-w-0 min-h-65 flex items-center justify-center align pt-10">
+              <div className="min-w-0 min-h-75 flex items-center justify-center align">
                 <CardPreview
                   suit={selection.suit}
                   rank={selection.rank}
@@ -275,7 +277,7 @@ const isSelectionComplete = !!(selection.suit && selection.rank && selectedOppon
               onClick={handleRequest}
               color="primary"
               disabled={!isSelectionComplete}
-              className={!isSelectionComplete ? "opacity-50 cursor-not-allowed" : ""}
+              className={!isSelectionComplete ? "opacity-50 disabled:hover disabled:cursor-not-allowed pointer-events-none" : ""}
               >
               REQUEST
             </Button>

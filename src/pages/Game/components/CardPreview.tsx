@@ -123,13 +123,13 @@ const CARD_IMAGES: Record<CardSuit, Record<CardRank, string>> = {
 export default function CardPreview({ suit, rank }: CardSelectionProps) {
   return (
     <div className="px-8">
-      {!suit && !rank ? (
+      {!suit || !rank ? (
         <div
           className="
-            w-40 h-[224px]
+            w-40 h-56
             rounded-xl
             border-2 border-dashed
-            border-[var(--color-primary)]
+            border-(--color-primary)
             bg-slate-700/40
             flex items-center justify-center
             text-slate-400 text-sm
