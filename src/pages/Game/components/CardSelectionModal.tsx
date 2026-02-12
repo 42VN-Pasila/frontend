@@ -116,6 +116,9 @@ export const CardSelectionModal = ({
     suit: null,
     rank: null,
   });
+  const handleUpdate = (updates: Partial<CardSelectionProps>) => {
+    setSelection(prev => ({ ...prev, ...updates }));
+  };
   const handleRequest = () => {
     if (!selection.suit || !selection.rank || !selectedOpponentId) return;
 
@@ -130,15 +133,18 @@ export const CardSelectionModal = ({
   setSelectedOpponentId(null);
 };
 
+const isSelectionComplete = !!(selection.suit && selection.rank && selectedOpponentId);
+
 
   useEffect(() => {
   if (selection.suit && selection.rank === null) {
-    setSelection((prev) => ({
-      ...prev,
-      rank: 1,
-    }));
+    // setSelection((prev) => ({
+    //   ...prev,
+    //   rank: 1,
+    // }));
+    handleUpdate({ rank: 1 });
   }
-}, [selection.suit]);
+}, [selection.suit, selection.rank]);
 
 
   // 2. LOGIC BRANCH: Determine the view type
@@ -232,7 +238,8 @@ export const CardSelectionModal = ({
               <div className="min-w-0">
                 <CenterSelection
                   selection={selection}
-                  onChange={setSelection}
+                  // onChange={setSelection}
+                  onChange={handleUpdate}
                 />
               </div>
 
@@ -264,7 +271,12 @@ export const CardSelectionModal = ({
             <p className="text-white-400 mt-1">
               If the selections are not completed within the time. You lost this turn.
             </p>
-            <Button onClick={handleRequest} color="primary">
+            <Button
+              onClick={handleRequest}
+              color="primary"
+              disabled={!isSelectionComplete}
+              className={!isSelectionComplete ? "opacity-50 cursor-not-allowed" : ""}
+              >
               REQUEST
             </Button>
           </div>

@@ -9,8 +9,7 @@ export type CardSelectionProps = {
 
 type CenterSelectionProps = {
   selection: CardSelectionProps;
-  // onChange: (selection: CardSelection) => void;
-  onChange: React.Dispatch<React.SetStateAction<CardSelectionProps>>;
+  onChange: (updates: Partial<CardSelectionProps>) => void;
 };
 
 export type CardRequestPayload = {
@@ -47,12 +46,18 @@ export default function CenterSelection({
         <Selector<CardSuit>
           items={suits}
           value={suit}
-          onChange={(suit) =>
-            onChange((prev) => ({
-              ...prev,
-              suit,
-            }))
-          }
+          // onChange={(suit) =>
+          //   onChange((prev) => ({
+          //     ...prev,
+          //     suit,
+          //   }))
+          // }
+
+          // onChange={(newSuit) =>
+          //   onChange({ ...selection, suit: newSuit })
+          // }
+
+          onChange={(suit) => onChange({ suit })}
           columns={4}
         />
 
@@ -69,12 +74,19 @@ export default function CenterSelection({
               })
             )}
             value={rank}
-            onChange={(rank) =>
-              onChange((prev) => ({
-              ...prev,
-              rank,
-              }))
-            }
+            // onChange={(rank) =>
+            //   onChange((prev) => ({
+            //   ...prev,
+            //   rank,
+            //   }))
+            // }
+
+            // onChange={(newRank) => 
+            //   // Just pass the result up. No more "prev => ..." mess here.
+            //   onChange({ ...selection, rank: newRank })
+            // }
+
+            onChange={(rank) => onChange({ rank })}
             columns={5}
             className="max-w-[260px]"
           />

@@ -21,7 +21,7 @@ function Selector<T extends string | number>({
     <div
       className={className}
       style={{
-        display: "flex",
+        display: "grid",
         flexWrap: "wrap",
         gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
         gap: 12,
