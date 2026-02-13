@@ -1,6 +1,6 @@
 import type { SelectorItem } from "./selectorData";
 
-export interface SelectorProps<T extends string | number = string> {
+export interface SelectorProps<T extends string> {
   items: SelectorItem<T>[];
   value: T | null;
   onChange: (value: T) => void;
@@ -9,7 +9,7 @@ export interface SelectorProps<T extends string | number = string> {
   className?: string;
 }
 
-function Selector<T extends string | number>({
+function Selector<T extends string>({
   items,
   value,
   onChange,

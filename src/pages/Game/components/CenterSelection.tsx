@@ -18,13 +18,6 @@ export type CardRequestPayload = {
   opponentId: number;
 };
 
-const RANK_NAMES: Record<number, string> = {
-  1: "Ace",
-  11: "Jack",
-  12: "Queen",
-  13: "King",
-};
-
 export default function CenterSelection({
   selection,
   onChange,
@@ -69,7 +62,7 @@ export default function CenterSelection({
           <Selector<CardRank>
             items={ALL_CARD_RANKS.map((rank) => ({
               value: rank,
-              label: `${RANK_NAMES[rank] ?? rank} of ${suit}`,
+              label: `${rank} of ${suit}`,
               Icon: CARD_ICONS[suit][rank],
               })
             )}
