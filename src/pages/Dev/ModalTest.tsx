@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { CardSelectionModal } from "../Game/components/CardSelectionModal";
+
 import { Button } from "@/shared/components";
+
+import { CardSelectionModal } from "../Game/components/CardSelectionModal/CardSelectionModal";
 
 function pickRandomOpponentId(localId: number) {
   const pool = [1, 2, 3, 4].filter((id) => id !== localId);

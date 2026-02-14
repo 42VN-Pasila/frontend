@@ -1,13 +1,23 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import { Button } from "@/shared/components";
+
 import Ed from "../../../assets/Ed.png";
 import Edd from "../../../assets/Edd.png";
 import Eddy from "../../../assets/Eddy.png";
 import Plank from "../../../assets/Plank 1.png";
-import CenterSelection from "./CenterSelection";
 import HourGlass from "../../../assets/hourglass.gif";
+import type { CardRank, CardSuit } from "../../common/types/cards";
+
 import CardPreview from "./CardPreview";
-import type { CardSelectionProps, CardRequestPayload } from "./CenterSelection";
+import CenterSelection from "./CardSelection";
+import type { SelectedCard } from "./CardSelection";
+
+export type CardRequestPayload = {
+  suit: CardSuit;
+  rank: CardRank;
+  opponentId: number;
+};
 
 interface Opponent {
   id: number;
@@ -88,10 +98,6 @@ interface CardSelectionModalProps {
 function getPositions(opponents: Opponent[], localId: number): Positions {
   const sorted = [...opponents].sort((a, b) => a.id - b.id);
 
-  if (sorted.length !== 4) {
-    throw new Error(`Expected 4 players, got ${sorted.length}`);
-  }
-
   let idx = sorted.findIndex((o) => o.id === localId);
   if (idx === -1) idx = 0;
 
@@ -112,42 +118,44 @@ export const CardSelectionModal = ({
   );
   const [timeLeft, setTimeLeft] = useState(10);
   const { top, left, right } = getPositions(MOCK_OPPONENTS, localPlayerId);
-  const [selection, setSelection] = useState<CardSelectionProps>({
+  const [selection, setSelection] = useState<SelectedCard>({
     suit: null,
     rank: null,
   });
 
-  const handleUpdate = (updates: Partial<CardSelectionProps>) => {
-    setSelection(prev => ({ ...prev, ...updates }));
+  const handleUpdate = (updates: Partial<SelectedCard>) => {
+    setSelection((prev) => ({ ...prev, ...updates }));
   };
   const handleRequest = () => {
     if (!selection.suit || !selection.rank || !selectedOpponentId) return;
 
     const payload = {
       //userId: the one who request card.
-    suit: selection.suit,
-    rank: selection.rank,
-    opponentId: selectedOpponentId,
+      suit: selection.suit,
+      rank: selection.rank,
+      opponentId: selectedOpponentId,
+    };
+
+    onSelect(payload); // later: API call
+    setSelection({ suit: null, rank: null }); // UI reset
+    setSelectedOpponentId(null);
   };
 
-  onSelect(payload); // later: API call
-  setSelection({ suit: null, rank: null }); // UI reset
-  setSelectedOpponentId(null);
-};
-
-const isSelectionComplete: boolean = !!(selection.suit && selection.rank && selectedOpponentId);
-
+  const isSelectionComplete: boolean = !!(
+    selection.suit &&
+    selection.rank &&
+    selectedOpponentId
+  );
 
   useEffect(() => {
-  if (selection.suit && selection.rank === null) {
-    // setSelection((prev) => ({
-    //   ...prev,
-    //   rank: selection.rank,
-    // }));
-    handleUpdate({ rank: null });
-  }
-}, [selection.suit, selection.rank]);
-
+    if (selection.suit && selection.rank === null) {
+      // setSelection((prev) => ({
+      //   ...prev,
+      //   rank: selection.rank,
+      // }));
+      handleUpdate({ rank: null });
+    }
+  }, [selection.suit, selection.rank]);
 
   // 2. LOGIC BRANCH: Determine the view type
   const isMyTurn = activePlayerId === localPlayerId;
@@ -247,10 +255,7 @@ const isSelectionComplete: boolean = !!(selection.suit && selection.rank && sele
 
               {/* PREVIEW */}
               <div className="min-w-0 min-h-75 flex items-center justify-center align">
-                <CardPreview
-                  suit={selection.suit}
-                  rank={selection.rank}
-                />
+                <CardPreview suit={selection.suit} rank={selection.rank} />
               </div>
               {/* 3. RIGHT: THE TIMER (Take up 40% width) */}
               <div className="min-w-0 flex flex-col items-center justify-center self-center px-4 border-l border-slate-700">
@@ -271,14 +276,19 @@ const isSelectionComplete: boolean = !!(selection.suit && selection.rank && sele
               </div>
             </div>
             <p className="text-white-400 mt-1">
-              If the selections are not completed within the time. You lost this turn.
+              If the selections are not completed within the time. You lost this
+              turn.
             </p>
             <Button
               onClick={handleRequest}
               color="primary"
               disabled={!isSelectionComplete}
-              className={!isSelectionComplete ? "opacity-50 disabled:hover disabled:cursor-not-allowed pointer-events-none" : ""}
-              >
+              className={
+                !isSelectionComplete
+                  ? "opacity-50 disabled:hover disabled:cursor-not-allowed pointer-events-none"
+                  : ""
+              }
+            >
               REQUEST
             </Button>
           </div>
