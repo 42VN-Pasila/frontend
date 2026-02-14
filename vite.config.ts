@@ -15,9 +15,9 @@ export default defineConfig({
       '@components': path.resolve(__dirname, 'src/components'),
       '@assets': path.resolve(__dirname, 'src/assets')
     }
-  }
+  },
   server: {
     host: '0.0.0.0',
     port: 5173
-  },
+  }
 });
