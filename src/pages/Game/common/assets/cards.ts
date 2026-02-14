@@ -1,55 +1,57 @@
-import TwoClub from '@assets/game/2-club.png';
-import TwoDiamond from '@assets/game/2-diamond.png';
-import TwoHeart from '@assets/game/2-heart.png';
-import TwoSpade from '@assets/game/2-spade.png';
-import ThreeClub from '@assets/game/3-club.png';
-import ThreeDiamond from '@assets/game/3-diamond.png';
-import ThreeHeart from '@assets/game/3-heart.png';
-import ThreeSpade from '@assets/game/3-spade.png';
-import FourClub from '@assets/game/4-club.png';
-import FourDiamond from '@assets/game/4-diamond.png';
-import FourHeart from '@assets/game/4-heart.png';
-import FourSpade from '@assets/game/4-spade.png';
-import FiveClub from '@assets/game/5-club.png';
-import FiveDiamond from '@assets/game/5-diamond.png';
-import FiveHeart from '@assets/game/5-heart.png';
-import FiveSpade from '@assets/game/5-spade.png';
-import SixClub from '@assets/game/6-club.png';
-import SixDiamond from '@assets/game/6-diamond.png';
-import SixHeart from '@assets/game/6-heart.png';
-import SixSpade from '@assets/game/6-spade.png';
-import SevenClub from '@assets/game/7-club.png';
-import SevenDiamond from '@assets/game/7-diamond.png';
-import SevenHeart from '@assets/game/7-heart.png';
-import SevenSpade from '@assets/game/7-spade.png';
-import EightClub from '@assets/game/8-club.png';
-import EightDiamond from '@assets/game/8-diamond.png';
-import EightHeart from '@assets/game/8-heart.png';
-import EightSpade from '@assets/game/8-spade.png';
-import NineClub from '@assets/game/9-club.png';
-import NineDiamond from '@assets/game/9-diamond.png';
-import NineHeart from '@assets/game/9-heart.png';
-import NineSpade from '@assets/game/9-spade.png';
-import TenClub from '@assets/game/10-club.png';
-import TenDiamond from '@assets/game/10-diamond.png';
-import TenHeart from '@assets/game/10-heart.png';
-import TenSpade from '@assets/game/10-spade.png';
-import AClub from '@assets/game/A-club.png';
-import ADiamond from '@assets/game/A-diamond.png';
-import AHeart from '@assets/game/A-heart.png';
-import ASpade from '@assets/game/A-spade.png';
-import JackClub from '@assets/game/J-club.png';
-import JackDiamond from '@assets/game/J-diamond.png';
-import JackHeart from '@assets/game/J-heart.png';
-import JackSpade from '@assets/game/J-spade.png';
-import KingClub from '@assets/game/K-club.png';
-import KingDiamond from '@assets/game/K-diamond.png';
-import KingHeart from '@assets/game/K-heart.png';
-import KingSpade from '@assets/game/K-spade.png';
-import QueenClub from '@assets/game/Q-club.png';
-import QueenDiamond from '@assets/game/Q-diamond.png';
-import QueenHeart from '@assets/game/Q-heart.png';
-import QueenSpade from '@assets/game/Q-spade.png';
+import TwoClub from '@assets/game/card-svg/2-club.svg?react';
+import TwoDiamond from '@assets/game/card-svg/2-diamond.svg?react';
+import TwoHeart from '@assets/game/card-svg/2-heart.svg?react';
+import TwoSpade from '@assets/game/card-svg/2-spade.svg?react';
+import ThreeClub from '@assets/game/card-svg/3-club.svg?react';
+import ThreeDiamond from '@assets/game/card-svg/3-diamond.svg?react';
+import ThreeHeart from '@assets/game/card-svg/3-heart.svg?react';
+import ThreeSpade from '@assets/game/card-svg/3-spade.svg?react';
+import FourClub from '@assets/game/card-svg/4-club.svg?react';
+import FourDiamond from '@assets/game/card-svg/4-diamond.svg?react';
+import FourHeart from '@assets/game/card-svg/4-heart.svg?react';
+import FourSpade from '@assets/game/card-svg/4-spade.svg?react';
+import FiveClub from '@assets/game/card-svg/5-club.svg?react';
+import FiveDiamond from '@assets/game/card-svg/5-diamond.svg?react';
+import FiveHeart from '@assets/game/card-svg/5-heart.svg?react';
+import FiveSpade from '@assets/game/card-svg/5-spade.svg?react';
+import SixClub from '@assets/game/card-svg/6-club.svg?react';
+import SixDiamond from '@assets/game/card-svg/6-diamond.svg?react';
+import SixHeart from '@assets/game/card-svg/6-heart.svg?react';
+import SixSpade from '@assets/game/card-svg/6-spade.svg?react';
+import SevenClub from '@assets/game/card-svg/7-club.svg?react';
+import SevenDiamond from '@assets/game/card-svg/7-diamond.svg?react';
+import SevenHeart from '@assets/game/card-svg/7-heart.svg?react';
+import SevenSpade from '@assets/game/card-svg/7-spade.svg?react';
+import EightClub from '@assets/game/card-svg/8-club.svg?react';
+import EightDiamond from '@assets/game/card-svg/8-diamond.svg?react';
+import EightHeart from '@assets/game/card-svg/8-heart.svg?react';
+import EightSpade from '@assets/game/card-svg/8-spade.svg?react';
+import NineClub from '@assets/game/card-svg/9-club.svg?react';
+import NineDiamond from '@assets/game/card-svg/9-diamond.svg?react';
+import NineHeart from '@assets/game/card-svg/9-heart.svg?react';
+import NineSpade from '@assets/game/card-svg/9-spade.svg?react';
+import TenClub from '@assets/game/card-svg/10-club.svg?react';
+import TenDiamond from '@assets/game/card-svg/10-diamond.svg?react';
+import TenHeart from '@assets/game/card-svg/10-heart.svg?react';
+import TenSpade from '@assets/game/card-svg/10-spade.svg?react';
+import AClub from '@assets/game/card-svg/A-club.svg?react';
+import ADiamond from '@assets/game/card-svg/A-diamond.svg?react';
+import AHeart from '@assets/game/card-svg/A-heart.svg?react';
+import ASpade from '@assets/game/card-svg/A-spade.svg?react';
+import JackClub from '@assets/game/card-svg/J-club.svg?react';
+import JackDiamond from '@assets/game/card-svg/J-diamond.svg?react';
+import JackHeart from '@assets/game/card-svg/J-heart.svg?react';
+import JackSpade from '@assets/game/card-svg/J-spade.svg?react';
+import KingClub from '@assets/game/card-svg/K-club.svg?react';
+import KingDiamond from '@assets/game/card-svg/K-diamond.svg?react';
+import KingHeart from '@assets/game/card-svg/K-heart.svg?react';
+import KingSpade from '@assets/game/card-svg/K-spade.svg?react';
+import QueenClub from '@assets/game/card-svg/Q-club.svg?react';
+import QueenDiamond from '@assets/game/card-svg/Q-diamond.svg?react';
+import QueenHeart from '@assets/game/card-svg/Q-heart.svg?react';
+import QueenSpade from '@assets/game/card-svg/Q-spade.svg?react';
+
+/* Icons*/
 import ClubIcon from '@assets/game/symbols-svg/Club-icon.svg?react';
 import TwoClubIcon from '@assets/game/symbols-svg/Club-icons/2-club-icon.svg?react';
 import ThreeClubIcon from '@assets/game/symbols-svg/Club-icons/3-club-icon.svg?react';
@@ -106,6 +108,8 @@ import AceSpadeIcon from '@assets/game/symbols-svg/Spade-icons/A-spade-icon.svg?
 import JackSpadeIcon from '@assets/game/symbols-svg/Spade-icons/J-spade-icon.svg?react';
 import KingSpadeIcon from '@assets/game/symbols-svg/Spade-icons/K-spade-icon.svg?react';
 import QueenSpadeIcon from '@assets/game/symbols-svg/Spade-icons/Q-spade-icon.svg?react';
+
+import type { CardRank, CardSuit } from '../types/cards';
 
 export const CardAssets = {
   ASpade,
@@ -225,4 +229,70 @@ export const CardIconAssets = {
   JackSpadeIcon,
   KingSpadeIcon,
   QueenSpadeIcon
+};
+
+export const CARD_IMAGES: Record<
+  CardSuit,
+  Record<CardRank, React.FC<React.SVGProps<SVGSVGElement>>>
+> = {
+  spades: {
+    Ace: ASpade,
+    Two: TwoSpade,
+    Three: ThreeSpade,
+    Four: FourSpade,
+    Five: FiveSpade,
+    Six: SixSpade,
+    Seven: SevenSpade,
+    Eight: EightSpade,
+    Nine: NineSpade,
+    Ten: TenSpade,
+    Jack: JackSpade,
+    Queen: QueenSpade,
+    King: KingSpade
+  },
+  hearts: {
+    Ace: AHeart,
+    Two: TwoHeart,
+    Three: ThreeHeart,
+    Four: FourHeart,
+    Five: FiveHeart,
+    Six: SixHeart,
+    Seven: SevenHeart,
+    Eight: EightHeart,
+    Nine: NineHeart,
+    Ten: TenHeart,
+    Jack: JackHeart,
+    Queen: QueenHeart,
+    King: KingHeart
+  },
+  diamonds: {
+    Ace: ADiamond,
+    Two: TwoDiamond,
+    Three: ThreeDiamond,
+    Four: FourDiamond,
+    Five: FiveDiamond,
+    Six: SixDiamond,
+    Seven: SevenDiamond,
+    Eight: EightDiamond,
+    Nine: NineDiamond,
+    Ten: TenDiamond,
+    Jack: JackDiamond,
+    Queen: QueenDiamond,
+    King: KingDiamond
+  },
+  clubs: {
+    Ace: AClub,
+    Two: TwoClub,
+    Three: ThreeClub,
+    Four: FourClub,
+    Five: FiveClub,
+    Six: SixClub,
+    Seven: SevenClub,
+    Eight: EightClub,
+    Nine: NineClub,
+    Ten: TenClub,
+    Jack: JackClub,
+    Queen: QueenClub,
+    King: KingClub
+  }
 };

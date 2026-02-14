@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 
+import Ed from "@assets/Ed.png";
+import Edd from "@assets/Edd.png";
+import Eddy from "@assets/Eddy.png";
+import Plank from "@assets/Plank 1.png";
+import HourGlass from "@assets/hourglass.gif";
+
 import { Button } from "@/shared/components";
 
-import Ed from "../../../assets/Ed.png";
-import Edd from "../../../assets/Edd.png";
-import Eddy from "../../../assets/Eddy.png";
-import Plank from "../../../assets/Plank 1.png";
-import HourGlass from "../../../assets/hourglass.gif";
 import type { CardRank, CardSuit } from "../../common/types/cards";
 
 import CardPreview from "./CardPreview";
