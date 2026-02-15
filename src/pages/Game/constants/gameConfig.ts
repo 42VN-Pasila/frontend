@@ -10,7 +10,7 @@ export const PLAYER_POSITIONS: Record<number, Position> = {
 export const DECK_POSITION: Position = { x: 0, y: 0, z: 2 };
 
 export const DEAL_ANIMATION: Record<string, number> = {
-  CARD_SPAWN_DELAY: 0.1,
+  REVEAL_DELAY: 200,
   DEAL_FLIGHT_DUR: 0.6,
   ARC_HEIGHT: 1.0
 };

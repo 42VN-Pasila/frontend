@@ -2,14 +2,11 @@ import { useTexture } from "@react-three/drei";
 import type { CardType } from "../types/CardType";
 import {
   CARD_SIZE,
-  DEAL_ANIMATION,
-  DECK_POSITION,
+  DEAL_ANIMATION
 } from "../constants/gameConfig";
 import { SRGBColorSpace } from "three";
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
-import { calculateHandPositions } from "../utils/calculatePositions";
-import { DealCard } from "../animations/dealCard";
 import { soundManager } from "@/shared/utils/soundManager";
 
 interface CardProps {
@@ -35,14 +32,16 @@ export const Card = ({
   useEffect(() => {
     if (shouldDeal && meshRef.current) {
       const cardDeckIndex = (card.cardIndex || 0) * 4 + (card.owner - 1);
-      const delay = cardDeckIndex * DEAL_ANIMATION.CARD_SPAWN_DELAY;
+      const revealDelay = (card.cardIndex || 0) * DEAL_ANIMATION.REVEAL_DELAY;
 
       setTimeout(() => {
+        setIsFlipped(true);
         soundManager.play("/src/assets/sounds/deal-card-sound.mp3", 0.1);
-      }, delay * 1000);
-      if (cardDeckIndex === 50 && onAnimationComplete) {
-        onAnimationComplete();
-      }
+        
+        if (cardDeckIndex === 51 && onAnimationComplete) {
+          onAnimationComplete();
+        }
+      }, revealDelay);
     }
   }, [shouldDeal, card, onAnimationComplete]);
 
