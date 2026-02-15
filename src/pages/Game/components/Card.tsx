@@ -34,44 +34,19 @@ export const Card = ({
 
   useEffect(() => {
     if (shouldDeal && meshRef.current) {
-      meshRef.current.position.set(
-        DECK_POSITION.x,
-        DECK_POSITION.y,
-        DECK_POSITION.z,
-      );
-
-      if (shouldDeal && meshRef.current)
-        console.log("Animation starting for:", card.id);
-
-      const targetPosition = calculateHandPositions(
-        card.owner,
-        card.cardIndex || 0,
-      );
-
       const cardDeckIndex = (card.cardIndex || 0) * 4 + (card.owner - 1);
       const delay = cardDeckIndex * DEAL_ANIMATION.CARD_SPAWN_DELAY;
 
       setTimeout(() => {
         soundManager.play("/src/assets/sounds/deal-card-sound.mp3", 0.1);
       }, delay * 1000);
-      const timeline = DealCard(
-        meshRef.current,
-        DECK_POSITION,
-        targetPosition,
-        delay,
-        card.rotation,
-      );
-
-      timeline.eventCallback("onComplete", () => {
-        setIsFlipped(true);
-
-        if (cardDeckIndex === 50 && onAnimationComplete) {
-          onAnimationComplete();
-        }
-      });
+      if (cardDeckIndex === 50 && onAnimationComplete) {
+        onAnimationComplete();
+      }
     }
   }, [shouldDeal, card, onAnimationComplete]);
 
+  if (!shouldDeal) return null;
   if (card.screenPosition != 1) return null;
 
   return (
