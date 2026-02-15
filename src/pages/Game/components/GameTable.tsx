@@ -34,6 +34,7 @@ export const GameTable = () => {
       return {
         ...card,
         owner: playerId,
+        screenPosition: screenPosition[playerId],
         cardIndex: cardIndex,
         position: position,
         rotation: PLAYER_ROTATION[playerId],

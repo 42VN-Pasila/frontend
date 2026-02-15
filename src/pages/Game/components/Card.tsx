@@ -72,6 +72,8 @@ export const Card = ({
     }
   }, [shouldDeal, card, onAnimationComplete]);
 
+  if (card.screenPosition != 1) return null;
+
   return (
     <mesh
       ref={meshRef}

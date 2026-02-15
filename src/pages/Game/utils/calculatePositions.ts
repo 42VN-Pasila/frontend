@@ -33,11 +33,11 @@ export function createArcPath(start: Position, end: Position, arcHeight: number)
   return [start, { x: peakX, y: peakY, z: peakZ }, end];
 }
 
-export function calculateScreenPosition(playerRoomPosition: number): number[] {
+export function calculateScreenPosition(playerRoomPosition: number): (1|2|3|4)[] {
   const result = [0, 0, 0, 0, 0];
   for (let roomPosition = 1; roomPosition <= 4; roomPosition++) {
     const offset = (roomPosition - playerRoomPosition + 4) % 4;
     result[roomPosition] = offset === 0 ? 1 : offset + 1;
   }
-  return result;
+  return result as (1|2|3|4)[];
 }

@@ -5,6 +5,7 @@ export interface CardType {
   position: Position;
   rotation: Position;
   owner: 1 | 2 | 3 | 4;
+  screenPosition: 1 | 2 | 3 | 4;
   inDeck: boolean;
   cardIndex: number;
 }
