@@ -14,8 +14,7 @@ export function shuffleDeck(): CardType[] {
         suit: suit,
         rank: rank,
         position: { ...DECK_POSITION },
-        rotation: { x: 0, y: 0, z: 0 },
-        owner: 0,
+        owner: 1,
         inDeck: true
       });
     }

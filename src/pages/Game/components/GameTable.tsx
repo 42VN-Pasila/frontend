@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import tableCover from "../../../assets/TableCover.png";
 import { Card } from "./Card";
-import { calculateHandPositions, calculateScreenPosition } from "../utils/calculatePositions";
+import { calculateScreenPosition } from "../utils/calculatePositions";
 import { useState } from "react";
 import type { CardType } from "../types/CardType";
 import { shuffleDeck } from "../utils/shuffleDeck";
@@ -27,14 +27,12 @@ export const GameTable = () => {
     const fullDeck = deck.map((card, index) => {
       const playerId = ((index % 4) + 1) as 1 | 2 | 3 | 4;
       const cardIndex = Math.floor(index / 4);
-      const position = calculateHandPositions(screenPosition[playerId], cardIndex);
 
       return {
         ...card,
         owner: playerId,
         screenPosition: screenPosition[playerId],
         cardIndex: cardIndex,
-        position: position,
         inDeck: true,
       };
     });
