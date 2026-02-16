@@ -1,6 +1,5 @@
 import { Canvas } from "@react-three/fiber";
 import tableCover from "../../../assets/TableCover.png";
-import { Deck } from "./Deck";
 import { Card } from "./Card";
 import { calculateHandPositions, calculateScreenPosition } from "../utils/calculatePositions";
 import { useState } from "react";
@@ -10,7 +9,6 @@ import { Button } from "@/shared/components";
 import {
   GAME_PHASES,
   type GamePhase,
-  PLAYER_ROTATION,
 } from "../constants/gameConfig";
 
 export const GameTable = () => {
@@ -37,7 +35,6 @@ export const GameTable = () => {
         screenPosition: screenPosition[playerId],
         cardIndex: cardIndex,
         position: position,
-        rotation: PLAYER_ROTATION[playerId],
         inDeck: true,
       };
     });
@@ -73,7 +70,7 @@ export const GameTable = () => {
         </Button>
       )}
       <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
-        {gamePhase === GAME_PHASES.DEALING && <Deck />}
+        {gamePhase === GAME_PHASES.DEALING}
         {cardDeck.map((card) => {
           const cardDeckIndex = (card.cardIndex || 0) * 4 + (card.owner - 1);
           const isLastCard = cardDeckIndex === 50;

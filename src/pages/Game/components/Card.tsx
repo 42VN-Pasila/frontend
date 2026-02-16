@@ -52,7 +52,6 @@ export const Card = ({
     <mesh
       ref={meshRef}
       position={[card.position.x, card.position.y, card.position.z]}
-      rotation={[0, 0, 0]}
     >
       <planeGeometry args={[CARD_SIZE.WIDTH, CARD_SIZE.HEIGHT]} />
       <meshBasicMaterial
