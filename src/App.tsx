@@ -8,6 +8,8 @@ import LoginPage from "./pages/Auth/LoginPage";
 import AboutPage from "./pages/HomePage/AboutPage";
 // import CardSelectionModal from "./pages/Game/components/CardSelectionModal";
 import ModalTest from "./pages/Dev/ModalTest";
+import MockRoomTest from "./pages/Dev/MockRoomTest";
+import GameBoard from "./pages/Game/components/GameBoard/GameBoard";
 
 const App: React.FC = () => {
   return (
@@ -28,6 +30,8 @@ const App: React.FC = () => {
           {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
           <Route path="/about" element={<AboutPage />} />
           <Route path="/dev/modal" element={<ModalTest />} />
+          <Route path="/dev/game/mock" element={<MockRoomTest />} />
+          <Route path="/dev/game/:roomId" element={<GameBoard />} />
         </Routes>
       </main>
     </div>

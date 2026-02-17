@@ -11,7 +11,7 @@ import { Button } from "@/shared/components";
 import type { CardRank, CardSuit } from "../../common/types/cards";
 
 import CardPreview from "./CardPreview";
-import CenterSelection from "./CardSelection";
+import CardSelection from "./CardSelection";
 import type { SelectedCard } from "./CardSelection";
 
 export type CardRequestPayload = {
@@ -247,7 +247,7 @@ export const CardSelectionModal = ({
 
               {/* 2. CENTER: Card Selection (Stays in the middle) */}
               <div className="min-w-0">
-                <CenterSelection
+                <CardSelection
                   selection={selection}
                   // onChange={setSelection}
                   onChange={handleUpdate}
