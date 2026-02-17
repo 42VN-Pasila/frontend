@@ -28,7 +28,8 @@
       "@/*": ["*"],
       "@gen/*": ["gen/*"],
       "@components/*": ["components/*"],
-      "@shared/*": ["shared/*"]
+      "@shared/*": ["shared/*"],
+      "@assets/*": ["assets/*"]
     }
   },
   "include": ["src"]
