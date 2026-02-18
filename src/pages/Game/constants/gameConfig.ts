@@ -1,6 +1,6 @@
 import type { Position } from '../types/CardType';
 
-export const PLAYER_POSITIONS: Position = {x: 0, y: 0, z: 0};
+export const PLAYER_HAND_POSITIONS: Position = {x: 0, y: 0, z: 0};
 
 export const DEAL_ANIMATION: Record<string, number> = {
   REVEAL_DELAY: 200,

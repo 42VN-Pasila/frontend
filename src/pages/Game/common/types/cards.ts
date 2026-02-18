@@ -37,4 +37,14 @@ export const ALL_CARD_RANKS = [
 export type Card = {
   suit: CardSuit;
   rank: CardRank;
+  position: Position;
+  owner: 1 | 2 | 3 | 4;
+  cardIndex: number;
 };
+
+export interface Position {
+  x: number;
+  y: number;
+  z: number;
+}
+

@@ -1,4 +1,3 @@
-import { DECK_POSITION } from '../constants/gameConfig';
 import type { CardType } from '../types/CardType';
 
 export function shuffleDeck(): CardType[] {
@@ -13,7 +12,6 @@ export function shuffleDeck(): CardType[] {
         id: `${rank}-${suit}`,
         suit: suit,
         rank: rank,
-        position: { ...DECK_POSITION },
         owner: 1,
         inDeck: true
       });

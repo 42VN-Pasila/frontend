@@ -8,7 +8,7 @@ import LoginPage from "./pages/Auth/LoginPage";
 import AboutPage from "./pages/HomePage/AboutPage";
 import GameMonitor from "./pages/Game/GameMonitor";
 // import CardSelectionModal from "./pages/Game/components/CardSelectionModal";
-import ModalTest from "./pages/Dev/ModalTest";
+// import ModalTest from "./pages/Dev/ModalTest";
 
 const App: React.FC = () => {
   return (
@@ -29,7 +29,7 @@ const App: React.FC = () => {
           {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
           <Route path="/about" element={<AboutPage />} />
           <Route path="/game" element={<GameMonitor />} />
-          <Route path="/dev/modal" element={<ModalTest />} />
+          {/* <Route path="/dev/modal" element={<ModalTest />} /> */}
         </Routes>
       </main>
     </div>

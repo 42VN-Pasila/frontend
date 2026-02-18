@@ -1,7 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import tableCover from "../../../assets/TableCover.png";
 import { Card } from "./Card";
-import { calculateScreenPosition } from "../utils/calculatePositions";
 import { useState } from "react";
 import type { CardType } from "../types/CardType";
 import { shuffleDeck } from "../utils/shuffleDeck";
@@ -15,7 +14,6 @@ export const GameTable = () => {
   const [cardDeck, setCardDeck] = useState<CardType[]>([]);
   const [isDealing, setDealing] = useState(false);
   const [gamePhase, setGamePhase] = useState<GamePhase>(GAME_PHASES.WAITING);
-  const screenPosition = calculateScreenPosition(1); //playerId from BE
 
   const handleDeal = () => {
     if (isDealing) return;
@@ -31,7 +29,6 @@ export const GameTable = () => {
       return {
         ...card,
         owner: playerId,
-        screenPosition: screenPosition[playerId],
         cardIndex: cardIndex,
         inDeck: true,
       };
