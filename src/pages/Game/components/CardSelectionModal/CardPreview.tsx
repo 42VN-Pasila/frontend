@@ -11,16 +11,16 @@ export default function CardPreview({ suit, rank }: CardPreviewProps) {
       <div className="px-8">
         <div
           className="
-            w-40 h-56
-            rounded-xl
+            w-64 h-88
+            rounded-2xl
             border-2 border-dashed
             border-(--color-primary)
             bg-slate-700/40
             flex items-center justify-center
-            text-slate-400 text-sm
+            text-slate-400 text-xl
           "
         >
-          Select a suit
+          Select a card
         </div>
       </div>
     );
@@ -30,7 +30,7 @@ export default function CardPreview({ suit, rank }: CardPreviewProps) {
 
   return (
     <div className="px-8">
-      <Card className="w-40 h-56 rounded-xl shadow" />
+      <Card className="w-64 h-88 rounded-xl shadow" />
     </div>
   );
 }

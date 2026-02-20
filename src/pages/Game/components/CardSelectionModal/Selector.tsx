@@ -43,14 +43,14 @@ function Selector<T extends string>({
             disabled={disabled}
             onClick={() => onChange(it.value)}
             className={[
-              "flex items-center justify-center gap-2 rounded-lg border px-3 py-2",
+              "flex items-center justify-center gap-2 rounded-lg border px-2 py-4",
               disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50",
               isActive
                 ? "bg-white border-(--color-primary) ring-4 ring-(--color-primary) scale-[1.1] transition-all duration-200 ease-out"
                 : "border-gray-300",
             ].join(" ")}
           >
-            <Icon width={20} height={20} />
+            <Icon width={28} height={28} />
             {it.label && <span className="sr-only">{it.label}</span>}
           </button>
         );
