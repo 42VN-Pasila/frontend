@@ -9,6 +9,7 @@ import {
   GAME_PHASES,
   type GamePhase,
 } from "../constants/gameConfig";
+import { calculateHandPositions } from "../utils/calculatePositions";
 
 export const GameTable = () => {
   const [cardDeck, setCardDeck] = useState<CardType[]>([]);
@@ -25,11 +26,13 @@ export const GameTable = () => {
     const fullDeck = deck.map((card, index) => {
       const playerId = ((index % 4) + 1) as 1 | 2 | 3 | 4;
       const cardIndex = Math.floor(index / 4);
+      const position = calculateHandPositions(cardIndex);
 
       return {
         ...card,
         owner: playerId,
         cardIndex: cardIndex,
+        position: position,
         inDeck: true,
       };
     });

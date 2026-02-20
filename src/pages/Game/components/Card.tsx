@@ -46,7 +46,6 @@ export const Card = ({
   }, [shouldDeal, card, onAnimationComplete]);
 
   if (!shouldDeal) return null;
-  if (card.screenPosition != 1) return null;
 
   return (
     <mesh
