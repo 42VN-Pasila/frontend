@@ -8,6 +8,25 @@ import Ed from "@assets/Ed.png";
 import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
 import Plank from "@assets/Plank 1.png";
+import type { Card } from "../../common/types/cards";
+import { ALL_CARD_SUITS, ALL_CARD_RANKS } from '../../common/types/cards';
+
+export const generateMockHand = (): Card[] => {
+  const handSize = Math.floor(Math.random() * 20) + 1;
+
+  const deck: Card[] = ALL_CARD_SUITS.flatMap((suit) =>
+    ALL_CARD_RANKS.map((rank) => ({ suit, rank }))
+  );
+
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+
+  return deck.slice(0, handSize);
+};
+
+const MOCK_PLAYER_HAND = generateMockHand();
 
 const MOCK_OPPONENTS = [
   { id: 4, username: "Huong", avatarUrl: Ed, cardCount: 7 },
@@ -97,7 +116,7 @@ export const GameBoard = ({
               onSelectOpponent={setSelectedOpponentId}
               className="row-span-2"
             />
-            <GamePlayerCard className="row-span-1" />
+            <GamePlayerCard cards={MOCK_PLAYER_HAND} className="row-span-1" />
           </main>
         </div>
       ) : (

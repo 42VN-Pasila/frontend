@@ -93,7 +93,7 @@ export const GameControlCenter = ({
             </div>
 
             {/* 2. SELECTORS */}
-            <div className="flex flex-col gap-4">
+            {/* <div className="flex flex-col gap-4">
                 <h3 className="text-slate-400 text-xl">Start with a suit:</h3>
                 <Selector<CardSuit>
                     items={SUIT_ITEMS}
@@ -101,6 +101,44 @@ export const GameControlCenter = ({
                     onChange={(suit) => onChange({ suit })}
                     columns={4}
                 />
+
+                <h3 className="text-slate-400 text-xl">The rank comes next:</h3>
+                {suit && (
+                    <Selector<CardRank>
+                        items={RANK_ITEMS_BY_SUIT[suit]}
+                        value={rank}
+                        onChange={(rank) => onChange({ rank })}
+                        columns={5}
+                    />
+                )}
+            </div> */}
+
+            {/* 2. SELECTORS */}
+            <div className="flex flex-col gap-6 relative">
+                
+                {/* FLOATING INSTRUCTION POP */}
+                {!suit && (
+                    <div className="absolute -top-12 left-0 animate-bounce bg-(--color-purple) text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-2">
+                        <span>👇 Pick a suit to start!</span>
+                    </div>
+                )}
+
+                <div className={`flex flex-col gap-4 rounded-xl transition-all duration-500 ${
+                    !suit 
+                    ? "p-4 ring-2 ring-(--color-primary) bg-blue-500/5 shadow-[0_0_20px_var(--color-primary)] shadow-opacity-20" 
+                    : "opacity-100"
+                }`}>
+                    <h3 className={`text-xl transition-colors ${!suit ? "text-white font-bold" : "text-slate-400"}`}>
+                        Start with a suit:
+                    </h3>
+                    
+                    <Selector<CardSuit>
+                        items={SUIT_ITEMS}
+                        value={suit}
+                        onChange={(suit) => onChange({ suit })}
+                        columns={4}
+                    />
+                </div>
 
                 <h3 className="text-slate-400 text-xl">The rank comes next:</h3>
                 {suit && (
