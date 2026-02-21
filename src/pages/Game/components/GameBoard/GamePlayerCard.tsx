@@ -1,3 +1,6 @@
+import { CARD_IMAGES } from "../../common/assets/cards";
+import type { Card } from "../../common/types/cards";
+
 const GamePlayerCard = ({ className }: { className?: string }) => {
     return (
         <section className={`${className} p-8 flex flex-col items-center bg-slate-900/30`}>

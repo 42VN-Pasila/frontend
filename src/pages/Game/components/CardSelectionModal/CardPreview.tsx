@@ -17,10 +17,10 @@ export default function CardPreview({ suit, rank }: CardPreviewProps) {
             border-(--color-primary)
             bg-slate-700/40
             flex items-center justify-center
-            text-slate-400 text-xl
+            text-slate-400 text-xl text-center
           "
         >
-          Select a card
+          Your selected Card will show here
         </div>
       </div>
     );

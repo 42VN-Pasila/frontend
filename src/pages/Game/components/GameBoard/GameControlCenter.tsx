@@ -63,14 +63,14 @@ export const GameControlCenter = ({
     }, [timeLeft]);
 
     return (
-        <aside className="col-span-1 border-r border-slate-800 bg-slate-900 p-6 flex flex-col h-full">
+        <aside className="w-full border-r border-slate-800 bg-slate-900 p-6 flex flex-col h-full">
             {/* 1. HEADER */}
-            <div className="p-4 bg-slate-800 rounded-md border-l-4 border-(--color-primary) mb-3">
-                <p className="text-lg font-semibold text-white">Your Turn</p>
-                <h3 className="text-white uppercase text-xs tracking-widest font-bold opacity-70">
+            {/* <div className="p-4 bg-slate-800 rounded-md border-l-4 border-(--color-primary) mb-3"> */}
+                {/* <p className="text-lg font-semibold text-white opacity">Your Turn</p> */}
+                <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-8">
                     Pick a Card:
                 </h3>
-            </div>
+            {/* </div> */}
 
             {/* 2. TIMER ROW */}
             <div className="flex items-center justify-between bg-slate-800 rounded-md px-4 py-3 mb-8">
@@ -78,7 +78,7 @@ export const GameControlCenter = ({
                     <img 
                         src={HourGlass} 
                         alt="" 
-                        className="w-20 h-20 object-contain" 
+                        className="w-16 h-16 object-contain" 
                     />
                     <span className="text-sm text-slate-400 uppercase font-bold">
                         Time Remaining
@@ -127,6 +127,7 @@ export const GameControlCenter = ({
                     onClick={onSubmit}
                     disabled={!isSelectionComplete}
                     color="primary"
+                    size="large"
                     className={!isSelectionComplete ? "opacity-50 pointer-events-none" : ""}
                 >
                     Request

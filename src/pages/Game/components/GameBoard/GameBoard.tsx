@@ -4,6 +4,17 @@ import GameOpponents from "./GameOpponents";
 import GamePlayerCard from "./GamePlayerCard";
 import type { CardRank, CardSuit } from '../../common/types/cards';
 import type { SelectedCard } from "../CardSelectionModal/CardSelection";
+import Ed from "@assets/Ed.png";
+import Edd from "@assets/Edd.png";
+import Eddy from "@assets/Eddy.png";
+import Plank from "@assets/Plank 1.png";
+
+const MOCK_OPPONENTS = [
+  { id: 4, username: "Huong", avatarUrl: Ed, cardCount: 7 },
+  { id: 2, username: "Tan", avatarUrl: Edd, cardCount: 9 },
+  { id: 3, username: "Triet", avatarUrl: Eddy, cardCount: 11 },
+  { id: 1, username: "Kha", avatarUrl: Plank, cardCount: 13 },
+];
 
 export type CardRequestPayload = {
   suit: CardSuit;
@@ -69,15 +80,23 @@ export const GameBoard = ({
     return (
     <>
       {isMyTurn ? (
-        <div className="grid grid-cols-3 h-screen w-screen overflow-hidden bg-slate-950">
-          <GameControlCenter
-            selection={selection}
-            onChange={handleUpdate}
-            onSubmit={handleRequest}
-            isSelectionComplete={isSelectionComplete}
-          />
-          <main className="col-span-2 grid grid-rows-3 h-full">
-            <GameOpponents className="row-span-2" />
+        <div className="grid grid-cols-8 h-screen w-screen overflow-hidden bg-slate-950">
+          <div className="col-span-2">
+            <GameControlCenter
+              selection={selection}
+              onChange={handleUpdate}
+              onSubmit={handleRequest}
+              isSelectionComplete={isSelectionComplete}
+            />
+          </div>
+          <main className="col-span-6 grid grid-rows-3 h-full">
+            <GameOpponents 
+              opponents={MOCK_OPPONENTS}
+              localPlayerId={localPlayerId}
+              selectedOpponentId={selectedOpponentId}
+              onSelectOpponent={setSelectedOpponentId}
+              className="row-span-2"
+            />
             <GamePlayerCard className="row-span-1" />
           </main>
         </div>
