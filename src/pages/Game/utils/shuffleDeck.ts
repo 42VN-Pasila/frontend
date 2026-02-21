@@ -13,7 +13,7 @@ export function shuffleDeck(): CardType[] {
         suit: suit,
         rank: rank,
         owner: 1,
-        inDeck: true
+        inDeck: true,
       });
     }
   }
