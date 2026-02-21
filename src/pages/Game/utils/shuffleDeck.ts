@@ -12,8 +12,10 @@ export function shuffleDeck(): CardType[] {
         id: `${rank}-${suit}`,
         suit: suit,
         rank: rank,
+        position: {x: 0, y: 0, z:0},
         owner: 1,
         inDeck: true,
+        cardIndex: 0
       });
     }
   }
