@@ -4,12 +4,12 @@ import { Route, Routes } from "react-router-dom";
 
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
-import GameLobby from "./pages/GameRoom/RoomLobby";
+import GameLobby from "./pages/Game/GameLobby/GameLobby";
 // import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 // import DashBoard from "./pages/DashBoard/DashBoard";
 import AboutPage from "./pages/HomePage/AboutPage";
 import HomePage from "./pages/HomePage/HomePage";
-import CreateRoom from "./pages/GameRoom/CreateRoom";
+import CreateRoom from "./pages/Game/GameLobby/CreateRoom";
 
 // import CardSelectionModal from "./pages/Game/components/CardSelectionModal";
 // import ModalTest from "./pages/Dev/ModalTest";
