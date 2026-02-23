@@ -76,9 +76,6 @@ export const GameControlCenter = ({
                         alt="" 
                         className="w-16 h-16 object-contain" 
                     />
-                    <span className="text-sm text-slate-400 uppercase font-bold">
-                        Time Remaining
-                    </span>
                 </div>
                 
                 <div className={`text-4xl font-mono leading-none ${

@@ -23,12 +23,9 @@ function Selector<T extends string>({
 }: SelectorProps<T>) {
   return (
     <div
-      className={className}
+      className={`${className} grid gap-2 md:gap-3`}
       style={{
-        display: "grid",
-        flexWrap: "wrap",
         gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-        gap: 12,
       }}
     >
       {items.map((it) => {
@@ -39,18 +36,23 @@ function Selector<T extends string>({
           <button
             key={String(it.value)}
             type="button"
-            aria-label={it.label}
             disabled={disabled}
             onClick={() => onChange(it.value)}
-            className={[
-              "flex items-center justify-center gap-2 rounded-lg border px-2 py-4",
-              disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50",
-              isActive
-                ? "bg-white border-(--color-primary) ring-4 ring-(--color-primary) scale-[1.1] transition-all duration-200 ease-out"
-                : "border-gray-300",
-            ].join(" ")}
+            className={`
+              flex items-center justify-center rounded-lg border transition-all
+              aspect-square p-1 md:p-2 
+              ${disabled ? "opacity-30 cursor-not-allowed" : "hover:bg-gray-50"}
+              ${isActive
+                ? "bg-white border-(--color-primary) ring-2 md:ring-4 ring-(--color-primary) scale-105 z-10"
+                : "border-slate-700 bg-slate-800/40"
+              }
+            `}
           >
-            <Icon width={28} height={28} />
+
+            <div className="w-full h-full max-w-[20px] max-h-[20px] md:max-w-[24px] md:max-h-[24px]">
+               <Icon className="w-full h-full object-contain" />
+            </div>
+            
             {it.label && <span className="sr-only">{it.label}</span>}
           </button>
         );
