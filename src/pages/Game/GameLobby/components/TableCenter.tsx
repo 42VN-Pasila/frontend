@@ -1,13 +1,29 @@
 import React from "react";
+
 import { Button } from "@/shared/components";
 
+
 export default function TableCenter({
-  onStart,
+  isOwner,
   canStart,
+  onStart,
+  onJoin,
 }: {
-  onStart?: () => void;
+  isOwner: boolean;
   canStart: boolean;
+  onStart: () => void;
+  onJoin: () => void;
 }) {
+  let label = "Join";
+  let disabled = false;
+  let onClick = onJoin;
+
+  if (isOwner) {
+    label = "Start";
+    disabled = !canStart;
+    onClick = onStart;
+  }
+
   return (
     <div
       className={[
@@ -25,12 +41,12 @@ export default function TableCenter({
       </div>
 
       <div className="absolute inset-0 grid place-items-center">
-        <Button
+         <Button
           className="bg-[var(--color-primary)]"
-          onClick={onStart}
-          disabled={!canStart}
+          onClick={onClick}
+          disabled={disabled}
         >
-          Start
+          {label}
         </Button>
       </div>
     </div>

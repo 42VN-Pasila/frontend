@@ -1,85 +1,68 @@
-import React, { useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useMemo, useState } from "react";
+
+import { useNavigate, useParams } from "react-router-dom";
 
 import LobbyBackGround from "../common/assets/LobbyBackGround.jpg";
 
-import type { Player, User } from "./types";
+import SeatsLayer from "./components/SeatsLayer";
+import TableCenter from "./components/TableCenter";
+import { TopLeftIcons, TopRightIcons } from "./components/TopIcons";
 import { MOCK_USERS } from "./mockUsers";
 import { joinNext, leaveAndMigrateOwner, resetToOwner } from "./roomLogic";
-
-import TopBadge from "./components/TopBadge";
-import TopRightIcons from "./components/TopRightIcons";
-import TableCenter from "./components/TableCenter";
-import SeatsLayer from "./components/SeatsLayer";
+import type { Player, User } from "./types";
 
 export default function GameLobby() {
   const params = useParams();
   const roomId = params.roomId ?? "????";
 
   const ownerUser = useMemo<User>(() => MOCK_USERS[3], []);
-  const joinQueue = useMemo<User[]>(() => MOCK_USERS.filter((u) => u.id !== ownerUser.id), [ownerUser.id]);
-
   const myUserId = ownerUser.id;
 
-  const [players, setPlayers] = useState<Player[]>(() => resetToOwner(ownerUser));
+  const [players, setPlayers] = useState<Player[]>(() =>
+    resetToOwner(ownerUser),
+  );
 
   function handleJoinNext() {
-    setPlayers((prev) => joinNext(prev, joinQueue));
+    setPlayers((prev) => joinNext(prev, MOCK_USERS)); // hoặc joinQueue
   }
 
   function handleLeave(userId: number) {
-    setPlayers((prev) => leaveAndMigrateOwner(prev, userId));
+    setPlayers((prev) => {
+      const next = leaveAndMigrateOwner(prev, userId);
+      if (next.length === 0) {
+        navigate("/createRoom");
+      }
+      return next;
+    });
   }
 
-  function handleReset() {
-    setPlayers(resetToOwner(ownerUser));
+  function handleStart() {
+    if (canStart) return;
   }
 
   const ownerNow = players.find((p) => p.isOwner);
-  const canStart = ownerNow ? ownerNow.user.id === myUserId : false;
-
+  const isMeOwner = ownerNow ? ownerNow.user.id === myUserId : false;
+// canStart tuỳ bạn: thường start khi đủ người hoặc luôn cho start
+const canStart = isMeOwner; // hoặc players.length >= 2, etc.
+  // const canStart = ownerNow ? ownerNow.user.id === myUserId : false;
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
-      {/* Background image */}
       <img
         src={LobbyBackGround}
         alt=""
         className="absolute inset-0 h-full w-full object-cover"
       />
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_50%_20%,transparent_40%,rgba(0,0,0,0.70)_100%)]" />
-
-      <TopBadge roomId={roomId} playerCount={players.length} />
-      <TopRightIcons onReset={handleReset} />
-
-      {/* Debug controls */}
-      {/* <div className="absolute left-6 top-28 flex gap-3">
-        <button
-          type="button"
-          onClick={handleJoinNext}
-          className="rounded-xl bg-white/10 border border-white/15 px-3 py-2 text-sm text-white"
-        >
-          Mock Join Next
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            const owner = players.find((p) => p.isOwner);
-            if (owner) handleLeave(owner.user.id);
-          }}
-          className="rounded-xl bg-white/10 border border-white/15 px-3 py-2 text-sm text-white"
-        >
-          Mock Owner Leave
-        </button>
-      </div> */}
-
-      {/* TABLE + SEATS */}
-      <div className="absolute inset-0 grid place-items-center">
+      <TopLeftIcons roomId={roomId} playerCount={players.length} />
+      <TopRightIcons onClose={() => navigate("/createRoom")} />
+      <div className="absolute inset-0 grid place-items-center z-100">
         <div className="relative">
-          <TableCenter canStart={canStart} onStart={() => {}} />
-          <SeatsLayer players={players} onJoinNext={handleJoinNext} onLeave={handleLeave} />
+          <TableCenter canStart={canStart} onStart={handleStart} isOwner={isMeOwner} onJoin={handleJoinNext}/>
+          <SeatsLayer
+            players={players}
+            onJoinNext={handleJoinNext}
+            onLeave={handleLeave}
+          />
         </div>
       </div>
     </div>

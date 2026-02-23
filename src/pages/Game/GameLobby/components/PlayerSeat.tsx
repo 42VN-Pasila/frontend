@@ -12,12 +12,17 @@ export default function PlayerSeat({
 }) {
   return (
     <div className={["absolute flex flex-col items-center gap-2", className].join(" ")}>
+      
+      
+      
       <div className="relative">
-        <img
-          src={player.user.avatarUrl}
-          alt={player.user.username}
-          className="h-16 w-16 rounded-2xl object-cover border border-white/25 shadow-lg"
-        />
+         <div className="h-20 w-20 rounded-full overflow-hidden border-4 border-[var(--color-primary)] shadow-xl">
+          <img
+            src={player.user.avatarUrl}
+            alt={player.user.username}
+            className="h-fit w-fit m-auto object-cover"
+          />
+        </div>
 
         {player.isOwner ? (
           <div className="absolute -right-2 -top-2 h-7 w-7 rounded-full bg-sky-400 shadow-lg grid place-items-center text-xs">

@@ -1,3 +1,4 @@
+// import useNavigate from "react-router-dom";
 import type { Player, SeatIndex, SeatPos, User } from "./types";
 
 export const POS_BY_SEAT: Record<SeatIndex, SeatPos> = {
@@ -13,6 +14,19 @@ function sortBySeatAsc(a: Player, b: Player) {
   return 0;
 }
 
+export function getNextAvailableSeat(players: Player[]): SeatIndex | null {
+  const used = new Set(players.map((p) => p.seat));
+  if (!used.has(1)) return 1;
+  if (!used.has(2)) return 2;
+  if (!used.has(3)) return 3;
+  if (!used.has(4)) return 4;
+  return null;
+}
+
+export function getPlayerByPos(players: Player[], pos: SeatPos): Player | undefined {
+  return players.find((p) => p.pos === pos);
+}
+
 export function makeOwner(ownerUser: User): Player {
   return {
     user: ownerUser,
@@ -26,29 +40,35 @@ export function resetToOwner(ownerUser: User): Player[] {
   return [makeOwner(ownerUser)];
 }
 
-export function getPlayerByPos(players: Player[], pos: SeatPos): Player | undefined {
-  return players.find((p) => p.pos === pos);
-}
-
-export function joinNext(players: Player[], joinQueue: User[]): Player[] {
+export function joinUser(players: Player[], user: User): Player[] {
   if (players.length >= 4) return players;
 
-  const nextSeat = (players.length + 1) as SeatIndex;
-  const joinedWithoutOwner = players.length - 1; // 0..2
-  const nextUser = joinQueue[joinedWithoutOwner];
-  if (!nextUser) return players;
-
-  const existed = players.find((p) => p.user.id === nextUser.id);
+  const existed = players.find((p) => p.user.id === user.id);
   if (existed) return players;
 
-  const nextPlayer: Player = {
-    user: nextUser,
-    seat: nextSeat,
-    pos: POS_BY_SEAT[nextSeat],
+  const seat = getNextAvailableSeat(players);
+  if (!seat) return players;
+
+  const next: Player = {
+    user,
+    seat,
+    pos: POS_BY_SEAT[seat],
     isOwner: false,
   };
 
-  return [...players, nextPlayer];
+  return [...players, next];
+}
+export function joinNext(players: Player[], pool: User[]): Player[] {
+  if (players.length >= 4) return players;
+
+  const nextUser = pool.find((u) => !players.some((p) => p.user.id === u.id));
+  if (!nextUser) return players;
+
+  return joinUser(players, nextUser);
+}
+
+export function leaveUser(players: Player[], userId: number): Player[] {
+  return players.filter((p) => p.user.id !== userId);
 }
 
 export function leaveAndMigrateOwner(players: Player[], userId: number): Player[] {
