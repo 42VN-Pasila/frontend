@@ -3,7 +3,7 @@ import GameControlCenter from "./GameControlCenter";
 import GameOpponents from "./GameOpponents";
 import GamePlayerCard from "./GamePlayerCard";
 import type { CardRank, CardSuit } from '../../common/types/cards';
-import type { SelectedCard } from "../CardSelectionModal/CardSelection";
+import type { SelectedCard } from "../CardSelection/CardSelection";
 import Ed from "@assets/Ed.png";
 import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
@@ -35,23 +35,24 @@ const MOCK_OPPONENTS = [
   { id: 1, username: "Kha", avatarUrl: Plank, cardCount: 13 },
 ];
 
-export type CardRequestPayload = {
+export type GameRequestPayload = {
+  requesterId: number;
   suit: CardSuit;
   rank: CardRank;
-  opponentId: number;
+  targetId: number;
 };
 
-interface CardSelectionModalProps {
+interface GameBoardProps {
   activePlayerId: number | null;
   localPlayerId: number;
-  onSelect: (payload: CardRequestPayload) => void;
+  onSelect: (payload: GameRequestPayload) => void;
 }
 
 export const GameBoard = ({
   activePlayerId,
   localPlayerId,
   onSelect,
-}: CardSelectionModalProps) => {
+}: GameBoardProps) => {
   const [selectedOpponentId, setSelectedOpponentId] = useState<number | null>(
     null,
   );
@@ -75,10 +76,10 @@ export const GameBoard = ({
     if (!isSelectionComplete) return;
 
     const payload = {
-      //userId: the one who request card.
+      requesterId: localPlayerId,
       suit: selection.suit!,
       rank: selection.rank!,
-      opponentId: selectedOpponentId!,
+      targetId: selectedOpponentId!,
     };
 
     onSelect(payload); // later: API call
@@ -99,8 +100,10 @@ export const GameBoard = ({
     return (
     <>
       {isMyTurn ? (
-        <div className="grid grid-cols-8 h-screen w-screen overflow-hidden bg-slate-950">
-          <div className="col-span-2">
+        // <div className="grid grid-cols-8 h-screen w-screen overflow-hidden bg-slate-950">
+        <div className="flex h-screen w-screen overflow-hidden bg-slate-950">
+        {/* <div className="col-span-2"> */}
+        <div className="w-72 lg:w-80 h-full shrink-0">
             <GameControlCenter
               selection={selection}
               onChange={handleUpdate}
@@ -108,21 +111,32 @@ export const GameBoard = ({
               isSelectionComplete={isSelectionComplete}
             />
           </div>
-          <main className="col-span-6 grid grid-rows-3 h-full">
-            <GameOpponents 
-              opponents={MOCK_OPPONENTS}
-              localPlayerId={localPlayerId}
-              selectedOpponentId={selectedOpponentId}
-              onSelectOpponent={setSelectedOpponentId}
-              className="row-span-2"
-            />
-            <GamePlayerCard cards={MOCK_PLAYER_HAND} className="row-span-1" />
+          {/* <main className="col-span-6 grid grid-rows-3 h-full"> */}
+          <main className="flex-1 flex flex-col min-w-0 h-full">
+            <div className="flex-[3] min-h-0">
+              <GameOpponents 
+                opponents={MOCK_OPPONENTS}
+                localPlayerId={localPlayerId}
+                selectedOpponentId={selectedOpponentId}
+                onSelectOpponent={setSelectedOpponentId}
+                // className="row-span-2"
+                className="h-full"
+              />
+            </div>
+            <div className="flex-[1] min-h-[200px] border-t border-slate-800">
+            <GamePlayerCard cards={MOCK_PLAYER_HAND} className="h-full" />
+            </div>
           </main>
         </div>
       ) : (
         /* The Opponent's view (later) */
-        <div className="flex h-screen w-screen items-center justify-center bg-slate-950 text-white">
-          <p>Waiting for opponent to make a move...</p>
+        <div className="grid grid-cols-8 h-screen w-screen overflow-hidden bg-slate-950">
+          <div className="col-span-2">
+            <p>Waiting for opponent to make a move...</p>
+          </div>
+          <main className="col-span-6 grid grid-rows-3 h-full">
+            <p>Waiting for opponent to make a move...</p>
+          </main>
         </div>
       )}
     </>

@@ -7,7 +7,7 @@ import LoginPage from "./pages/Auth/LoginPage";
 // import DashBoard from "./pages/DashBoard/DashBoard";
 import AboutPage from "./pages/HomePage/AboutPage";
 // import CardSelectionModal from "./pages/Game/components/CardSelectionModal";
-import ModalTest from "./pages/Dev/ModalTest";
+// import ModalTest from "./pages/Dev/ModalTest";
 import MockRoomTest from "./pages/Dev/MockRoomTest";
 
 const App: React.FC = () => {
@@ -28,7 +28,7 @@ const App: React.FC = () => {
           /> */}
           {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/dev/modal" element={<ModalTest />} />
+          {/* <Route path="/dev/modal" element={<ModalTest />} /> */}
           <Route path="/dev/game/mock" element={<MockRoomTest />} />
         </Routes>
       </main>

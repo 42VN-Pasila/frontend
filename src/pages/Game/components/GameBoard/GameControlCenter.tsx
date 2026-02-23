@@ -3,11 +3,11 @@ import HourGlass from "@assets/hourglass.gif";
 import Button from "@shared/components/Button";
 import type { NullableProps } from "@/common/types";
 import type { Card } from "../../common/types/cards";
-import Selector, { type SelectorItem } from "../CardSelectionModal/Selector";
+import Selector, { type SelectorItem } from "../CardSelection/Selector";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../../common/types/cards";
 import type { CardRank, CardSuit } from "../../common/types/cards";
-import { CARD_ICONS, SUIT_ICONS } from "../CardSelectionModal/constants";
-import CardPreview from "../CardSelectionModal/CardPreview";
+import { CARD_ICONS, SUIT_ICONS } from "../CardSelection/constants";
+import CardPreview from "../CardSelection/CardPreview";
 
 export type SelectedCard = NullableProps<Card>;
 
@@ -63,15 +63,11 @@ export const GameControlCenter = ({
     }, [timeLeft]);
 
     return (
-        <aside className="w-full border-r border-slate-800 bg-slate-900 p-6 flex flex-col h-full">
+        <aside className="w-full border-r border-slate-800 bg-slate-900 p-6 flex flex-col h-full overflow-y-auto custom-scrollbar">
             {/* 1. HEADER */}
-            {/* <div className="p-4 bg-slate-800 rounded-md border-l-4 border-(--color-primary) mb-3"> */}
-                {/* <p className="text-lg font-semibold text-white opacity">Your Turn</p> */}
-                <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-8">
-                    Pick a Card:
-                </h3>
-            {/* </div> */}
-
+            <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-8">
+                Pick a Card:
+            </h3>
             {/* 2. TIMER ROW */}
             <div className="flex items-center justify-between bg-slate-800 rounded-md px-4 py-3 mb-8">
                 <div className="flex items-center gap-3">
@@ -92,29 +88,8 @@ export const GameControlCenter = ({
                 </div>
             </div>
 
-            {/* 2. SELECTORS */}
-            {/* <div className="flex flex-col gap-4">
-                <h3 className="text-slate-400 text-xl">Start with a suit:</h3>
-                <Selector<CardSuit>
-                    items={SUIT_ITEMS}
-                    value={suit}
-                    onChange={(suit) => onChange({ suit })}
-                    columns={4}
-                />
-
-                <h3 className="text-slate-400 text-xl">The rank comes next:</h3>
-                {suit && (
-                    <Selector<CardRank>
-                        items={RANK_ITEMS_BY_SUIT[suit]}
-                        value={rank}
-                        onChange={(rank) => onChange({ rank })}
-                        columns={5}
-                    />
-                )}
-            </div> */}
-
-            {/* 2. SELECTORS */}
-            <div className="flex flex-col gap-6 relative">
+            {/* 3. SELECTORS */}
+            <div className="flex flex-col gap-6 relative shrink-0">
                 
                 {/* FLOATING INSTRUCTION POP */}
                 {!suit && (
@@ -140,7 +115,7 @@ export const GameControlCenter = ({
                     />
                 </div>
 
-                <h3 className="text-slate-400 text-xl">The rank comes next:</h3>
+                <h3 className="text-slate-400 text-xl">Then pick the rank:</h3>
                 {suit && (
                     <Selector<CardRank>
                         items={RANK_ITEMS_BY_SUIT[suit]}
@@ -151,10 +126,10 @@ export const GameControlCenter = ({
                 )}
             </div>
 
-            <div className="flex-grow" />
+            <div className="flex-grow min-h-[20px]" />
 
-            {/* 3. LOWER SECTION (Preview + Button) */}
-            <div className="flex flex-col gap-6 pt-4">
+            {/* 4. LOWER SECTION (Preview + Button) */}
+            <div className="flex flex-col gap-6 pt-4 shrink-0">
                 <div className="flex items-center justify-center">
                     <CardPreview suit={selection.suit} rank={selection.rank} />
                 </div>

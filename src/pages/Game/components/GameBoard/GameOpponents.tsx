@@ -38,7 +38,7 @@ const OpponentOption = ({
       
       {/* Avatar Div */}
       <div className={`
-        w-24 h-24 rounded-full overflow-hidden bg-slate-700 transition-all duration-150 border-2
+        w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden bg-slate-700 transition-all duration-150 border-2
         ${selected
             ? "border-(--color-primary) ring-4 ring-(--color-primary) scale-[1.1] transition-all duration-300 ease-out"
             : "border-transparent opacity-50 group-hover:opacity-100"
@@ -107,7 +107,9 @@ const GameOpponents = ({
 
   return (
     <section className={`${className} min-w-0 flex flex-col bg-slate-800/50 p-6 border-b border-slate-800 gap-10 relative`}>
-      
+      <h3 className="uppercase text-xl tracking-widest font-bold transition-colors text-white">
+          Pick an Opponent:
+      </h3>
       {/* 1. FLOATING BOUNCE INSTRUCTION */}
       {isPendingSelection && (
         <div className="mt-5 absolute left-1/2 -translate-x-1/2 animate-bounce bg-(--color-purple) text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-2">
@@ -115,14 +117,8 @@ const GameOpponents = ({
         </div>
       )}
 
-      <h3 className={`uppercase text-xl tracking-widest font-bold transition-colors ${
-        isPendingSelection ? "text-white" : "text-slate-500"
-      }`}>
-          Pick an Opponent:
-      </h3>
-
       <div className="flex justify-center">
-        <div className={`grid grid-cols-3 grid-rows-2 gap-x-80 gap-y-10 place-items-center p-10 rounded-3xl transition-all duration-500 
+        <div className={`grid grid-cols-3 grid-rows-2 gap-x-[10vw] w-full max-w-5xl gap-y-10 place-items-center p-10 rounded-3xl transition-all duration-500 
         ${isPendingSelection 
             ? "border-2 border-[var(--color-primary)] bg-[var(--color-primary)]/5 shadow-[0_0_40px_-10px_var(--color-primary)]" 
             : "border-2 border-transparent"
