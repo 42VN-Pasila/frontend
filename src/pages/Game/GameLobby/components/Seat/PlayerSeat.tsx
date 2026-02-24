@@ -1,26 +1,22 @@
-import type { Player } from "../types";
+import React from "react";
 
-export default function BottomPanel({
+import type { Player } from "../../Type/types";
+
+export default function PlayerSeat({
   player,
   className,
   onLeave,
 }: {
   player: Player;
-  className?: string;
-  onLeave: (userId: number) => void;
+  className: string;
+  onLeave?: (userId: number) => void;
 }) {
   return (
     <div
-      className={[
-        "absolute flex flex-col justify-center items-center gap-2 z-1000",
-        className ?? "",
-      ].join(" ")}
+      className={["absolute flex flex-col items-center gap-2", className].join(
+        " ",
+      )}
     >
-      <div className="flex items-center justify-center rounded-full bg-black/35 px-3 py-1 text-[11px] font-semibold tracking-wide text-white/80">
-        <div className="w-full h-full">
-          {player.user.username}
-        </div>
-      </div>
       <div className="relative">
         <div className="h-20 w-20 rounded-full overflow-hidden border-4 border-[var(--color-primary)] shadow-xl">
           <img
@@ -35,6 +31,7 @@ export default function BottomPanel({
             🏠
           </div>
         ) : null}
+
         {onLeave ? (
           <button
             type="button"
@@ -45,6 +42,10 @@ export default function BottomPanel({
             ⎋
           </button>
         ) : null}
+      </div>
+
+      <div className="rounded-full bg-black/35 px-3 py-1 text-[11px] font-semibold tracking-wide text-white/80">
+        {player.user.username}
       </div>
     </div>
   );
