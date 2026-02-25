@@ -1,23 +1,5 @@
 import CardBack from "@assets/card-back-2.png";
-
-interface Opponent {
-  id: number;
-  username: string;
-  avatarUrl: string;
-  cardCount: number;
-}
-
-type Positions = {
-  left: Opponent;
-  top: Opponent;
-  right: Opponent;
-};
-
-interface OpponentOptionProps extends Opponent {
-  selected?: boolean;
-  side: 'left' | 'right' | 'top';
-  onClick?: () => void;
-}
+import type { Opponent, Positions, OpponentOptionProps } from "../../common/types/players";
 
 const OpponentOption = ({
   id,
@@ -87,21 +69,23 @@ function getPositions(opponents: Opponent[], localId: number): Positions {
   return { top, left, right };
 }
 
-interface GameOpponentsProps {
+interface GameOpponentPickerProps {
   opponents: Opponent[];
   localPlayerId: number;
   selectedOpponentId: number | null;
   onSelectOpponent: (id: number) => void;
+  isMyTurn: boolean
   className?: string;
 }
 
-const GameOpponents = ({ 
+const GameOpponentPicker = ({ 
   opponents, 
   localPlayerId, 
   selectedOpponentId, 
-  onSelectOpponent, 
+  onSelectOpponent,
+  isMyTurn, 
   className 
-}: GameOpponentsProps) => {
+}: GameOpponentPickerProps) => {
   const { left, top, right } = getPositions(opponents, localPlayerId);
   const isPendingSelection = !selectedOpponentId;
 
@@ -166,4 +150,4 @@ const GameOpponents = ({
   );
 };
 
-export default GameOpponents;
+export default GameOpponentPicker;

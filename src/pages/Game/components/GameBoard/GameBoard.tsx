@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import GameControlCenter from "./GameControlCenter";
-import GameOpponents from "./GameOpponents";
+import GameOpponentPicker from "./GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard";
 import type { CardRank, CardSuit } from '../../common/types/cards';
 import type { SelectedCard } from "../CardSelection/CardSelection";
@@ -99,46 +99,64 @@ export const GameBoard = ({
 
     return (
     <>
-      {isMyTurn ? (
-        // <div className="grid grid-cols-8 h-screen w-screen overflow-hidden bg-slate-950">
+      (
         <div className="flex h-screen w-screen overflow-hidden bg-slate-950">
-        {/* <div className="col-span-2"> */}
-        <div className="w-72 lg:w-80 h-full shrink-0">
-            <GameControlCenter
-              selection={selection}
-              onChange={handleUpdate}
-              onSubmit={handleRequest}
-              isSelectionComplete={isSelectionComplete}
+          <div className="w-72 lg:w-80 h-full shrink-0">
+              <GameControlCenter
+                selection={selection}
+                onChange={handleUpdate}
+                onSubmit={handleRequest}
+                isSelectionComplete={isSelectionComplete}
+                isMyTurn={isMyTurn}
+              />
+            </div>
+            <main className="flex-1 flex flex-col min-w-0 h-full">
+              <div className="flex-[3] min-h-0">
+                <GameOpponentPicker
+                  opponents={MOCK_OPPONENTS}
+                  localPlayerId={localPlayerId}
+                  selectedOpponentId={selectedOpponentId}
+                  onSelectOpponent={setSelectedOpponentId}
+                  isMyTurn={isMyTurn}
+                  className="h-full"
+                />
+              </div>
+              <div className="flex-[1] min-h-[200px] border-t border-slate-800">
+              <GamePlayerCard
+                cards={MOCK_PLAYER_HAND}
+                className="h-full"
+                isMyTurn={isMyTurn}
+              />
+              </div>
+            </main>
+        </div>
+       )
+
+       {/* : (
+          <div className="flex h-screen w-screen overflow-hidden bg-slate-950">
+           <div className="w-72 lg:w-80 h-full shrink-0">
+             <GameTurnObserver
+              activePlayerId={activePlayerId}
             />
           </div>
-          {/* <main className="col-span-6 grid grid-rows-3 h-full"> */}
           <main className="flex-1 flex flex-col min-w-0 h-full">
             <div className="flex-[3] min-h-0">
-              <GameOpponents 
+              <GameOpponentDisplay
                 opponents={MOCK_OPPONENTS}
                 localPlayerId={localPlayerId}
                 selectedOpponentId={selectedOpponentId}
                 onSelectOpponent={setSelectedOpponentId}
-                // className="row-span-2"
                 className="h-full"
               />
             </div>
+
             <div className="flex-[1] min-h-[200px] border-t border-slate-800">
-            <GamePlayerCard cards={MOCK_PLAYER_HAND} className="h-full" />
+              <GamePlayerCard cards={MOCK_PLAYER_HAND} className="h-full"/>
             </div>
           </main>
         </div>
-      ) : (
-        /* The Opponent's view (later) */
-        <div className="grid grid-cols-8 h-screen w-screen overflow-hidden bg-slate-950">
-          <div className="col-span-2">
-            <p>Waiting for opponent to make a move...</p>
-          </div>
-          <main className="col-span-6 grid grid-rows-3 h-full">
-            <p>Waiting for opponent to make a move...</p>
-          </main>
-        </div>
-      )}
+      )} */}
+
     </>
   );
 };

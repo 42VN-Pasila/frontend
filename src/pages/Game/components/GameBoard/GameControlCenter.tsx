@@ -16,6 +16,7 @@ type GameControlCenterProps = {
   onChange: (updates: Partial<SelectedCard>) => void;
   onSubmit: () => void;
   isSelectionComplete: boolean;
+  isMyTurn: boolean;
 };
 
 const SUIT_ITEMS: SelectorItem<CardSuit>[] = ALL_CARD_SUITS.map((suit) => ({
@@ -41,6 +42,7 @@ export const GameControlCenter = ({
     onChange,
     onSubmit,
     isSelectionComplete,
+    isMyTurn,
 }: GameControlCenterProps) => {
     const { suit, rank } = selection;
 
@@ -126,7 +128,7 @@ export const GameControlCenter = ({
             <div className="flex-grow min-h-[20px]" />
 
             {/* 4. LOWER SECTION (Preview + Button) */}
-            <div className="flex flex-col gap-6 pt-4 shrink-0">
+            <div className="flex flex-col gap-6 pt-4 shrink-0 ">
                 <div className="flex items-center justify-center">
                     <CardPreview suit={selection.suit} rank={selection.rank} />
                 </div>
