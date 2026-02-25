@@ -3,11 +3,11 @@ import HourGlass from "@assets/hourglass.gif";
 import Button from "@shared/components/Button";
 import type { NullableProps } from "@/common/types";
 import type { Card } from "../../common/types/cards";
-import Selector, { type SelectorItem } from "../CardSelection/Selector";
+import Selector, { type SelectorItem } from "../Game/Selector";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../../common/types/cards";
 import type { CardRank, CardSuit } from "../../common/types/cards";
-import { CARD_ICONS, SUIT_ICONS } from "../CardSelection/constants";
-import CardPreview from "../CardSelection/CardPreview";
+import { CARD_ICONS, SUIT_ICONS } from "../Game/constants";
+import CardPreview from "../Game/CardPreview";
 
 export type SelectedCard = NullableProps<Card>;
 
@@ -16,7 +16,7 @@ type GameControlCenterProps = {
   onChange: (updates: Partial<SelectedCard>) => void;
   onSubmit: () => void;
   isSelectionComplete: boolean;
-  isMyTurn: boolean;
+  isInteractive: boolean;
 };
 
 const SUIT_ITEMS: SelectorItem<CardSuit>[] = ALL_CARD_SUITS.map((suit) => ({
@@ -42,7 +42,7 @@ export const GameControlCenter = ({
     onChange,
     onSubmit,
     isSelectionComplete,
-    isMyTurn,
+    isInteractive,
 }: GameControlCenterProps) => {
     const { suit, rank } = selection;
 

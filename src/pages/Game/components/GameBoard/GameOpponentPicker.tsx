@@ -1,5 +1,6 @@
 import CardBack from "@assets/card-back-2.png";
 import type { Opponent, Positions, OpponentOptionProps } from "../../common/types/players";
+import FloatingInstruction from "../Game/FloatingInstruction";
 
 const OpponentOption = ({
   id,
@@ -74,7 +75,7 @@ interface GameOpponentPickerProps {
   localPlayerId: number;
   selectedOpponentId: number | null;
   onSelectOpponent: (id: number) => void;
-  isMyTurn: boolean
+  isInteractive: boolean
   className?: string;
 }
 
@@ -83,7 +84,7 @@ const GameOpponentPicker = ({
   localPlayerId, 
   selectedOpponentId, 
   onSelectOpponent,
-  isMyTurn, 
+  isInteractive, 
   className 
 }: GameOpponentPickerProps) => {
   const { left, top, right } = getPositions(opponents, localPlayerId);
@@ -94,12 +95,12 @@ const GameOpponentPicker = ({
       <h3 className="uppercase text-xl tracking-widest font-bold transition-colors text-white">
           Pick an Opponent:
       </h3>
-      {/* 1. FLOATING BOUNCE INSTRUCTION */}
-      {isPendingSelection && (
-        <div className="mt-5 absolute left-1/2 -translate-x-1/2 animate-bounce bg-(--color-purple) text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-2">
-            🎯 Pick your target!
-        </div>
-      )}
+
+      <FloatingInstruction
+        text="🎯 Pick your target!"
+        visible={isPendingSelection}
+        className="mt-5 bg-[var(--color-purple)]"
+      />
 
       <div className="flex justify-center">
         <div className={`grid grid-cols-3 grid-rows-2 gap-x-[10vw] w-full max-w-5xl gap-y-10 place-items-center p-10 rounded-3xl transition-all duration-500 

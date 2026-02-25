@@ -3,7 +3,7 @@ import GameControlCenter from "./GameControlCenter";
 import GameOpponentPicker from "./GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard";
 import type { CardRank, CardSuit } from '../../common/types/cards';
-import type { SelectedCard } from "../CardSelection/CardSelection";
+import type { SelectedCard } from "../Game/CardSelection";
 import Ed from "@assets/Ed.png";
 import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
@@ -93,7 +93,7 @@ export const GameBoard = ({
     }
   }, [selection.suit, selection.rank]);
 
-  const isMyTurn = activePlayerId === localPlayerId;
+  const isInteractive = activePlayerId === localPlayerId;
 
   if (activePlayerId === null) return null;
 
@@ -107,7 +107,7 @@ export const GameBoard = ({
                 onChange={handleUpdate}
                 onSubmit={handleRequest}
                 isSelectionComplete={isSelectionComplete}
-                isMyTurn={isMyTurn}
+                isInteractive={isInteractive}
               />
             </div>
             <main className="flex-1 flex flex-col min-w-0 h-full">
@@ -117,7 +117,7 @@ export const GameBoard = ({
                   localPlayerId={localPlayerId}
                   selectedOpponentId={selectedOpponentId}
                   onSelectOpponent={setSelectedOpponentId}
-                  isMyTurn={isMyTurn}
+                  isInteractive={isInteractive}
                   className="h-full"
                 />
               </div>
@@ -125,38 +125,12 @@ export const GameBoard = ({
               <GamePlayerCard
                 cards={MOCK_PLAYER_HAND}
                 className="h-full"
-                isMyTurn={isMyTurn}
+                isInteractive={isInteractive}
               />
               </div>
             </main>
         </div>
        )
-
-       {/* : (
-          <div className="flex h-screen w-screen overflow-hidden bg-slate-950">
-           <div className="w-72 lg:w-80 h-full shrink-0">
-             <GameTurnObserver
-              activePlayerId={activePlayerId}
-            />
-          </div>
-          <main className="flex-1 flex flex-col min-w-0 h-full">
-            <div className="flex-[3] min-h-0">
-              <GameOpponentDisplay
-                opponents={MOCK_OPPONENTS}
-                localPlayerId={localPlayerId}
-                selectedOpponentId={selectedOpponentId}
-                onSelectOpponent={setSelectedOpponentId}
-                className="h-full"
-              />
-            </div>
-
-            <div className="flex-[1] min-h-[200px] border-t border-slate-800">
-              <GamePlayerCard cards={MOCK_PLAYER_HAND} className="h-full"/>
-            </div>
-          </main>
-        </div>
-      )} */}
-
     </>
   );
 };

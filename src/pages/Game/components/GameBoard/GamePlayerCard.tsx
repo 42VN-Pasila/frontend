@@ -5,13 +5,13 @@ import { ALL_CARD_RANKS } from "../../common/types/cards";
 interface GamePlayerCardProps {
   cards: Card[];
   className?: string;
-  isMyTurn: boolean;
+  isInteractive: boolean;
 }
 
 const GamePlayerCard = ({
   cards,
   className = "",
-  isMyTurn,
+  isInteractive,
 }: GamePlayerCardProps) => {
   const sortedCards = [...cards].sort((a, b) => {
     return ALL_CARD_RANKS.indexOf(a.rank) - ALL_CARD_RANKS.indexOf(b.rank);
