@@ -3,11 +3,12 @@ import HourGlass from "@assets/hourglass.gif";
 import Button from "@shared/components/Button";
 import type { NullableProps } from "@/common/types";
 import type { Card } from "../../common/types/cards";
-import Selector, { type SelectorItem } from "../Game/Selector";
+import Selector, { type SelectorItem } from "../shared/Selector";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../../common/types/cards";
 import type { CardRank, CardSuit } from "../../common/types/cards";
-import { CARD_ICONS, SUIT_ICONS } from "../Game/constants";
-import CardPreview from "../Game/CardPreview";
+import { CARD_ICONS, SUIT_ICONS } from "../shared/constants";
+import CardPreview from "../shared/CardPreview";
+import FloatingInstruction from "../shared/FloatingInstruction";
 
 export type SelectedCard = NullableProps<Card>;
 
@@ -59,7 +60,6 @@ export const GameControlCenter = ({
 
     useEffect(() => {
         if (timeLeft <= 0) {
-            console.log("Time is up!");
             // window.location.reload(); // comment out for testing UI
         }
     }, [timeLeft]);
@@ -67,56 +67,27 @@ export const GameControlCenter = ({
     return (
         <aside className="w-full border-r border-slate-800 bg-slate-900 p-6 flex flex-col h-full overflow-y-auto custom-scrollbar">
             {/* 1. HEADER */}
-            <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-8">
+            <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-4">
                 Pick a Card:
             </h3>
-            {/* 2. TIMER ROW */}
-            <div className="flex items-center justify-between bg-slate-800 rounded-md px-4 py-3 mb-8">
-                <div className="flex items-center gap-3">
-                    <img 
-                        src={HourGlass} 
-                        alt="" 
-                        className="w-16 h-16 object-contain" 
-                    />
-                </div>
-                
-                <div className={`text-4xl font-mono leading-none ${
-                    timeLeft < 5 ? 'text-red-500 animate-pulse' : 'text-white'
-                }`}>
-                    00:{String(timeLeft).padStart(2, "0")}
-                </div>
-            </div>
 
-            {/* 3. SELECTORS */}
             <div className="flex flex-col gap-6 relative shrink-0">
-                
-                {/* FLOATING INSTRUCTION POP */}
-                {!suit && (
-                    <div className="absolute -top-12 left-0 animate-bounce bg-(--color-purple) text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-2">
-                        <span>👇 Pick a suit to start!</span>
-                    </div>
-                )}
-
-                <div className={`flex flex-col gap-4 rounded-xl transition-all duration-500 ${
-                    !suit 
-                    ? "p-4 ring-2 ring-(--color-primary) bg-blue-500/5 shadow-[0_0_20px_var(--color-primary)] shadow-opacity-20" 
-                    : "opacity-100"
-                }`}>
-                    <h3 className={`text-xl transition-colors ${!suit ? "text-white font-bold" : "text-slate-400"}`}>
-                        Start with a suit:
-                    </h3>
-                    
+                <FloatingInstruction 
+                    text="👇 Pick a suit to start!" 
+                    visible={!suit}
+                >
                     <Selector<CardSuit>
+                        label="Start with a suit:"
                         items={SUIT_ITEMS}
                         value={suit}
                         onChange={(suit) => onChange({ suit })}
                         columns={4}
                     />
-                </div>
+                </FloatingInstruction>
 
-                <h3 className="text-slate-400 text-xl">Then pick the rank:</h3>
                 {suit && (
                     <Selector<CardRank>
+                        label="Then pick the rank:"
                         items={RANK_ITEMS_BY_SUIT[suit]}
                         value={rank}
                         onChange={(rank) => onChange({ rank })}

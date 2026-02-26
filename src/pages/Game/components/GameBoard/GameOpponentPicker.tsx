@@ -1,6 +1,6 @@
 import CardBack from "@assets/card-back-2.png";
 import type { Opponent, Positions, OpponentOptionProps } from "../../common/types/players";
-import FloatingInstruction from "../Game/FloatingInstruction";
+import FloatingInstruction from "../shared/FloatingInstruction";
 
 const OpponentOption = ({
   id,
@@ -96,11 +96,11 @@ const GameOpponentPicker = ({
           Pick an Opponent:
       </h3>
 
-      <FloatingInstruction
+      {/* <FloatingInstruction
         text="🎯 Pick your target!"
         visible={isPendingSelection}
         className="mt-5 bg-[var(--color-purple)]"
-      />
+      /> */}
 
       <div className="flex justify-center">
         <div className={`grid grid-cols-3 grid-rows-2 gap-x-[10vw] w-full max-w-5xl gap-y-10 place-items-center p-10 rounded-3xl transition-all duration-500 

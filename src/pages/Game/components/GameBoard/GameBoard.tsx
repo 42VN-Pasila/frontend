@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import GameControlCenter from "./GameControlCenter";
 import GameOpponentPicker from "./GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard";
+import Timer from "../shared/Timer"
 import type { CardRank, CardSuit } from '../../common/types/cards';
-import type { SelectedCard } from "../Game/CardSelection";
+import type { SelectedCard } from "../shared/CardSelection";
 import Ed from "@assets/Ed.png";
 import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
 import Plank from "@assets/Plank 1.png";
+import HourGlass from "@assets/hourglass.gif";
 import type { Card } from "../../common/types/cards";
 import { ALL_CARD_SUITS, ALL_CARD_RANKS } from '../../common/types/cards';
 
@@ -53,6 +55,8 @@ export const GameBoard = ({
   localPlayerId,
   onSelect,
 }: GameBoardProps) => {
+  const [timeLeft, setTimeLeft] = useState(15);
+
   const [selectedOpponentId, setSelectedOpponentId] = useState<number | null>(
     null,
   );
@@ -67,6 +71,21 @@ export const GameBoard = ({
     selection.rank &&
     selectedOpponentId
   );
+
+  useEffect(() => {
+        setTimeLeft(15);
+        const intervalId = setInterval(() => {
+            setTimeLeft((prev) => Math.max(prev - 1, 0));
+        }, 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+
+    useEffect(() => {
+        if (timeLeft <= 0) {
+            // window.location.reload(); // comment out for testing UI
+        }
+    }, [timeLeft]);
 
   const handleUpdate = (updates: Partial<SelectedCard>) => {
     setSelection((prev) => ({ ...prev, ...updates }));
@@ -98,7 +117,6 @@ export const GameBoard = ({
   if (activePlayerId === null) return null;
 
     return (
-    <>
       (
         <div className="flex h-screen w-screen overflow-hidden bg-slate-950">
           <div className="w-72 lg:w-80 h-full shrink-0">
@@ -111,6 +129,9 @@ export const GameBoard = ({
               />
             </div>
             <main className="flex-1 flex flex-col min-w-0 h-full">
+              <div className="absolute top-4 right-4 z-20">
+                <Timer timeLeft={timeLeft} icon={HourGlass} />
+              </div>
               <div className="flex-[3] min-h-0">
                 <GameOpponentPicker
                   opponents={MOCK_OPPONENTS}
@@ -131,7 +152,6 @@ export const GameBoard = ({
             </main>
         </div>
        )
-    </>
   );
 };
 
