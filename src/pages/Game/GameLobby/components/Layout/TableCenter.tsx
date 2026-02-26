@@ -1,8 +1,4 @@
-import React from "react";
-
 import { Button } from "@/shared/components";
-
-
 export default function TableCenter({
   isOwner,
   canStart,
@@ -27,7 +23,7 @@ export default function TableCenter({
   return (
     <div
       className={[
-        "w-[min(1200px,92vw)] h-[min(640px,72vh)]",
+        "w-full h-full",
         "rounded-[999px]",
         "bg-[#8E3B46]",
         "shadow-[0_40px_120px_rgba(0,0,0,0.55)]",
@@ -42,7 +38,7 @@ export default function TableCenter({
 
       <div className="absolute inset-0 grid place-items-center">
          <Button
-          className="bg-[var(--color-primary)]"
+          className="bg-[var(--color-primary)] z-1000"
           onClick={onClick}
           disabled={disabled}
         >

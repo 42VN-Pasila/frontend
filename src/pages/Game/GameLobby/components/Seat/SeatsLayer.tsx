@@ -1,8 +1,5 @@
-import React from "react";
-
 import type { Player } from "../../Type/types";
 import SeatSlot from "./SeatSlot";
-
 export default function SeatsLayer({
   players,
   onJoinNext,
@@ -13,7 +10,7 @@ export default function SeatsLayer({
   onLeave: (userId: number) => void;
 }) {
   return (
-    <>
+    <div className="absolute inset-0">
       <SeatSlot
         pos="top"
         players={players}
@@ -38,6 +35,6 @@ export default function SeatsLayer({
         onJoinNext={onJoinNext}
         onLeave={onLeave}
       />
-    </>
+    </div>
   );
 }

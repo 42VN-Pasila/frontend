@@ -1,16 +1,14 @@
 import { getPlayerByPos } from "../../Logic/roomLogic";
 import type { Player, SeatPos } from "../../Type/types";
-import BottomPanel from "../Layout/BottomPanel";
 import OpenSeat from "./OpenSeat";
-import PlayerSeat from "./PlayerSeat";
+import SeatPlayer from "./SeatPlayer";
 
 const POS_CLASS: Record<SeatPos, string> = {
-  top: "left-1/2 -top-6 -translate-x-1/2",
-  left: "-left-6 top-1/2 -translate-y-1/2",
-  right: "-right-6 top-1/2 -translate-y-1/2",
-  bottom: "left-1/2 top-4/5 -translate-x-1/2",
+  top: "left-1/2 top-2/5 -translate-x-1/2 -translate-y-[260px]",
+  bottom: "left-1/2 top-2/5 -translate-x-1/2 translate-y-[270px]",
+  left: "left-1/2 top-1/2 -translate-y-1/2 -translate-x-[600px]",
+  right: "left-1/2 top-1/2 -translate-y-1/2 translate-x-[520px]",
 };
-
 export default function SeatSlot({
   pos,
   players,
@@ -23,19 +21,14 @@ export default function SeatSlot({
   onLeave: (userId: number) => void;
 }) {
   const player = getPlayerByPos(players, pos);
-  const className = POS_CLASS[pos];
 
-  if (!player) {
-    return (
-      <OpenSeat label="OPEN SEAT" className={className} onClick={onJoinNext} />
-    );
-  }
-
-  if (pos === "bottom") {
-    return (
-      <BottomPanel onLeave={onLeave} player={player} className={className} />
-    );
-  }
-
-  return <PlayerSeat player={player} className={className} onLeave={onLeave} />;
+  return (
+    <div className={`absolute w-fit h-fit ${POS_CLASS[pos]}`}>
+      {!player ? (
+        <OpenSeat label="OPEN SEAT" onClick={onJoinNext} />
+      ) : (
+        <SeatPlayer player={player} pos={pos} onLeave={onLeave} />
+      )}
+    </div>
+  );
 }
