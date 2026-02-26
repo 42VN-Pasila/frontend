@@ -113,7 +113,7 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
 Input.displayName = "Form.Input";
 
 const FormButton = React.forwardRef<HTMLButtonElement, FormButtonProps>(
-  ({ className, children, type = "submit", ...rest }, ref) => {
+  ({ className, color, children, type = "submit", ...rest }, ref) => {
     return (
       <Button
         ref={ref}

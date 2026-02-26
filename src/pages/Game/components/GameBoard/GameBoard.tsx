@@ -1,23 +1,26 @@
-import { useState, useEffect } from "react";
-import GameControlCenter from "./GameControlCenter";
-import GameOpponentPicker from "./GameOpponentPicker";
-import GamePlayerCard from "./GamePlayerCard";
-import Timer from "../shared/Timer"
-import type { CardRank, CardSuit } from '../../common/types/cards';
-import type { SelectedCard } from "../shared/CardSelection";
+import { useEffect, useState } from "react";
+
 import Ed from "@assets/Ed.png";
 import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
 import Plank from "@assets/Plank 1.png";
 import HourGlass from "@assets/hourglass.gif";
+
+import type { CardRank, CardSuit } from "../../common/types/cards";
 import type { Card } from "../../common/types/cards";
-import { ALL_CARD_SUITS, ALL_CARD_RANKS } from '../../common/types/cards';
+import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../../common/types/cards";
+import type { SelectedCard } from "../shared/CardSelection";
+import Timer from "../shared/Timer";
+
+import GameControlCenter from "./GameControlCenter";
+import GameOpponentPicker from "./GameOpponentPicker";
+import GamePlayerCard from "./GamePlayerCard";
 
 export const generateMockHand = (): Card[] => {
   const handSize = Math.floor(Math.random() * 20) + 1;
 
   const deck: Card[] = ALL_CARD_SUITS.flatMap((suit) =>
-    ALL_CARD_RANKS.map((rank) => ({ suit, rank }))
+    ALL_CARD_RANKS.map((rank) => ({ suit, rank })),
   );
 
   for (let i = deck.length - 1; i > 0; i--) {
@@ -73,19 +76,19 @@ export const GameBoard = ({
   );
 
   useEffect(() => {
-        setTimeLeft(15);
-        const intervalId = setInterval(() => {
-            setTimeLeft((prev) => Math.max(prev - 1, 0));
-        }, 1000);
+    setTimeLeft(15);
+    const intervalId = setInterval(() => {
+      setTimeLeft((prev) => Math.max(prev - 1, 0));
+    }, 1000);
 
-        return () => clearInterval(intervalId);
-    }, []);
+    return () => clearInterval(intervalId);
+  }, []);
 
-    useEffect(() => {
-        if (timeLeft <= 0) {
-            // window.location.reload(); // comment out for testing UI
-        }
-    }, [timeLeft]);
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      // window.location.reload(); // comment out for testing UI
+    }
+  }, [timeLeft]);
 
   const handleUpdate = (updates: Partial<SelectedCard>) => {
     setSelection((prev) => ({ ...prev, ...updates }));
@@ -116,42 +119,40 @@ export const GameBoard = ({
 
   if (activePlayerId === null) return null;
 
-    return (
-      (
-        <div className="flex h-screen w-screen overflow-hidden bg-slate-950">
-          <div className="w-72 lg:w-80 h-full shrink-0">
-              <GameControlCenter
-                selection={selection}
-                onChange={handleUpdate}
-                onSubmit={handleRequest}
-                isSelectionComplete={isSelectionComplete}
-                isInteractive={isInteractive}
-              />
-            </div>
-            <main className="flex-1 flex flex-col min-w-0 h-full">
-              <div className="absolute top-4 right-4 z-20">
-                <Timer timeLeft={timeLeft} icon={HourGlass} />
-              </div>
-              <div className="flex-[3] min-h-0">
-                <GameOpponentPicker
-                  opponents={MOCK_OPPONENTS}
-                  localPlayerId={localPlayerId}
-                  selectedOpponentId={selectedOpponentId}
-                  onSelectOpponent={setSelectedOpponentId}
-                  isInteractive={isInteractive}
-                  className="h-full"
-                />
-              </div>
-              <div className="flex-[1] min-h-[200px] border-t border-slate-800">
-              <GamePlayerCard
-                cards={MOCK_PLAYER_HAND}
-                className="h-full"
-                isInteractive={isInteractive}
-              />
-              </div>
-            </main>
+  return (
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-950">
+      <div className="w-72 lg:w-80 h-full shrink-0">
+        <GameControlCenter
+          selection={selection}
+          onChange={handleUpdate}
+          onSubmit={handleRequest}
+          isSelectionComplete={isSelectionComplete}
+          isInteractive={isInteractive}
+        />
+      </div>
+      <main className="flex-1 flex flex-col min-w-0 h-full">
+        <div className="absolute top-4 right-4 z-20">
+          <Timer timeLeft={timeLeft} icon={HourGlass} />
         </div>
-       )
+        <div className="flex-[3] min-h-0">
+          <GameOpponentPicker
+            opponents={MOCK_OPPONENTS}
+            localPlayerId={localPlayerId}
+            selectedOpponentId={selectedOpponentId}
+            onSelectOpponent={setSelectedOpponentId}
+            isInteractive={isInteractive}
+            className="h-full"
+          />
+        </div>
+        <div className="flex-[1] min-h-[200px] border-t border-slate-800">
+          <GamePlayerCard
+            cards={MOCK_PLAYER_HAND}
+            className="h-full"
+            isInteractive={isInteractive}
+          />
+        </div>
+      </main>
+    </div>
   );
 };
 

@@ -32,7 +32,7 @@ function Selector<T extends string>({
     <div {...rest} className={`flex flex-col gap-4 ${className}`}>
       
       {label && (
-        <h3 className={`text-l transition-colors ${value ? "text-slate-400" : "text-white font-bold"}`}>
+        <h3 className={`text-l transition-colors ${value ? "text-slate-400 mt-0" : "mt-6 text-white font-bold"}`}>
           {label}
         </h3>
       )}

@@ -1,7 +1,7 @@
-interface FloatingInstructionProps
-  extends React.ComponentPropsWithoutRef<"div"> {
+interface FloatingInstructionProps {
+  // extends React.ComponentPropsWithoutRef<"div">
   text: string;
-  visible?: boolean;
+  visible: boolean;
   children: React.ReactNode;
 }
 
@@ -9,24 +9,24 @@ const FloatingInstruction = ({
   text,
   visible = true,
   children,
-  className,
-  ...rest
+  // className,
+  // ...rest
 }: FloatingInstructionProps) => {
-
   return (
     <div className="relative w-full">
       {visible && (
         <div
-          {...rest}
-          className={[
-            "z-20 pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2",
-            "w-fit whitespace-nowrap animate-bounce",
-            "bg-(--color-purple) text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-lg",
-            "flex items-center justify-center text-center",
-            className,
-          ]
-            .filter(Boolean)
-            .join(" ")}
+          // {...rest}
+          className="z-20 pointer-events-none absolute top-3 left-1/2 -translate-x-1/2 w-fit whitespace-nowrap animate-bounce bg-(--color-purple) text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-lg flex items-center justify-center text-center"
+          // {[
+          //   "z-20 pointer-events-none absolute top-3 left-1/2 -translate-x-1/2",
+          //   "w-fit whitespace-nowrap animate-bounce",
+          //   "bg-(--color-purple) text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-lg",
+          //   "flex items-center justify-center text-center",
+          //   className,
+          // ]
+          // .filter(Boolean)
+          // .join(" ")}
         >
           {text}
         </div>
