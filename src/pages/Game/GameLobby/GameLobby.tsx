@@ -36,11 +36,6 @@ export default function GameLobby() {
   const isMeOwner = ownerId !== null && me.id === ownerId;
   const canStart = isMeOwner && players.length === 4;
 
-  // function handleJoin() {
-  //   addPlayer(roomId, me);
-  //   syncFromStore();
-  // }
-
   useEffect(() => {
     function onStorage(e: StorageEvent) {
       if (e.key === "mock_rooms_v1") {
@@ -103,7 +98,6 @@ export default function GameLobby() {
 
           <SeatsLayer
             players={players}
-            // onJoinNext={handleJoin}
             onLeave={handleLeave}
           />
         </div>
