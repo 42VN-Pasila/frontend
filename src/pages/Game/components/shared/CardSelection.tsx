@@ -41,11 +41,8 @@ export default function CardSelection({
 
   return (
     <div className="flex flex-col">
-      <h3 className="text-white uppercase text-sm tracking-widest font-bold">
-        Pick a Card:
-      </h3>
 
-      <div className="flex flex-col gap-6 relative shrink-0">
+      <div className="flex flex-col gap-4 relative shrink-0">
         <FloatingInstruction text="👇 Pick a suit to start!" visible={!suit}>
           <Selector<CardSuit>
             label="Start with a suit:"

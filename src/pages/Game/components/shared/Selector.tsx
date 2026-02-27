@@ -57,16 +57,16 @@ function Selector<T extends string>({
               {...buttonProps}
               className={`
                 flex items-center justify-center rounded-lg border transition-all
-                aspect-square p-1 md:p-2 
+                aspect-square p-2 
                 ${disabled ? "opacity-30 cursor-not-allowed" : "hover:bg-white"}
                 ${isActive
-                  ? "bg-white border-(--color-primary) ring-2 md:ring-4 ring-(--color-primary) scale-105 z-10 hover:bg-white"
+                  ? "bg-white border-(--color-primary) ring-4 ring-(--color-primary) scale-105 z-10 hover:bg-white"
                   : "border-slate-700 bg-slate-800/40"
                 }
                 ${itemClassName ?? ""}
               `}
             >
-              <div className="w-full h-full max-w-[16px] max-h-[16px] md:max-w-[24px] md:max-h-[24px]">
+              <div className="w-full h-full max-w-[20px] max-h-[20px] md:max-w-[24px] md:max-h-[24px]">
                  <Icon className="w-full h-full object-contain" aria-hidden="true" />
               </div>
               {itemLabel && <span className="sr-only">{itemLabel}</span>}

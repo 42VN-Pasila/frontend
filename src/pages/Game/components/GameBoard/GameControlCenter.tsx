@@ -38,22 +38,21 @@ export const GameControlCenter = ({
   }, [timeLeft]);
 
   return (
-    <aside className="w-full border-r border-slate-800 bg-slate-900 pt-4 p-6 flex flex-col h-full overflow-y-auto">
-      <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-4">
+    <aside className="w-full border-r border-slate-800 bg-slate-900 pt-2 p-6 flex flex-col h-full">
+      <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-2">
         Pick a Card:
       </h3>
 
       <CardSelection selection={selection} onChange={onChange} />
 
-      <div className="min-h-[20px]" />
+      <div className="min-h-[10px]" />
 
-      <div className="flex flex-col gap-6 pt-4 shrink-0 flex-grow">
+      <div className="flex flex-col gap-2 shrink-0 flex-grow">
         <div className="flex items-center justify-center h-full">
           <CardPreview suit={selection.suit} rank={selection.rank} />
         </div>
-        <p className="text-white-400 mt-1 text-center">
-          Select a card and an opponent before time runs out to avoid losing
-          your turn.
+        <p className="text-white-400 mt-1 text-center text-sm">
+          Complete selections before time runs out to avoid losing your turn.
         </p>
         <Button
           onClick={onSubmit}
