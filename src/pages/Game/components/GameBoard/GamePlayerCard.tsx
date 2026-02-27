@@ -29,7 +29,7 @@ const GamePlayerCard = ({
               key={`${card.suit}-${card.rank}`}
               className="relative transition-transform duration-200 hover:-translate-y-4" // hover for fun
               style={{
-                marginLeft: index === 0 ? '0' : `${cards.length > 10 ? '-4rem' : '-2.5rem'}`,
+                marginLeft: index === 0 ? '0' : `${cards.length > 10 ? '-3rem' : '-2.5rem'}`,
                 zIndex: index
               }}
             >

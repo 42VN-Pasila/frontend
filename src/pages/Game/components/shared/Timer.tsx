@@ -29,7 +29,7 @@ const Timer = ({
       </div>
 
       <div
-        className={`text-4xl font-mono leading-none transition-colors duration-300 ${
+        className={`text-3xl md:text-4xl font-mono leading-none transition-colors duration-300 ${
           isDanger ? "text-red-500 animate-pulse" : "text-white"
         }`}
       >

@@ -130,11 +130,12 @@ export const GameBoard = ({
           isInteractive={isInteractive}
         />
       </div>
-      <main className="flex-1 flex flex-col min-w-0 h-full">
-        <div className="absolute top-4 right-4 z-20">
-          <Timer timeLeft={timeLeft} icon={HourGlass} />
-        </div>
-        <div className="flex-[3] min-h-0">
+      <main className="flex-1 flex flex-col min-w-20 h-full">
+        <div className="relative flex-[5] min-h-0">
+          <div className="absolute -translate-y-1/2 left-10 z-20 min-h-[20px]"
+              style={{ top: '90%' }}>
+            <Timer timeLeft={timeLeft} icon={HourGlass} />
+          </div>
           <GameOpponentPicker
             opponents={MOCK_OPPONENTS}
             localPlayerId={localPlayerId}
@@ -144,7 +145,7 @@ export const GameBoard = ({
             className="h-full"
           />
         </div>
-        <div className="flex-[1] min-h-[200px] border-t border-slate-800">
+        <div className="flex-[2] min-h-[20px] border-t border-slate-800">
           <GamePlayerCard
             cards={MOCK_PLAYER_HAND}
             className="h-full"
