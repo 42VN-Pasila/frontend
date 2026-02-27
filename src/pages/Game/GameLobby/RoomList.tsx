@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
+
+import { addPlayer, listRooms } from "./Logic/roomStore";
 import { getOrCreateCurrentUser, resetCurrentUser } from "./Mock/mockIdentity";
-import { addPlayer, listRooms  } from "./Logic/roomStore";
 
 export default function RoomList() {
   const nav = useNavigate();
@@ -11,6 +13,16 @@ export default function RoomList() {
   function refresh() {
     setRooms(listRooms());
   }
+
+  useEffect(() => {
+    function onStorage(e: StorageEvent) {
+      if (e.key === "mock_rooms_v1") {
+        refresh();
+      }
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   return (
     <div className="min-h-screen p-6 text-white">
@@ -22,7 +34,7 @@ export default function RoomList() {
 
         <div className="flex gap-2">
           <button
-            className="px-3 py-2 rounded bg-white/10"
+            className="px-3 py-2 rounded bg-white/10 hover:bg-white/20 transition"
             onClick={() => {
               resetCurrentUser();
               location.reload();
@@ -30,33 +42,50 @@ export default function RoomList() {
           >
             New Identity
           </button>
-          <button className="px-3 py-2 rounded bg-white/10" onClick={refresh}>
+          <button
+            className="px-3 py-2 rounded bg-white/10 hover:bg-white/20 transition"
+            onClick={refresh}
+          >
             Refresh
           </button>
         </div>
       </div>
 
       <div className="mt-6 grid gap-3">
-        {rooms.map((r) => (
-          <div key={r.id} className="rounded-xl bg-black/40 border border-white/10 p-4 flex items-center justify-between">
-            <div>
-              <div className="font-semibold">Room #{r.id}</div>
-              <div className="text-sm text-white/60">
-                Players: {r.players.length}/4 • {r.status}
-              </div>
-            </div>
+        {rooms.map((r) => {
+          const isFull = r.players.length >= 4;
 
-            <button
-              className="px-4 py-2 rounded bg-[var(--color-primary)]"
-              onClick={() => {
-                addPlayer(r.id, me);
-                nav(`/rooms/${r.id}`);
-              }}
+          return (
+            <div
+              key={r.id}
+              className="rounded-xl bg-black/40 border border-white/10 p-4 flex items-center justify-between hover:border-white/20 transition"
             >
-              Join
-            </button>
-          </div>
-        ))}
+              <div>
+                <div className="font-semibold">Room #{r.id}</div>
+                <div className="text-sm text-white/60">
+                  Players: {r.players.length}/4
+                </div>
+              </div>
+
+              {isFull ? (
+                <div className="flex items-center gap-2 text-red-400 font-bold tracking-widest">
+                  <span className="h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
+                  FULL
+                </div>
+              ) : (
+                <button
+                  className="px-4 py-2 rounded bg-[var(--color-primary)] hover:scale-105 transition font-semibold"
+                  onClick={() => {
+                    addPlayer(r.id, me);
+                    nav(`/rooms/${r.id}`);
+                  }}
+                >
+                  Join
+                </button>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

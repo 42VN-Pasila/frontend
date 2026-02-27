@@ -1,15 +1,15 @@
-import type { Player, User } from "../Type/types";
-import {leaveAndMigrateOwner} from  "./roomLogic"
+import type { Player, User } from '../Type/types';
+
+import { leaveAndMigrateOwner } from './roomLogic';
 
 export type Room = {
   id: string;
   createdAt: number;
   ownerId: number;
   players: Player[];
-  status: "lobby" | "playing";
 };
 
-const KEY = "mock_rooms_v1";
+const KEY = 'mock_rooms_v1';
 
 function readAll(): Room[] {
   const raw = localStorage.getItem(KEY);
@@ -37,21 +37,19 @@ export function createRoomWithId(roomId: string, owner: User): Room {
     id: roomId,
     createdAt: Date.now(),
     ownerId: owner.id,
-    status: "lobby",
     players: [
       {
         user: owner,
-        seat: { SeatIndex: 1, SeatPos: "bottom" },
-        isOwner: true,
-      },
-    ],
+        seat: { SeatIndex: 1, SeatPos: 'bottom' },
+        isOwner: true
+      }
+    ]
   };
 
   rooms.push(room);
   writeAll(rooms);
   return room;
 }
-
 
 export function removePlayer(roomId: string, userId: number): Room | undefined {
   const rooms = readAll();
@@ -66,7 +64,7 @@ export function removePlayer(roomId: string, userId: number): Room | undefined {
   }
 
   const newOwner = room.players.find((p) => p.isOwner);
-  if (newOwner) room.ownerId = newOwner.user.id; 
+  if (newOwner) room.ownerId = newOwner.user.id;
 
   writeAll(rooms);
   return room;
@@ -76,21 +74,18 @@ export function addPlayer(roomId: string, user: User): Room | undefined {
   const rooms = readAll();
   const room = rooms.find((r) => r.id === roomId);
   if (!room) return;
-  if (room.players.some((p) => p.user.id === user.id)) return room;
-  if (room.players.length >= 4) return room;
+  if (room.players.some((p) => p.user.id === user.id) || room.players.length >= 4) return room;
   const used = new Set(room.players.map((p) => p.seat.SeatIndex));
   const next = ([1, 2, 3, 4] as const).find((x) => !used.has(x));
   if (!next) return room;
-  const posByIndex = { 1: "bottom", 2: "left", 3: "top", 4: "right" } as const;
+  const posByIndex = { 1: 'bottom', 2: 'left', 3: 'top', 4: 'right' } as const;
   const newPlayer: Player = {
     user,
     seat: { SeatIndex: next, SeatPos: posByIndex[next] },
-    isOwner: false,
+    isOwner: false
   };
 
-  room.players = [...room.players, newPlayer].sort(
-    (a, b) => a.seat.SeatIndex - b.seat.SeatIndex,
-  );
+  room.players = [...room.players, newPlayer].sort((a, b) => a.seat.SeatIndex - b.seat.SeatIndex);
 
   writeAll(rooms);
   return room;

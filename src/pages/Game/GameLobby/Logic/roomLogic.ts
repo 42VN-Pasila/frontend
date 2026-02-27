@@ -32,20 +32,6 @@ export function getNextAvailableSeat(players: Player[]): SeatIndex | null {
 export function getPlayerByPos(players: Player[], pos: SeatPos): Player | undefined {
   return players.find((p) => p.seat.SeatPos === pos);
 }
-export function makeOwner(ownerUser: User): Player {
-  return {
-    user: ownerUser,
-    seat: {
-      SeatIndex: 1,
-      SeatPos: POS_BY_SEAT[1],
-    },
-    isOwner: true,
-  };
-}
-
-export function resetToOwner(ownerUser: User): Player[] {
-  return [makeOwner(ownerUser)];
-}
 
 export function joinUser(players: Player[], user: User): Player[] {
   if (isRoomFull(players)) return players;
@@ -66,15 +52,6 @@ export function joinUser(players: Player[], user: User): Player[] {
   };
 
   return [...players, next].sort(sortBySeat);
-}
-
-export function joinNext(players: Player[], pool: User[]): Player[] {
-  if (isRoomFull(players)) return players;
-
-  const nextUser = pool.find((u) => !players.some((p) => p.user.id === u.id));
-  if (!nextUser) return players;
-
-  return joinUser(players, nextUser);
 }
 
 export function leaveUser(players: Player[], userId: number): Player[] {

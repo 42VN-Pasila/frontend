@@ -12,12 +12,10 @@ const POS_CLASS: Record<SeatPos, string> = {
 export default function SeatSlot({
   pos,
   players,
-  onJoinNext,
   onLeave,
 }: {
   pos: SeatPos;
   players: Player[];
-  onJoinNext: () => void;
   onLeave: (userId: number) => void;
 }) {
   const player = getPlayerByPos(players, pos);
@@ -25,7 +23,7 @@ export default function SeatSlot({
   return (
     <div className={`absolute w-fit h-fit ${POS_CLASS[pos]}`}>
       {!player ? (
-        <OpenSeat label="OPEN SEAT" onClick={onJoinNext} />
+        <OpenSeat label="OPEN SEAT"/>
       ) : (
         <SeatPlayer player={player} pos={pos} onLeave={onLeave} />
       )}

@@ -1,25 +1,23 @@
 import { Button } from "@/shared/components";
+
 export default function TableCenter({
   isOwner,
   canStart,
   onStart,
-  onJoin,
 }: {
   isOwner: boolean;
   canStart: boolean;
   onStart: () => void;
-  onJoin: () => void;
 }) {
   let label = "Join";
   let disabled = false;
-  let onClick = onJoin;
+  let onClick;
 
   if (isOwner) {
     label = "Start";
     disabled = !canStart;
     onClick = onStart;
   }
-
   return (
     <div
       className={[
@@ -36,15 +34,31 @@ export default function TableCenter({
         <div className="absolute inset-10 rounded-[999px] border border-[#E0777D] opacity-50" />
       </div>
 
-      <div className="absolute inset-0 grid place-items-center">
-         <Button
-          className="bg-[var(--color-primary)] z-1000"
-          onClick={onClick}
-          disabled={disabled}
-        >
-          {label}
-        </Button>
-      </div>
+      {!isOwner ? (
+        <div className="absolute inset-0 grid place-items-center">
+          <div className="flex gap-1 text-#E2E4F6 text-3xl font-extrabold tracking-widest">
+            {"Waiting for player...".split("").map((char, index) => (
+              <span
+                key={index}
+                className="waiting-letter"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="absolute inset-0 grid place-items-center">
+          <Button
+            className="bg-[var(--color-primary)] z-1000"
+            onClick={onClick}
+            disabled={disabled}
+          >
+            {label}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

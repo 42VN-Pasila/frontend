@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-
 import { useNavigate, useParams } from "react-router-dom";
-
 import LobbyBackGround from "../common/assets/LobbyBackGround.jpg";
-
-import { addPlayer, getRoom, removePlayer } from "./Logic/roomStore";
+import { getRoom, removePlayer } from "./Logic/roomStore";
 import { getOrCreateCurrentUser } from "./Mock/mockIdentity";
 import type { Player } from "./Type/types";
 import TableCenter from "./components/Layout/TableCenter";
@@ -31,39 +28,37 @@ export default function GameLobby() {
     setPlayers(room.players);
     setOwnerId(room.ownerId);
   }
+    
+    useEffect(() => {
+      syncFromStore();
+    }, [roomId]);
+    
+  const isMeOwner = ownerId !== null && me.id === ownerId;
+  const canStart = isMeOwner && players.length === 4;
+
+  // function handleJoin() {
+  //   addPlayer(roomId, me);
+  //   syncFromStore();
+  // }
 
   useEffect(() => {
-    syncFromStore();
+    function onStorage(e: StorageEvent) {
+      if (e.key === "mock_rooms_v1") {
+        syncFromStore();
+      }
+    }
+
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, [roomId]);
 
-  const isMeOwner = ownerId !== null && me.id === ownerId;
-  const canStart = isMeOwner;// && players.length === 4;
-
-  function handleJoin() {
-    addPlayer(roomId, me);
-    syncFromStore();
-  }
-
   useEffect(() => {
-  function onStorage(e: StorageEvent) {
-    if (e.key === "mock_rooms_v1") {
+    function onFocus() {
       syncFromStore();
     }
-  }
-
-  window.addEventListener("storage", onStorage);
-  return () => window.removeEventListener("storage", onStorage);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [roomId]);
-
-useEffect(() => {
-  function onFocus() {
-    syncFromStore();
-  }
-  window.addEventListener("focus", onFocus);
-  return () => window.removeEventListener("focus", onFocus);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [roomId]);
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, [roomId]);
 
   function handleLeave(userId: number) {
     removePlayer(roomId, userId);
@@ -85,9 +80,7 @@ useEffect(() => {
 
   function handleStart() {
     if (!canStart) return;
-    window.location.href = "http://10.11.2.4:5173/dev/game/mock";
-    // TODO: websocket start
-  }
+    }
 
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
@@ -106,12 +99,11 @@ useEffect(() => {
             canStart={canStart}
             onStart={handleStart}
             isOwner={isMeOwner}
-            onJoin={handleJoin}
           />
 
           <SeatsLayer
             players={players}
-            onJoinNext={handleJoin}
+            // onJoinNext={handleJoin}
             onLeave={handleLeave}
           />
         </div>

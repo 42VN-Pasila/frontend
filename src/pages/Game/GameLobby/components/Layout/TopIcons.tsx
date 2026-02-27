@@ -20,6 +20,7 @@ export function TopRightIcons({
     </div>
   );
 }
+
 export function TopLeftIcons({
   roomId,
   playerCount,

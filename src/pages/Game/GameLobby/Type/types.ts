@@ -13,5 +13,3 @@ export type Player = {
   seat: Seat;     
   isOwner: boolean;  
 };
-
-
