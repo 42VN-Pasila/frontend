@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
-
 import Ed from "@assets/Ed.png";
 import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
 import Plank from "@assets/Plank 1.png";
 import HourGlass from "@assets/hourglass.gif";
-
 import type { CardRank, CardSuit } from "../../common/types/cards";
 import type { Card } from "../../common/types/cards";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../../common/types/cards";
 import type { SelectedCard } from "../shared/CardSelection";
 import Timer from "../shared/Timer";
-
 import GameControlCenter from "./GameControlCenter";
 import GameOpponentPicker from "./GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard";
@@ -131,9 +128,8 @@ export const GameBoard = ({
         />
       </div>
       <main className="flex-1 flex flex-col min-w-20 h-full">
-        <div className="relative flex-[5] min-h-0">
-          <div className="absolute -translate-y-1/2 left-10 z-20 min-h-[20px]"
-              style={{ top: '90%' }}>
+        <div className="relative flex-[7] min-h-0">
+          <div className="absolute bottom-6 left-6 z-25">  
             <Timer timeLeft={timeLeft} icon={HourGlass} />
           </div>
           <GameOpponentPicker
@@ -145,10 +141,9 @@ export const GameBoard = ({
             className="h-full"
           />
         </div>
-        <div className="flex-[2] min-h-[20px] border-t border-slate-800">
+        <div className="flex-[3] min-h-[20px] border-t border-slate-800 pt">
           <GamePlayerCard
             cards={MOCK_PLAYER_HAND}
-            className="h-full"
             isInteractive={isInteractive}
           />
         </div>

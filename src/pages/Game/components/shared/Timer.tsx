@@ -6,7 +6,7 @@ interface TimerProps extends React.ComponentPropsWithoutRef<"div"> {
 
 const Timer = ({
   timeLeft,
-  dangerThreshold = 5,
+  dangerThreshold = 7,
   icon,
   className,
   ...props
@@ -16,20 +16,22 @@ const Timer = ({
   return (
     <div
       {...props}
-      className={`flex items-center justify-between bg-slate-800 rounded-md px-4 py-3 ${className ?? ""}`}
+      className={`flex items-center justify-between bg-slate-800 rounded-md px-4 py-3 gap-2 ${
+          isDanger ? "animate-bounce" : ""
+        } ${className ?? ""}`}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {icon && (
           <img 
             src={icon} 
             alt="Timer Icon" 
-            className="w-12 h-12 md:w-16 md:h-16 object-contain" 
+            className="w-10 h-10 object-contain" 
           />
         )}
       </div>
 
       <div
-        className={`text-3xl md:text-4xl font-mono leading-none transition-colors duration-300 ${
+        className={`text-2xl pt-1 font-mono leading-none transition-colors duration-300 ${
           isDanger ? "text-red-500 animate-pulse" : "text-white"
         }`}
       >
