@@ -13,6 +13,7 @@ export type SelectedCard = NullableProps<Card>;
 type CardSelectionProps = {
   selection: SelectedCard;
   onChange: (updates: Partial<SelectedCard>) => void;
+  disabled?: boolean;
 };
 
 export const SUIT_ITEMS: SelectorItem<CardSuit>[] = ALL_CARD_SUITS.map((suit) => ({
@@ -36,6 +37,7 @@ export const RANK_ITEMS_BY_SUIT: Record<CardSuit, SelectorItem<CardRank>[]> =
 export default function CardSelection({
   selection,
   onChange,
+  disabled = false,
 }: CardSelectionProps) {
   const { suit, rank } = selection;
 
@@ -50,6 +52,7 @@ export default function CardSelection({
             value={suit}
             onChange={(suit) => onChange({ suit })}
             columns={4}
+            disabled={disabled}
           />
         </FloatingInstruction>
 
@@ -64,6 +67,7 @@ export default function CardSelection({
               value={rank}
               onChange={(rank) => onChange({ rank })}
               columns={5}
+              disabled={disabled}
             />
           </FloatingInstruction>
         )}

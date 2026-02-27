@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import Button from "@shared/components/Button";
+
 import CardPreview from "../shared/CardPreview";
 import type { SelectedCard } from "../shared/CardSelection";
 import CardSelection from "../shared/CardSelection";
@@ -19,7 +21,6 @@ export const GameControlCenter = ({
   isSelectionComplete,
   isInteractive,
 }: GameControlCenterProps) => {
-
   const [timeLeft, setTimeLeft] = useState(15);
 
   useEffect(() => {
@@ -43,7 +44,11 @@ export const GameControlCenter = ({
         Pick a Card:
       </h3>
 
-      <CardSelection selection={selection} onChange={onChange} />
+      <CardSelection
+        selection={selection}
+        onChange={isInteractive ? onChange : () => {}}
+        disable={!isInteractive}
+      />
 
       <div className="min-h-[10px]" />
 
@@ -56,11 +61,13 @@ export const GameControlCenter = ({
         </p>
         <Button
           onClick={onSubmit}
-          disabled={!isSelectionComplete}
+          disabled={!isSelectionComplete || !isInteractive}
           color="primary"
           size="large"
           className={
-            !isSelectionComplete ? "opacity-50 pointer-events-none" : ""
+            !isSelectionComplete || !isInteractive
+              ? "opacity-50 pointer-events-none"
+              : ""
           }
         >
           Request
