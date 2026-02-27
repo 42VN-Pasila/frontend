@@ -11,7 +11,7 @@ export type Room = {
 
 const KEY = 'mock_rooms_v1';
 
-function readAll(): Room[] {
+export function readAll(): Room[] {
   const raw = localStorage.getItem(KEY);
   return raw ? (JSON.parse(raw) as Room[]) : [];
 }

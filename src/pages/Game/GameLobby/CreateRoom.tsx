@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { RoomId } from "@/shared/api/roomId";
+import { RoomId } from "@/shared/api/roomApi";
 import { Button } from "@/shared/components";
 import { getOrCreateCurrentUser } from "./Mock/mockIdentity";
 import { createRoomWithId } from "./Logic/roomStore";
