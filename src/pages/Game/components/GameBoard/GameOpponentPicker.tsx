@@ -48,7 +48,7 @@ const GameOpponentPicker = ({
   const isPendingSelection = !selectedOpponentId;
 
   return (
-    <section className={`${className} flex flex-col bg-slate-800/50 p-6 border-b border-slate-800 relative`}>
+    <section className={`${className} flex flex-col bg-slate-800/50 pt-4 p-6 border-b border-slate-800 relative`}>
       <h3 className="uppercase text-xl tracking-widest font-bold text-white mb-4">
         Pick an Opponent:
       </h3>

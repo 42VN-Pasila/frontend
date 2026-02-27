@@ -58,9 +58,9 @@ function Selector<T extends string>({
               className={`
                 flex items-center justify-center rounded-lg border transition-all
                 aspect-square p-1 md:p-2 
-                ${disabled ? "opacity-30 cursor-not-allowed" : "hover:bg-gray-100/10"}
+                ${disabled ? "opacity-30 cursor-not-allowed" : "hover:bg-white"}
                 ${isActive
-                  ? "bg-white border-(--color-primary) ring-2 md:ring-4 ring-(--color-primary) scale-105 z-10"
+                  ? "bg-white border-(--color-primary) ring-2 md:ring-4 ring-(--color-primary) scale-105 z-10 hover:bg-white"
                   : "border-slate-700 bg-slate-800/40"
                 }
                 ${itemClassName ?? ""}

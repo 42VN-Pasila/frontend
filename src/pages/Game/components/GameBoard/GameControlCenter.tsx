@@ -38,7 +38,7 @@ export const GameControlCenter = ({
   }, [timeLeft]);
 
   return (
-    <aside className="w-full border-r border-slate-800 bg-slate-900 p-6 flex flex-col h-full overflow-y-auto">
+    <aside className="w-full border-r border-slate-800 bg-slate-900 pt-4 p-6 flex flex-col h-full overflow-y-auto">
       <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-4">
         Pick a Card:
       </h3>
