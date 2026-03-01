@@ -48,21 +48,23 @@ const GameOpponentPicker = ({
   const isPendingSelection = !selectedOpponentId;
 
   return (
-    <section className={`${className} flex flex-col bg-slate-800/50 pt-2 p-6 border-b border-slate-800 relative`}>
-      <h3 className="uppercase text-xl tracking-widest font-bold text-white mb-4">
+    <section
+      {...props}
+      className={`${className} flex flex-col bg-slate-800/50 pt-2 p-6 border-b border-slate-800 relative h-full overflow-hidden`}>
+      <h3 className="truncate uppercase text-xl tracking-widest font-bold text-white mb-4 shrink-0">
         Pick an Opponent:
       </h3>
 
       <div className="flex justify-center relative">
         <FloatingInstruction
           text="🎯 Pick your target!"
-          // visible={isPendingSelection && isInteractive}
-          visible={isPendingSelection}
+          visible={isPendingSelection && isInteractive}
         >
           <OpponentDisplay 
             positions={sortedPositions}
             selectedId={selectedOpponentId}
             onSelect={onSelectOpponent}
+            isInteractive={isInteractive}
           />
         </FloatingInstruction>
       </div>

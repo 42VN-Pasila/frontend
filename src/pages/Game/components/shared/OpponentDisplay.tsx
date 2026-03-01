@@ -5,9 +5,10 @@ interface OpponentDisplayProps {
   positions: { left: Opponent; top: Opponent; right: Opponent };
   selectedId: number | null;
   onSelect: (id: number) => void;
+  isInteractive: boolean;
 }
 
-const OpponentDisplay = ({ positions, selectedId, onSelect }: OpponentDisplayProps) => {
+const OpponentDisplay = ({ positions, selectedId, onSelect, isInteractive }: OpponentDisplayProps) => {
   const layout = [
     { data: positions.top, side: "top" as const, gridClass: "col-start-2" },
     { data: positions.left, side: "left" as const, gridClass: "col-start-1 row-start-2" },
@@ -22,7 +23,7 @@ const OpponentDisplay = ({ positions, selectedId, onSelect }: OpponentDisplayPro
             {...data}
             side={side}
             selected={selectedId === data.id}
-            onClick={() => onSelect(data.id)}
+            onClick={() => isInteractive && onSelect(data.id)}
           />
         </div>
       ))}

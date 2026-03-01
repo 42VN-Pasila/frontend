@@ -21,23 +21,6 @@ export const GameControlCenter = ({
   isSelectionComplete,
   isInteractive,
 }: GameControlCenterProps) => {
-  const [timeLeft, setTimeLeft] = useState(15);
-
-  useEffect(() => {
-    setTimeLeft(15);
-    const intervalId = setInterval(() => {
-      setTimeLeft((prev) => Math.max(prev - 1, 0));
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    if (timeLeft <= 0) {
-      // window.location.reload(); // comment out for testing UI
-    }
-  }, [timeLeft]);
-
   return (
     <aside className="w-full border-r border-slate-800 bg-slate-900 pt-2 p-6 flex flex-col h-full">
       <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-2">
@@ -47,7 +30,7 @@ export const GameControlCenter = ({
       <CardSelection
         selection={selection}
         onChange={isInteractive ? onChange : () => {}}
-        disable={!isInteractive}
+        isInteractive={isInteractive}
       />
 
       <div className="min-h-[10px]" />

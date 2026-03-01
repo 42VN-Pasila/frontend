@@ -12,7 +12,7 @@ export default function CardPreview({ suit, rank }: NullableProps<Card>) {
             className="shadow-2xl scale-105"
           />
         ) : (
-          <CardEmptySlot>Your selected Card</CardEmptySlot>
+          <CardEmptySlot>Selected Card</CardEmptySlot>
         )}
       </div>
     </div>

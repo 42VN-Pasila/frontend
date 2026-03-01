@@ -138,7 +138,6 @@ export const GameBoard = ({
             selectedOpponentId={selectedOpponentId}
             onSelectOpponent={setSelectedOpponentId}
             isInteractive={isInteractive}
-            className="h-full"
           />
         </div>
         <div className="flex-[3] min-h-[20px] border-t border-slate-800 pt">

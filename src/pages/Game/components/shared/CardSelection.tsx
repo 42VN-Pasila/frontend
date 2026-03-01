@@ -13,7 +13,7 @@ export type SelectedCard = NullableProps<Card>;
 type CardSelectionProps = {
   selection: SelectedCard;
   onChange: (updates: Partial<SelectedCard>) => void;
-  disabled?: boolean;
+  isInteractive: boolean;
 };
 
 export const SUIT_ITEMS: SelectorItem<CardSuit>[] = ALL_CARD_SUITS.map((suit) => ({
@@ -37,9 +37,17 @@ export const RANK_ITEMS_BY_SUIT: Record<CardSuit, SelectorItem<CardRank>[]> =
 export default function CardSelection({
   selection,
   onChange,
-  disabled = false,
+  isInteractive,
 }: CardSelectionProps) {
   const { suit, rank } = selection;
+
+  if (!isInteractive) {
+    return (
+      <div className="flex items-center justify-center p-6 border-2 border-dashed border-(--color-primary) rounded-lg">
+        <p className="text-gray-500 italic">⏳ It's the opponent's turn...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col">
@@ -52,14 +60,11 @@ export default function CardSelection({
             value={suit}
             onChange={(suit) => onChange({ suit })}
             columns={4}
-            disabled={disabled}
           />
         </FloatingInstruction>
 
         {suit && (
-          <FloatingInstruction
-            text="👇 Pick a rank to continue!"
-            visible={!rank}
+          <FloatingInstruction text="👇 Pick a rank to continue!" visible={!rank}
           >
             <Selector<CardRank>
               label="Then pick the rank:"
@@ -67,7 +72,6 @@ export default function CardSelection({
               value={rank}
               onChange={(rank) => onChange({ rank })}
               columns={5}
-              disabled={disabled}
             />
           </FloatingInstruction>
         )}
