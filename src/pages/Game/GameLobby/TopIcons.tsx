@@ -1,9 +1,4 @@
-
-export function TopRightIcons({
-  onClose,
-}: {
-  onClose: () => void;
-}) {
+export function TopRightIcons({ onClose }: { onClose: () => void }) {
   return (
     <div className="absolute right-6 top-6 flex items-center">
       <button
@@ -20,15 +15,14 @@ export function TopRightIcons({
 
 export function RoomInfo({
   roomId,
-  // playerCount,
 }: {
   roomId: string;
-  // playerCount: number;
 }) {
   return (
     <div className="absolute top-6 rounded-2xl bg-(--color-purple-primary) px-4 py-3 text-white shadow-lg backdrop-blur border border-white/10">
-      <div className="text-xs font-extrabold tracking-widest">ROOM: {roomId}</div>
-      {/* <div className="mt-1 text-[11px] text-white/70">Players: {playerCount}/4</div> */}
+      <div className="text-xs font-extrabold tracking-widest">
+        ROOM: {roomId}
+      </div>
     </div>
   );
 }

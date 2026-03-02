@@ -5,7 +5,7 @@ type ButtonSize = "small" | "medium" | "large";
 type ButtonGlow = "primary" | "none";
 type ButtonShadow = "on" | "off";
 type Emphasis = "high" | "low";
-type SemanticColor = "primary" | "red" | "gold" | "blue" | "purple" | "orange";
+export type SemanticColor = "primary" | "red" | "gold" | "blue" | "purple" | "orange";
 
 const COLOR_CONTEXT_CLASSES: Record<SemanticColor, string> = {
   primary: "color-primary",
@@ -17,7 +17,7 @@ const COLOR_CONTEXT_CLASSES: Record<SemanticColor, string> = {
 };
 
 const BASE_CLASSES = [
-  "inline-flex items-center justify-center rounded-md cursor-pointer",
+  "inline-flex items-center justify-center cursor-pointer",
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary-focus)]",
   "disabled:opacity-50 disabled:cursor-not-allowed",
   "shadow-sm transition-colors duration-150",
