@@ -19,7 +19,7 @@ const COLOR_CONTEXT_CLASSES: Record<SemanticColor, string> = {
 const BASE_CLASSES = [
   "inline-flex items-center justify-center rounded-md cursor-pointer",
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary-focus)]",
-  "disabled:opacity-50 disabled:cursor-not-allowed",
+  "disabled:opacity-90 disabled:cursor-not-allowed",
   "shadow-sm transition-colors duration-150",
 ];
 

@@ -22,7 +22,7 @@ export const GameControlCenter = ({
   isInteractive,
 }: GameControlCenterProps) => {
   return (
-    <aside className="w-full border-r border-slate-800 bg-slate-900 pt-2 p-6 flex flex-col h-full">
+    <aside className="w-full border-r border-slate-800 bg-[#3c303e]/70 pt-2 p-6 flex flex-col h-full">
       <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-2">
         Pick a Card:
       </h3>
@@ -46,11 +46,11 @@ export const GameControlCenter = ({
           onClick={onSubmit}
           disabled={!isSelectionComplete || !isInteractive}
           color="primary"
+          variant="primary"
+          emphasis="high"
           size="large"
           className={
-            !isSelectionComplete || !isInteractive
-              ? "opacity-50 pointer-events-none"
-              : ""
+            !isSelectionComplete || !isInteractive ? "pointer-events-none" : ""
           }
         >
           Request

@@ -44,7 +44,7 @@ export default function CardSelection({
   if (!isInteractive) {
     return (
       <div className="flex items-center justify-center p-6 border-2 border-dashed border-(--color-primary) rounded-lg">
-        <p className="text-gray-500 italic">⏳ It's the opponent's turn...</p>
+        <p className="text---color-light-gray italic">⏳ It's the opponent's turn...</p>
       </div>
     );
   }

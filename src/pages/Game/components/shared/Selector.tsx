@@ -32,7 +32,7 @@ function Selector<T extends string>({
     <div {...rest} className={`flex flex-col gap-4 ${className}`}>
       
       {label && (
-        <h3 className={`text-l transition-colors ${value ? "text-slate-400 mt-0" : "mt-6 text-white font-bold"}`}>
+        <h3 className={`text-l transition-colors ${value ? "text--color-light-gray mt-0" : "mt-6 text--color-light-gray font-bold"}`}>
           {label}
         </h3>
       )}
@@ -56,12 +56,12 @@ function Selector<T extends string>({
               onClick={() => onChange(itemValue)}
               {...buttonProps}
               className={`
-                flex items-center justify-center rounded-lg border transition-all
+                flex items-center justify-center rounded-lg border-2 transition-all
                 aspect-square p-2 
                 ${disabled ? "opacity-70" : "hover:bg-white"}
                 ${isActive
-                  ? "bg-white border-(--color-primary) ring-4 ring-(--color-primary) scale-105 z-10 hover:bg-white"
-                  : "border-slate-700 bg-slate-800/40"
+                  ? "bg-white ring-4 ring-(--color-primary) scale-105 z-10 hover:bg-white"
+                  : "border-(--color-dark-gray) bg-slate-800/70"
                 }
                 ${itemClassName ?? ""}
               `}

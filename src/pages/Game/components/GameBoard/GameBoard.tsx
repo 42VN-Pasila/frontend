@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
+
 import Ed from "@assets/Ed.png";
 import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
+import BackGround from "@assets/Firefly_gpt-image.png";
 import Plank from "@assets/Plank 1.png";
 import HourGlass from "@assets/hourglass.gif";
+
 import type { CardRank, CardSuit } from "../../common/types/cards";
 import type { Card } from "../../common/types/cards";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../../common/types/cards";
 import type { SelectedCard } from "../shared/CardSelection";
 import Timer from "../shared/Timer";
+
 import GameControlCenter from "./GameControlCenter";
 import GameOpponentPicker from "./GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard";
@@ -117,8 +121,12 @@ export const GameBoard = ({
   if (activePlayerId === null) return null;
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950">
-      <div className="w-72 lg:w-80 h-full shrink-0">
+    <div
+      className="relative flex h-screen w-screen overflow-hidden bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${BackGround})` }}
+    >
+      <div className="absolute inset-0 bg-black/40" />
+      <div className="w-72 lg:w-80 h-full shrink-0 z-10 border-r-4 border-[#b54591]">
         <GameControlCenter
           selection={selection}
           onChange={handleUpdate}
@@ -128,8 +136,8 @@ export const GameBoard = ({
         />
       </div>
       <main className="flex-1 flex flex-col min-w-20 h-full">
-        <div className="relative flex-[7] min-h-0">
-          <div className="absolute bottom-6 left-6 z-25">  
+        <div className="relative flex-[6]">
+          <div className="absolute bottom-4 left-6 z-25">
             <Timer timeLeft={timeLeft} icon={HourGlass} />
           </div>
           <GameOpponentPicker

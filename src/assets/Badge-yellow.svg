@@ -1,0 +1,8 @@
+<svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 0V0.5M4 0.5V1M4 0.5H8M3.5 1.5H2.5M2 1.5H2.5M2.5 1.5V2.5M1.5 2.5V3.5V4.5M8 1.5H8.5H9M9.5 1.5H9M9 1.5V2.5M10 2.5V3.5V4.5V5M0 5H1.5H2M10 5.5V5M10 5H11.5" stroke="#EDB45E"/>
+<path d="M4 10.5V10M4 10V9.5M4 10H8M3.5 9H2.5M2 9H2.5M2.5 9V8M1.5 8V7V6M8 9H8.5H9M9.5 9H9M9 9V8M10 8V7V6V5.5M0 5.5H1.5H2M10 5V5.5M10 5.5H11.5" stroke="#D48B1D"/>
+<rect x="5.70538" y="1.17242" width="5.70344" height="5.70344" transform="rotate(45 5.70538 1.17242)" fill="#E0AC55"/>
+<rect x="8.5571" y="2.35364" width="5.70344" height="5.70344" transform="rotate(90 8.5571 2.35364)" fill="#CA9B4C"/>
+<rect x="9.198" y="3.1889" width="5.70344" height="5.70344" transform="rotate(105 9.198 3.1889)" fill="#D59833"/>
+<rect width="5.70344" height="5.70344" transform="matrix(0.258819 0.965926 0.965926 -0.258819 2.21274 3.1889)" fill="#C38C33"/>
+</svg>

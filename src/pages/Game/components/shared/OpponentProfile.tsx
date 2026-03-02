@@ -1,6 +1,10 @@
+import CardBackImg from "@assets/card-back-2.png";
+import BadgeYellow from "@assets/Badge-yellow.svg"
+
 import type { Opponent } from "../../common/types/players";
+
 import Avatar from "./Avatar";
-import CardBadge from "./CardBadge";
+import Badge from "./Badge";
 import NameTag from "./NameTag";
 
 interface OpponentProfileProps extends Opponent {
@@ -25,19 +29,24 @@ const OpponentProfile = ({
       onClick={onClick}
       className="group flex flex-col items-center gap-4 focus:outline-none"
     >
-      <div className={`flex items-center gap-4 ${isRightSide ? "flex-row-reverse" : "flex-row"}`}>
-        <Avatar 
-          src={avatarUrl} 
-          alt={username} 
-          isSelected={selected} 
+      <div
+        className={`flex items-center gap-4 ${isRightSide ? "flex-row-reverse" : "flex-row"}`}
+      >
+        <Avatar src={avatarUrl} alt={username} isSelected={selected} />
+
+        <Badge
+          variant="card"
+          count={cardCount}
+          imageUrl={CardBackImg}
         />
-        
-        <CardBadge count={cardCount} />
+        <Badge
+          variant="circle"
+          count={cardCount}
+          imageUrl={BadgeYellow}
+        />
       </div>
 
-      <NameTag isSelected={selected}>
-        {username}
-      </NameTag>
+      <NameTag isSelected={selected}>{username}</NameTag>
     </button>
   );
 };
