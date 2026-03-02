@@ -41,6 +41,7 @@
   --color-red: #f40000;
   --color-red-hover: #ff2222;
   --color-red-active: #ee0000;
+  --color-red-primary: #FE4C40;
 
   /* Gold/Yellow */
   --color-gold: #ffd700;
@@ -56,7 +57,9 @@
   --color-purple: #735DBD;
   --color-purple-hover: #8A6CF1;
   --color-purple-active: #583DB2;
-
+  --color-purple-primary: #B2478B;
+  --color-purple-component-bg: #3C303E;
+  --color-purple-secondary: #5A3652;
   /* Orange */
   --color-orange: #F07103;
   --color-orange-hover: #F88621;
@@ -137,3 +140,4 @@ display: inline-block;
   text-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
   will-change: transform, opacity;
 }
+

@@ -5,14 +5,11 @@ export function TopRightIcons({
   onClose: () => void;
 }) {
   return (
-    <div className="absolute right-6 top-6 flex items-center gap-3">
-      <button className="h-12 w-12 rounded-full bg-white/10 border border-white/15 shadow-lg backdrop-blur grid place-items-center">
-        👥
-      </button>
+    <div className="absolute right-6 top-6 flex items-center">
       <button
         type="button"
         onClick={onClose}
-        className="h-12 w-12 rounded-full bg-white/10 border border-white/15 shadow-lg backdrop-blur grid place-items-center z-101"
+        className="h-12 w-12 rounded-2xl bg-white/10 border border-white/15 shadow-lg backdrop-blur grid place-items-center z-101"
         title="Close"
       >
         X
@@ -21,17 +18,17 @@ export function TopRightIcons({
   );
 }
 
-export function TopLeftIcons({
+export function RoomInfo({
   roomId,
-  playerCount,
+  // playerCount,
 }: {
   roomId: string;
-  playerCount: number;
+  // playerCount: number;
 }) {
   return (
-    <div className="absolute left-6 top-6 rounded-2xl bg-black/35 px-4 py-3 text-white shadow-lg backdrop-blur border border-white/10">
-      <div className="text-xs font-extrabold tracking-widest">ROOM: #{roomId}</div>
-      <div className="mt-1 text-[11px] text-white/70">Players: {playerCount}/4</div>
+    <div className="absolute top-6 rounded-2xl bg-(--color-purple-primary) px-4 py-3 text-white shadow-lg backdrop-blur border border-white/10">
+      <div className="text-xs font-extrabold tracking-widest">ROOM: {roomId}</div>
+      {/* <div className="mt-1 text-[11px] text-white/70">Players: {playerCount}/4</div> */}
     </div>
   );
 }

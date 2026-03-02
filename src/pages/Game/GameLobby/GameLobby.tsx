@@ -1,107 +1,39 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import LobbyBackGround from "../common/assets/LobbyBackGround.jpg";
-import { getRoom, removePlayer } from "./Logic/roomStore";
-import { getOrCreateCurrentUser } from "./Mock/mockIdentity";
-import type { Player } from "./Type/types";
-import TableCenter from "./components/Layout/TableCenter";
-import { TopLeftIcons, TopRightIcons } from "./components/Layout/TopIcons";
-import SeatsLayer from "./components/Seat/SeatsLayer";
+// import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import BackGround from "./Background.png";
+import FriendList from "./FriendList";
+import PlayerGrid from "./PlayerGrid";
+import StartButton from "./StartButton";
+import { RoomInfo, TopRightIcons } from "./components/Layout/TopIcons";
 
 export default function GameLobby() {
+  const roomid = "1234";
+  // const playerCount = 0;
   const navigate = useNavigate();
-  const { roomId: rawRoomId } = useParams();
-
-  const roomId = rawRoomId ?? "????";
-
-  const me = useMemo(() => getOrCreateCurrentUser(), []);
-
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [ownerId, setOwnerId] = useState<number | null>(null);
-
-  function syncFromStore() {
-    const room = getRoom(roomId);
-    if (!room) {
-      navigate("/roomlist");
-      return;
-    }
-    setPlayers(room.players);
-    setOwnerId(room.ownerId);
-  }
-    
-    useEffect(() => {
-      syncFromStore();
-    }, [roomId]);
-    
-  const isMeOwner = ownerId !== null && me.id === ownerId;
-  const canStart = isMeOwner && players.length === 4;
-
-  useEffect(() => {
-    function onStorage(e: StorageEvent) {
-      if (e.key === "mock_rooms_v1") {
-        syncFromStore();
-      }
-    }
-
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, [roomId]);
-
-  useEffect(() => {
-    function onFocus() {
-      syncFromStore();
-    }
-    window.addEventListener("focus", onFocus);
-    return () => window.removeEventListener("focus", onFocus);
-  }, [roomId]);
-
-  function handleLeave(userId: number) {
-    removePlayer(roomId, userId);
-
-    const room = getRoom(roomId);
-    if (!room) {
-      navigate("/roomlist");
-      return;
-    }
-
-    if (userId === me.id) {
-      navigate("/roomlist");
-      return;
-    }
-
-    setPlayers(room.players);
-    setOwnerId(room.ownerId);
-  }
-
-  function handleStart() {
-    if (!canStart) return;
-    }
-
   return (
-    <div className="min-h-screen w-full overflow-hidden relative">
-      <img
-        src={LobbyBackGround}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+    <div
+      className="flex h-screen w-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${BackGround})` }}
+    >
+      {/* LEFT - CHAT */}
+      <aside className="w-[20%] border-3 border-(--color-purple-primary) text-center">
+        Live chat
+      </aside>
+      {/* CENTER */}
+      <main className="relative flex-1 bg-transparent flex flex-col items-center">
+        <div className="absolute inset-0 bg-black/40"></div>
+        <RoomInfo roomId={roomid} />
+        <PlayerGrid />
+      </main>
 
-      <TopLeftIcons roomId={roomId} playerCount={players.length} />
-      <TopRightIcons onClose={() => navigate("/roomlist")} />
-
-      <div className="absolute inset-0 grid place-items-center">
-        <div className="relative w-[min(1200px,92vw)] h-[min(640px,72vh)]">
-          <TableCenter
-            canStart={canStart}
-            onStart={handleStart}
-            isOwner={isMeOwner}
-          />
-
-          <SeatsLayer
-            players={players}
-            onLeave={handleLeave}
-          />
-        </div>
-      </div>
+      {/* RIGHT */}
+      <aside className="relative w-[25%] bg-(--color-purple-component-bg) flex flex-row justify-between">
+        <TopRightIcons onClose={() => navigate(-1)} />
+        <FriendList />
+        <StartButton />
+        {/* <StartPanel /> */}
+      </aside>
     </div>
   );
 }
