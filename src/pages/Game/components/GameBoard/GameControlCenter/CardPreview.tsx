@@ -1,5 +1,5 @@
-import CardSvg, { CardEmptySlot } from "./CardSvg";
-import type { Card } from "../../common/types/cards";
+import CardSvg, { CardEmptySlot } from "../CardSvg";
+import type { Card } from "../../../common/types/cards";
 import type { NullableProps } from "@/common/types";
 
 export default function CardPreview({ suit, rank }: NullableProps<Card>) {

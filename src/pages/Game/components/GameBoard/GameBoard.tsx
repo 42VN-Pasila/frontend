@@ -10,12 +10,12 @@ import HourGlass from "@assets/hourglass.gif";
 import type { CardRank, CardSuit } from "../../common/types/cards";
 import type { Card } from "../../common/types/cards";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../../common/types/cards";
-import type { SelectedCard } from "../shared/CardSelection";
-import Timer from "../shared/Timer";
+import type { SelectedCard } from "./GameControlCenter/CardSelection";
+import Timer from "./Timer";
 
-import GameControlCenter from "./GameControlCenter";
-import GameOpponentPicker from "./GameOpponentPicker";
-import GamePlayerCard from "./GamePlayerCard";
+import GameControlCenter from "./GameControlCenter/GameControlCenter";
+import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
+import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 
 export const generateMockHand = (): Card[] => {
   const handSize = Math.floor(Math.random() * 20) + 1;

@@ -1,12 +1,12 @@
 import type { NullableProps } from "@/common/types";
 
-import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../../common/types/cards";
-import type { CardRank, CardSuit } from "../../common/types/cards";
-import type { Card } from "../../common/types/cards";
+import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../../../common/types/cards";
+import type { CardRank, CardSuit } from "../../../common/types/cards";
+import type { Card } from "../../../common/types/cards";
 
-import Selector, { type SelectorItem } from "./Selector";
-import { CARD_ICONS, SUIT_ICONS } from "./constants";
-import FloatingInstruction from "../shared/FloatingInstruction";
+import Selector, { type SelectorItem } from "../GameControlCenter/Selector";
+import { CARD_ICONS, SUIT_ICONS } from "../constants";
+import FloatingInstruction from "../FloatingInstruction";
 
 export type SelectedCard = NullableProps<Card>;
 

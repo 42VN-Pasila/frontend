@@ -1,9 +1,9 @@
 import CardDeck2 from "@assets/CardDeck-2.svg";
 
-import type { Card } from "../../common/types/cards";
-import { ALL_CARD_RANKS } from "../../common/types/cards";
-import Badge from "../shared/Badge";
-import CardSvg from "../shared/CardSvg";
+import type { Card } from "../../../common/types/cards";
+import { ALL_CARD_RANKS } from "../../../common/types/cards";
+import Badge from "../Badge";
+import CardSvg from "../CardSvg";
 
 interface GamePlayerCardProps extends React.ComponentPropsWithoutRef<"div"> {
   cards: Card[];
@@ -26,9 +26,6 @@ const GamePlayerCard = ({
       className={`${className} w-full h-full flex p-4 overflow-hidden`}
     >
       <div className="w-full h-full flex flex-col p-2">
-        <h3 className="truncate text-white uppercase text-xl tracking-widest font-bold shrink-0">
-          Your hand:
-        </h3>
 
         <div className="flex flex-row items-center gap-3 justify-center">
           <Badge

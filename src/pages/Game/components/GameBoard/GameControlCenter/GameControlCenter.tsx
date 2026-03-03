@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import Button from "@shared/components/Button";
 
-import CardPreview from "../shared/CardPreview";
-import type { SelectedCard } from "../shared/CardSelection";
-import CardSelection from "../shared/CardSelection";
+import CardPreview from "../GameControlCenter/CardPreview";
+import type { SelectedCard } from "../GameControlCenter/CardSelection";
+import CardSelection from "../GameControlCenter/CardSelection";
 
 type GameControlCenterProps = {
   selection: SelectedCard;
@@ -22,10 +22,7 @@ export const GameControlCenter = ({
   isInteractive,
 }: GameControlCenterProps) => {
   return (
-    <aside className="w-full border-r border-slate-800 bg-[#3c303e]/70 pt-2 p-6 flex flex-col h-full">
-      <h3 className="text-white uppercase text-xl tracking-widest font-bold mb-2">
-        Pick a Card:
-      </h3>
+    <aside className="w-full border-r border-slate-800 bg-[#3c303e]/70 p-6 flex flex-col h-full">
 
       <CardSelection
         selection={selection}

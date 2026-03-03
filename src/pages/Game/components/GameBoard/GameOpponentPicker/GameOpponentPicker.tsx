@@ -1,6 +1,6 @@
-import OpponentDisplay from "../shared/OpponentDisplay";
-import type { Opponent } from "../../common/types/players";
-import FloatingInstruction from "../shared/FloatingInstruction";
+import OpponentDisplay from "./OpponentDisplay";
+import type { Opponent } from "../../../common/types/players";
+import FloatingInstruction from "../FloatingInstruction";
 import { useMemo } from "react";
 
 type Positions = {
@@ -51,11 +51,8 @@ const GameOpponentPicker = ({
     <section
       {...props}
       className={`${className} flex flex-col bg-slate-800/50 pt-2 p-6 border-b border-slate-800 relative h-full overflow-hidden`}>
-      <h3 className="truncate uppercase text-xl tracking-widest font-bold text-white mb-4 shrink-0">
-        Pick an Opponent:
-      </h3>
 
-      <div className="flex justify-center relative">
+      <div className="flex items-center justify-center">
         <FloatingInstruction
           text="🎯 Pick your target!"
           visible={isPendingSelection && isInteractive}
