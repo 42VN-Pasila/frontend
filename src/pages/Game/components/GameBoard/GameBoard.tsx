@@ -18,7 +18,7 @@ import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 
 export const generateMockHand = (): Card[] => {
-  const handSize = Math.floor(Math.random() * 20) + 1;
+  const handSize = Math.floor(Math.random() * 20) + 19;
 
   const deck: Card[] = ALL_CARD_SUITS.flatMap((suit) =>
     ALL_CARD_RANKS.map((rank) => ({ suit, rank })),
@@ -148,7 +148,7 @@ export const GameBoard = ({
             isInteractive={isInteractive}
           />
         </div>
-        <div className="flex-[3] min-h-[20px] border-t border-slate-800 pt">
+        <div className="flex-[3] relative min-h-[20px] border-t border-slate-800 pt">
           <GamePlayerCard
             cards={MOCK_PLAYER_HAND}
             isInteractive={isInteractive}

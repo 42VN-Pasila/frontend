@@ -23,43 +23,37 @@ const GamePlayerCard = ({
   return (
     <div
       {...props}
-      className={`${className} w-full h-full flex p-4 overflow-hidden`}
+      className={`${className} relative w-full h-full flex items-center gap-10`}
     >
-      <div className="w-full h-full flex flex-col p-2">
-
-        <div className="flex flex-row items-center gap-3 justify-center">
-          <Badge
-            variant="deck"
-            count={10}
-            imageUrl={CardDeck2}
-            label="sets collected"
-          />
-          <div className="flex items-center justify-center w-full overflow-hidden">
-            <div className="flex items-center justify-center w-full max-w-6xl">
-              {sortedCards.map((card, index) => (
-                <div
-                  key={`${card.suit}-${card.rank}`}
-                  className="relative transition-transform duration-200 hover:-translate-y-4 mt-4"
-                  style={{
-                    marginLeft:
-                      index === 0
-                        ? "0"
-                        : cards.length > 10
-                          ? "-4.1rem"
-                          : "-2.5rem",
-                    zIndex: index,
-                  }}
-                >
-                  <CardSvg
-                    card={card}
-                    className="h-[18vh] min-h-[140px] max-h-[220px]"
-                  />
-                </div>
-              ))}
+      <div className="flex-[9] flex justify-center overflow-hidden ml-8">
+        <div className="flex items-center justify-center w-full">
+          {sortedCards.map((card, index) => (
+            <div
+              key={`${card.suit}-${card.rank}`}
+              className="relative transition-transform duration-200 hover:-translate-y-4 hover:z-50 mt-4"
+              style={{
+                marginLeft:
+                  index === 0 ? "0" : cards.length >= 20 ? "-4.7rem" : "-2.5rem",
+                zIndex: index,
+              }}
+            >
+              <CardSvg
+                card={card}
+                className="h-[16vh] min-h-[140px] max-h-[220px]"
+              />
             </div>
-          </div>
+          ))}
         </div>
       </div>
+      <div className="flex-[1] flex justify-end items-center pr-4">
+        <Badge
+          variant="deck"
+          count={10}
+          imageUrl={CardDeck2}
+          className="w-[10vw] top-3 min-w-[120px] max-w-[180px]"
+        />
+      </div>
+      
     </div>
   );
 };
