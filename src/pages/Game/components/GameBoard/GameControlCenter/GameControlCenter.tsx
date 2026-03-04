@@ -33,7 +33,6 @@ export const GameControlCenter = ({
         isInteractive={isInteractive}
       />
 
-      <div className="min-h-[10px]" />
 
       <div className="flex flex-col gap-2 shrink-0 flex-grow m-6">
         <div className="flex items-center justify-center h-full">
