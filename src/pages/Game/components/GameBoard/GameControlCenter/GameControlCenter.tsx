@@ -22,7 +22,10 @@ export const GameControlCenter = ({
   isInteractive,
 }: GameControlCenterProps) => {
   return (
-    <aside className="w-full border-r border-slate-800 bg-[#3c303e]/70 p-6 flex flex-col h-full">
+    <aside className="relative border-r border-slate-800 bg-[#3c303e]/70 flex flex-col h-full">
+      {!isInteractive && (
+        <div className={`absolute bg-transparent z-100 w-full h-full`} />
+      )}
 
       <CardSelection
         selection={selection}
@@ -32,7 +35,7 @@ export const GameControlCenter = ({
 
       <div className="min-h-[10px]" />
 
-      <div className="flex flex-col gap-2 shrink-0 flex-grow">
+      <div className="flex flex-col gap-2 shrink-0 flex-grow m-6">
         <div className="flex items-center justify-center h-full">
           <CardPreview suit={selection.suit} rank={selection.rank} />
         </div>
