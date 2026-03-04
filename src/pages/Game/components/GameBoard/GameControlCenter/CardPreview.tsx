@@ -4,7 +4,7 @@ import type { NullableProps } from "@/common/types";
 
 export default function CardPreview({ suit, rank }: NullableProps<Card>) {
   return (
-    <div className="px-8 flex justify-center">
+    <div className="px-8 m-6 flex justify-center">
       <div className="w-full min-w-[160px]">
         {suit && rank ? (
           <CardSvg 

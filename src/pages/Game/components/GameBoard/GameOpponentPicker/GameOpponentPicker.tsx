@@ -55,7 +55,7 @@ const GameOpponentPicker = ({
       <div className="flex items-center justify-center">
         <FloatingInstruction
           text="🎯 Pick your target!"
-          visible={isPendingSelection && isInteractive}
+          visible={isPendingSelection}
         >
           <OpponentDisplay 
             positions={sortedPositions}

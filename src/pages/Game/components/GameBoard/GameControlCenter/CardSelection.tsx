@@ -37,20 +37,19 @@ export const RANK_ITEMS_BY_SUIT: Record<CardSuit, SelectorItem<CardRank>[]> =
 export default function CardSelection({
   selection,
   onChange,
-  isInteractive,
 }: CardSelectionProps) {
   const { suit, rank } = selection;
 
-  if (!isInteractive) {
-    return (
-      <div className="flex items-center justify-center p-6 border-2 border-dashed border-(--color-primary) rounded-lg">
-        <p className="text---color-light-gray italic">⏳ It's the opponent's turn...</p>
-      </div>
-    );
-  }
+  // if (!isInteractive) {
+  //   return (
+  //     <div className="flex items-center justify-center p-6 border-2 border-dashed border-(--color-primary) rounded-lg">
+  //       <p className="text---color-light-gray italic">⏳ It's the opponent's turn...</p>
+  //     </div>
+  //   );
+  // }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col m-6">
 
       <div className="flex flex-col gap-4 relative shrink-0">
         <FloatingInstruction text="👇 Pick a suit to start!" visible={!suit}>
