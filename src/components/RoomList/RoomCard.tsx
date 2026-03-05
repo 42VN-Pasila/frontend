@@ -1,4 +1,5 @@
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import { Tag } from '../../shared/components/Tag';
 
 export type RoomLike = {
     id: string;
@@ -13,30 +14,10 @@ type RoomCardProps = {
     onJoin?: (id: string) => void;
 };
 
-export const StatusTag = ({ room }: { room: RoomLike }) => {
-    const max = room.maxPlayers ?? 4;
-    const full = room.players >= max;
-    const status = room.status ?? (full ? "FULL" : "OPEN");
-    const isOpen = status === "OPEN";
-
-    return (
-        <div
-            className="inline-flex items-center rounded-none px-3 py-1 text-xs font-black tracking-[0.20em]"
-            style={{
-                background: isOpen ? "#DD0339" : "rgba(228,227,227,0.12)",
-                color: isOpen ? "#120F10" : "#E4E3E3",
-                border: `1px solid ${isOpen ? "rgba(221,3,57,0.00)" : "rgba(228,227,227,0.14)"}`,
-            }}
-            aria-label={`status-${status}`}
-        >
-            {status}
-        </div>
-    );
-};
-
 export const RoomCard = ({ room, onJoin }: RoomCardProps) => {
     const max = room.maxPlayers ?? 4;
     const full = room.players >= max;
+    const status = room.status ?? (full ? "FULL" : "OPEN");
     const disabled = full;
 
     return (
@@ -63,7 +44,7 @@ export const RoomCard = ({ room, onJoin }: RoomCardProps) => {
             </div>
 
             <div className="flex md:justify-center">
-                <StatusTag room={room} />
+                <Tag variant={status === "OPEN" ? "primary" : "inverse"} emphasis={"low"}>{status}</Tag>
             </div>
 
             <div className="flex md:justify-end">
