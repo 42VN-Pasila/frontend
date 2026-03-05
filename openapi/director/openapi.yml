@@ -1,0 +1,213 @@
+openapi: 3.0.0
+info:
+  title: Director
+  description: >
+    Game service
+  version: "0.1"
+  x-displayName: Game service
+
+servers:
+  - url: https://app.42pasila.vn/director
+    description: Production
+
+paths:
+  /_ping:
+    get:
+      summary: Check if the service is running
+      responses:
+        "200":
+          description: Service is running
+          content:
+            application/json:
+              schema:
+                type: string
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateUserResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /rooms:
+    post:
+      tags:
+        - Rooms
+      summary: Create a room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRoomRequest"
+      responses:
+        "201":
+          description: Room created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateRoomResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /rooms/{roomId}/connect:
+    post:
+      tags:
+        - Rooms
+      summary: Connect a user to room
+      operationId: connectRoom
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConnectRoomRequest"
+      responses:
+        "200":
+          description: Connected successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConnectRoomResponse"
+        "404":
+          description: Room not found or already ended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    CreateUserRequest:
+      type: object
+      required:
+        - rudexUserId
+      properties:
+        rudexUserId:
+          type: string
+
+    CreateUserResponse:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+    Room:
+      type: object
+      required:
+        - id
+        - userIds
+        - createdAt
+        - connectionCount
+      properties:
+        id:
+          type: string
+        matchId:
+          type: string
+          nullable: true
+        userIds:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+          nullable: true
+        connectionCount:
+          type: integer
+          minimum: 0
+
+    CreateRoomRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+
+    CreateRoomResponse:
+      type: object
+      required:
+        - roomId
+      properties:
+        roomId:
+          type: string
+
+    ConnectRoomRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+
+    ConnectRoomResponse:
+      type: object
+      required:
+        - roomId
+      properties:
+        roomId:
+          type: string
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+        statusCode:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string

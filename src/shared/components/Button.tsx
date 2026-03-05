@@ -1,10 +1,8 @@
 import React from "react";
+import type { ComponentEmphasis, ComponentSize, ComponentVariant } from "./types";
 
-type ButtonVariant = "primary" | "inverse";
-type ButtonSize = "small" | "medium" | "large";
 type ButtonGlow = "primary" | "none";
 type ButtonShadow = "on" | "off";
-type Emphasis = "high" | "low";
 type SemanticColor = "primary" | "red" | "gold" | "blue" | "purple" | "orange";
 
 const COLOR_CONTEXT_CLASSES: Record<SemanticColor, string> = {
@@ -81,7 +79,7 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
     "gap-2",
     "font-semibold tracking-wide font-chakraBold"
   ].join(" "),
-  
+
   medium: [
     "text-base sm:text-lg lg:text-xl",
     "px-[18px] sm:px-[22px] lg:px-[25px]",
@@ -90,7 +88,7 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
     "gap-3 sm:gap-4",
     "font-semibold tracking-wide font-chakraBold"
   ].join(" "),
-  
+
   large: [
     "text-xl sm:text-2xl lg:text-3xl",
     "px-[25px] sm:px-[35px] lg:px-[40px]",
@@ -119,9 +117,9 @@ const SHADOW_CLASSES: Record<ButtonShadow, string> = {
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  emphasis?: Emphasis;
+  variant?: ComponentVariant;
+  size?: ComponentSize;
+  emphasis?: ComponentEmphasis;
   color?: SemanticColor;
   glow?: ButtonGlow;
   shadow?: ButtonShadow;
