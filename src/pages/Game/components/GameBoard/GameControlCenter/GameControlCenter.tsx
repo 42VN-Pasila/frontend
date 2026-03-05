@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import Button from "@shared/components/Button";
 
 import CardPreview from "../GameControlCenter/CardPreview";
@@ -23,18 +21,11 @@ export const GameControlCenter = ({
 }: GameControlCenterProps) => {
   return (
     <aside className="relative border-r border-slate-800 bg-[#3c303e]/70 flex flex-col h-full">
-      {/* {!isInteractive && (
-        <div className={`absolute bg-transparent z-100 w-full h-full`} />
-      )} */}
-
-
       <CardSelection
-        //disabled={isInteractive}
         selection={selection}
         onChange={isInteractive ? onChange : () => {}}
         isInteractive={isInteractive}
       />
-
 
       <div className="flex flex-col gap-2 shrink-0 flex-grow m-6">
         <div className="flex items-center justify-center h-full">

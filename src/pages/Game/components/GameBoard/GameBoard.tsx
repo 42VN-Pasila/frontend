@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-
 import Ed from "@assets/Ed.png";
 import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
-import BackGround from "@assets/Firefly_gpt-image.png";
 import Plank from "@assets/Plank 1.png";
 import HourGlass from "@assets/hourglass.gif";
 
@@ -110,23 +108,13 @@ export const GameBoard = ({
     setSelectedOpponentId(null);
   };
 
-  useEffect(() => {
-    if (selection.suit && selection.rank === null) {
-      handleUpdate({ rank: null });
-    }
-  }, [selection.suit, selection.rank]);
-
   const isInteractive = activePlayerId === localPlayerId;
 
   if (activePlayerId === null) return null;
 
   return (
-    <div
-      className="relative flex h-screen w-screen overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${BackGround})` }}
-    >
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="w-72 lg:w-80 h-full shrink-0 z-10 border-r-4 border-[#b54591]">
+    <div className="relative flex h-screen w-screen overflow-hidden bg-cover bg-center bg-no-repeat bg-(--color-black)">
+      <div className="w-72 lg:w-80 h-full shrink-0 z-10 border-r-4">
         <GameControlCenter
           selection={selection}
           onChange={handleUpdate}
@@ -135,6 +123,7 @@ export const GameBoard = ({
           isInteractive={isInteractive}
         />
       </div>
+
       <main className="flex-1 flex flex-col min-w-20 h-full">
         <div className="relative flex-[6]">
           <div className="absolute bottom-4 left-6 z-25">
