@@ -46,7 +46,7 @@ const BASE_CLASSES = [
 //   },
 // };
 
-const VARIANT_EMPHASIS_CLASSES: Record<ButtonVariant, Record<Emphasis, string>> = {
+const VARIANT_EMPHASIS_CLASSES: Record<ComponentVariant, Record<ComponentEmphasis, string>> = {
   primary: {
     high: [
       "bg-[var(--semantic-bg-color)] hover:bg-[var(--semantic-bg-color-hover)] active:bg-[var(--semantic-bg-color-active)]",
@@ -71,7 +71,7 @@ const VARIANT_EMPHASIS_CLASSES: Record<ButtonVariant, Record<Emphasis, string>> 
   },
 };
 
-const SIZE_CLASSES: Record<ButtonSize, string> = {
+const SIZE_CLASSES: Record<ComponentSize, string> = {
   small: [
     "text-sm sm:text-md",
     "px-[15px] sm:px-[18px]",
