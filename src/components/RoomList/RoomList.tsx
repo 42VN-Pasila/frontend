@@ -1,14 +1,21 @@
 import { DataDisplayGrid } from "@/shared/components/DataDisplayGrid";
+import RoomCard from "./RoomCard";
 
 type Room = {
     id: string;
     name: string;
+    players: number;
+    status: "OPEN" | "FULL";
 };
 
 const rooms: Room[] = [
-    { id: "1", name: "Alpha Room" },
-    { id: "2", name: "Bravo Room" },
-    { id: "3", name: "Charlie Room" },
+    { id: "r_001", name: "RAVEN-07", players: 2, status: "OPEN" },
+    { id: "r_002", name: "ANTE-13", players: 4, status: "FULL" },
+    { id: "r_003", name: "LIAR-02", players: 3, status: "OPEN" },
+    { id: "r_004", name: "JOKER-99", players: 2, status: "OPEN" },
+    { id: "r_005", name: "QUEEN-01", players: 2, status: "OPEN" },
+    { id: "r_006", name: "KING-01", players: 2, status: "OPEN" },
+    { id: "r_007", name: "ACE-01", players: 2, status: "OPEN" },
 ];
 
 export const RoomList = () => {
@@ -29,6 +36,11 @@ export const RoomList = () => {
             </header>
             <DataDisplayGrid.Root<Room> items={rooms} itemToText={(room) => room.name}>
                 <DataDisplayGrid.Search />
+                <DataDisplayGrid.Content
+                    renderItem={(room: Room) => (
+                        <RoomCard room={{ id: room.id, code: room.name, players: room.players, status: room.status }} />
+                    )}
+                />
             </DataDisplayGrid.Root>
         </div>
     );
