@@ -1,10 +1,10 @@
 import type { NullableProps } from "@/common/types";
 
-import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../../../common/types/cards";
-import type { CardRank, CardSuit } from "../../../common/types/cards";
-import type { Card } from "../../../common/types/cards";
+import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../types";
+import type { CardRank, CardSuit } from "../types";
+import type { Card } from "../types";
 
-import Selector, { type SelectorItem } from "../GameControlCenter/Selector";
+import Selector, { type SelectorItem } from "./Selector";
 import { CARD_ICONS, SUIT_ICONS } from "../constants";
 import FloatingInstruction from "../FloatingInstruction";
 
@@ -13,7 +13,7 @@ export type SelectedCard = NullableProps<Card>;
 type CardSelectionProps = {
   selection: SelectedCard;
   onChange: (updates: Partial<SelectedCard>) => void;
-  isInteractive: boolean;
+  disabled: boolean;
 };
 
 export const SUIT_ITEMS: SelectorItem<CardSuit>[] = ALL_CARD_SUITS.map((suit) => ({
@@ -37,12 +37,12 @@ export const RANK_ITEMS_BY_SUIT: Record<CardSuit, SelectorItem<CardRank>[]> =
 export default function CardSelection({
   selection,
   onChange,
-  isInteractive,
+  disabled,
 }: CardSelectionProps) {
   const { suit, rank } = selection;
 
   return (
-    <div className={`flex flex-col m-6 ${isInteractive ? '' : 'pointer-events-none' }`}>
+    <div className={`flex flex-col m-6 ${disabled ? '' : 'pointer-events-none'}`}>
 
       <div className="flex flex-col gap-4 relative shrink-0">
         <FloatingInstruction text="👇 Pick a suit to start!" visible={!suit}>

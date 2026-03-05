@@ -111,6 +111,9 @@ import QueenSpadeIcon from '@assets/game/symbols-svg/Spade-icons/Q-spade-icon.sv
 
 import type { CardRank, CardSuit } from '../types/cards';
 
+type CardSvgComponent = typeof ASpade;
+
+
 export const CardAssets = {
   ASpade,
   TwoSpade,
@@ -233,7 +236,7 @@ export const CardIconAssets = {
 
 export const CARD_IMAGES: Record<
   CardSuit,
-  Record<CardRank, React.FC<React.SVGProps<SVGSVGElement>>>
+  Record<CardRank, CardSvgComponent>
 > = {
   spades: {
     Ace: ASpade,

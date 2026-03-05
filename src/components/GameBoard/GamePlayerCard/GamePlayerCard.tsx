@@ -1,19 +1,18 @@
 import CardDeck2 from "@assets/CardDeck-2.svg";
 
-import type { Card } from "../../../common/types/cards";
-import { ALL_CARD_RANKS } from "../../../common/types/cards";
+import type { Card } from "../types";
+import { ALL_CARD_RANKS } from "../types";
 import Badge from "../Badge";
 import CardSvg from "../CardSvg";
 
 interface GamePlayerCardProps extends React.ComponentPropsWithoutRef<"div"> {
   cards: Card[];
-  isInteractive: boolean;
+  disabled: boolean;
 }
 
 const GamePlayerCard = ({
   cards,
   className = "",
-  isInteractive,
   ...props
 }: GamePlayerCardProps) => {
   const sortedCards = [...cards].sort((a, b) => {
@@ -53,7 +52,7 @@ const GamePlayerCard = ({
           className="w-[10vw] top-3 min-w-[120px] max-w-[180px]"
         />
       </div>
-      
+
     </div>
   );
 };

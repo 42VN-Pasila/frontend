@@ -1,5 +1,5 @@
 import CardSvg, { CardEmptySlot } from "../CardSvg";
-import type { Card } from "../../../common/types/cards";
+import type { Card } from "../../../pages/Game/common/types/cards";
 import type { NullableProps } from "@/common/types";
 
 export default function CardPreview({ suit, rank }: NullableProps<Card>) {
@@ -7,8 +7,8 @@ export default function CardPreview({ suit, rank }: NullableProps<Card>) {
     <div className="px-8 flex justify-center">
       <div className="w-full min-w-[160px]">
         {suit && rank ? (
-          <CardSvg 
-            card={{ suit, rank }} 
+          <CardSvg
+            card={{ suit, rank }}
             className="shadow-2xl scale-105"
           />
         ) : (

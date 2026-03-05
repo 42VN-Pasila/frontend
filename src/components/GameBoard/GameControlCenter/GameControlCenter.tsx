@@ -1,15 +1,15 @@
 import Button from "@shared/components/Button";
 
-import CardPreview from "../GameControlCenter/CardPreview";
-import type { SelectedCard } from "../GameControlCenter/CardSelection";
-import CardSelection from "../GameControlCenter/CardSelection";
+import CardPreview from "./CardPreview";
+import type { SelectedCard } from "./CardSelection";
+import CardSelection from "./CardSelection";
 
 type GameControlCenterProps = {
   selection: SelectedCard;
   onChange: (updates: Partial<SelectedCard>) => void;
   onSubmit: () => void;
   isSelectionComplete: boolean;
-  isInteractive: boolean;
+  disabled: boolean;
 };
 
 export const GameControlCenter = ({
@@ -17,14 +17,14 @@ export const GameControlCenter = ({
   onChange,
   onSubmit,
   isSelectionComplete,
-  isInteractive,
+  disabled,
 }: GameControlCenterProps) => {
   return (
     <aside className="relative border-r border-slate-800 bg-[#3c303e]/70 flex flex-col h-full">
       <CardSelection
         selection={selection}
-        onChange={isInteractive ? onChange : () => {}}
-        isInteractive={isInteractive}
+        onChange={disabled ? () => { } : onChange}
+        disabled={!disabled}
       />
 
       <div className="flex flex-col gap-2 shrink-0 flex-grow m-6">
@@ -36,13 +36,13 @@ export const GameControlCenter = ({
         </p>
         <Button
           onClick={onSubmit}
-          disabled={!isSelectionComplete || !isInteractive}
+          disabled={!isSelectionComplete || disabled}
           color="primary"
           variant="primary"
           emphasis="high"
           size="large"
           className={
-            !isSelectionComplete || !isInteractive ? "pointer-events-none" : ""
+            !isSelectionComplete || disabled ? "pointer-events-none" : ""
           }
         >
           Request

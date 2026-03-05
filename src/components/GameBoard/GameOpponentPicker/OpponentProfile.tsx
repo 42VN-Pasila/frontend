@@ -1,6 +1,6 @@
 import CardBackImg from "@assets/card-back-2.png";
 
-import type { Opponent } from "../../../common/types/players";
+import type { Opponent } from "../../../pages/Game/common/types/players";
 
 import Avatar from "./Avatar";
 import Badge from "../Badge";

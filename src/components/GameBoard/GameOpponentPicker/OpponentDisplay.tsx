@@ -1,14 +1,14 @@
-import type { Opponent } from "../../../common/types/players";
-import OpponentProfile from "../GameOpponentPicker/OpponentProfile";
+import type { Opponent } from "../types";
+import OpponentProfile from "./OpponentProfile";
 
 interface OpponentDisplayProps {
   positions: { left: Opponent; top: Opponent; right: Opponent };
-  selectedId: number | null;
-  onSelect: (id: number) => void;
-  isInteractive: boolean;
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  disabled: boolean;
 }
 
-const OpponentDisplay = ({ positions, selectedId, onSelect, isInteractive }: OpponentDisplayProps) => {
+const OpponentDisplay = ({ positions, selectedId, onSelect, disabled }: OpponentDisplayProps) => {
   const layout = [
     { data: positions.top, side: "top" as const },
     { data: positions.left, side: "left" as const },
@@ -22,7 +22,7 @@ const OpponentDisplay = ({ positions, selectedId, onSelect, isInteractive }: Opp
           <OpponentProfile
             {...data}
             selected={selectedId === data.id}
-            onClick={() => isInteractive && onSelect(data.id)}
+            onClick={() => !disabled && onSelect(data.id)}
           />
         </div>
       ))}
