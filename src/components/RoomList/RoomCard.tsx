@@ -1,3 +1,5 @@
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+
 export type RoomLike = {
     id: string;
     code: string;
@@ -56,7 +58,7 @@ export const RoomCard = ({ room, onJoin }: RoomCardProps) => {
 
             <div className="flex items-center gap-2">
                 <div className="text-sm font-black" style={{ color: "#E4E3E3" }}>
-                    {room.players}/{max}
+                    <PersonOutlineIcon fontSize="small" /> {room.players}/{max}
                 </div>
             </div>
 
