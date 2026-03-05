@@ -18,7 +18,7 @@ import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 
 export const generateMockHand = (): Card[] => {
-  const handSize = Math.floor(Math.random() * 20) + 19;
+  const handSize = Math.floor(Math.random() * 20) + 1;
 
   const deck: Card[] = ALL_CARD_SUITS.flatMap((suit) =>
     ALL_CARD_RANKS.map((rank) => ({ suit, rank })),

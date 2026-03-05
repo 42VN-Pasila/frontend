@@ -23,11 +23,13 @@ export const GameControlCenter = ({
 }: GameControlCenterProps) => {
   return (
     <aside className="relative border-r border-slate-800 bg-[#3c303e]/70 flex flex-col h-full">
-      {!isInteractive && (
+      {/* {!isInteractive && (
         <div className={`absolute bg-transparent z-100 w-full h-full`} />
-      )}
+      )} */}
+
 
       <CardSelection
+        //disabled={isInteractive}
         selection={selection}
         onChange={isInteractive ? onChange : () => {}}
         isInteractive={isInteractive}

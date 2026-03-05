@@ -25,7 +25,7 @@ const Badge = ({
   return (
     <div
       {...props}
-      className={`group relative flex flex-col items-center shrink-0 transition-all duration-200 group-hover:-translate-y-1 ${className}`}
+      className={`group relative select-none flex flex-col items-center shrink-0 transition-all duration-200 group-hover:-translate-y-1 ${className}`}
     >
       <div className={`relative ${sizeClasses[variant]}`}>
         <img 

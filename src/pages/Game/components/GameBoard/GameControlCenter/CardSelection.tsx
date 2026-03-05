@@ -37,6 +37,7 @@ export const RANK_ITEMS_BY_SUIT: Record<CardSuit, SelectorItem<CardRank>[]> =
 export default function CardSelection({
   selection,
   onChange,
+  isInteractive,
 }: CardSelectionProps) {
   const { suit, rank } = selection;
 
@@ -49,7 +50,7 @@ export default function CardSelection({
   // }
 
   return (
-    <div className="flex flex-col m-6">
+    <div className={`flex flex-col m-6 ${isInteractive ? '' : 'pointer-events-none' }`}>
 
       <div className="flex flex-col gap-4 relative shrink-0">
         <FloatingInstruction text="👇 Pick a suit to start!" visible={!suit}>
