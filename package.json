@@ -8,8 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "gen": "pnpm gen:rudex",
-    "gen:rudex": "openapi --input openapi/rudex/openapi.yml --output src/gen --client axios --useOptions"
+    "gen": "pnpm gen:openapi",
+     "gen:openapi": "openapi --input openapi/rudex/openapi.yml --output src/gen/rudex --client axios --useOptions && openapi --input openapi/director/openapi.yml --output src/gen/director --client axios --useOptions"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

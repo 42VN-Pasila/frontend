@@ -1,8 +1,8 @@
-import { OpenAPI } from '@/gen/core/OpenAPI';
-import { UserLoginService } from '@/gen/services/UserLoginService';
-import { UserRegistrationService } from '@/gen/services/UserRegistrationService';
-import type { LoginRequestBody } from '@/gen/models/LoginRequestBody';
-import type { RegisterRequestBody } from '@/gen/models/RegisterRequestBody';
+import { OpenAPI } from '@/gen/rudex/core/OpenAPI';
+import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
+import { UserRegistrationService } from '@/gen/rudex/services/UserRegistrationService';
+import type { LoginRequestBody } from '@/gen/rudex/models/LoginRequestBody';
+import type { RegisterRequestBody } from '@/gen/rudex/models/RegisterRequestBody';
 
 OpenAPI.BASE = import.meta.env.VITE_RUDEX_URL;
 

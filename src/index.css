@@ -5,6 +5,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@theme {
+  --color-rave-black:  #120F10;
+  --color-rave-red: #dd0339;
+  --color-rave-dark-red: #be103c;
+  --color-rave-white: #e4e3e3;
+}
+
 :root {
   font-family: "Chakra Petch", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -18,6 +25,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --rave-black: #120f10;
+  --rave-red: #dd0339;
+  --rave-white: #e4e3e3;
 
   /*Primary button color*/
   --color-primary: #1ecf94ab;
