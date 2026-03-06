@@ -143,7 +143,7 @@ export const GameBoard = () => {
   const disabled = true;
 
   return (
-    <div className="relative flex h-screen w-screen overflow-hidden bg-cover bg-center bg-no-repeat bg-(--color-black)">
+    <div className="relative flex h-screen w-screen overflow-hidden bg-rave-black">
       <div className="w-72 lg:w-80 h-full shrink-0 z-10">
         <GameControlCenter
           selection={selection}
@@ -155,7 +155,7 @@ export const GameBoard = () => {
       </div>
 
       <main className="flex-1 flex flex-col min-w-20 h-full">
-        <div className="relative flex-[6]">
+        <div className="relative flex-[6] border-b-2 border-rave-white/10">
           <div className="absolute bottom-4 left-6 z-25">
             <Timer timeLeft={timeLeft} icon={HourGlass} />
           </div>
@@ -165,7 +165,7 @@ export const GameBoard = () => {
             disabled={!disabled}
           />
         </div>
-        <div className="flex-[3] relative min-h-[20px] border-t border-slate-800 pt">
+        <div className="flex-[4] ">
           <GamePlayerCard
             cards={MOCK_PLAYER_HAND}
             disabled={disabled}

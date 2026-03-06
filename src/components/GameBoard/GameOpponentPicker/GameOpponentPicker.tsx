@@ -1,6 +1,5 @@
 import OpponentDisplay from "./OpponentDisplay";
 import type { Opponent } from "../types";
-import FloatingInstruction from "../FloatingInstruction";
 import { useMemo } from "react";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 
@@ -55,28 +54,19 @@ const GameOpponentPicker = ({
     [opponents, turnOrder, playerId]
   );
 
-  const isPendingSelection = !selectedOpponentId;
 
   return (
     <section
       {...props}
-      className={`${className} flex flex-col bg-rave-black pt-2 p-6 border-b border-slate-800 relative h-full overflow-hidden`}>
-
-      <div className="flex items-center justify-center">
-        <FloatingInstruction
-          text="🎯 Pick your target!"
-          visible={isPendingSelection}
-        >
-          {sortedPositions && (
-            <OpponentDisplay
-              positions={sortedPositions}
-              selectedId={selectedOpponentId}
-              onSelect={(id: string) => onSelectOpponent(id)}
-              disabled={disabled}
-            />
-          )}
-        </FloatingInstruction>
-      </div>
+      className={`${className} flex flex-col bg-rave-black pt-2 p-6 relative h-full overflow-hidden`}>
+      {sortedPositions && (
+        <OpponentDisplay
+          positions={sortedPositions}
+          selectedId={selectedOpponentId}
+          onSelect={(id: string) => onSelectOpponent(id)}
+          disabled={disabled}
+        />
+      )}
     </section>
   );
 };

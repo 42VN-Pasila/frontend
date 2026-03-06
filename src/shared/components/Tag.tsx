@@ -1,4 +1,5 @@
 import type { ComponentEmphasis, ComponentVariant } from "./types";
+import { twMerge } from "tailwind-merge";
 
 
 const VARIANT_EMPHASIS_CLASSES: Record<ComponentVariant, Record<ComponentEmphasis, string>> = {
@@ -21,5 +22,5 @@ type TagProps = {
 export const Tag = ({ children, variant, emphasis }: TagProps) => {
     const baseClasses = "inline-flex items-center rounded-none px-3 py-2 text-xs  tracking-[0.18em]";
     const variantClasses = VARIANT_EMPHASIS_CLASSES[variant][emphasis];
-    return <div className={[baseClasses, variantClasses].join(" ")}>{children}</div>;
+    return <div className={twMerge(baseClasses, variantClasses)}>{children}</div>;
 };

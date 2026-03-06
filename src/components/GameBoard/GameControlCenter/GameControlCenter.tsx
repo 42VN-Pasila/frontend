@@ -20,19 +20,17 @@ export const GameControlCenter = ({
   disabled,
 }: GameControlCenterProps) => {
   return (
-    <aside className="relative border-r-2 border-rave-red bg-rave-black flex flex-col h-full">
+    <aside className="border-r-2 border-rave-white/10 bg-rave-black flex flex-col justify-between gap-10 h-full px-6 py-8">
       <CardSelection
         selection={selection}
         onChange={disabled ? () => { } : onChange}
         disabled={!disabled}
       />
 
-      <div className="flex flex-col gap-2 shrink-0 flex-grow m-6">
-        <div className="flex items-center justify-center h-full">
-          <CardPreview suit={selection.suit} rank={selection.rank} />
-        </div>
-        <p className="text-white-400 mt-1 text-center text-sm">
-          Complete selections before time runs out to avoid losing your turn.
+      <CardPreview suit={selection.suit} rank={selection.rank} />
+      <div className="flex flex-col justify-center items-center gap-2">
+        <p className="text-white-400 text-center text-sm">
+          Complete selections before time runs out to avoid losing your turn
         </p>
         <Button
           onClick={onSubmit}
@@ -41,6 +39,7 @@ export const GameControlCenter = ({
           variant="primary"
           emphasis="high"
           size="large"
+          fullWidth={true}
           className={
             !isSelectionComplete || disabled ? "pointer-events-none" : ""
           }

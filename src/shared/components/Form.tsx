@@ -1,4 +1,5 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 import { Button } from "./Button";
 
 export interface FormRootProps
@@ -23,9 +24,7 @@ export type FormButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Root = React.forwardRef<HTMLFormElement, FormRootProps>(
   ({ gap = 16, backgroundColor, className, style, children, ...rest }, ref) => {
-    const composed = ["flex flex-col py-8 px-10 rounded-[10px]", className]
-      .filter(Boolean)
-      .join(" ");
+    const composed = twMerge("flex flex-col py-8 px-10 rounded-[10px]", className);
     return (
       <form
         ref={ref}
@@ -49,9 +48,7 @@ const Label = React.forwardRef<HTMLLabelElement, FormLabelProps>(
     return (
       <label
         ref={ref}
-        className={["block text-sm font-medium mb-1", className]
-          .filter(Boolean)
-          .join(" ")}
+        className={twMerge("block text-sm font-medium mb-1", className)}
         {...rest}
       >
         {children}
@@ -80,7 +77,7 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
           ref={ref}
           required={required}
           type={type}
-          className={[
+          className={twMerge(
             "px-3 py-2 rounded-md bg-black/50 border",
             error
               ? "border-[var(--color-red)]"
@@ -90,10 +87,8 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
               ? "focus-visible:ring-[var(--color-red)]"
               : "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]",
             "transition-colors",
-            className,
-          ]
-            .filter(Boolean)
-            .join(" ")}
+            className
+          )}
           {...rest}
         />
         {error && (
@@ -151,14 +146,12 @@ const Title = React.forwardRef<HTMLHeadingElement, FormTitleProps>(
       center: "text-center",
       right: "text-right",
     };
-    const composed = [
+    const composed = twMerge(
       "font-semibold text-[var(--color-neutral-50)]",
       sizeMap[textSize],
       alignMap[textAlign],
-      className,
-    ]
-      .filter(Boolean)
-      .join(" ");
+      className
+    );
     return (
       <div
         ref={ref as React.Ref<HTMLHeadingElement>}

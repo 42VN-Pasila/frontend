@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
+import { twMerge } from "tailwind-merge";
 
 //------------------------------------------------
 // Context
@@ -70,7 +71,7 @@ export const Root = <T,>({
             }}
         >
             <div
-                className={["bg-rave-black text-rave-white font-chakraBold", className ?? ""].join(" ").trim()}
+                className={twMerge("bg-rave-black text-rave-white font-chakraBold", className)}
                 {...rest}
             >
                 {children}
@@ -91,7 +92,7 @@ const Search = ({ className, wrapperClassName, placeholder = "Search...", ...res
     const { query, setQuery } = useDataDisplayGridContext<unknown>();
 
     return (
-        <div className={["relative", wrapperClassName ?? ""].join(" ").trim()}>
+        <div className={twMerge("relative", wrapperClassName)}>
             <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-rave-white/55">
                 <SearchIcon fontSize="small" />
             </span>
@@ -101,12 +102,12 @@ const Search = ({ className, wrapperClassName, placeholder = "Search...", ...res
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={placeholder}
                 autoComplete="off"
-                className={[
+                className={twMerge(
                     "h-12 w-full border border-rave-white/20 bg-rave-white/5 pl-12 pr-4",
                     "text-rave-white placeholder:text-rave-white/40",
                     "transition-colors duration-150 focus:border-rave-red focus:outline-none focus:ring-2 focus:ring-rave-red/30",
-                    className ?? "",
-                ].join(" ").trim()}
+                    className
+                )}
                 {...rest}
             />
         </div>
@@ -157,7 +158,7 @@ const Content = <T,>({
                 : "grid-cols-1 md:grid-cols-2";
 
     return (
-        <div className={[className ?? "", "py-8"].join(" ").trim()} {...rest}>
+        <div className={twMerge("py-8", className)} {...rest}>
             {filtered.length === 0 ? (
                 <DefaultEmpty />
             ) : (

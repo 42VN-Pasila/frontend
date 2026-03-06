@@ -6,7 +6,6 @@ import type { Card } from "../types";
 
 import Selector, { type SelectorItem } from "./Selector";
 import { CARD_ICONS, SUIT_ICONS } from "../constants";
-import FloatingInstruction from "../FloatingInstruction";
 
 export type SelectedCard = NullableProps<Card>;
 
@@ -42,32 +41,24 @@ export default function CardSelection({
   const { suit, rank } = selection;
 
   return (
-    <div className={`flex flex-col m-6 ${disabled ? '' : 'pointer-events-none'}`}>
+    <div className={`flex flex-col gap-8 relative shrink-0 ${disabled ? '' : 'pointer-events-none'}`}>
+      <Selector<CardSuit>
+        label="Start with a suit:"
+        items={SUIT_ITEMS}
+        value={suit}
+        onChange={(suit) => onChange({ suit })}
+        columns={4}
+      />
 
-      <div className="flex flex-col gap-4 relative shrink-0">
-        <FloatingInstruction text="👇 Pick a suit to start!" visible={!suit}>
-          <Selector<CardSuit>
-            label="Start with a suit:"
-            items={SUIT_ITEMS}
-            value={suit}
-            onChange={(suit) => onChange({ suit })}
-            columns={4}
-          />
-        </FloatingInstruction>
-
-        {suit && (
-          <FloatingInstruction text="👇 Pick a rank to continue!" visible={!rank}
-          >
-            <Selector<CardRank>
-              label="Then pick the rank:"
-              items={RANK_ITEMS_BY_SUIT[suit]}
-              value={rank}
-              onChange={(rank) => onChange({ rank })}
-              columns={5}
-            />
-          </FloatingInstruction>
-        )}
-      </div>
+      {suit && (
+        <Selector<CardRank>
+          label="Then pick the rank:"
+          items={RANK_ITEMS_BY_SUIT[suit]}
+          value={rank}
+          onChange={(rank) => onChange({ rank })}
+          columns={5}
+        />
+      )}
     </div>
   );
 }

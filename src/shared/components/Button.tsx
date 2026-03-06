@@ -1,4 +1,5 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 import type { ComponentEmphasis, ComponentSize, ComponentVariant } from "./types";
 
 type ButtonGlow = "primary" | "none";
@@ -76,7 +77,6 @@ const SIZE_CLASSES: Record<ComponentSize, string> = {
     "text-sm sm:text-md",
     "px-[15px] sm:px-[18px]",
     "h-[40px] sm:h-[48px]",
-    "gap-2",
     "font-semibold tracking-wide font-chakraBold"
   ].join(" "),
 
@@ -85,15 +85,14 @@ const SIZE_CLASSES: Record<ComponentSize, string> = {
     "px-[18px] sm:px-[22px] lg:px-[25px]",
     "h-[50px] sm:h-[56px] lg:h-[60px]",
     "w-[150px] md:w-[180px] lg:w-[200px]",
-    "gap-3 sm:gap-4",
     "font-semibold tracking-wide font-chakraBold"
   ].join(" "),
 
   large: [
     "text-xl sm:text-2xl lg:text-3xl",
     "px-[25px] sm:px-[35px] lg:px-[40px]",
-    "h-[70px] sm:h-[85px] lg:h-[100px]",
-    "gap-4 sm:gap-5",
+    "h-[60px] sm:h-[85px] lg:h-[100px]",
+    "w-[150px] md:w-[180px] lg:w-[200px]",
     "font-semibold tracking-wide font-chakraBold"
   ].join(" "),
 };
@@ -149,18 +148,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const contextColor = COLOR_CONTEXT_CLASSES[color];
     const glowClasses = GLOW_CLASSES[glow];
     const shadowClasses = SHADOW_CLASSES[shadow];
-    const composed = [
-      BASE_CLASSES,
+    const composed = twMerge(
+      ...BASE_CLASSES,
       base,
       sizeClasses,
       contextColor,
       glowClasses,
       shadowClasses,
       className,
-      fullWidth && "!w-full",
-    ]
-      .filter(Boolean)
-      .join(" ");
+      fullWidth ? "!w-full" : "",
+    );
 
     return (
       <button
