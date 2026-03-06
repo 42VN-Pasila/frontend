@@ -32,7 +32,7 @@ const GamePlayerCard = ({
               className="relative transition-transform duration-200 hover:-translate-y-4 hover:z-50 mt-4"
               style={{
                 marginLeft:
-                  index === 0 ? "0" : cards.length >= 20 ? "-4.7rem" : "-2.5rem",
+                  index === 0 ? "0" : cards.length >= 20 ? "-4.1rem" : "-2.5rem",
                 zIndex: index,
               }}
             >
