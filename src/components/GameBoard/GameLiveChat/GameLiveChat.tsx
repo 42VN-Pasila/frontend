@@ -2,7 +2,7 @@ import { Label } from "@/shared/components/Label"
 
 export const GameLiveChat = () => {
     return (
-        <div className="h-full  bg-rave-black/60 p-6 flex flex-col" >
+        <div className="flex-1 min-h-0 bg-rave-black p-4 flex flex-col" >
             <Label className="text-2xl">
                 Live Chat
             </Label>

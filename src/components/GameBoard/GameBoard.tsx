@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Ed from "@assets/Ed.png";
 import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
-import HourGlass from "@assets/hourglass.gif";
 
 import type { SelectedCard } from "./CardSelectionPanel/CardSelector";
 import type { CardRank, CardSuit } from "./types";
@@ -10,10 +9,10 @@ import type { Card } from "./types";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "./types";
 import { useGameSessionStore } from "@shared/stores/useGameSessionStore";
 
-import CardSelectionPanel from "./CardSelectionPanel/CardSelectionPanel";
 import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 import { GameControlPanel } from "./GameControlPanel/GameControlPanel";
+import CardSelectionPanel from "./CardSelectionPanel/CardSelectionPanel";
 
 const generateMockHand = (): Card[] => {
   const handSize = Math.floor(Math.random() * 20) + 1;
@@ -151,8 +150,6 @@ export const GameBoard = () => {
         isSelectionComplete={isSelectionComplete}
         disabled={!disabled}
       />
-
-
 
       <main className="flex-1 min-w-0 h-full flex flex-col">
         <div className="flex-1 min-h-0 grid grid-rows-[7fr_3fr]">

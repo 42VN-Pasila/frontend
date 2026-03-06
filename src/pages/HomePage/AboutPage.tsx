@@ -207,25 +207,25 @@ export const AboutPage = () => {
   return (
     <>
       <HomePageNavBar />
-        <main className="flex flex-col min-h-[100dvh]">
-          <section className="flex-1 flex items-center justify-center px-6">
-            <div className="w-full max-w-[1200px]">
-              <div className="
+      <main className="flex flex-col min-h-[100dvh]">
+        <section className="flex-1 flex items-center justify-center px-6">
+          <div className="w-full max-w-[1200px]">
+            <div className="
               grid gap-8 place-items-center
               grid-cols-1
               sm:grid-cols-2
               lg:grid-cols-4
             ">
-                {TEAM.map((member, i) => (
-                  <AboutCard
-                    {...member}
-                    flipped={i <= flippedIndex}
-                  />
-                ))}
-              </div>
+              {TEAM.map((member, i) => (
+                <AboutCard
+                  {...member}
+                  flipped={i <= flippedIndex}
+                />
+              ))}
             </div>
-          </section>
-        </main>
+          </div>
+        </section>
+      </main>
       <Footer />
     </>
   );

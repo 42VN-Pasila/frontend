@@ -58,7 +58,7 @@ const GameOpponentPicker = ({
   return (
     <section
       {...props}
-      className={`${className} flex flex-col bg-rave-black pt-2 p-6 relative h-full overflow-hidden`}>
+      className={`${className} flex flex-col bg-rave-black   relative h-full overflow-hidden`}>
       {sortedPositions && (
         <OpponentDisplay
           positions={sortedPositions}
