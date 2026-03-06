@@ -9,7 +9,7 @@ import { CARD_ICONS, SUIT_ICONS } from "../constants";
 
 export type SelectedCard = NullableProps<Card>;
 
-type CardSelectionProps = {
+type CardSelectorProps = {
   selection: SelectedCard;
   onChange: (updates: Partial<SelectedCard>) => void;
   disabled: boolean;
@@ -33,11 +33,11 @@ export const RANK_ITEMS_BY_SUIT: Record<CardSuit, SelectorItem<CardRank>[]> =
     ]),
   ) as Record<CardSuit, SelectorItem<CardRank>[]>;
 
-export default function CardSelection({
+export default function CardSelector({
   selection,
   onChange,
   disabled,
-}: CardSelectionProps) {
+}: CardSelectorProps) {
   const { suit, rank } = selection;
 
   return (

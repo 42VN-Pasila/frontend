@@ -4,16 +4,16 @@ import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
 import HourGlass from "@assets/hourglass.gif";
 
-import type { SelectedCard } from "./GameControlCenter/CardSelection";
+import type { SelectedCard } from "./CardSelectionPanel/CardSelector";
 import type { CardRank, CardSuit } from "./types";
 import type { Card } from "./types";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "./types";
-import Timer from "./Timer";
 import { useGameSessionStore } from "@shared/stores/useGameSessionStore";
 
-import GameControlCenter from "./GameControlCenter/GameControlCenter";
+import CardSelectionPanel from "./CardSelectionPanel/CardSelectionPanel";
 import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
+import { GameControlPanel } from "./GameControlPanel/GameControlPanel";
 
 const generateMockHand = (): Card[] => {
   const handSize = Math.floor(Math.random() * 20) + 1;
@@ -144,34 +144,32 @@ export const GameBoard = () => {
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden bg-rave-black">
-      <div className="w-72 lg:w-80 h-full shrink-0 z-10">
-        <GameControlCenter
-          selection={selection}
-          onChange={handleUpdate}
-          onSubmit={handleRequest}
-          isSelectionComplete={isSelectionComplete}
-          disabled={!disabled}
-        />
-      </div>
+      <CardSelectionPanel
+        selection={selection}
+        onChange={handleUpdate}
+        onSubmit={handleRequest}
+        isSelectionComplete={isSelectionComplete}
+        disabled={!disabled}
+      />
 
-      <main className="flex-1 flex flex-col min-w-20 h-full">
-        <div className="relative flex-[6] border-b-2 border-rave-white/10">
-          <div className="absolute bottom-4 left-6 z-25">
-            <Timer timeLeft={timeLeft} icon={HourGlass} />
+
+
+      <main className="flex-1 min-w-0 h-full flex flex-col">
+        <div className="flex-1 min-h-0 grid grid-rows-[7fr_3fr]">
+          <div className="border-b-2 border-rave-white/10  h-full">
+            <GameOpponentPicker
+              selectedOpponentId={selectedOpponentId}
+              onSelectOpponent={setSelectedOpponentId}
+              disabled={!disabled}
+            />
           </div>
-          <GameOpponentPicker
-            selectedOpponentId={selectedOpponentId}
-            onSelectOpponent={setSelectedOpponentId}
-            disabled={!disabled}
-          />
-        </div>
-        <div className="flex-[4] ">
-          <GamePlayerCard
-            cards={MOCK_PLAYER_HAND}
-            disabled={disabled}
-          />
+          <div className="min-h-0">
+            <GamePlayerCard cards={MOCK_PLAYER_HAND} disabled={disabled} />
+          </div>
         </div>
       </main>
+
+      <GameControlPanel />
     </div>
   );
 };

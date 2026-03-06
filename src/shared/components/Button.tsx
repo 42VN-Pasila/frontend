@@ -50,7 +50,7 @@ const BASE_CLASSES = [
 const VARIANT_EMPHASIS_CLASSES: Record<ComponentVariant, Record<ComponentEmphasis, string>> = {
   primary: {
     high: [
-      "bg-[var(--semantic-bg-color)] hover:bg-[var(--semantic-bg-color-hover)] active:bg-[var(--semantic-bg-color-active)]",
+      "bg-rave-red hover:bg-rave-red/80 active:bg-rave-red/60",
       "text-[var(--rave-black)] font-medium",
     ].join(" "),
     low: [

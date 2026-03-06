@@ -1,10 +1,10 @@
 import Button from "@shared/components/Button";
 
 import CardPreview from "./CardPreview";
-import type { SelectedCard } from "./CardSelection";
-import CardSelection from "./CardSelection";
+import type { SelectedCard } from "./CardSelector";
+import CardSelector from "./CardSelector";
 
-type GameControlCenterProps = {
+type CardSelectionPanelProps = {
   selection: SelectedCard;
   onChange: (updates: Partial<SelectedCard>) => void;
   onSubmit: () => void;
@@ -12,16 +12,16 @@ type GameControlCenterProps = {
   disabled: boolean;
 };
 
-export const GameControlCenter = ({
+export const CardSelectionPanel = ({
   selection,
   onChange,
   onSubmit,
   isSelectionComplete,
   disabled,
-}: GameControlCenterProps) => {
+}: CardSelectionPanelProps) => {
   return (
-    <aside className="border-r-2 border-rave-white/10 bg-rave-black flex flex-col justify-between gap-10 h-full px-6 py-8">
-      <CardSelection
+    <aside className="w-72 lg:w-80 border-r-2 border-rave-white/10 bg-rave-black flex flex-col justify-between gap-10 h-full p-6">
+      <CardSelector
         selection={selection}
         onChange={disabled ? () => { } : onChange}
         disabled={!disabled}
@@ -51,4 +51,4 @@ export const GameControlCenter = ({
   );
 };
 
-export default GameControlCenter;
+export default CardSelectionPanel;
