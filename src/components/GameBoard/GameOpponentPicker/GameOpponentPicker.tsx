@@ -60,7 +60,7 @@ const GameOpponentPicker = ({
   return (
     <section
       {...props}
-      className={`${className} flex flex-col bg-slate-800/50 pt-2 p-6 border-b border-slate-800 relative h-full overflow-hidden`}>
+      className={`${className} flex flex-col bg-rave-black pt-2 p-6 border-b border-slate-800 relative h-full overflow-hidden`}>
 
       <div className="flex items-center justify-center">
         <FloatingInstruction

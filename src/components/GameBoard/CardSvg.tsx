@@ -6,8 +6,8 @@ export const CardEmptySlot = ({ children, className = "", ...props }: React.Comp
   <div
     {...props}
     className={`
-      aspect-[2/3] border-2 border-dashed border-(--color-primary) 
-      bg-slate-700/40 rounded-xl flex items-center justify-center 
+      aspect-[2/3] border-2 border-dashed border-(--rave-red) 
+      bg-rave-light-red rounded-xl flex items-center justify-center 
       text--color-light-gray text-sm text-center p-4 ${className}
     `}
   >

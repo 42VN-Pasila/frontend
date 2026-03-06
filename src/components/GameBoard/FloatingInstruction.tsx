@@ -17,7 +17,7 @@ const FloatingInstruction = ({
       {visible && (
         <div
           // {...rest}
-          className="z-20 pointer-events-none absolute top-3 left-1/2 -translate-x-1/2 w-fit whitespace-nowrap animate-bounce bg-(--color-purple) text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-lg flex items-center justify-center text-center"
+          className="z-20 pointer-events-none absolute top-3 left-1/2 -translate-x-1/2 w-fit whitespace-nowrap animate-bounce bg-rave-white border-2 border-rave-red text-rave-red  text-sm font-bold px-4 py-1.5 rounded-full shadow-lg flex items-center justify-center text-center"
           // {[
           //   "z-20 pointer-events-none absolute top-3 left-1/2 -translate-x-1/2",
           //   "w-fit whitespace-nowrap animate-bounce",
@@ -35,7 +35,7 @@ const FloatingInstruction = ({
       <div
         className={`rounded-xl transition-all duration-500 ${
           visible
-            ? "p-4 ring-2 ring-(--color-primary) bg-blue-500/5 shadow-[0_0_20px_var(--color-primary)] shadow-opacity-20"
+            ? "p-4 ring-2 ring-rave-dark-red bg-transparent shadow-[0_0_20px_var(--rave-red)] shadow-opacity-20"
             : "p-0"
         }`}
       >

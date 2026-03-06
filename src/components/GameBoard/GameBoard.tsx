@@ -144,7 +144,7 @@ export const GameBoard = () => {
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden bg-cover bg-center bg-no-repeat bg-(--color-black)">
-      <div className="w-72 lg:w-80 h-full shrink-0 z-10 border-r-4">
+      <div className="w-72 lg:w-80 h-full shrink-0 z-10">
         <GameControlCenter
           selection={selection}
           onChange={handleUpdate}

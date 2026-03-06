@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 @theme {
-  --color-rave-black:  #120F10;
+  --color-rave-black: #120f10;
   --color-rave-red: #dd0339;
   --color-rave-dark-red: #be103c;
   --color-rave-white: #e4e3e3;
@@ -29,6 +29,7 @@
   --rave-black: #120f10;
   --rave-red: #dd0339;
   --rave-white: #e4e3e3;
+  --rave-light-red: #220b11;
 
   /*Primary button color*/
   --color-primary: #1ecf94ab;
@@ -49,7 +50,7 @@
   --color-black: #0e0603;
 
   /* Red */
-  --color-red: #f40000;
+  --color-red: #dd0339;
   --color-red-hover: #ff2222;
   --color-red-active: #ee0000;
 
@@ -59,19 +60,19 @@
   --color-gold-active: #e6b800;
 
   /* Blue */
-  --color-blue: #008AD0;
-  --color-blue-hover: #2DB2F5;
-  --color-blue-active: #0475AD;
+  --color-blue: #008ad0;
+  --color-blue-hover: #2db2f5;
+  --color-blue-active: #0475ad;
 
   /* Purple */
-  --color-purple: #735DBD;
-  --color-purple-hover: #8A6CF1;
-  --color-purple-active: #583DB2;
+  --color-purple: #735dbd;
+  --color-purple-hover: #8a6cf1;
+  --color-purple-active: #583db2;
 
   /* Orange */
-  --color-orange: #F07103;
-  --color-orange-hover: #F88621;
-  --color-orange-active: #C3732E;
+  --color-orange: #f07103;
+  --color-orange-hover: #f88621;
+  --color-orange-active: #c3732e;
 
   --semantic-bg-color: transparent;
   --semantic-bg-color-hover: transparent;
@@ -124,4 +125,3 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-

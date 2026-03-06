@@ -7,19 +7,19 @@ const NameTag = ({ isSelected, children, className = "", ...props }: NameTagProp
   <div
     {...props}
     className={`
-      min-w-[200px] px-4 py-1 rounded-lg transition-all duration-300
-      bg-(--color-orange) backdrop-blur-md shadow-lg
+      min-w-[200px] px-4 py-1 transition-all duration-300
+      bg-(--rave-light-red) border-1 border-rave-red backdrop-blur-md shadow-lg
       ${
         isSelected
           ? "bg-(--color-orange) scale-105"
-          : "opacity-70 group-hover:opacity-100"
+          : ""
       }
       ${className}
 `}
   >
     <span
       className={`text-sm md:text-base font-bold tracking-wide transition-colors duration-300 ${
-        isSelected ? "text-white" : "text-slate-300 group-hover:text-white"
+        isSelected ? "text-white" : ""
       }`}
     >
       {children}

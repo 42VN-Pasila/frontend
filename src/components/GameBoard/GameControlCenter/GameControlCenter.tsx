@@ -20,7 +20,7 @@ export const GameControlCenter = ({
   disabled,
 }: GameControlCenterProps) => {
   return (
-    <aside className="relative border-r border-slate-800 bg-[#3c303e]/70 flex flex-col h-full">
+    <aside className="relative border-r-2 border-rave-red bg-rave-black flex flex-col h-full">
       <CardSelection
         selection={selection}
         onChange={disabled ? () => { } : onChange}
@@ -37,7 +37,7 @@ export const GameControlCenter = ({
         <Button
           onClick={onSubmit}
           disabled={!isSelectionComplete || disabled}
-          color="primary"
+          color="red"
           variant="primary"
           emphasis="high"
           size="large"
