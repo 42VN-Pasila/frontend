@@ -109,7 +109,7 @@ import JackSpadeIcon from '@assets/game/symbols-svg/Spade-icons/J-spade-icon.svg
 import KingSpadeIcon from '@assets/game/symbols-svg/Spade-icons/K-spade-icon.svg?react';
 import QueenSpadeIcon from '@assets/game/symbols-svg/Spade-icons/Q-spade-icon.svg?react';
 
-import type { CardRank, CardSuit } from '../types/cards';
+import type { CardRank, CardSuit } from '../types';
 
 type CardSvgComponent = typeof ASpade;
 

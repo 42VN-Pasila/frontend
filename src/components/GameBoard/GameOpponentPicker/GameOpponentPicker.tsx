@@ -1,5 +1,5 @@
 import OpponentDisplay from "./OpponentDisplay";
-import type { Opponent } from "../../../pages/Game/common/types/players";
+import type { Opponent } from "../types";
 import FloatingInstruction from "../FloatingInstruction";
 import { useMemo } from "react";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";

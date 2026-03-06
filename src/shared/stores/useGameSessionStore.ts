@@ -1,4 +1,4 @@
-import type { Opponent } from "@/pages/Game/common/types/players";
+import type { Opponent } from "@/components/GameBoard/types"
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 

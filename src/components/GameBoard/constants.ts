@@ -1,5 +1,5 @@
 import { CardIconAssets } from './assets/cards';
-import type { CardRank, CardSuit } from '../../pages/Game/common/types/cards';
+import type { CardRank, CardSuit } from './types';
 
 export const SUIT_ICONS: Record<CardSuit, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   spades: CardIconAssets.SpadeIcon,

@@ -1,5 +1,6 @@
 import { CARD_IMAGES } from "./assets/cards";
-import type { Card } from "../../pages/Game/common/types/cards";
+// import type { Card } from "../../pages/Game/common/types/cards";
+import type { Card } from "./types";
 
 export const CardEmptySlot = ({ children, className = "", ...props }: React.ComponentPropsWithoutRef<"div">) => (
   <div
