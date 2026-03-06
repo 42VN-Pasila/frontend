@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+ import { useEffect, useState } from "react";
 import Ed from "@assets/Ed.png";
 import Edd from "@assets/Edd.png";
 import Eddy from "@assets/Eddy.png";
@@ -73,20 +73,6 @@ export const GameBoard = () => {
     selectedOpponentId
   );
 
-  useEffect(() => {
-    setTimeLeft(15);
-    const intervalId = setInterval(() => {
-      setTimeLeft((prev) => Math.max(prev - 1, 0));
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    if (timeLeft <= 0) {
-      // window.location.reload(); // comment out for testing UI
-    }
-  }, [timeLeft]);
 
   useEffect(() => {
     if (!playerId) {
