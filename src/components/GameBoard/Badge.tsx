@@ -10,9 +10,6 @@ const Badge = ({
   className = "",
   ...props
 }: BadgeProps) => {
-
-
-
   return (
     <div
       {...props}

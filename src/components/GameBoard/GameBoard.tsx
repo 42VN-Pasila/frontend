@@ -1,7 +1,4 @@
- import { useEffect, useState } from "react";
-import Ed from "@assets/Ed.png";
-import Edd from "@assets/Edd.png";
-import Eddy from "@assets/Eddy.png";
+import { useEffect, useState } from "react";
 
 import type { SelectedCard } from "./CardSelectionPanel/CardSelector";
 import type { CardRank, CardSuit } from "./types";
@@ -32,9 +29,9 @@ const generateMockHand = (): Card[] => {
 const MOCK_PLAYER_HAND = generateMockHand();
 
 const MOCK_OPPONENTS = [
-  { id: "opponent-1", username: "Huong", avatarUrl: Ed, cardCount: 7 },
-  { id: "opponent-2", username: "Tan", avatarUrl: Edd, cardCount: 9 },
-  { id: "opponent-3", username: "Triet", avatarUrl: Eddy, cardCount: 11 },
+  { id: "opponent-1", username: "Huong", avatarUrl: 'https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e5359f2d39923046255369c_peep-71.png', cardCount: 7 },
+  { id: "opponent-2", username: "Tan", avatarUrl: 'https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535d195197053fe1a71f4b_peep-98.png', cardCount: 9 },
+  { id: "opponent-3", username: "Triet", avatarUrl: 'https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535d35550b761a3af880d9_peep-99.png', cardCount: 11 },
 ];
 
 export type GameRequestPayload = {
@@ -56,7 +53,6 @@ export const GameBoard = () => {
   const setOpponents = useGameSessionStore().setOpponents;
   const setTurnOrder = useGameSessionStore().setTurnOrder;
 
-  const [timeLeft, setTimeLeft] = useState(15);
 
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(
     null,
@@ -75,6 +71,8 @@ export const GameBoard = () => {
 
 
   useEffect(() => {
+    const isMockSession = !roomId || roomId === "mock-room-001";
+
     if (!playerId) {
       setPlayerId("player-local");
     }
@@ -84,12 +82,9 @@ export const GameBoard = () => {
       setMatchId("mock-match-001");
     }
 
-    if (opponents.length === 0) {
+    if (isMockSession) {
       setOpponents(MOCK_OPPONENTS);
       setOpponentIds(MOCK_OPPONENTS.map((opponent) => opponent.id));
-    }
-
-    if (turnOrder.length === 0) {
       setTurnOrder(["player-local", ...MOCK_OPPONENTS.map((opponent) => opponent.id)]);
     }
   }, [
