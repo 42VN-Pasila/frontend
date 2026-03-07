@@ -10,7 +10,7 @@ const NavigationItemUnderline = ({ text }: NavigationItemUnderlineProps) => {
       className="
         relative inline-block
         after:content-['']
-        after:bg-[var(--color-primary)]
+        after:bg-rave-red
         after:absolute
         after:h-0.5
         after:w-0

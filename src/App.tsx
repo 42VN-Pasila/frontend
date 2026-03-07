@@ -6,8 +6,8 @@ import LoginPage from "./pages/Auth/LoginPage";
 // import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 // import DashBoard from "./pages/DashBoard/DashBoard";
 import AboutPage from "./pages/HomePage/AboutPage";
-// import CardSelectionModal from "./pages/Game/components/CardSelectionModal";
 import { RoomList } from "./components/RoomList/RoomList";
+import { Dev } from "./pages/Dev/Dev";
 
 const App: React.FC = () => {
   return (
@@ -27,6 +27,7 @@ const App: React.FC = () => {
           /> */}
           {/* <Route path="/dashboard" element={<DashBoard/>}/> */}
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/dev" element={<Dev />} />
           <Route path="/rooms" element={<RoomList />} />
         </Routes>
       </main>
