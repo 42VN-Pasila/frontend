@@ -4,16 +4,6 @@ import type { ComponentEmphasis, ComponentSize, ComponentVariant } from "./types
 
 type ButtonGlow = "primary" | "none";
 type ButtonShadow = "on" | "off";
-type SemanticColor = "primary" | "red" | "gold" | "blue" | "purple" | "orange";
-
-const COLOR_CONTEXT_CLASSES: Record<SemanticColor, string> = {
-  primary: "color-primary",
-  red: "color-red",
-  gold: "color-gold",
-  blue: "color-blue",
-  purple: "color-purple",
-  orange: "color-orange",
-};
 
 const BASE_CLASSES = [
   "inline-flex items-center justify-center cursor-pointer",
@@ -22,52 +12,27 @@ const BASE_CLASSES = [
   "shadow-sm transition-colors duration-150",
 ];
 
-// const VARIANT_EMPHASIS_CLASSES: Record<ButtonVariant, Record<Emphasis, string>> = {
-//   primary: {
-//     high: [
-//       "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] active:bg-[var(--color-primary-active)]",
-//       "text-[var(--color-light-gray)] font-medium",
-//     ].join(" "),
-//     low: [
-//       "border-2 border-[var(--color-primary)] text-[var(--color-light-gray)]",
-//       "hover:bg-[var(--color-primary)]/10 active:bg-[var(--color-primary-active)]/20",
-//     ].join(" "),
-//   },
-//   inverse: {
-//     high: [
-//       "bg-[var(--color-light-gray)] hover:bg-[var(--color-light-gray-active)]",
-//       "text-[var(--color-black)] font-medium",
-//       "border border-[var(--color-border)]",
-//     ].join(" "),
-//     low: [
-//       "border-2 border-[var(--color-border-strong)]",
-//       "text-[var(--color-light-gray)]",
-//       "hover:bg-[var(--color-dark-gray)]/10 active:bg-[var(--color-dark-gray)]/20",
-//     ].join(" "),
-//   },
-// };
-
 const VARIANT_EMPHASIS_CLASSES: Record<ComponentVariant, Record<ComponentEmphasis, string>> = {
   primary: {
     high: [
       "bg-rave-red hover:bg-rave-red/80 active:bg-rave-red/60",
-      "text-[var(--rave-black)] font-medium",
+      "text-rave-black font-medium",
     ].join(" "),
     low: [
-      "border-2 border-[var(--semantic-bg-color)] text-[var(--color-light-gray)]",
-      "hover:bg-[var(--semantic-bg-color)]/10 active:bg-[var(--semantic-bg-color-active)]/20",
+      "border-2 border-rave-red text-rave-white",
+      "hover:bg-rave-red/10 active:bg-rave-red/20",
     ].join(" "),
   },
   inverse: {
     high: [
-      "bg-[var(--color-light-gray)] hover:bg-[var(--color-light-gray-active)]",
-      "text-[var(--color-black)] font-medium",
+      "bg-rave-white hover:bg-rave-white/80 active:bg-rave-white/60",
+      "text-rave-black font-medium",
       "border border-[var(--color-border)]",
     ].join(" "),
     low: [
-      "border-2 border-[var(--color-border-strong)]",
-      "text-[var(--color-light-gray)]",
-      "hover:bg-[var(--color-dark-gray)]/10 active:bg-[var(--color-dark-gray)]/20",
+      "border-2 border-rave-white/50",
+      "text-rave-white",
+      "hover:bg-rave-black/10 active:bg-rave-black/20",
     ].join(" "),
   },
 };
@@ -99,8 +64,8 @@ const SIZE_CLASSES: Record<ComponentSize, string> = {
 
 const GLOW_CLASSES: Record<ButtonGlow, string> = {
   primary: [
-    "shadow-[0_0_15px_var(--color-primary-glow-inner),0_0_30px_var(--color-primary-glow-outer)]",
-    "hover:shadow-[0_0_20px_var(--color-primary-glow-inner-hover),0_0_40px_var(--color-primary-glow-outer-hover)]",
+    "shadow-[0_0_15px_var(--color-red),0_0_30px_var(--color-red)]",
+    "hover:shadow-[0_0_20px_var(--color-red-hover),0_0_40px_var(--color-red-hover)]",
   ].join(" "),
   none: "",
 };
@@ -119,7 +84,6 @@ export interface ButtonProps
   variant?: ComponentVariant;
   size?: ComponentSize;
   emphasis?: ComponentEmphasis;
-  color?: SemanticColor;
   glow?: ButtonGlow;
   shadow?: ButtonShadow;
   fullWidth?: boolean;
@@ -135,7 +99,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       className,
       type = "button",
-      color = "primary",
       glow = "none",
       shadow = "off",
       fullWidth = false,
@@ -145,14 +108,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const base = VARIANT_EMPHASIS_CLASSES[variant][emphasis];
     const sizeClasses = SIZE_CLASSES[size];
-    const contextColor = COLOR_CONTEXT_CLASSES[color];
     const glowClasses = GLOW_CLASSES[glow];
     const shadowClasses = SHADOW_CLASSES[shadow];
     const composed = twMerge(
       ...BASE_CLASSES,
       base,
       sizeClasses,
-      contextColor,
       glowClasses,
       shadowClasses,
       className,

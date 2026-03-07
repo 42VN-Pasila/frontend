@@ -35,7 +35,6 @@ export const CardSelectionPanel = ({
         <Button
           onClick={onSubmit}
           disabled={!isSelectionComplete || disabled}
-          color="red"
           variant="primary"
           emphasis="high"
           size="large"

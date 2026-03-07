@@ -92,9 +92,9 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
           {...rest}
         />
         {error && (
-         <p className="mt-1 text-xs text-[var(--color-red)]">
-          {error}
-         </p> 
+          <p className="mt-1 text-xs text-[var(--color-red)]">
+            {error}
+          </p>
         )}
         {!error && description && (
           <p className="mt-1 text-xs text-[var(--color-neutral-300)]">
@@ -108,13 +108,12 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
 Input.displayName = "Form.Input";
 
 const FormButton = React.forwardRef<HTMLButtonElement, FormButtonProps>(
-  ({ className, color, children, type = "submit", ...rest }, ref) => {
+  ({ className, children, type = "submit", ...rest }, ref) => {
     return (
       <Button
         ref={ref}
         type={type}
         className={className}
-        variant="primary"
         emphasis="high"
         {...rest}
       >

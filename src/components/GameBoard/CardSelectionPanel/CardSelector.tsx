@@ -15,13 +15,13 @@ type CardSelectorProps = {
   disabled: boolean;
 };
 
-export const SUIT_ITEMS: SelectorItem<CardSuit>[] = ALL_CARD_SUITS.map((suit) => ({
+const SUIT_ITEMS: SelectorItem<CardSuit>[] = ALL_CARD_SUITS.map((suit) => ({
   value: suit,
   label: suit[0].toUpperCase() + suit.slice(1),
   Icon: SUIT_ICONS[suit],
 }));
 
-export const RANK_ITEMS_BY_SUIT: Record<CardSuit, SelectorItem<CardRank>[]> =
+const RANK_ITEMS_BY_SUIT: Record<CardSuit, SelectorItem<CardRank>[]> =
   Object.fromEntries(
     ALL_CARD_SUITS.map((suit) => [
       suit,

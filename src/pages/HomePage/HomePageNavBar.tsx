@@ -1,7 +1,7 @@
 import Logo from "@/shared/components/Logo";
 import NavigationItemUnderline from "@/components/Auth/NavigationItemUnderline";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -69,15 +69,14 @@ const HomePageNavBar = () => {
           ref={dropdownRef}
           className={`
           absolute right-6 top-[100%] -mt-7 w-40 md:hidden
-          bg-[var(--color-black)]/95 border border-white/10 rounded-xl
+          bg-rave-black border border-white/10 rounded-xl
           shadow-lg shadow-black/40
           overflow-hidden
           transition-all duration-200 origin-top-right
-          ${
-            open
+          ${open
               ? "opacity-100 scale-100 translate-y-0"
               : "opacity-0 scale-95 -translate-y-1 pointer-events-none"
-          }
+            }
         `}
         >
           <div className="flex flex-col py-2 text-sm text-white">

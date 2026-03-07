@@ -31,9 +31,9 @@ function Selector<T extends string>({
   ...rest
 }: SelectorProps<T>) {
   return (
-    <div {...rest} className={`flex flex-col gap-4 ${className}`}>
+    <div {...rest} className={`flex flex-col gap-2 ${className}`}>
       {label && (
-        <Label>{label}</Label>
+        <Label className="font-bold tracking-widest text-lg">{label}</Label>
       )
       }
       <div
