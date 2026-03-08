@@ -22,6 +22,7 @@ export const RoomList = () => {
     }));
 
 
+
     return (
         <div className="relative border-2 border-rave-white/10 rounded-lg text-rave-white font-chakraBold p-6">
             <div

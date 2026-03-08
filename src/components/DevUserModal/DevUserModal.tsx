@@ -5,7 +5,7 @@ import { useGameSessionStore, useUserStore } from "@/shared/stores/useGameSessio
 export const DevUserModal = () => {
 
     const { setUsername, setImageUrl, setUserId, userId, username } = useUserStore();
-    const { setPlayerId, resetGameSession } = useGameSessionStore();
+    const { setPlayerId, resetGameSession, turnOrder, setTurnOrder } = useGameSessionStore();
 
 
     const [userNameInput, setUserNameInput] = useState(username);
@@ -15,6 +15,7 @@ export const DevUserModal = () => {
         setUsername(userNameInput.trim());
         setUserId(userIdInput.trim());
         setPlayerId(userIdInput.trim());
+        setTurnOrder([userIdInput.trim(), ...turnOrder.slice(1)]);
     };
 
     const handleReset = () => {

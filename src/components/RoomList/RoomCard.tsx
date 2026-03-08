@@ -1,5 +1,8 @@
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { Tag } from '../../shared/components/Tag';
+import { directorApi } from '@/shared/api/directorApi';
+import { useGameSessionStore, useUserStore } from '@/shared/stores/useGameSessionStore';
+import { Button } from '@/shared/components';
 
 export type RoomLike = {
     id: string;
@@ -11,14 +14,30 @@ export type RoomLike = {
 
 type RoomCardProps = {
     room: RoomLike;
-    onJoin?: (id: string) => void;
 };
 
-export const RoomCard = ({ room, onJoin }: RoomCardProps) => {
+export const RoomCard = ({ room }: RoomCardProps) => {
     const max = room.maxPlayers ?? 4;
     const full = room.players >= max;
     const status = room.status ?? (full ? "FULL" : "OPEN");
     const disabled = full;
+
+    const { userId } = useUserStore();
+    const { setRoomId, setPlayerId } = useGameSessionStore();
+    const [connectRoom] = directorApi.useConnectRoomMutation();
+
+    const handleConnectRoom = async (roomId: string) => {
+        if (!userId || !roomId) return;
+        try {
+            await connectRoom({ roomId, userId }).unwrap();
+            console.log("Connected to room", roomId);
+            setRoomId(roomId);
+            setPlayerId(userId);
+        } catch {
+            //TODO: Handle error
+            // Keep local state unchanged when connect fails.
+        }
+    };
 
     return (
         <div
@@ -46,21 +65,15 @@ export const RoomCard = ({ room, onJoin }: RoomCardProps) => {
                 <Tag variant={status === "OPEN" ? "primary" : "inverse"} emphasis={"low"}>{status}</Tag>
             </div>
 
-            <div className="flex md:justify-end">
-                <button
-                    type="button"
-                    onClick={() => onJoin?.(room.id)}
-                    disabled={disabled}
-                    className="rounded-none border px-6 py-2 font-black tracking-[0.14em]"
-                    style={{
-                        background: disabled ? "rgba(228,227,227,0.10)" : "#DD0339",
-                        color: disabled ? "#E4E3E3" : "#120F10",
-                        borderColor: disabled ? "rgba(228,227,227,0.14)" : "rgba(221,3,57,0.00)",
-                    }}
-                >
-                    JOIN
-                </button>
-            </div>
+            <Button
+                type="button"
+                onClick={() => handleConnectRoom(room.id)}
+                disabled={disabled}
+                className="rounded-none border font-black tracking-[0.14em] "
+                size="medium"
+            >
+                JOIN
+            </Button>
         </div>
     );
 };

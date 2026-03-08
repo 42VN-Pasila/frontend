@@ -20,14 +20,14 @@ const MOCK_OPPONENTS = [
 
 export const Dashboard = () => {
     const { setOpponents, setOpponentIds, setTurnOrder } = useGameSessionStore();
-    const { setUsername, setImageUrl } = useUserStore();
+    const { setUsername, setImageUrl, userId } = useUserStore();
     useEffect(() => {
         setUsername(MOCK_USER.username);
         setImageUrl(MOCK_USER.imageUrl);
         setOpponents(MOCK_OPPONENTS);
         setOpponentIds(MOCK_OPPONENTS.map((opponent) => opponent.id));
-        setTurnOrder(["player-local", ...MOCK_OPPONENTS.map((opponent) => opponent.id)]);
-    }, [setImageUrl, setUsername, setOpponents, setOpponentIds, setTurnOrder]);
+        setTurnOrder([userId, ...MOCK_OPPONENTS.map((opponent) => opponent.id)]);
+    }, [setImageUrl, setUsername, setOpponents, setOpponentIds, setTurnOrder, userId]);
 
     return (
         <div className="min-h-screen bg-rave-black text-rave-white">

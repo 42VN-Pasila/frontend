@@ -16,7 +16,7 @@ const OpponentDisplay = ({ positions, selectedId, onSelect, disabled }: Opponent
   ];
 
   return (
-    <div className="flex flex-grow gap-x-[4vw] w-full items-center justify-center p-10">
+    <div className="flex grow gap-x-[4vw] w-full items-center justify-center p-10">
       {layout.map(({ data }) => (
         <div key={data.id}>
           <OpponentProfile

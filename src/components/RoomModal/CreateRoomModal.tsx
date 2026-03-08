@@ -9,7 +9,8 @@ export const CreateRoomModal = () => {
     const setPlayerId = useGameSessionStore((state) => state.setPlayerId);
 
     const [roomName, setRoomName] = useState("");
-    const [createRoom, { isLoading }] = directorApi.useCreateRoomMutation();
+    const [createRoom, { isLoading, error }] = directorApi.useCreateRoomMutation();
+
 
     const handleCreateRoom = async () => {
         const normalizedRoomName = roomName.trim();
@@ -35,6 +36,12 @@ export const CreateRoomModal = () => {
                     </div>
                 </div>
             </header>
+            {/* TODO: Handle error */}
+            {error && (
+                <div className="text-rave-red text-sm border border-rave-red bg-rave-red/10 px-3 py-2  tracking-[0.18em] mb-4">
+                    {"Unable to create room"}
+                </div>
+            )}
             <div className="flex items-center gap-2">
                 <input
                     type="text"
