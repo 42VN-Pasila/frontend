@@ -4,6 +4,7 @@ import { FriendList } from "../FriendList/FriendList";
 import { RoomList } from "../RoomList/RoomList";
 import { UserProfile } from "./UserProfile";
 import GameStats from "./GameStats";
+import { DevUserModal } from "../DevUserModal/DevUserModal";
 
 const MOCK_USER = {
     userId: "123",
@@ -33,12 +34,13 @@ export const Dashboard = () => {
                     <UserProfile className="self-start sm:self-auto" />
                 </div>
 
-                <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
-                    <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">
+                    <div className="grid grid-cols-1 gap-4 xl:col-span-8">
                         <GameStats />
                         <RoomList />
                     </div>
-                    <div className="xl:sticky xl:top-6">
+                    <div className="grid grid-cols-1 gap-4 xl:col-span-4 xl:sticky xl:top-6">
+                        <DevUserModal />
                         <FriendList />
                     </div>
                 </div>
