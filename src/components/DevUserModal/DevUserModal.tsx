@@ -25,7 +25,7 @@ export const DevUserModal = () => {
     };
 
     return (
-        <section className="w-full max-w-md rounded-lg border border-rave-white/20 bg-rave-black p-4 text-rave-white">
+        <section className="w-full  rounded-lg border border-rave-white/20 bg-rave-black p-4 text-rave-white">
             <h2 className="text-lg font-bold tracking-widest">DEV USER MODAL</h2>
             <p className="mt-1 text-xs text-rave-white/60">
                 Set IDs directly into state manager stores for local testing.
