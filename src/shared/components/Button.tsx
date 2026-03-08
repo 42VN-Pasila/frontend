@@ -20,19 +20,19 @@ const VARIANT_EMPHASIS_CLASSES: Record<ComponentVariant, Record<ComponentEmphasi
     ].join(" "),
     low: [
       "border-2 border-rave-red text-rave-white",
-      "hover:bg-rave-red/10 active:bg-rave-red/20",
+      "hover:bg-rave-red/5 active:bg-rave-red/10",
     ].join(" "),
   },
   inverse: {
     high: [
       "bg-rave-white hover:bg-rave-white/80 active:bg-rave-white/60",
       "text-rave-black font-medium",
-      "border border-[var(--color-border)]",
+      "border border-rave-white/10",
     ].join(" "),
     low: [
-      "border-2 border-rave-white/50",
+      "border border-rave-white/20 bg-rave-white/5",
       "text-rave-white",
-      "hover:bg-rave-black/10 active:bg-rave-black/20",
+      "hover:bg-rave-white/10 active:bg-rave-white/20",
     ].join(" "),
   },
 };

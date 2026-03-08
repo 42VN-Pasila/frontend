@@ -22,8 +22,7 @@ export const RoomCard = ({ room, onJoin }: RoomCardProps) => {
 
     return (
         <div
-            className="grid grid-cols-1 gap-3 border p-5 md:grid-cols-[1.2fr_0.6fr_0.6fr_auto] md:items-center"
-            style={{ borderColor: "rgba(228,227,227,0.14)", background: "rgba(0,0,0,0.25)" }}
+            className="grid grid-cols-1 gap-3 border p-5 md:grid-cols-[1.2fr_0.6fr_0.6fr_auto] md:items-center border-rave-white/10 bg-rave-white/5"
         >
             <div className="min-w-0">
                 <div className="text-[11px] font-black tracking-[0.22em]" style={{ color: "rgba(228,227,227,0.65)" }}>

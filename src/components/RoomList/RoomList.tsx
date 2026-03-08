@@ -2,6 +2,7 @@ import { DataDisplayGrid } from "@/shared/components/DataDisplayGrid";
 import type { Room as DirectorRoom } from "@/gen/director/models/Room";
 import RoomCard from "./RoomCard";
 import { directorApi } from "@/shared/api/directorApi";
+import { Button } from "@/shared/components"
 
 type Room = {
     id: string;
@@ -11,7 +12,7 @@ type Room = {
 };
 
 export const RoomList = () => {
-    const { data: rooms = [], isLoading, error } = directorApi.useListRoomsQuery();
+    const { data: rooms = [], isLoading, isFetching, error, refetch } = directorApi.useListRoomsQuery();
 
     const roomItems: Room[] = rooms.map((room: DirectorRoom) => ({
         id: room.id,
@@ -20,12 +21,27 @@ export const RoomList = () => {
         status: (room.connectionCount ?? room.userIds.length) >= 4 ? "FULL" : "OPEN",
     }));
 
+
     return (
-        <div className="bg-rave-black text-rave-white font-chakraBold min-h-screen p-8">
+        <div className="relative border-2 border-rave-white/10 rounded-lg text-rave-white font-chakraBold p-6">
+            <div
+                className={`
+                pointer-events-none absolute inset-x-4 top-2 h-16 rounded-xl
+                transition-opacity duration-300
+                opacity-90
+            `}
+                style={{
+                    backgroundImage:
+                        "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.18) 1px, transparent 1.6px)",
+                    backgroundSize: "8px 8px",
+                    maskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
+                    WebkitMaskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
+                }}
+            />
             <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-4">
-                <h1 className="text-4xl sm:text-5xl tracking-tight leading-none">
+                <h2 className="text-2xl font-bold tracking-widest">
                     ROOM LIST
-                </h1>
+                </h2>
                 <div className="flex items-center gap-2">
                     <div className="border border-rave-white/15 bg-rave-white/5 px-3 py-2 text-xs tracking-[0.18em]">
                         {roomItems.length} ROOMS
@@ -40,7 +56,19 @@ export const RoomList = () => {
             {error && <p className="text-rave-red/90 text-sm mb-4">Failed to load rooms.</p>}
 
             <DataDisplayGrid.Root<Room> items={roomItems} itemToText={(room) => room.name}>
-                <DataDisplayGrid.Search />
+                <div className="flex items-center gap-2 w-full" >
+                    <DataDisplayGrid.Search wrapperClassName="w-full" />
+                    <Button
+                        variant="inverse"
+                        emphasis="low"
+                        size="small"
+                        onClick={refetch}
+                        disabled={isFetching}
+                    >
+                        {isFetching ? "REFRESHING..." : "REFRESH"}
+                    </Button>
+                    <Button variant="primary" emphasis="high" size="small" className="min-w-40">CREATE ROOM</Button>
+                </div>
                 <DataDisplayGrid.Content
                     renderItem={(room: Room) => (
                         <RoomCard room={{ id: room.id, code: room.name, players: room.players, status: room.status }} />
