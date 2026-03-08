@@ -1,18 +1,24 @@
 import { OpenAPI } from '@/gen/director/core/OpenAPI';
 import { UsersService } from '@/gen/director/services/UsersService';
-import type { CreateUserRequest } from '@/gen/director/models/CreateUserRequest';
-import { type ConnectRoomRequest, type CreateRoomRequest, RoomsService } from '@/gen/director';
+import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
+import { type ConnectRoomRequest, type CreateRoomRequestBody, RoomsService } from '@/gen/director';
+import { toDevPath } from './path.dev';
 
-OpenAPI.BASE = import.meta.env.VITE_DIRECTOR_URL;
+
+
+OpenAPI.BASE = toDevPath(import.meta.env.VITE_DIRECTOR_URL ?? "");
 
 export const directorClient = {
-    async createUser(body: CreateUserRequest) {
+    async createUser(body: CreateUserRequestBody) {
         return UsersService.postUsers({ requestBody: body });
     },
-    async createRoom(body: CreateRoomRequest) {
+    async createRoom(body: CreateRoomRequestBody) {
         return RoomsService.postRooms({ requestBody: body });
     },
     async connectRoom(roomId: string, body: ConnectRoomRequest) {
         return RoomsService.connectRoom({ roomId, requestBody: body });
+    },
+    async listRooms() {
+        return RoomsService.getRooms();
     },
 };

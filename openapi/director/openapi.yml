@@ -31,7 +31,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateUserRequest"
+              $ref: "#/components/schemas/CreateUserRequestBody"
       responses:
         "201":
           description: User created
@@ -52,6 +52,31 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
   /rooms:
+    get:
+      tags:
+        - Rooms
+      summary: Get all rooms
+      responses:
+        "200":
+          description: Rooms fetched
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Room"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
     post:
       tags:
         - Rooms
@@ -61,7 +86,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateRoomRequest"
+              $ref: "#/components/schemas/CreateRoomRequestBody"
       responses:
         "201":
           description: Room created
@@ -113,6 +138,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "500":
           description: Internal server error
           content:
@@ -122,7 +153,7 @@ paths:
 
 components:
   schemas:
-    CreateUserRequest:
+    CreateUserRequestBody:
       type: object
       required:
         - rudexUserId
@@ -141,11 +172,14 @@ components:
       type: object
       required:
         - id
+        - name
         - userIds
         - createdAt
         - connectionCount
       properties:
         id:
+          type: string
+        name:
           type: string
         matchId:
           type: string
@@ -165,20 +199,26 @@ components:
           type: integer
           minimum: 0
 
-    CreateRoomRequest:
+    CreateRoomRequestBody:
       type: object
       required:
         - userId
+        - roomName
       properties:
         userId:
+          type: string
+        roomName:
           type: string
 
     CreateRoomResponse:
       type: object
       required:
         - roomId
+        - roomName
       properties:
         roomId:
+          type: string
+        roomName:
           type: string
 
     ConnectRoomRequest:
