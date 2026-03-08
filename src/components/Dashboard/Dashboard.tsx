@@ -1,25 +1,33 @@
 import { useEffect } from "react";
-import { useUserStore } from "@/shared/stores/useGameSessionStore";
+import { useGameSessionStore, useUserStore } from "@/shared/stores/useGameSessionStore";
 import { FriendList } from "../FriendList/FriendList";
 import { RoomList } from "../RoomList/RoomList";
 import { UserProfile } from "./UserProfile";
 import GameStats from "./GameStats";
 import { DevUserModal } from "../DevUserModal/DevUserModal";
+import { RoomModal } from "../RoomModal/RoomModal";
 
 const MOCK_USER = {
-    userId: "123",
     username: "John Doe",
     imageUrl: "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535cfb4600807d898fc75b_peep-97.png",
 };
 
-export const Dashboard = () => {
+const MOCK_OPPONENTS = [
+    { id: "opponent-1", username: "Huong", avatarUrl: 'https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e5359f2d39923046255369c_peep-71.png', cardCount: 7 },
+    { id: "opponent-2", username: "Tan", avatarUrl: 'https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535d195197053fe1a71f4b_peep-98.png', cardCount: 9 },
+    { id: "opponent-3", username: "Triet", avatarUrl: 'https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535d35550b761a3af880d9_peep-99.png', cardCount: 11 },
+];
 
-    const { setUsername, setUserId, setImageUrl } = useUserStore();
+export const Dashboard = () => {
+    const { setOpponents, setOpponentIds, setTurnOrder } = useGameSessionStore();
+    const { setUsername, setImageUrl } = useUserStore();
     useEffect(() => {
-        setUserId(MOCK_USER.userId);
         setUsername(MOCK_USER.username);
         setImageUrl(MOCK_USER.imageUrl);
-    }, [setImageUrl, setUserId, setUsername]);
+        setOpponents(MOCK_OPPONENTS);
+        setOpponentIds(MOCK_OPPONENTS.map((opponent) => opponent.id));
+        setTurnOrder(["player-local", ...MOCK_OPPONENTS.map((opponent) => opponent.id)]);
+    }, [setImageUrl, setUsername, setOpponents, setOpponentIds, setTurnOrder]);
 
     return (
         <div className="min-h-screen bg-rave-black text-rave-white">
@@ -37,6 +45,7 @@ export const Dashboard = () => {
                 <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">
                     <div className="grid grid-cols-1 gap-4 xl:col-span-8">
                         <GameStats />
+                        <RoomModal />
                         <RoomList />
                     </div>
                     <div className="grid grid-cols-1 gap-4 xl:col-span-4 xl:sticky xl:top-6">

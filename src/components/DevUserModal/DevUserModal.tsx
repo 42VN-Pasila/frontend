@@ -3,24 +3,27 @@ import { Button } from "@/shared/components";
 import { useGameSessionStore, useUserStore } from "@/shared/stores/useGameSessionStore";
 
 export const DevUserModal = () => {
-    const rudexUserId = useUserStore((state) => state.userId);
-    const setRudexUserId = useUserStore((state) => state.setUserId);
 
-    const playerUserId = useGameSessionStore((state) => state.playerId);
-    const setPlayerUserId = useGameSessionStore((state) => state.setPlayerId);
+    const { setUsername, setImageUrl, setUserId, userId, username } = useUserStore();
+    const { setPlayerId, resetGameSession } = useGameSessionStore();
 
-    const [rudexUserIdInput, setRudexUserIdInput] = useState(rudexUserId);
-    const [userIdInput, setUserIdInput] = useState(playerUserId);
+
+    const [userNameInput, setUserNameInput] = useState(username);
+    const [userIdInput, setUserIdInput] = useState(userId);
 
     const handleApply = () => {
-        setRudexUserId(rudexUserIdInput.trim());
-        setPlayerUserId(userIdInput.trim());
+        setUsername(userNameInput.trim());
+        setUserId(userIdInput.trim());
+        setPlayerId(userIdInput.trim());
     };
 
     const handleReset = () => {
-        setRudexUserId("");
-        setPlayerUserId("");
-        setRudexUserIdInput("");
+        setUsername("");
+        setImageUrl("");
+        setPlayerId("");
+        resetGameSession();
+        setUserId("");
+        setUserNameInput("");
         setUserIdInput("");
     };
 
@@ -34,19 +37,18 @@ export const DevUserModal = () => {
             <div className="mt-4 space-y-3">
                 <label className="block">
                     <span className="mb-1 block text-xs tracking-wide text-rave-white/75">
-                        rudexUserId (useUserStore.userId)
+                        userName (useUserStore.username)
                     </span>
                     <input
-                        value={rudexUserIdInput}
-                        onChange={(e) => setRudexUserIdInput(e.target.value)}
-                        placeholder="e.g. rudex-user-123"
+                        value={userNameInput}
+                        onChange={(e) => setUserNameInput(e.target.value)}
+                        placeholder="e.g. John Doe"
                         className="h-10 w-full border border-rave-white/20 bg-rave-white/5 px-3 text-sm text-rave-white outline-none focus:border-rave-red"
                     />
                 </label>
-
                 <label className="block">
                     <span className="mb-1 block text-xs tracking-wide text-rave-white/75">
-                        userId (useGameSessionStore.playerId)
+                        userId (useGameSessionStore.playerId and useUserStore.userId)
                     </span>
                     <input
                         value={userIdInput}
@@ -68,3 +70,4 @@ export const DevUserModal = () => {
         </section>
     );
 };
+

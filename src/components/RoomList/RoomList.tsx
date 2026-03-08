@@ -42,14 +42,10 @@ export const RoomList = () => {
                 <h2 className="text-2xl font-bold tracking-widest">
                     ROOM LIST
                 </h2>
-                <div className="flex items-center gap-2">
-                    <div className="border border-rave-white/15 bg-rave-white/5 px-3 py-2 text-xs tracking-[0.18em]">
-                        {roomItems.length} ROOMS
-                    </div>
-                    <div className="border border-rave-red bg-rave-red/10 px-3 py-2 text-xs tracking-[0.18em]">
-                        MAX PLAYERS: 4
-                    </div>
+                <div className="border border-rave-red bg-rave-red/10 px-3 py-2 text-xs tracking-[0.18em]">
+                    {roomItems.length} ROOMS
                 </div>
+
             </header>
 
             {isLoading && <p className="text-rave-white/70 text-sm mb-4">Loading rooms...</p>}
@@ -67,9 +63,9 @@ export const RoomList = () => {
                     >
                         {isFetching ? "REFRESHING..." : "REFRESH"}
                     </Button>
-                    <Button variant="primary" emphasis="high" size="small" className="min-w-40">CREATE ROOM</Button>
                 </div>
                 <DataDisplayGrid.Content
+                    columns={1}
                     renderItem={(room: Room) => (
                         <RoomCard room={{ id: room.id, code: room.name, players: room.players, status: room.status }} />
                     )}
