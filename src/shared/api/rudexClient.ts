@@ -3,8 +3,9 @@ import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
 import { UserRegistrationService } from '@/gen/rudex/services/UserRegistrationService';
 import type { LoginRequestBody } from '@/gen/rudex/models/LoginRequestBody';
 import type { RegisterRequestBody } from '@/gen/rudex/models/RegisterRequestBody';
+import { toDevPath } from './path.dev';
 
-OpenAPI.BASE = import.meta.env.VITE_RUDEX_URL;
+OpenAPI.BASE = toDevPath(import.meta.env.VITE_RUDEX_URL ?? "");
 
 export const rudexClient = {
   async login(body: LoginRequestBody) {

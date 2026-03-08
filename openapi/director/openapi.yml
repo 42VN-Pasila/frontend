@@ -172,11 +172,14 @@ components:
       type: object
       required:
         - id
+        - name
         - userIds
         - createdAt
         - connectionCount
       properties:
         id:
+          type: string
+        name:
           type: string
         matchId:
           type: string
@@ -200,16 +203,22 @@ components:
       type: object
       required:
         - userId
+        - roomName
       properties:
         userId:
+          type: string
+        roomName:
           type: string
 
     CreateRoomResponse:
       type: object
       required:
         - roomId
+        - roomName
       properties:
         roomId:
+          type: string
+        roomName:
           type: string
 
     ConnectRoomRequest:

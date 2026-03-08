@@ -2,8 +2,11 @@ import { OpenAPI } from '@/gen/director/core/OpenAPI';
 import { UsersService } from '@/gen/director/services/UsersService';
 import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
 import { type ConnectRoomRequest, type CreateRoomRequestBody, RoomsService } from '@/gen/director';
+import { toDevPath } from './path.dev';
 
-OpenAPI.BASE = import.meta.env.VITE_DIRECTOR_URL;
+
+
+OpenAPI.BASE = toDevPath(import.meta.env.VITE_DIRECTOR_URL ?? "");
 
 export const directorClient = {
     async createUser(body: CreateUserRequestBody) {
