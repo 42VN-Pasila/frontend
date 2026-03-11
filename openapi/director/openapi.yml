@@ -346,13 +346,26 @@ components:
           type: string
         url:
           type: string
+    UserDto:
+      type: object
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        avatarUrl:
+          type: string
+          format: uri
     RoomDto:
       type: object
       required:
         - id
         - name
         - ownerId
-        - userIds
+        - users
         - connectionCount
       properties:
         id:
@@ -361,10 +374,10 @@ components:
           type: string
         ownerId:
           type: string
-        userIds:
+        users:
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/UserDto"
         connectionCount:
           type: integer
           minimum: 0

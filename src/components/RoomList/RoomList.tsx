@@ -4,14 +4,16 @@ import type { RoomDto } from "@/gen/director";
 import { directorApi } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
 import { DataDisplayGrid } from "@/shared/components/DataDisplayGrid";
-
 import RoomCard from "./RoomCard";
+import { MAX_PLAYERS } from "@/common/constants";
+
+type RoomStatus = "OPEN" | "FULL";
 
 type Room = {
   id: string;
   name: string;
-  players: number;
-  status: "OPEN" | "FULL";
+  userCount: number;
+  status: RoomStatus;
 };
 
 
@@ -26,28 +28,18 @@ export const RoomList = () => {
   const [roomCardErrorMessage, setRoomCardErrorMessage] = useState("");
   const roomItems: Room[] = [
     ...rooms.map((room: RoomDto) => {
-      const playerCount = room.connectionCount ?? room.userIds.length;
+      const userCount = room.connectionCount;
       return {
         id: room.id,
         name: room.name.toUpperCase(),
-        players: playerCount,
-        status: (playerCount >= 4 ? "FULL" : "OPEN") as "OPEN" | "FULL",
+        userCount,
+        status: (userCount == MAX_PLAYERS ? "FULL" : "OPEN") as RoomStatus,
       };
     }),
   ];
   const whenCantJoinRoom = (param: string) => {
     setRoomCardErrorMessage(param);
   };
-
-  // export const RoomList = () => {
-  //     const { data: rooms = [], isLoading, isFetching, error, refetch } = directorApi.useListRoomsQuery();
-
-  //     const roomItems: Room[] = rooms.map((room: DirectorRoom) => ({
-  //         id: room.id,
-  //         name: room.name.toUpperCase(),
-  //         players: room.connectionCount ?? room.userIds.length,
-  //         status: (room.connectionCount ?? room.userIds.length) >= 4 ? "FULL" : "OPEN",
-  //     }));
 
   return (
     <div className="relative border-2 border-rave-white/10 rounded-lg text-rave-white font-chakraBold p-6">
@@ -108,7 +100,7 @@ export const RoomList = () => {
               room={{
                 id: room.id,
                 name: room.name,
-                players: room.players,
+                userCount: room.userCount,
                 status: room.status,
                 onConnectError: whenCantJoinRoom,
               }}

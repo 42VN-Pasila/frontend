@@ -12,7 +12,7 @@ import { MAX_PLAYERS } from "@/common/constants";
 type Room = {
     id: string;
     name: string;
-    players: number;
+    userCount: number;
     status?: "OPEN" | "FULL";
     onConnectError: (err: string) => void
 };
@@ -22,7 +22,7 @@ type RoomCardProps = {
 };
 
 export const RoomCard = ({ room }: RoomCardProps) => {
-    const full = room.players >= MAX_PLAYERS;
+    const full = room.userCount === MAX_PLAYERS;
     const status = room.status ?? (full ? "FULL" : "OPEN");
 
     const { id: roomId, setRoomId } = useRoomStore();
@@ -69,7 +69,7 @@ export const RoomCard = ({ room }: RoomCardProps) => {
 
             <div className="flex items-center gap-2">
                 <div className="text-sm font-black" style={{ color: "#E4E3E3" }}>
-                    <PersonOutlineIcon fontSize="small" /> {room.players}/{MAX_PLAYERS}
+                    <PersonOutlineIcon fontSize="small" /> {room.userCount}/{MAX_PLAYERS}
                 </div>
             </div>
 
