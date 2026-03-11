@@ -11,7 +11,6 @@ export const handleConnectRoomError = (err: unknown): string => {
   if (err && typeof err === 'object' && 'status' in err && 'data' in err) {
     const status = (err as { status: number | string }).status;
     const message = getErrorMessage((err as { data: unknown }).data);
-
     if (status === 404) {
       return (`Not found: ${message}`);
     } 

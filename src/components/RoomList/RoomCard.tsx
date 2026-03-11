@@ -16,6 +16,7 @@ export type RoomLike = {
   players: number;
   maxPlayers?: number;
   status?: "OPEN" | "FULL";
+  onConnectError: (err: string) => void 
 };
 
 type RoomCardProps = {
@@ -41,7 +42,8 @@ export const RoomCard = ({ room }: RoomCardProps) => {
       setRoomId(roomId);
       setPlayerId(userId);
     } catch (error: unknown) {
-      handleConnectRoomError(error);
+      const errorMessage = handleConnectRoomError(error);
+      room.onConnectError(errorMessage);
     }
   };
 
