@@ -5,7 +5,7 @@ import type { ConnectRoomResponse } from "@/gen/director/models/ConnectRoomRespo
 import type { CreateRoomResponse } from "@/gen/director/models/CreateRoomResponse";
 import type { ConnectRoomRequest, CreateRoomRequestBody } from "@/gen/director";
 
-type DirectorApiError = {
+export type DirectorApiError = {
     status: number | string;
     data: unknown;
 };

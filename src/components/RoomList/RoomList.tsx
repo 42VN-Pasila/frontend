@@ -11,15 +11,36 @@ type Room = {
     status: "OPEN" | "FULL";
 };
 
+const MockRooms: Room[] = [
+    { id: "1", name: "ALPHA", players: 2, status: "OPEN" },
+    { id: "fake-room-404", name: "TEST-404", players: 1, status: "OPEN" }, // Mock room for testing 404 error
+];
+
 export const RoomList = () => {
     const { data: rooms = [], isLoading, isFetching, error, refetch } = directorApi.useListRoomsQuery();
 
-    const roomItems: Room[] = rooms.map((room: DirectorRoom) => ({
-        id: room.id,
-        name: room.name.toUpperCase(),
-        players: room.connectionCount ?? room.userIds.length,
-        status: (room.connectionCount ?? room.userIds.length) >= 4 ? "FULL" : "OPEN",
-    }));
+    const roomItems: Room[] = [
+        ...MockRooms,
+        ...rooms.map((room: DirectorRoom) => {
+            const playerCount = room.connectionCount ?? room.userIds.length;
+            return {
+                id: room.id,
+                name: room.name.toUpperCase(),
+                players: playerCount,
+                status: (playerCount >= 4 ? "FULL" : "OPEN") as "OPEN" | "FULL",
+            };
+        })
+    ];
+
+// export const RoomList = () => {
+//     const { data: rooms = [], isLoading, isFetching, error, refetch } = directorApi.useListRoomsQuery();
+
+//     const roomItems: Room[] = rooms.map((room: DirectorRoom) => ({
+//         id: room.id,
+//         name: room.name.toUpperCase(),
+//         players: room.connectionCount ?? room.userIds.length,
+//         status: (room.connectionCount ?? room.userIds.length) >= 4 ? "FULL" : "OPEN",
+//     }));
 
 
 
