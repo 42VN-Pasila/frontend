@@ -8,10 +8,6 @@ import { DevUserModal } from "../DevUserModal/DevUserModal";
 import { RoomModal } from "../RoomModal/RoomModal";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
-const MOCK_USER = {
-    username: "John Doe",
-    imageUrl: "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535cfb4600807d898fc75b_peep-97.png",
-};
 
 const MOCK_OPPONENTS = [
     { id: "opponent-1", username: "Huong", avatarUrl: 'https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e5359f2d39923046255369c_peep-71.png', cardCount: 7 },
@@ -23,8 +19,6 @@ export const Dashboard = () => {
     const { setOpponents, setOpponentIds, setTurnOrder } = useGameSessionStore();
     const { setUsername, setImageUrl, userId } = useUserStore();
     useEffect(() => {
-        setUsername(MOCK_USER.username);
-        setImageUrl(MOCK_USER.imageUrl);
         setOpponents(MOCK_OPPONENTS);
         setOpponentIds(MOCK_OPPONENTS.map((opponent) => opponent.id));
         setTurnOrder([userId, ...MOCK_OPPONENTS.map((opponent) => opponent.id)]);

@@ -22,7 +22,10 @@ export const RoomSlot = () => {
 
     const handleConnectRoom = async () => {
         if (!userId || !roomId) return;
-        await connectRoom({ roomId, userId }).unwrap();
+        const result = await connectRoom({ roomId, userId });
+        if ("error" in result) {
+            return;
+        }
     };
 
     const occupiedSlots: Slot[] = [

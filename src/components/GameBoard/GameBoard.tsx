@@ -41,7 +41,6 @@ export type GameRequestPayload = {
 export const GameBoard = () => {
   const userId = useUserStore().userId;
   const roomId = useGameSessionStore().roomId;
-  const setUserId = useUserStore().setUserId;
   const setRoomId = useGameSessionStore().setRoomId;
   const setMatchId = useGameSessionStore().setMatchId;
 
@@ -62,12 +61,10 @@ export const GameBoard = () => {
 
 
   useEffect(() => {
-
     if (!roomId) {
       setRoomId("mock-room-001");
       setMatchId("mock-match-001");
     }
-
   }, [
     roomId,
     setRoomId,
