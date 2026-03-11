@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import { useGameSessionStore, useUserStore } from "@/shared/stores/useGameSessionStore";
+import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { FriendList } from "../FriendList/FriendList";
 import { RoomList } from "../RoomList/RoomList";
 import { UserProfile } from "./UserProfile";
 import GameStats from "./GameStats";
 import { DevUserModal } from "../DevUserModal/DevUserModal";
 import { RoomModal } from "../RoomModal/RoomModal";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
 const MOCK_USER = {
     username: "John Doe",

@@ -1,12 +1,13 @@
 import { directorApi } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
-import { useGameSessionStore, useUserStore } from "@/shared/stores/useGameSessionStore";
+import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+import { useUserStore } from "@/shared/stores/useUserStore";
 import { useState } from "react";
 
 export const CreateRoomModal = () => {
     const userId = useUserStore((state) => state.userId);
     const setRoomId = useGameSessionStore((state) => state.setRoomId);
-    const setPlayerId = useGameSessionStore((state) => state.setPlayerId);
+    const setUserId = useUserStore((state) => state.setUserId);
 
     const [roomName, setRoomName] = useState("");
     const [createRoom, { isLoading, error }] = directorApi.useCreateRoomMutation();
@@ -20,7 +21,7 @@ export const CreateRoomModal = () => {
         const response = await createRoom({ userId, roomName: normalizedRoomName }).unwrap();
         if (response.roomId) {
             setRoomId(response.roomId);
-            setPlayerId(userId);
+            setUserId(userId);
         }
     };
 

@@ -1,9 +1,8 @@
-import type { Room } from "@/gen/director/models/Room";
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { directorClient } from "./directorClient";
 import type { ConnectRoomResponse } from "@/gen/director/models/ConnectRoomResponse";
 import type { CreateRoomResponse } from "@/gen/director/models/CreateRoomResponse";
-import type { ConnectRoomRequest, CreateRoomRequestBody } from "@/gen/director";
+import type { ConnectRoomRequest, CreateRoomRequestBody, RoomDto } from "@/gen/director";
 
 type DirectorApiError = {
     status: number | string;
@@ -23,7 +22,7 @@ export const directorApi = createApi({
     baseQuery: fakeBaseQuery<DirectorApiError>(),
     tagTypes: ["Room"],
     endpoints: (builder) => ({
-        listRooms: builder.query<Room[], void>({
+        listRooms: builder.query<RoomDto[], void>({
             async queryFn() {
                 try {
                     const data = await directorClient.listRooms();

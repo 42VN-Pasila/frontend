@@ -5,11 +5,9 @@ import { createJSONStorage, persist } from "zustand/middleware";
 type GameSessionState = {
     roomId: string;
     matchId: string;
-    playerId: string;
     opponentIds: string[];
     opponents: Opponent[];
     turnOrder: string[];
-    setPlayerId: (playerId: string) => void;
     setOpponentIds: (opponentIds: string[]) => void;
     setRoomId: (roomId: string) => void;
     setMatchId: (matchId: string) => void;
@@ -23,11 +21,9 @@ export const useGameSessionStore = create<GameSessionState>()(
         (set) => ({
             roomId: "",
             matchId: "",
-            playerId: "",
             opponentIds: [],
             opponents: [],
             turnOrder: [],
-            setPlayerId: (playerId: string) => set({ playerId }),
             setOpponentIds: (opponentIds: string[]) => set({ opponentIds }),
             setRoomId: (roomId: string) => set({ roomId }),
             setMatchId: (matchId: string) => set({ matchId }),
@@ -36,7 +32,6 @@ export const useGameSessionStore = create<GameSessionState>()(
             resetGameSession: () => set({
                 roomId: "",
                 matchId: "",
-                playerId: "",
                 opponentIds: [],
                 turnOrder: []
             }),
@@ -45,42 +40,11 @@ export const useGameSessionStore = create<GameSessionState>()(
             name: "game-session",
             storage: createJSONStorage(() => localStorage),
             partialize: (state) => ({
-                playerId: state.playerId,
                 opponentIds: state.opponentIds,
                 roomId: state.roomId,
                 matchId: state.matchId,
                 turnOrder: state.turnOrder,
                 opponents: state.opponents,
-            }),
-        },
-    ),
-);
-
-type UserState = {
-    userId: string;
-    username: string;
-    imageUrl?: string;
-    setUserId: (userId: string) => void;
-    setUsername: (username: string) => void;
-    setImageUrl: (imageUrl: string) => void;
-};
-
-export const useUserStore = create<UserState>()(
-    persist(
-        (set) => ({
-            userId: "",
-            username: "",
-            setUserId: (userId: string) => set({ userId }),
-            setUsername: (username: string) => set({ username }),
-            setImageUrl: (imageUrl: string) => set({ imageUrl }),
-        }),
-        {
-            name: "user",
-            storage: createJSONStorage(() => localStorage),
-            partialize: (state) => ({
-                userId: state.userId,
-                username: state.username,
-                imageUrl: state.imageUrl,
             }),
         },
     ),

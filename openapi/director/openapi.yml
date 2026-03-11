@@ -64,7 +64,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Room"
+                  $ref: "#/components/schemas/RoomDto"
         "400":
           description: Bad request
           content:
@@ -106,7 +106,39 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-
+  /rooms/{roomId}:
+    get:
+      tags:
+        - Rooms
+      summary: Get a room by id
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Room fetched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoomDto"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Room not found or already ended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
   /rooms/{roomId}/connect:
     post:
       tags:
@@ -151,6 +183,50 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /rooms/{roomId}/matches:
+    post:
+      tags:
+        - Rooms
+      summary: Start a match
+      operationId: startMatch
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartMatchRequest"
+      responses:
+        "200":
+          description: Match started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StartMatchResponse"
+        "403":
+          description: Only room owner can start match
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Room not found or already ended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     CreateUserRequestBody:
@@ -168,33 +244,25 @@ components:
       properties:
         userId:
           type: string
-    Room:
+    RoomDto:
       type: object
       required:
         - id
         - name
+        - ownerId
         - userIds
-        - createdAt
         - connectionCount
       properties:
         id:
           type: string
         name:
           type: string
-        matchId:
+        ownerId:
           type: string
-          nullable: true
         userIds:
           type: array
           items:
             type: string
-        createdAt:
-          type: string
-          format: date-time
-        endedAt:
-          type: string
-          format: date-time
-          nullable: true
         connectionCount:
           type: integer
           minimum: 0
@@ -232,8 +300,25 @@ components:
     ConnectRoomResponse:
       type: object
       required:
+        - room
+      properties:
+        room:
+          $ref: "#/components/schemas/RoomDto"
+    StartMatchRequest:
+      type: object
+      required:
+        - ownerId
+      properties:
+        ownerId:
+          type: string
+    StartMatchResponse:
+      type: object
+      required:
+        - matchId
         - roomId
       properties:
+        matchId:
+          type: string
         roomId:
           type: string
 

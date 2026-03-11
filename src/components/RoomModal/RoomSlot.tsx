@@ -1,7 +1,7 @@
 import { directorApi } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
-import { useUserStore } from "@/shared/stores/useGameSessionStore";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
 type SlotStatus = "HOST" | "JOINED" | "EMPTY";
 type Slot = {
@@ -12,21 +12,21 @@ type Slot = {
 
 export const RoomSlot = () => {
     const roomId = useGameSessionStore((state) => state.roomId);
-    const playerId = useGameSessionStore((state) => state.playerId);
+    const userId = useUserStore((state) => state.userId);
     const opponents = useGameSessionStore((state) => state.opponents);
     const username = useUserStore((state) => state.username);
     const currentPlayerName = username || "You";
-    const isHost = playerId === opponents[0].id;
+    const isHost = userId === opponents[0].id;
 
     const [connectRoom, { isLoading }] = directorApi.useConnectRoomMutation();
 
     const handleConnectRoom = async () => {
-        if (!playerId || !roomId) return;
-        await connectRoom({ roomId, userId: playerId }).unwrap();
+        if (!userId || !roomId) return;
+        await connectRoom({ roomId, userId }).unwrap();
     };
 
     const occupiedSlots: Slot[] = [
-        { id: playerId || "player-local", label: currentPlayerName, status: "HOST" as const },
+        { id: userId, label: currentPlayerName, status: "HOST" as const },
         ...opponents.slice(0, 3).map((opponent) => ({
             id: opponent.id,
             label: opponent.username,

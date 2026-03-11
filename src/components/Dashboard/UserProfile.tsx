@@ -1,4 +1,4 @@
-import { useUserStore } from "@/shared/stores/useGameSessionStore";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
 const getInitials = (username: string) =>
     username

@@ -2,6 +2,7 @@ import OpponentDisplay from "./OpponentDisplay";
 import type { Opponent } from "../types";
 import { useMemo } from "react";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
 type Positions = {
   left: Opponent;
@@ -9,12 +10,12 @@ type Positions = {
   right: Opponent;
 };
 
-function getPositions(opponents: Opponent[], turnOrder: string[], playerId: string): Positions | null {
-  if (!playerId || opponents.length < 3 || turnOrder.length < 4) {
+function getPositions(opponents: Opponent[], turnOrder: string[], userId: string): Positions | null {
+  if (!userId || opponents.length < 3 || turnOrder.length < 4) {
     return null;
   }
 
-  const playerIndex = turnOrder.findIndex((id) => id === playerId);
+  const playerIndex = turnOrder.findIndex((id) => id === userId);
   if (playerIndex === -1) {
     return null;
   }
@@ -45,13 +46,13 @@ const GameOpponentPicker = ({
   ...props
 }: GameOpponentPickerProps) => {
 
-  const playerId = useGameSessionStore().playerId;
+  const userId = useUserStore().userId;
   const opponents = useGameSessionStore().opponents;
   const turnOrder = useGameSessionStore().turnOrder;
 
   const sortedPositions = useMemo(() =>
-    getPositions(opponents, turnOrder, playerId),
-    [opponents, turnOrder, playerId]
+    getPositions(opponents, turnOrder, userId),
+    [opponents, turnOrder, userId]
   );
 
   console.log(sortedPositions)

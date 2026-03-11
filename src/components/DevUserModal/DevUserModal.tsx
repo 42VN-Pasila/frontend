@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/shared/components";
-import { useGameSessionStore, useUserStore } from "@/shared/stores/useGameSessionStore";
+import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
 export const DevUserModal = () => {
 
     const { setUsername, setImageUrl, setUserId, userId, username } = useUserStore();
-    const { setPlayerId, resetGameSession, turnOrder, setTurnOrder } = useGameSessionStore();
+    const { resetGameSession, turnOrder, setTurnOrder } = useGameSessionStore();
 
 
     const [userNameInput, setUserNameInput] = useState(username);
@@ -14,14 +15,12 @@ export const DevUserModal = () => {
     const handleApply = () => {
         setUsername(userNameInput.trim());
         setUserId(userIdInput.trim());
-        setPlayerId(userIdInput.trim());
         setTurnOrder([userIdInput.trim(), ...turnOrder.slice(1)]);
     };
 
     const handleReset = () => {
         setUsername("");
         setImageUrl("");
-        setPlayerId("");
         resetGameSession();
         setUserId("");
         setUserNameInput("");
@@ -49,7 +48,7 @@ export const DevUserModal = () => {
                 </label>
                 <label className="block">
                     <span className="mb-1 block text-xs tracking-wide text-rave-white/75">
-                        userId (useGameSessionStore.playerId and useUserStore.userId)
+                        userId (useUserStore.userId)
                     </span>
                     <input
                         value={userIdInput}

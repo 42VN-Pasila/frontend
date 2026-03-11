@@ -10,6 +10,7 @@ import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 import { GameControlPanel } from "./GameControlPanel/GameControlPanel";
 import CardSelectionPanel from "./CardSelectionPanel/CardSelectionPanel";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
 const generateMockHand = (): Card[] => {
   const handSize = Math.floor(Math.random() * 20) + 1;
@@ -38,9 +39,9 @@ export type GameRequestPayload = {
 };
 
 export const GameBoard = () => {
-  const playerId = useGameSessionStore().playerId;
+  const userId = useUserStore().userId;
   const roomId = useGameSessionStore().roomId;
-  const setPlayerId = useGameSessionStore().setPlayerId;
+  const setUserId = useUserStore().setUserId;
   const setRoomId = useGameSessionStore().setRoomId;
   const setMatchId = useGameSessionStore().setMatchId;
 
@@ -62,19 +63,13 @@ export const GameBoard = () => {
 
   useEffect(() => {
 
-    if (!playerId) {
-      setPlayerId("player-local");
-    }
-
     if (!roomId) {
       setRoomId("mock-room-001");
       setMatchId("mock-match-001");
     }
 
   }, [
-    playerId,
     roomId,
-    setPlayerId,
     setRoomId,
     setMatchId,
   ]);
@@ -84,10 +79,10 @@ export const GameBoard = () => {
   };
 
   const handleRequest = () => {
-    if (!isSelectionComplete || !playerId || !selectedOpponentId) return;
+    if (!isSelectionComplete || !userId || !selectedOpponentId) return;
 
     const payload: GameRequestPayload = {
-      userId: playerId,
+      userId: userId,
       opponentId: selectedOpponentId,
       suit: selection.suit!,
       rank: selection.rank!,

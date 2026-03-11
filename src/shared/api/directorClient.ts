@@ -3,6 +3,43 @@ import { UsersService } from '@/gen/director/services/UsersService';
 import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
 import { type ConnectRoomRequest, type CreateRoomRequestBody, RoomsService } from '@/gen/director';
 import { toDevPath } from './path.dev';
+import { Socket, io } from "socket.io-client";
+
+export const socket: Socket = io(import.meta.env.VITE_DIRECTOR_URL, {
+    transports: ["websocket"], // optional: prefer websocket
+    autoConnect: false,        // we control when to connect
+    withCredentials: true,     // if you use cookies
+});
+
+type SocketResponse = {
+    ok: boolean;
+    error: string;
+};
+
+socket.connect();
+
+export const joinRoomSocket = (roomId: string, userId: string) => {
+    socket.emit("room:join", { roomId, userId }, (res: SocketResponse) => {
+        if (!res?.ok) {
+            console.error("join failed", res?.error);
+            return;
+        }
+        console.log("joined!");
+    });
+};
+
+export const pingRoomSocket = (roomId: string, userId: string) => {
+    socket.emit("room:ping", { roomId, userId }, (res: SocketResponse) => {
+        if (!res?.ok) {
+            console.error("ping failed", res?.error);
+        }
+    });
+};
+
+export const attachRoomSocketDebugListeners = () => {
+    socket.on("room.connected", (evt) => console.log("someone joined", evt));
+    socket.on("room.ping", (evt) => console.log("ping received", evt));
+};
 
 
 

@@ -1,8 +1,9 @@
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { Tag } from '../../shared/components/Tag';
 import { directorApi } from '@/shared/api/directorApi';
-import { useGameSessionStore, useUserStore } from '@/shared/stores/useGameSessionStore';
 import { Button } from '@/shared/components';
+import { useUserStore } from '@/shared/stores/useUserStore';
+import { useRoomStore } from '@/shared/stores/useRoomStore';
 
 export type RoomLike = {
     id: string;
@@ -23,7 +24,7 @@ export const RoomCard = ({ room }: RoomCardProps) => {
     const disabled = full;
 
     const { userId } = useUserStore();
-    const { setRoomId, setPlayerId } = useGameSessionStore();
+    const { setRoomId } = useRoomStore();
     const [connectRoom] = directorApi.useConnectRoomMutation();
 
     const handleConnectRoom = async (roomId: string) => {
@@ -32,7 +33,6 @@ export const RoomCard = ({ room }: RoomCardProps) => {
             await connectRoom({ roomId, userId }).unwrap();
             console.log("Connected to room", roomId);
             setRoomId(roomId);
-            setPlayerId(userId);
         } catch {
             //TODO: Handle error
             // Keep local state unchanged when connect fails.
