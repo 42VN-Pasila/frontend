@@ -2,7 +2,7 @@ import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { directorClient } from "./directorClient";
 import type { ConnectRoomResponse } from "@/gen/director/models/ConnectRoomResponse";
 import type { CreateRoomResponse } from "@/gen/director/models/CreateRoomResponse";
-import type { ConnectRoomRequest, CreateRoomRequestBody, RoomDto } from "@/gen/director";
+import type { Avatar, ConnectRoomRequest, CreateRoomRequestBody, RoomDto, UpdateUserAvatarRequestBody, UpdateUserAvatarResponse } from "@/gen/director";
 
 export type DirectorApiError = {
     status: number | string;
@@ -60,6 +60,27 @@ export const directorApi = createApi({
             },
             invalidatesTags: ["Room"],
         }),
+        listAvatars: builder.query<Avatar[], void>({
+            async queryFn() {
+                try {
+                    const data = await directorClient.listAvatars();
+                    return { data };
+                } catch (error) {
+                    return { error: toDirectorApiError(error, "Unable to fetch avatars") };
+                }
+            },
+        }),
+        updateUserAvatar: builder.mutation<UpdateUserAvatarResponse, { userId: string; avatarId: string }>({
+            async queryFn({ userId, avatarId }) {
+                try {
+                    const bodyPayload: UpdateUserAvatarRequestBody = { avatarId };
+                    const data = await directorClient.updateUserAvatar(userId, bodyPayload);
+                    return { data };
+                } catch (error) {
+                    return { error: toDirectorApiError(error, "Unable to update user avatar") };
+                }
+            },
+        }),
     }),
 });
 
@@ -67,4 +88,6 @@ export const {
     useListRoomsQuery,
     useCreateRoomMutation,
     useConnectRoomMutation,
+    useListAvatarsQuery,
+    useUpdateUserAvatarMutation,
 } = directorApi;

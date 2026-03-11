@@ -22,7 +22,7 @@ export const UserProfile = ({
             className={`group inline-flex items-center gap-3 rounded-lg border border-rave-white/20 bg-rave-white/5 px-2 py-2 transition-colors hover:border-rave-red/60 hover:bg-rave-red/10 ${className}`}
             {...props}
         >
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-rave-white/20 bg-rave-white text-sm font-bold text-rave-white">
+            <span className="text-rave-black inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-rave-white/20 bg-rave-white text-sm font-bold">
                 {imageUrl ? (
                     <img
                         src={imageUrl}

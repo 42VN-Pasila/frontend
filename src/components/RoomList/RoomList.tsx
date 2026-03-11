@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { Room as DirectorRoom } from "@/gen/director/models/Room";
+import type { RoomDto } from "@/gen/director";
 import { directorApi } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
 import { DataDisplayGrid } from "@/shared/components/DataDisplayGrid";
@@ -14,10 +14,6 @@ type Room = {
   status: "OPEN" | "FULL";
 };
 
-const MockRooms: Room[] = [
-  { id: "1", name: "ALPHA", players: 2, status: "OPEN" },
-  { id: "fake-room-404", name: "TEST-404", players: 1, status: "OPEN" }, // Mock room for testing 404 error
-];
 
 export const RoomList = () => {
   const {
@@ -29,8 +25,7 @@ export const RoomList = () => {
   } = directorApi.useListRoomsQuery();
   const [roomCardErrorMessage, setRoomCardErrorMessage] = useState("");
   const roomItems: Room[] = [
-    ...MockRooms,
-    ...rooms.map((room: DirectorRoom) => {
+    ...rooms.map((room: RoomDto) => {
       const playerCount = room.connectionCount ?? room.userIds.length;
       return {
         id: room.id,
@@ -112,7 +107,7 @@ export const RoomList = () => {
             <RoomCard
               room={{
                 id: room.id,
-                code: room.name,
+                name: room.name,
                 players: room.players,
                 status: room.status,
                 onConnectError: whenCantJoinRoom,

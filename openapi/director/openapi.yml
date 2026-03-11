@@ -51,6 +51,63 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /users/{userId}/avatar:
+    patch:
+      tags:
+        - Users
+      summary: Update user avatar
+      operationId: updateUserAvatar
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserAvatarRequestBody"
+      responses:
+        "200":
+          description: User avatar updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateUserAvatarResponse"
+        "404":
+          description: User or avatar not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /resources/avatars:
+    get:
+      tags:
+        - Resources
+      summary: Get all avatars
+      responses:
+        "200":
+          description: Avatars fetched
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Avatar"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /rooms:
     get:
       tags:
@@ -96,6 +153,18 @@ paths:
                 $ref: "#/components/schemas/CreateRoomResponse"
         "400":
           description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: User already in room
           content:
             application/json:
               schema:
@@ -164,14 +233,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ConnectRoomResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "404":
           description: Room not found or already ended
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        "400":
-          description: Bad request
+        "409":
+          description: User already in room or room maximum players reached
           content:
             application/json:
               schema:
@@ -243,6 +318,33 @@ components:
         - userId
       properties:
         userId:
+          type: string
+    UpdateUserAvatarRequestBody:
+      type: object
+      required:
+        - avatarId
+      properties:
+        avatarId:
+          type: string
+    UpdateUserAvatarResponse:
+      type: object
+      required:
+        - userId
+        - avatarId
+      properties:
+        userId:
+          type: string
+        avatarId:
+          type: string
+    Avatar:
+      type: object
+      required:
+        - id
+        - url
+      properties:
+        id:
+          type: string
+        url:
           type: string
     RoomDto:
       type: object

@@ -1,30 +1,37 @@
 import { useState } from "react";
 import { Button } from "@/shared/components";
-import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
+import { useListAvatarsQuery, useUpdateUserAvatarMutation } from "@/shared/api/directorApi";
 
 export const DevUserModal = () => {
-
-    const { setUsername, setImageUrl, setUserId, userId, username } = useUserStore();
-    const { resetGameSession, turnOrder, setTurnOrder } = useGameSessionStore();
-
-
+    const { setUsername, setImageUrl, setUserId, userId, username, imageUrl } = useUserStore();
     const [userNameInput, setUserNameInput] = useState(username);
     const [userIdInput, setUserIdInput] = useState(userId);
+    const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(imageUrl ?? "");
 
+    const { data: avatars = [], isLoading: isLoadingAvatars } = useListAvatarsQuery();
+    const [updateUserAvatar] = useUpdateUserAvatarMutation();
     const handleApply = () => {
         setUsername(userNameInput.trim());
         setUserId(userIdInput.trim());
-        setTurnOrder([userIdInput.trim(), ...turnOrder.slice(1)]);
+        setImageUrl(selectedAvatarUrl);
+
+        const selectedAvatar = avatars.find((avatar) => avatar.url === selectedAvatarUrl);
+        if (selectedAvatar && userIdInput.trim()) {
+            void updateUserAvatar({
+                userId: userIdInput.trim(),
+                avatarId: selectedAvatar.id,
+            });
+        }
     };
 
     const handleReset = () => {
         setUsername("");
         setImageUrl("");
-        resetGameSession();
         setUserId("");
         setUserNameInput("");
         setUserIdInput("");
+        setSelectedAvatarUrl("");
     };
 
     return (
@@ -57,6 +64,33 @@ export const DevUserModal = () => {
                         className="h-10 w-full border border-rave-white/20 bg-rave-white/5 px-3 text-sm text-rave-white outline-none focus:border-rave-red"
                     />
                 </label>
+            </div>
+
+            <div className="mt-4">
+                <p className="mb-2 text-xs tracking-wide text-rave-white/75">
+                    Avatar (click to select)
+                </p>
+                {isLoadingAvatars ? (
+                    <div className="text-xs text-rave-white/60">Loading avatars...</div>
+                ) : (
+                    <div className="grid grid-cols-4 gap-2">
+                        {avatars.map((avatar) => {
+                            const selected = avatar.url === selectedAvatarUrl;
+                            return (
+                                <button
+                                    key={avatar.id}
+                                    type="button"
+                                    onClick={() => setSelectedAvatarUrl(avatar.url)}
+                                    className={`aspect-square overflow-hidden border-2 transition-colors ${selected ? "border-rave-red" : "border-rave-white/15 hover:border-rave-white/40"
+                                        }`}
+                                    title={avatar.id}
+                                >
+                                    <img src={avatar.url} alt="avatar" className="h-full w-full object-cover" />
+                                </button>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
 
             <div className="mt-4 flex items-center gap-2">
