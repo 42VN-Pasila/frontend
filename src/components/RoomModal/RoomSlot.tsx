@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
@@ -14,7 +16,7 @@ type Slot = {
 export const RoomSlot = () => {
     const { id: roomId, ownerId, users } = useRoomStore();
     const { userId, username, avatarUrl } = useUserStore();
-
+    const [readyUserIds, setReadyUserIds] = useState<Set<string>>(new Set());
 
     const currentUserName = username || "You";
     const isHost = userId === ownerId;
@@ -22,7 +24,23 @@ export const RoomSlot = () => {
 
     const handleStartMatch = async () => {
         if (!userId || !roomId) return;
-        console.log("Starting match");
+
+        if (!isHost) {
+            setReadyUserIds((prev) => {
+                const next = new Set(prev);
+                if (next.has(userId)) {
+                    next.delete(userId);
+                    console.log("User is UNREADY");
+                } else {
+                    next.add(userId);
+                    console.log("User is READY");
+                }
+                return next;
+            });
+            return;
+        }
+
+        console.log("Host clicked START");
     };
 
     const handleExitRoom = async () => {
@@ -30,15 +48,21 @@ export const RoomSlot = () => {
         console.log("Exiting room");
     };
 
-    const opponents = users.filter((user) => user.id !== ownerId);
+    const hostUser = users.find((user) => user.id === ownerId);
+    const joinedUsers = users.filter((user) => user.id !== ownerId);
 
     const occupiedSlots: Slot[] = [
-        { id: userId, username: currentUserName, status: "HOST" as const, avatarUrl: avatarUrl },
-        ...opponents.map((user, index) => ({
+        {
+            id: hostUser?.id ?? `host-${ownerId || "unknown"}`,
+            username: hostUser?.id === userId ? currentUserName : "HOST",
+            status: "HOST" as const,
+            avatarUrl: hostUser?.id === userId ? avatarUrl : hostUser?.avatarUrl,
+        },
+        ...joinedUsers.map((user, index) => ({
             id: user.id,
-            username: `Opponent ${index + 1}`,
+            username: user.id === userId ? currentUserName : `Opponent ${index + 1}`,
             status: "JOINED" as const,
-            avatarUrl: user.avatarUrl,
+            avatarUrl: user.id === userId ? avatarUrl : user.avatarUrl,
         })),
     ];
 
@@ -53,6 +77,17 @@ export const RoomSlot = () => {
             avatarUrl: undefined,
         });
     }
+
+    const isReady = readyUserIds.has(userId);
+    const allReady = joinedUsers.length > 0 && joinedUsers.every((u) => readyUserIds.has(u.id));
+
+    const actionButtonLabel = isHost
+        ? "START"
+        : isReady
+            ? "WAITING..."
+            : "READY";
+
+    const isActionButtonDisabled = !userId || !roomId || (isHost && !allReady);
 
     return (
         <>
@@ -81,8 +116,9 @@ export const RoomSlot = () => {
                         size="small"
                         className="h-10! sm:h-10!"
                         onClick={handleStartMatch}
+                        disabled={isActionButtonDisabled}
                     >
-                        {isHost ? "READY" : "START"}
+                        {actionButtonLabel}
                     </Button>
                 </div>
             </header >
@@ -129,12 +165,22 @@ export const RoomSlot = () => {
                                             isHost
                                                 ? "bg-rave-red"
                                                 : isJoined
-                                                    ? "bg-rave-white/70"
+                                                    ? readyUserIds.has(slot.id)
+                                                        ? "bg-emerald-400"
+                                                        : "bg-rave-white/70"
                                                     : "bg-rave-white/25",
                                         ].join(" ")}
                                     />
                                     <span>
-                                        {isHost ? "YOU ARE HOST" : isJoined ? "READY" : "WAITING…"}
+                                        {isHost
+                                            ? slot.id === userId
+                                                ? "YOU ARE HOST"
+                                                : "HOST"
+                                            : isJoined
+                                                ? readyUserIds.has(slot.id)
+                                                    ? "READY"
+                                                    : "NOT READY"
+                                                : "WAITING…"}
                                     </span>
                                 </div>
 

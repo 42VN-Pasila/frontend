@@ -38,6 +38,17 @@ export const directorApi = createApi({
             },
             invalidatesTags: ["Room"],
         }),
+        // startMatch: builder.mutation<StartMatchResponse, { roomId: string; ownerId: string }>({
+        //     async queryFn({ roomId, ownerId }) {
+        //         try {
+        //             const data = await directorClient.startMatch(roomId, { ownerId });
+        //             return { data };
+        //         } catch (error) {
+        //             return { error: toDirectorApiError(error, "Unable to start match") };
+        //         }
+        //     },
+        //     invalidatesTags: ["Room"],
+        // }),
         listAvatars: builder.query<Avatar[], void>({
             async queryFn() {
                 const data = await directorClient.listAvatars();
@@ -60,6 +71,7 @@ export const {
     useListRoomsQuery,
     useCreateRoomMutation,
     useConnectRoomMutation,
+    // useStartMatchMutation,
     useListAvatarsQuery,
     useUpdateUserAvatarMutation,
 } = directorApi;
