@@ -3,7 +3,8 @@ import Avatar from "@/shared/components/Avatar";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 import { directorApi } from "@/shared/api/directorApi";
-import { UpdateRoomUserStatusRequestBody } from "@/gen/director";
+import { useNavigate } from "react-router-dom";
+import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 
 type SlotStatus = "HOST" | "JOINED" | "EMPTY";
 type Slot = {
@@ -22,7 +23,10 @@ export const RoomSlot = () => {
         refetchOnReconnect: true,
     });
     const { userId, username, avatarUrl } = useUserStore();
+    const navigate = useNavigate();
     const [updateUserStatus] = directorApi.useUpdateUserStatusMutation();
+    const [startMatch] = directorApi.useStartMatchMutation();
+    const { setRoomId: setGameRoomId, setMatchId } = useGameSessionStore();
     const currentOwnerId = roomStatus?.ownerId ?? ownerId;
     const currentUsers = roomStatus?.users ?? users;
 
@@ -35,10 +39,10 @@ export const RoomSlot = () => {
 
         if (!isHost) {
             const currentUser = currentUsers.find((user) => user.id === userId);
-            const shouldBeReady = currentUser?.status !== UpdateRoomUserStatusRequestBody.status.READY;
+            const shouldBeReady = currentUser?.status !== "Ready";
             const nextStatus = shouldBeReady
-                ? UpdateRoomUserStatusRequestBody.status.READY
-                : UpdateRoomUserStatusRequestBody.status.NOT_READY;
+                ? "Ready"
+                : "NotReady";
 
             await updateUserStatus({
                 userId,
@@ -50,14 +54,19 @@ export const RoomSlot = () => {
     };
 
     const handleStartMatch = async () => {
-        if (!userId || !roomId) return;
-
-        if (!isHost) {
-            await handleReady();
-            return;
+        if (!userId || !roomId || !isHost) return;
+        const { data, error } = await startMatch({
+            roomId,
+            ownerId: userId,
+        });
+        if (data) {
+            setGameRoomId(data.roomId);
+            setMatchId(data.matchId);
+            navigate(`/match/${data.matchId}`);
         }
-
-        console.log("Host clicked START");
+        if (error) {
+            console.error(error);
+        }
     };
 
     const handleExitRoom = async () => {
@@ -96,10 +105,10 @@ export const RoomSlot = () => {
     }
 
     const isReady = currentUsers.some(
-        (user) => user.id === userId && user.status === UpdateRoomUserStatusRequestBody.status.READY,
+        (user) => user.id === userId && user.status === "Ready",
     );
     const allReady = joinedUsers.length > 0 && joinedUsers.every(
-        (user) => user.status === UpdateRoomUserStatusRequestBody.status.READY,
+        (user) => user.status === "Ready",
     );
 
     const actionButtonLabel = isHost
@@ -187,7 +196,7 @@ export const RoomSlot = () => {
                                                 ? "bg-rave-red"
                                                 : isJoined
                                                     ? currentUsers.some(
-                                                        (user) => user.id === slot.id && user.status === UpdateRoomUserStatusRequestBody.status.READY,
+                                                        (user) => user.id === slot.id && user.status === "Ready",
                                                     )
                                                         ? "bg-emerald-400"
                                                         : "bg-rave-white/70"
@@ -201,7 +210,7 @@ export const RoomSlot = () => {
                                                 : "HOST"
                                             : isJoined
                                                 ? currentUsers.some(
-                                                    (user) => user.id === slot.id && user.status === UpdateRoomUserStatusRequestBody.status.READY,
+                                                    (user) => user.id === slot.id && user.status === "Ready",
                                                 )
                                                     ? "READY"
                                                     : "NOT READY"

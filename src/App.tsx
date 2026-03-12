@@ -4,8 +4,8 @@ import { Route, Routes } from "react-router-dom";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import LoginPage from "./pages/Auth/LoginPage";
 import AboutPage from "./pages/HomePage/AboutPage";
-import { Dev } from "./pages/Dev/Dev";
 import { Dashboard } from "./components/Dashboard/Dashboard";
+import { GameBoard } from "./components/GameBoard/GameBoard";
 
 const App: React.FC = () => {
   return (
@@ -24,8 +24,8 @@ const App: React.FC = () => {
             }
           /> */}
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/match/:matchId" element={<GameBoard />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/dev" element={<Dev />} />
         </Routes>
       </main>
     </div>

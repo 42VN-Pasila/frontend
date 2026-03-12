@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import type { SelectedCard } from "./CardSelectionPanel/CardSelector";
 import type { CardRank, CardSuit } from "./types";
 import type { Card } from "./types";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "./types";
-import { useGameSessionStore } from "@shared/stores/useGameSessionStore";
 
 import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
@@ -29,8 +28,6 @@ const generateMockHand = (): Card[] => {
 
 const MOCK_PLAYER_HAND = generateMockHand();
 
-
-
 export type GameRequestPayload = {
   userId: string;
   opponentId: string;
@@ -40,9 +37,6 @@ export type GameRequestPayload = {
 
 export const GameBoard = () => {
   const userId = useUserStore().userId;
-  const roomId = useGameSessionStore().roomId;
-  const setRoomId = useGameSessionStore().setRoomId;
-  const setMatchId = useGameSessionStore().setMatchId;
 
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(
     null,
@@ -58,18 +52,6 @@ export const GameBoard = () => {
     selection.rank &&
     selectedOpponentId
   );
-
-
-  useEffect(() => {
-    if (!roomId) {
-      setRoomId("mock-room-001");
-      setMatchId("mock-match-001");
-    }
-  }, [
-    roomId,
-    setRoomId,
-    setMatchId,
-  ]);
 
   const handleUpdate = (updates: Partial<SelectedCard>) => {
     setSelection((prev) => ({ ...prev, ...updates }));

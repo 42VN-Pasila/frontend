@@ -1,3 +1,4 @@
+// TODO: test and remove this file
 export const getErrorMessage = (data: unknown): string => {
   if (typeof data === 'string') return data;
   if (data && typeof data === 'object') {
