@@ -18,6 +18,8 @@ type Room = {
 
 
 export const RoomList = () => {
+  const [roomCardErrorMessage, setRoomCardErrorMessage] = useState("");
+
   const {
     data: rooms = [],
     isLoading,
@@ -25,7 +27,7 @@ export const RoomList = () => {
     error,
     refetch,
   } = directorApi.useListRoomsQuery();
-  const [roomCardErrorMessage, setRoomCardErrorMessage] = useState("");
+
   const roomItems: Room[] = [
     ...rooms.map((room: RoomDto) => {
       const userCount = room.connectionCount;
@@ -37,7 +39,8 @@ export const RoomList = () => {
       };
     }),
   ];
-  const whenCantJoinRoom = (param: string) => {
+
+  const handleError = (param: string) => {
     setRoomCardErrorMessage(param);
   };
 
@@ -102,7 +105,7 @@ export const RoomList = () => {
                 name: room.name,
                 userCount: room.userCount,
                 status: room.status,
-                onConnectError: whenCantJoinRoom,
+                onConnectError: handleError,
               }}
             />
           )}

@@ -1,4 +1,3 @@
-import { directorApi } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
@@ -15,17 +14,20 @@ type Slot = {
 export const RoomSlot = () => {
     const { id: roomId, ownerId, users } = useRoomStore();
     const { userId, username, avatarUrl } = useUserStore();
+
+
     const currentUserName = username || "You";
     const isHost = userId === ownerId;
 
-    const [connectRoom, { isLoading }] = directorApi.useConnectRoomMutation();
 
-    const handleConnectRoom = async () => {
+    const handleStartMatch = async () => {
         if (!userId || !roomId) return;
-        const result = await connectRoom({ roomId, userId });
-        if ("error" in result) {
-            return;
-        }
+        console.log("Starting match");
+    };
+
+    const handleExitRoom = async () => {
+        if (!userId || !roomId) return;
+        console.log("Exiting room");
     };
 
     const opponents = users.filter((user) => user.id !== ownerId);
@@ -69,8 +71,7 @@ export const RoomSlot = () => {
                         emphasis="low"
                         size="small"
                         className="h-10! sm:h-10!"
-                        onClick={handleConnectRoom}
-                        disabled={isLoading}
+                        onClick={handleExitRoom}
                     >
                         EXIT
                     </Button>
@@ -79,8 +80,7 @@ export const RoomSlot = () => {
                         emphasis="high"
                         size="small"
                         className="h-10! sm:h-10!"
-                        onClick={handleConnectRoom}
-                        disabled={isLoading}
+                        onClick={handleStartMatch}
                     >
                         {isHost ? "READY" : "START"}
                     </Button>

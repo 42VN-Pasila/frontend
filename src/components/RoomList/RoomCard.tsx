@@ -25,7 +25,7 @@ export const RoomCard = ({ room }: RoomCardProps) => {
     const full = room.userCount === MAX_PLAYERS;
     const status = room.status ?? (full ? "FULL" : "OPEN");
 
-    const { id: roomId, setRoomId } = useRoomStore();
+    const { id: roomId, setRoomId, setUsers, setOwnerId, setConnectionCount } = useRoomStore();
     const { userId, setUserId } = useUserStore();
 
     const [connectRoom] = directorApi.useConnectRoomMutation();
@@ -35,9 +35,14 @@ export const RoomCard = ({ room }: RoomCardProps) => {
 
     const handleConnectRoom = async (roomId: string) => {
         if (!userId || !roomId) return;
-        const { error } = await connectRoom({ roomId, userId });
-        setRoomId(roomId);
-        setUserId(userId);
+        const { data, error } = await connectRoom({ roomId, userId });
+        if (data) {
+            setRoomId(roomId);
+            setUserId(userId);
+            setUsers(data.room.users);
+            setOwnerId(data.room.ownerId);
+            setConnectionCount(data.room.connectionCount);
+        }
         if (error) {
             const errorMessage = handleConnectRoomError(error);
             room.onConnectError(errorMessage);

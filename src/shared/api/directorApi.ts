@@ -13,36 +13,33 @@ export type DirectorApiError = {
 const toErrorResponse = (raw: unknown, fallbackMessage: string, status: number | string): ErrorResponse => {
     if (raw && typeof raw === "object") {
         const maybe = raw as Partial<ErrorResponse>;
-        if (typeof maybe.error === "string") {
-            return {
-                error: maybe.error,
-                message: typeof maybe.message === "string" ? maybe.message : maybe.error,
-                statusCode: typeof maybe.statusCode === "number" ? maybe.statusCode : (typeof status === "number" ? status : undefined),
-                timestamp: typeof maybe.timestamp === "string" ? maybe.timestamp : undefined,
-                path: typeof maybe.path === "string" ? maybe.path : undefined,
-            };
-        }
-        if (typeof maybe.message === "string") {
-            return {
-                error: maybe.message,
-                message: maybe.message,
+        const resolvedMessage = maybe.message?.trim() || fallbackMessage;
+        return {
+            type: maybe.type || "DIRECTOR_API_ERROR",
+            message: resolvedMessage,
+            info: {
+                ...(maybe.info ?? {}),
                 statusCode: typeof status === "number" ? status : undefined,
-            };
-        }
+            },
+        };
     }
 
     if (typeof raw === "string") {
         return {
-            error: raw,
-            message: raw,
-            statusCode: typeof status === "number" ? status : undefined,
+            type: "DIRECTOR_API_ERROR",
+            message: raw || fallbackMessage,
+            info: {
+                statusCode: typeof status === "number" ? status : undefined,
+            },
         };
     }
 
     return {
-        error: fallbackMessage,
+        type: "DIRECTOR_API_ERROR",
         message: fallbackMessage,
-        statusCode: typeof status === "number" ? status : undefined,
+        info: {
+            statusCode: typeof status === "number" ? status : undefined,
+        },
     };
 };
 

@@ -2,15 +2,15 @@ import { useState } from "react";
 
 import { directorApi } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
-import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
+import { useRoomStore } from "@/shared/stores/useRoomStore";
 
 import { handleCreateRoomError } from "./errorCreateHandling";
 import { MAX_PLAYERS } from "@/common/constants";
 
 export const CreateRoomModal = () => {
     const { userId, setUserId } = useUserStore();
-    const setRoomId = useGameSessionStore((state) => state.setRoomId);
+    const { setRoomId, setUsers, setOwnerId, setConnectionCount } = useRoomStore();
 
     const [roomName, setRoomName] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -24,9 +24,12 @@ export const CreateRoomModal = () => {
             userId,
             roomName: normalizedRoomName,
         })
-        if (data?.roomId) {
-            setRoomId(data.roomId);
+        if (data) {
+            setRoomId(data.room.id);
             setUserId(userId);
+            setUsers(data.room.users);
+            setOwnerId(data.room.ownerId);
+            setConnectionCount(data.room.connectionCount);
         }
         if (error) {
             const message = handleCreateRoomError(error);
