@@ -1,9 +1,9 @@
-import { useState } from "react";
-
 import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
+import { directorApi } from "@/shared/api/directorApi";
+import { UpdateRoomUserStatusRequestBody } from "@/gen/director";
 
 type SlotStatus = "HOST" | "JOINED" | "EMPTY";
 type Slot = {
@@ -15,28 +15,45 @@ type Slot = {
 
 export const RoomSlot = () => {
     const { id: roomId, ownerId, users } = useRoomStore();
+    const { data: roomStatus, refetch: refetchRoomStatus } = directorApi.useGetRoomStatusQuery(roomId, {
+        skip: !roomId,
+        pollingInterval: 3_000,
+        refetchOnFocus: true,
+        refetchOnReconnect: true,
+    });
     const { userId, username, avatarUrl } = useUserStore();
-    const [readyUserIds, setReadyUserIds] = useState<Set<string>>(new Set());
+    const [updateUserStatus] = directorApi.useUpdateUserStatusMutation();
+    const currentOwnerId = roomStatus?.ownerId ?? ownerId;
+    const currentUsers = roomStatus?.users ?? users;
 
     const currentUserName = username || "You";
-    const isHost = userId === ownerId;
+    const isHost = userId === currentOwnerId;
 
+
+    const handleReady = async () => {
+        if (!userId || !roomId) return;
+
+        if (!isHost) {
+            const currentUser = currentUsers.find((user) => user.id === userId);
+            const shouldBeReady = currentUser?.status !== UpdateRoomUserStatusRequestBody.status.READY;
+            const nextStatus = shouldBeReady
+                ? UpdateRoomUserStatusRequestBody.status.READY
+                : UpdateRoomUserStatusRequestBody.status.NOT_READY;
+
+            await updateUserStatus({
+                userId,
+                roomId,
+                status: nextStatus,
+            });
+            await refetchRoomStatus();
+        }
+    };
 
     const handleStartMatch = async () => {
         if (!userId || !roomId) return;
 
         if (!isHost) {
-            setReadyUserIds((prev) => {
-                const next = new Set(prev);
-                if (next.has(userId)) {
-                    next.delete(userId);
-                    console.log("User is UNREADY");
-                } else {
-                    next.add(userId);
-                    console.log("User is READY");
-                }
-                return next;
-            });
+            await handleReady();
             return;
         }
 
@@ -48,12 +65,12 @@ export const RoomSlot = () => {
         console.log("Exiting room");
     };
 
-    const hostUser = users.find((user) => user.id === ownerId);
-    const joinedUsers = users.filter((user) => user.id !== ownerId);
+    const hostUser = currentUsers.find((user) => user.id === currentOwnerId);
+    const joinedUsers = currentUsers.filter((user) => user.id !== currentOwnerId);
 
     const occupiedSlots: Slot[] = [
         {
-            id: hostUser?.id ?? `host-${ownerId || "unknown"}`,
+            id: hostUser?.id ?? `host-${currentOwnerId || "unknown"}`,
             username: hostUser?.id === userId ? currentUserName : "HOST",
             status: "HOST" as const,
             avatarUrl: hostUser?.id === userId ? avatarUrl : hostUser?.avatarUrl,
@@ -78,13 +95,17 @@ export const RoomSlot = () => {
         });
     }
 
-    const isReady = readyUserIds.has(userId);
-    const allReady = joinedUsers.length > 0 && joinedUsers.every((u) => readyUserIds.has(u.id));
+    const isReady = currentUsers.some(
+        (user) => user.id === userId && user.status === UpdateRoomUserStatusRequestBody.status.READY,
+    );
+    const allReady = joinedUsers.length > 0 && joinedUsers.every(
+        (user) => user.status === UpdateRoomUserStatusRequestBody.status.READY,
+    );
 
     const actionButtonLabel = isHost
         ? "START"
         : isReady
-            ? "WAITING..."
+            ? "UNREADY"
             : "READY";
 
     const isActionButtonDisabled = !userId || !roomId || (isHost && !allReady);
@@ -115,7 +136,7 @@ export const RoomSlot = () => {
                         emphasis="high"
                         size="small"
                         className="h-10! sm:h-10!"
-                        onClick={handleStartMatch}
+                        onClick={isHost ? handleStartMatch : handleReady}
                         disabled={isActionButtonDisabled}
                     >
                         {actionButtonLabel}
@@ -165,7 +186,9 @@ export const RoomSlot = () => {
                                             isHost
                                                 ? "bg-rave-red"
                                                 : isJoined
-                                                    ? readyUserIds.has(slot.id)
+                                                    ? currentUsers.some(
+                                                        (user) => user.id === slot.id && user.status === UpdateRoomUserStatusRequestBody.status.READY,
+                                                    )
                                                         ? "bg-emerald-400"
                                                         : "bg-rave-white/70"
                                                     : "bg-rave-white/25",
@@ -177,7 +200,9 @@ export const RoomSlot = () => {
                                                 ? "YOU ARE HOST"
                                                 : "HOST"
                                             : isJoined
-                                                ? readyUserIds.has(slot.id)
+                                                ? currentUsers.some(
+                                                    (user) => user.id === slot.id && user.status === UpdateRoomUserStatusRequestBody.status.READY,
+                                                )
                                                     ? "READY"
                                                     : "NOT READY"
                                                 : "WAITING…"}

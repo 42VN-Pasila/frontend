@@ -179,7 +179,8 @@ paths:
     get:
       tags:
         - Rooms
-      summary: Get a room by id
+      summary: Get room status by id
+      operationId: getRoomStatus
       parameters:
         - in: path
           name: roomId
@@ -301,7 +302,54 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-
+  /rooms/{roomId}/users/{userId}:
+    patch:
+      tags:
+        - Rooms
+      summary: Update room user status
+      operationId: updateRoomUserStatus
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRoomUserStatusRequestBody"
+      responses:
+        "200":
+          description: Room user status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateRoomUserStatusResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Room, user, or room membership not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     CreateUserRequestBody:
@@ -346,7 +394,7 @@ components:
           type: string
         url:
           type: string
-    UserDto:
+    RoomUserDto:
       type: object
       required:
         - id
@@ -377,7 +425,7 @@ components:
         users:
           type: array
           items:
-            $ref: "#/components/schemas/UserDto"
+            $ref: "#/components/schemas/RoomUserDto"
         connectionCount:
           type: integer
           minimum: 0
@@ -446,6 +494,32 @@ components:
           type: string
         roomId:
           type: string
+    UpdateRoomUserStatusRequestBody:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - Ready
+            - NotReady
+    UpdateRoomUserStatusResponse:
+      type: object
+      required:
+        - roomId
+        - userId
+        - status
+      properties:
+        roomId:
+          type: string
+        userId:
+          type: string
+        status:
+          type: string
+          enum:
+            - Ready
+            - NotReady
 
     ErrorResponse:
       type: object

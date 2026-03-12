@@ -1,4 +1,4 @@
-import type { UserDto } from "@/gen/director";
+import type { RoomUserDto } from "@/gen/director";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -6,12 +6,12 @@ export type RoomState = {
     id: string;
     name: string;
     ownerId: string;
-    users: UserDto[];
+    users: RoomUserDto[];
     connectionCount: number;
     setRoomId: (roomId: string) => void;
     setName: (name: string) => void;
     setOwnerId: (ownerId: string) => void;
-    setUsers: (newUsers: UserDto[]) => void;
+    setUsers: (newUsers: RoomUserDto[]) => void;
     setConnectionCount: (connectionCount: number) => void;
     resetRoom: () => void;
 };
@@ -27,7 +27,7 @@ export const useRoomStore = create<RoomState>()(
             setRoomId: (roomId: string) => set({ id: roomId }),
             setName: (name: string) => set({ name }),
             setOwnerId: (ownerId: string) => set({ ownerId }),
-            setUsers: (users: UserDto[]) => set({ users }),
+            setUsers: (users: RoomUserDto[]) => set({ users }),
             setConnectionCount: (connectionCount: number) => set({ connectionCount }),
             resetRoom: () => set({
                 id: "",

@@ -2,7 +2,7 @@ import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { directorClient } from "./directorClient";
 import type { ConnectRoomResponse } from "@/gen/director/models/ConnectRoomResponse";
 import type { CreateRoomResponse } from "@/gen/director/models/CreateRoomResponse";
-import type { Avatar, ConnectRoomRequest, CreateRoomRequestBody, ListRoomsDto, UpdateUserAvatarRequestBody, UpdateUserAvatarResponse } from "@/gen/director";
+import type { Avatar, ConnectRoomRequest, CreateRoomRequestBody, ListRoomsDto, RoomDto, UpdateRoomUserStatusRequestBody, UpdateRoomUserStatusResponse, UpdateUserAvatarRequestBody, UpdateUserAvatarResponse } from "@/gen/director";
 
 
 
@@ -64,6 +64,19 @@ export const directorApi = createApi({
 
             },
         }),
+        getRoomStatus: builder.query<RoomDto, string>({
+            async queryFn(roomId) {
+                const data = await directorClient.getRoomStatus(roomId);
+                return { data };
+            },
+        }),
+        updateUserStatus: builder.mutation<UpdateRoomUserStatusResponse, { userId: string; roomId: string; status: UpdateRoomUserStatusRequestBody.status }>({
+            async queryFn({ userId, roomId, status }) {
+                const bodyPayload: UpdateRoomUserStatusRequestBody = { status: status as UpdateRoomUserStatusRequestBody.status };
+                const data = await directorClient.updateUserStatus(roomId, userId, bodyPayload);
+                return { data };
+            },
+        }),
     }),
 });
 
@@ -74,4 +87,6 @@ export const {
     // useStartMatchMutation,
     useListAvatarsQuery,
     useUpdateUserAvatarMutation,
+    useGetRoomStatusQuery,
+    useUpdateUserStatusMutation,
 } = directorApi;
