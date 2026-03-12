@@ -14,7 +14,7 @@ export const UserProfile = ({
     ...props
 }: React.ComponentPropsWithoutRef<"button">) => {
     const username = useUserStore((state) => state.username);
-    const imageUrl = useUserStore((state) => state.imageUrl);
+    const avatarUrl = useUserStore((state) => state.avatarUrl);
     const initials = getInitials(username);
 
     return (
@@ -23,7 +23,7 @@ export const UserProfile = ({
             className={`group inline-flex items-center gap-3 rounded-lg border border-rave-white/20 bg-rave-white/5 px-2 py-2 transition-colors hover:border-rave-red/60 hover:bg-rave-red/10 ${className}`}
             {...props}
         >
-            <Avatar src={imageUrl} alt={username} fallbackText={initials} className="h-10 w-10" />
+            <Avatar src={avatarUrl} alt={username} fallbackText={initials} className="h-10 w-10" />
             <span className="pr-2 text-sm tracking-wide text-rave-white/85 group-hover:text-rave-white">
                 {username}
             </span>
