@@ -2,9 +2,12 @@ import { useState } from "react";
 import { Button } from "@/shared/components";
 import { useUserStore } from "@/shared/stores/useUserStore";
 import { useListAvatarsQuery, useUpdateUserAvatarMutation } from "@/shared/api/directorApi";
+import { useRoomStore } from "@/shared/stores/useRoomStore";
 
 export const DevUserModal = () => {
-    const { setUsername, setAvatarUrl, setUserId, userId, username, avatarUrl } = useUserStore();
+    const { setUsername, setAvatarUrl, setUserId, userId, username, avatarUrl, resetUser } = useUserStore();
+    const { resetRoom } = useRoomStore();
+
     const [userNameInput, setUserNameInput] = useState(username);
     const [userIdInput, setUserIdInput] = useState(userId);
     const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(avatarUrl ?? "");
@@ -25,13 +28,14 @@ export const DevUserModal = () => {
         }
     };
 
-    const handleReset = () => {
-        setUsername("");
-        setAvatarUrl("");
-        setUserId("");
+    const handleResetUser = () => {
+        resetUser();
         setUserNameInput("");
         setUserIdInput("");
-        setSelectedAvatarUrl("");
+    };
+
+    const handleResetRoom = () => {
+        resetRoom();
     };
 
     return (
@@ -97,8 +101,11 @@ export const DevUserModal = () => {
                 <Button variant="primary" emphasis="high" size="small" onClick={handleApply}>
                     Apply
                 </Button>
-                <Button variant="inverse" emphasis="low" size="small" onClick={handleReset}>
-                    Reset
+                <Button variant="inverse" emphasis="low" size="small" onClick={handleResetUser}>
+                    Reset User
+                </Button>
+                <Button variant="inverse" emphasis="low" size="small" onClick={handleResetRoom}>
+                    Reset Room
                 </Button>
             </div>
         </section>

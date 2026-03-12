@@ -1,9 +1,9 @@
 import { CreateRoomModal } from "./CreateRoomModal";
-import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { RoomSlot } from "./RoomSlot";
+import { useRoomStore } from "@/shared/stores/useRoomStore";
 
 export const RoomModal = () => {
-    const { roomId } = useGameSessionStore();
+    const { id: roomId } = useRoomStore();
 
     return (
         <div className="relative border-2 border-rave-white/10 rounded-lg text-rave-white font-chakraBold p-6">
