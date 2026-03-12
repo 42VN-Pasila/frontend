@@ -440,16 +440,12 @@ components:
     ErrorResponse:
       type: object
       required:
-        - error
+        - type
+        - message
       properties:
-        error:
+        type:
           type: string
         message:
           type: string
-        statusCode:
-          type: integer
-        timestamp:
-          type: string
-          format: date-time
-        path:
-          type: string
+        info:
+          type: object
