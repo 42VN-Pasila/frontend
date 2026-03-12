@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
@@ -14,6 +16,7 @@ type Slot = {
 export const RoomSlot = () => {
     const { id: roomId, ownerId, users } = useRoomStore();
     const { userId, username, avatarUrl } = useUserStore();
+    const [isReady, setIsReady] = useState(false);
 
 
     const currentUserName = username || "You";
@@ -22,7 +25,15 @@ export const RoomSlot = () => {
 
     const handleStartMatch = async () => {
         if (!userId || !roomId) return;
-        console.log("Starting match");
+
+        if (!isHost) {
+            const nextReady = !isReady;
+            setIsReady(nextReady);
+            console.log(nextReady ? "User is READY" : "User is UNREADY");
+            return;
+        }
+
+        console.log("Host clicked START");
     };
 
     const handleExitRoom = async () => {
@@ -30,15 +41,21 @@ export const RoomSlot = () => {
         console.log("Exiting room");
     };
 
-    const opponents = users.filter((user) => user.id !== ownerId);
+    const hostUser = users.find((user) => user.id === ownerId);
+    const joinedUsers = users.filter((user) => user.id !== ownerId);
 
     const occupiedSlots: Slot[] = [
-        { id: userId, username: currentUserName, status: "HOST" as const, avatarUrl: avatarUrl },
-        ...opponents.map((user, index) => ({
+        {
+            id: hostUser?.id ?? `host-${ownerId || "unknown"}`,
+            username: hostUser?.id === userId ? currentUserName : "HOST",
+            status: "HOST" as const,
+            avatarUrl: hostUser?.id === userId ? avatarUrl : hostUser?.avatarUrl,
+        },
+        ...joinedUsers.map((user, index) => ({
             id: user.id,
-            username: `Opponent ${index + 1}`,
+            username: user.id === userId ? currentUserName : `Opponent ${index + 1}`,
             status: "JOINED" as const,
-            avatarUrl: user.avatarUrl,
+            avatarUrl: user.id === userId ? avatarUrl : user.avatarUrl,
         })),
     ];
 
@@ -53,6 +70,14 @@ export const RoomSlot = () => {
             avatarUrl: undefined,
         });
     }
+
+    const actionButtonLabel = isHost
+        ? "START"
+        : isReady
+            ? "WAITING..."
+            : "READY";
+
+    const isActionButtonDisabled = !userId || !roomId;
 
     return (
         <>
@@ -81,8 +106,9 @@ export const RoomSlot = () => {
                         size="small"
                         className="h-10! sm:h-10!"
                         onClick={handleStartMatch}
+                        disabled={isActionButtonDisabled}
                     >
-                        {isHost ? "READY" : "START"}
+                        {actionButtonLabel}
                     </Button>
                 </div>
             </header >
@@ -129,12 +155,24 @@ export const RoomSlot = () => {
                                             isHost
                                                 ? "bg-rave-red"
                                                 : isJoined
-                                                    ? "bg-rave-white/70"
+                                                    ? slot.id === userId && isReady
+                                                        ? "bg-emerald-400"
+                                                        : "bg-rave-white/70"
                                                     : "bg-rave-white/25",
                                         ].join(" ")}
                                     />
                                     <span>
-                                        {isHost ? "YOU ARE HOST" : isJoined ? "READY" : "WAITING…"}
+                                        {isHost
+                                            ? slot.id === userId
+                                                ? "YOU ARE HOST"
+                                                : "HOST"
+                                            : isJoined
+                                                ? slot.id === userId && !isHost
+                                                    ? isReady
+                                                        ? "READY"
+                                                        : "NOT READY"
+                                                    : "NOT READY"
+                                                : "WAITING…"}
                                     </span>
                                 </div>
 

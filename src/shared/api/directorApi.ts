@@ -3,7 +3,7 @@ import { directorClient } from "./directorClient";
 import type { ErrorResponse } from "@/gen/director/models/ErrorResponse";
 import type { ConnectRoomResponse } from "@/gen/director/models/ConnectRoomResponse";
 import type { CreateRoomResponse } from "@/gen/director/models/CreateRoomResponse";
-import type { Avatar, ConnectRoomRequest, CreateRoomRequestBody, RoomDto, UpdateUserAvatarRequestBody, UpdateUserAvatarResponse } from "@/gen/director";
+import type { Avatar, ConnectRoomRequest, CreateRoomRequestBody, RoomDto, StartMatchResponse, UpdateUserAvatarRequestBody, UpdateUserAvatarResponse } from "@/gen/director";
 
 export type DirectorApiError = {
     status: number | string;
@@ -97,6 +97,17 @@ export const directorApi = createApi({
             },
             invalidatesTags: ["Room"],
         }),
+        // startMatch: builder.mutation<StartMatchResponse, { roomId: string; ownerId: string }>({
+        //     async queryFn({ roomId, ownerId }) {
+        //         try {
+        //             const data = await directorClient.startMatch(roomId, { ownerId });
+        //             return { data };
+        //         } catch (error) {
+        //             return { error: toDirectorApiError(error, "Unable to start match") };
+        //         }
+        //     },
+        //     invalidatesTags: ["Room"],
+        // }),
         listAvatars: builder.query<Avatar[], void>({
             async queryFn() {
                 try {
@@ -125,6 +136,7 @@ export const {
     useListRoomsQuery,
     useCreateRoomMutation,
     useConnectRoomMutation,
+    // useStartMatchMutation,
     useListAvatarsQuery,
     useUpdateUserAvatarMutation,
 } = directorApi;

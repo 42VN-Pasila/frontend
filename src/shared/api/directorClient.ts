@@ -1,7 +1,7 @@
 import { OpenAPI } from '@/gen/director/core/OpenAPI';
 import { UsersService } from '@/gen/director/services/UsersService';
 import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
-import { type ConnectRoomRequest, type CreateRoomRequestBody, ResourcesService, RoomsService, type UpdateUserAvatarRequestBody } from '@/gen/director';
+import { type ConnectRoomRequest, type CreateRoomRequestBody, ResourcesService, RoomsService, type StartMatchRequest, type UpdateUserAvatarRequestBody } from '@/gen/director';
 import { toDevPath } from './path.dev';
 import { Socket, io } from "socket.io-client";
 
@@ -55,6 +55,9 @@ export const directorClient = {
     async connectRoom(roomId: string, body: ConnectRoomRequest) {
         return RoomsService.connectRoom({ roomId, requestBody: body });
     },
+    // async startMatch(roomId: string, body: StartMatchRequest) {
+    //     return RoomsService.startMatch({ roomId, requestBody: body });
+    // },
     async listRooms() {
         return RoomsService.getRooms();
     },
