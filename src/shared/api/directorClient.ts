@@ -16,7 +16,7 @@ type SocketResponse = {
     error: string;
 };
 
-socket.connect();
+// socket.connect();
 
 export const joinRoomSocket = (roomId: string, userId: string) => {
     socket.emit("room:join", { roomId, userId }, (res: SocketResponse) => {

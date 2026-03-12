@@ -1,3 +1,4 @@
+import Avatar from "@/shared/components/Avatar";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 const getInitials = (username: string) =>
@@ -22,20 +23,10 @@ export const UserProfile = ({
             className={`group inline-flex items-center gap-3 rounded-lg border border-rave-white/20 bg-rave-white/5 px-2 py-2 transition-colors hover:border-rave-red/60 hover:bg-rave-red/10 ${className}`}
             {...props}
         >
-            <span className="text-rave-black inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-rave-white/20 bg-rave-white text-sm font-bold">
-                {imageUrl ? (
-                    <img
-                        src={imageUrl}
-                        alt={username}
-                        className="h-full w-full object-cover"
-                    />
-                ) : (
-                    initials
-                )}
-            </span>
+            <Avatar src={imageUrl} alt={username} fallbackText={initials} className="h-10 w-10" />
             <span className="pr-2 text-sm tracking-wide text-rave-white/85 group-hover:text-rave-white">
                 {username}
             </span>
-        </button>
+        </button >
     );
 };

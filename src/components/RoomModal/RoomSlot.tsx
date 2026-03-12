@@ -1,20 +1,21 @@
 import { directorApi } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
+import Avatar from "@/shared/components/Avatar";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 type SlotStatus = "HOST" | "JOINED" | "EMPTY";
 type Slot = {
     id: string;
-    label: string;
+    username: string;
     status: SlotStatus;
+    avatarUrl?: string;
 }
 
 export const RoomSlot = () => {
-    const { id: roomId, ownerId, userIds } = useRoomStore();
-    const userId = useUserStore((state) => state.userId);
-    const username = useUserStore((state) => state.username);
-    const currentPlayerName = username || "You";
+    const { id: roomId, ownerId, users } = useRoomStore();
+    const { userId, username, avatarUrl } = useUserStore();
+    const currentUserName = username || "You";
     const isHost = userId === ownerId;
 
     const [connectRoom, { isLoading }] = directorApi.useConnectRoomMutation();
@@ -27,23 +28,27 @@ export const RoomSlot = () => {
         }
     };
 
-    const opponents = userIds.filter((userId) => userId !== ownerId);
+    const opponents = users.filter((user) => user.id !== ownerId);
 
     const occupiedSlots: Slot[] = [
-        { id: userId, label: currentPlayerName, status: "HOST" as const },
-        ...opponents.map((opponent) => ({
-            id: opponent,
-            label: opponent,
+        { id: userId, username: currentUserName, status: "HOST" as const, avatarUrl: avatarUrl },
+        ...opponents.map((user, index) => ({
+            id: user.id,
+            username: `Opponent ${index + 1}`,
             status: "JOINED" as const,
+            avatarUrl: user.avatarUrl,
         })),
     ];
+
+    console.log(occupiedSlots);
 
     const slots: Slot[] = [...occupiedSlots];
     while (slots.length < 4) {
         slots.push({
             id: `empty-${slots.length + 1}`,
-            label: "OPEN SLOT",
+            username: "OPEN SLOT",
             status: "EMPTY" as const,
+            avatarUrl: undefined,
         });
     }
 
@@ -104,15 +109,14 @@ export const RoomSlot = () => {
                                             : "border-rave-white/15 bg-rave-white/5 hover:border-rave-white/25",
                                 ].join(" ")}
                             >
-
-
                                 <div className="relative flex items-start justify-between gap-3">
-                                    <div className="min-w-0">
+                                    <div className="min-w-0 flex flex-col gap-2">
                                         <p className="text-[10px] font-semibold tracking-[0.2em] text-rave-white/60">
                                             {slot.status}
                                         </p>
+                                        <Avatar src={slot.avatarUrl} alt={slot.username} className="h-10 w-10" />
                                         <p className="mt-2 truncate text-sm font-semibold tracking-wide text-rave-white">
-                                            {slot.label}
+                                            {slot.username}
                                         </p>
                                     </div>
                                 </div>

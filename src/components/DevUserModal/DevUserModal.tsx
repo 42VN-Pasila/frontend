@@ -4,17 +4,17 @@ import { useUserStore } from "@/shared/stores/useUserStore";
 import { useListAvatarsQuery, useUpdateUserAvatarMutation } from "@/shared/api/directorApi";
 
 export const DevUserModal = () => {
-    const { setUsername, setImageUrl, setUserId, userId, username, imageUrl } = useUserStore();
+    const { setUsername, setAvatarUrl, setUserId, userId, username, avatarUrl } = useUserStore();
     const [userNameInput, setUserNameInput] = useState(username);
     const [userIdInput, setUserIdInput] = useState(userId);
-    const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(imageUrl ?? "");
+    const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(avatarUrl ?? "");
 
     const { data: avatars = [], isLoading: isLoadingAvatars } = useListAvatarsQuery();
     const [updateUserAvatar] = useUpdateUserAvatarMutation();
     const handleApply = () => {
         setUsername(userNameInput.trim());
         setUserId(userIdInput.trim());
-        setImageUrl(selectedAvatarUrl);
+        setAvatarUrl(selectedAvatarUrl);
 
         const selectedAvatar = avatars.find((avatar) => avatar.url === selectedAvatarUrl);
         if (selectedAvatar && userIdInput.trim()) {
@@ -27,7 +27,7 @@ export const DevUserModal = () => {
 
     const handleReset = () => {
         setUsername("");
-        setImageUrl("");
+        setAvatarUrl("");
         setUserId("");
         setUserNameInput("");
         setUserIdInput("");

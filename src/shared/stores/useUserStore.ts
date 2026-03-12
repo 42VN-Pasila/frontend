@@ -4,10 +4,10 @@ import { createJSONStorage, persist } from "zustand/middleware";
 type UserState = {
     userId: string;
     username: string;
-    imageUrl?: string;
+    avatarUrl?: string;
     setUserId: (userId: string) => void;
     setUsername: (username: string) => void;
-    setImageUrl: (imageUrl: string) => void;
+    setAvatarUrl: (avatarUrl: string) => void;
 };
 
 export const useUserStore = create<UserState>()(
@@ -17,7 +17,7 @@ export const useUserStore = create<UserState>()(
             username: "",
             setUserId: (userId: string) => set({ userId }),
             setUsername: (username: string) => set({ username }),
-            setImageUrl: (imageUrl: string) => set({ imageUrl }),
+            setAvatarUrl: (avatarUrl: string) => set({ avatarUrl }),
         }),
         {
             name: "user",
@@ -25,7 +25,7 @@ export const useUserStore = create<UserState>()(
             partialize: (state) => ({
                 userId: state.userId,
                 username: state.username,
-                imageUrl: state.imageUrl,
+                avatarUrl: state.avatarUrl,
             }),
         },
     ),
