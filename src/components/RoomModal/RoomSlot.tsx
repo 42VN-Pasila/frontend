@@ -16,8 +16,7 @@ type Slot = {
 export const RoomSlot = () => {
     const { id: roomId, ownerId, users } = useRoomStore();
     const { userId, username, avatarUrl } = useUserStore();
-    const [isReady, setIsReady] = useState(false);
-
+    const [readyUserIds, setReadyUserIds] = useState<Set<string>>(new Set());
 
     const currentUserName = username || "You";
     const isHost = userId === ownerId;
@@ -27,9 +26,17 @@ export const RoomSlot = () => {
         if (!userId || !roomId) return;
 
         if (!isHost) {
-            const nextReady = !isReady;
-            setIsReady(nextReady);
-            console.log(nextReady ? "User is READY" : "User is UNREADY");
+            setReadyUserIds((prev) => {
+                const next = new Set(prev);
+                if (next.has(userId)) {
+                    next.delete(userId);
+                    console.log("User is UNREADY");
+                } else {
+                    next.add(userId);
+                    console.log("User is READY");
+                }
+                return next;
+            });
             return;
         }
 
@@ -71,13 +78,16 @@ export const RoomSlot = () => {
         });
     }
 
+    const isReady = readyUserIds.has(userId);
+    const allReady = joinedUsers.length > 0 && joinedUsers.every((u) => readyUserIds.has(u.id));
+
     const actionButtonLabel = isHost
         ? "START"
         : isReady
             ? "WAITING..."
             : "READY";
 
-    const isActionButtonDisabled = !userId || !roomId;
+    const isActionButtonDisabled = !userId || !roomId || (isHost && !allReady);
 
     return (
         <>
@@ -155,7 +165,7 @@ export const RoomSlot = () => {
                                             isHost
                                                 ? "bg-rave-red"
                                                 : isJoined
-                                                    ? slot.id === userId && isReady
+                                                    ? readyUserIds.has(slot.id)
                                                         ? "bg-emerald-400"
                                                         : "bg-rave-white/70"
                                                     : "bg-rave-white/25",
@@ -167,10 +177,8 @@ export const RoomSlot = () => {
                                                 ? "YOU ARE HOST"
                                                 : "HOST"
                                             : isJoined
-                                                ? slot.id === userId && !isHost
-                                                    ? isReady
-                                                        ? "READY"
-                                                        : "NOT READY"
+                                                ? readyUserIds.has(slot.id)
+                                                    ? "READY"
                                                     : "NOT READY"
                                                 : "WAITING…"}
                                     </span>
