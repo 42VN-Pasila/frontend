@@ -121,7 +121,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/RoomDto"
+                  $ref: "#/components/schemas/ListRoomsDto"
         "400":
           description: Bad request
           content:
@@ -381,7 +381,20 @@ components:
         connectionCount:
           type: integer
           minimum: 0
-
+    ListRoomsDto:
+      type: object
+      required:
+        - id
+        - name
+        - connectionCount
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        connectionCount:
+          type: integer
+          minimum: 0
     CreateRoomRequestBody:
       type: object
       required:
