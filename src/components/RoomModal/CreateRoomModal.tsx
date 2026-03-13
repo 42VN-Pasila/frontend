@@ -5,7 +5,6 @@ import { Button } from "@/shared/components";
 import { useUserStore } from "@/shared/stores/useUserStore";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 
-import { handleCreateRoomError } from "./errorCreateHandling";
 import { MAX_PLAYERS } from "@/common/constants";
 
 export const CreateRoomModal = () => {
@@ -30,10 +29,10 @@ export const CreateRoomModal = () => {
             setUsers(data.room.users);
             setOwnerId(data.room.ownerId);
             setConnectionCount(data.room.connectionCount);
+            setErrorMessage(null);
         }
         if (error) {
-            const message = handleCreateRoomError(error);
-            setErrorMessage(message);
+            setErrorMessage(error.message ?? "An unknown error happened");
         }
     };
 
@@ -47,7 +46,6 @@ export const CreateRoomModal = () => {
                     </div>
                 </div>
             </header>
-            {/* TODO: Handle error */}
             {errorMessage && (
                 <div className="text-rave-red text-sm border border-rave-red bg-rave-red/10 px-3 py-2 tracking-[0.18em] mb-4">
                     {errorMessage}

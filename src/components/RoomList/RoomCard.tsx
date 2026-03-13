@@ -5,7 +5,6 @@ import { Button } from "@/shared/components";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 import { Tag } from "../../shared/components/Tag";
-import { handleConnectRoomError } from "./errorConnectHandling";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { MAX_PLAYERS } from "@/common/constants";
 
@@ -44,8 +43,7 @@ export const RoomCard = ({ room }: RoomCardProps) => {
             setConnectionCount(data.room.connectionCount);
         }
         if (error) {
-            const errorMessage = handleConnectRoomError(error);
-            room.onConnectError(errorMessage);
+            room.onConnectError(error.message?? "An unknown error happened");
         }
     };
 
