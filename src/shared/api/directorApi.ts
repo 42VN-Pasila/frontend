@@ -2,13 +2,13 @@ import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { directorClient } from "./directorClient";
 import type { ConnectRoomResponse } from "@/gen/director/models/ConnectRoomResponse";
 import type { CreateRoomResponse } from "@/gen/director/models/CreateRoomResponse";
-import type { Avatar, ConnectRoomRequest, CreateRoomRequestBody, ListRoomsDto, RoomDto, StartMatchResponse, UpdateRoomUserStatusRequestBody, UpdateRoomUserStatusResponse, UpdateUserAvatarRequestBody, UpdateUserAvatarResponse } from "@/gen/director";
+import type { Avatar, ConnectRoomRequest, CreateRoomRequestBody, ErrorResponse, ListRoomsDto, RoomDto, StartMatchResponse, UpdateRoomUserStatusRequestBody, UpdateRoomUserStatusResponse, UpdateUserAvatarRequestBody, UpdateUserAvatarResponse } from "@/gen/director";
 
 
 
 export const directorApi = createApi({
     reducerPath: "directorApi",
-    baseQuery: fakeBaseQuery(),
+    baseQuery: fakeBaseQuery<ErrorResponse>(),
     tagTypes: ["Room"],
     endpoints: (builder) => ({
         listRooms: builder.query<ListRoomsDto[], void>({

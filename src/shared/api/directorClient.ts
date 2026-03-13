@@ -1,7 +1,7 @@
 import { OpenAPI } from '@/gen/director/core/OpenAPI';
 import { UsersService } from '@/gen/director/services/UsersService';
 import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
-import { type ConnectRoomRequest, type CreateRoomRequestBody, ResourcesService, RoomsService, type StartMatchRequest, UpdateRoomUserStatusRequestBody, type UpdateUserAvatarRequestBody } from '@/gen/director';
+import { type AskCardEvent, type ConnectMatchEvent, type ConnectRoomRequest, type CreateRoomRequestBody, type DisConnectMatchEvent, ResourcesService, RoomsService, type StartMatchRequest, UpdateRoomUserStatusRequestBody, type UpdateUserAvatarRequestBody } from '@/gen/director';
 import { toDevPath } from './path.dev';
 import { Socket, io } from "socket.io-client";
 
@@ -18,8 +18,8 @@ type SocketResponse = {
 
 // socket.connect();
 
-export const joinRoomSocket = (roomId: string, userId: string) => {
-    socket.emit("room:join", { roomId, userId }, (res: SocketResponse) => {
+export const socketJoinMatch = (payload: ConnectMatchEvent) => {
+    socket.emit("match:join", payload, (res: SocketResponse) => {
         if (!res?.ok) {
             console.error("join failed", res?.error);
             return;
@@ -28,20 +28,30 @@ export const joinRoomSocket = (roomId: string, userId: string) => {
     });
 };
 
-export const pingRoomSocket = (roomId: string, userId: string) => {
-    socket.emit("room:ping", { roomId, userId }, (res: SocketResponse) => {
+export const socketLeaveMatch = (payload: DisConnectMatchEvent) => {
+    socket.emit("match:leave", payload, (res: SocketResponse) => {
         if (!res?.ok) {
-            console.error("ping failed", res?.error);
+            console.error("leave failed", res?.error);
+            return;
         }
+        console.log("left!");
     });
 };
 
-export const attachRoomSocketDebugListeners = () => {
-    socket.on("room.connected", (evt) => console.log("someone joined", evt));
-    socket.on("room.ping", (evt) => console.log("ping received", evt));
+export const socketAskCardMatch = (payload: AskCardEvent) => {
+    socket.emit("match:ask-card", payload, (res: SocketResponse) => {
+        if (!res?.ok) {
+            console.error("ask card failed", res?.error);
+            return;
+        }
+        console.log("card asked!");
+    });
 };
 
-
+export const socketAttachMatchDebugListeners = () => {
+    socket.on("match:connected", (evt) => console.log("someone joined", evt));
+    socket.on("match:ping", (evt) => console.log("ping received", evt));
+};
 
 OpenAPI.BASE = toDevPath(import.meta.env.VITE_DIRECTOR_URL ?? "");
 
