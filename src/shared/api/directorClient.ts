@@ -61,6 +61,9 @@ export const directorClient = {
     async listRooms() {
         return RoomsService.getRooms();
     },
+    async exitRoom(roomId: string, body: { userId: string }) {
+        return RoomsService.exitRoom({ roomId, requestBody: body });
+    },
     async listAvatars() {
         return ResourcesService.getResourcesAvatars();
     },

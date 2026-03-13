@@ -15,7 +15,7 @@ type Slot = {
 }
 
 export const RoomSlot = () => {
-    const { id: roomId, ownerId, users } = useRoomStore();
+    const { id: roomId, ownerId, users, resetRoom } = useRoomStore();
     const { data: roomStatus, refetch: refetchRoomStatus } = directorApi.useGetRoomStatusQuery(roomId, {
         skip: !roomId,
         pollingInterval: 3_000,
@@ -26,6 +26,7 @@ export const RoomSlot = () => {
     const navigate = useNavigate();
     const [updateUserStatus] = directorApi.useUpdateUserStatusMutation();
     const [startMatch] = directorApi.useStartMatchMutation();
+    const [exitRoom] = directorApi.useExitRoomMutation();
     const { setRoomId: setGameRoomId, setMatchId } = useGameSessionStore();
     const currentOwnerId = roomStatus?.ownerId ?? ownerId;
     const currentUsers = roomStatus?.users ?? users;
@@ -70,8 +71,12 @@ export const RoomSlot = () => {
     };
 
     const handleExitRoom = async () => {
-        if (!userId || !roomId) return;
-        console.log("Exiting room");
+        const result = await exitRoom({ roomId: roomId!, body: { userId: userId! } });
+        if ('error' in result) {
+            console.error("Failed to exit room", result.error);
+            return;
+        }
+        resetRoom();
     };
 
     const hostUser = currentUsers.find((user) => user.id === currentOwnerId);

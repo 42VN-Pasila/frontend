@@ -74,6 +74,13 @@ export const directorApi = createApi({
             },
             invalidatesTags: ["Room"],
         }),
+        exitRoom: builder.mutation<void, { roomId: string; body: { userId: string } }>({
+            async queryFn({ roomId, body }) {
+                await directorClient.exitRoom(roomId, body);
+                return { data: undefined };
+            },
+            invalidatesTags: ["Room"],
+        }),
     }),
 });
 
@@ -86,4 +93,5 @@ export const {
     useUpdateUserAvatarMutation,
     useGetRoomStatusQuery,
     useUpdateUserStatusMutation,
+    useExitRoomMutation,
 } = directorApi;
