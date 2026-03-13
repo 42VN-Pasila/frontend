@@ -352,55 +352,6 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
-    AskCardEvent:
-      type: object
-      required:
-        - matchId
-        - userId
-        - opponentId
-        - rank
-        - suit
-      properties:
-        matchId:
-          type: string
-        userId:
-          type: string
-        opponentId:
-          type: string
-        rank:
-          type: string
-        suit:
-          type: string
-    ConnectMatchEvent:
-      type: object
-      required:
-        - matchId
-        - userId
-      properties:
-        matchId:
-          type: string
-        userId:
-          type: string
-    DisConnectMatchEvent:
-      type: object
-      required:
-        - matchId
-        - userId
-      properties:
-        matchId:
-          type: string
-        userId:
-          type: string
-    CreateRoomEvent:
-      type: object
-      required:
-        - matchId
-        - userId
-      properties:
-        matchId:
-          type: string
-        userId:
-          type: string
     CreateUserRequestBody:
       type: object
       required:
@@ -464,6 +415,7 @@ components:
         - ownerId
         - users
         - connectionCount
+        - started
       properties:
         id:
           type: string
@@ -478,6 +430,8 @@ components:
         connectionCount:
           type: integer
           minimum: 0
+        started:
+          type: boolean
     ListRoomsDto:
       type: object
       required:
