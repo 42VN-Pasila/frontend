@@ -51,6 +51,63 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /users/{userId}/avatar:
+    patch:
+      tags:
+        - Users
+      summary: Update user avatar
+      operationId: updateUserAvatar
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserAvatarRequestBody"
+      responses:
+        "200":
+          description: User avatar updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateUserAvatarResponse"
+        "404":
+          description: User or avatar not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /resources/avatars:
+    get:
+      tags:
+        - Resources
+      summary: Get all avatars
+      responses:
+        "200":
+          description: Avatars fetched
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Avatar"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /rooms:
     get:
       tags:
@@ -64,7 +121,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Room"
+                  $ref: "#/components/schemas/ListRoomsDto"
         "400":
           description: Bad request
           content:
@@ -100,13 +157,58 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: User already in room
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-
+  /rooms/{roomId}:
+    get:
+      tags:
+        - Rooms
+      summary: Get room status by id
+      operationId: getRoomStatus
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Room fetched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoomDto"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Room not found or already ended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
   /rooms/{roomId}/connect:
     post:
       tags:
@@ -132,8 +234,97 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ConnectRoomResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "404":
           description: Room not found or already ended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: User already in room or room maximum players reached
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /rooms/{roomId}/matches:
+    post:
+      tags:
+        - Rooms
+      summary: Start a match
+      operationId: startMatch
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartMatchRequest"
+      responses:
+        "200":
+          description: Match started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StartMatchResponse"
+        "403":
+          description: Only room owner can start match
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Room not found or already ended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /rooms/{roomId}/disconnect:
+    post:
+      tags:
+        - Rooms
+      summary: Disconnect a user from room
+      operationId: disconnectRoom
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DisconnectRoomRequest"
+      responses:
+        "204":
+          description: Disconnected successfully
+        "404":
+          description: User or room not found
           content:
             application/json:
               schema:
@@ -151,8 +342,105 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /rooms/{roomId}/users/{userId}:
+    patch:
+      tags:
+        - Rooms
+      summary: Update room user status
+      operationId: updateRoomUserStatus
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRoomUserStatusRequestBody"
+      responses:
+        "200":
+          description: Room user status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateRoomUserStatusResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Room, user, or room membership not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
+    AskCardEvent:
+      type: object
+      required:
+        - matchId
+        - userId
+        - opponentId
+        - rank
+        - suit
+      properties:
+        matchId:
+          type: string
+        userId:
+          type: string
+        opponentId:
+          type: string
+        rank:
+          type: string
+        suit:
+          type: string
+    ConnectMatchEvent:
+      type: object
+      required:
+        - matchId
+        - userId
+      properties:
+        matchId:
+          type: string
+        userId:
+          type: string
+    DisConnectMatchEvent:
+      type: object
+      required:
+        - matchId
+        - userId
+      properties:
+        matchId:
+          type: string
+        userId:
+          type: string
+    CreateRoomEvent:
+      type: object
+      required:
+        - matchId
+        - userId
+      properties:
+        matchId:
+          type: string
+        userId:
+          type: string
     CreateUserRequestBody:
       type: object
       required:
@@ -168,37 +456,85 @@ components:
       properties:
         userId:
           type: string
-    Room:
+    UpdateUserAvatarRequestBody:
+      type: object
+      required:
+        - avatarId
+      properties:
+        avatarId:
+          type: string
+    UpdateUserAvatarResponse:
+      type: object
+      required:
+        - userId
+        - avatarId
+      properties:
+        userId:
+          type: string
+        avatarId:
+          type: string
+    Avatar:
+      type: object
+      required:
+        - id
+        - url
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+    RoomUserDto:
+      type: object
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        avatarUrl:
+          type: string
+          format: uri
+    RoomDto:
       type: object
       required:
         - id
         - name
-        - userIds
-        - createdAt
+        - ownerId
+        - users
+        - connectionCount
+        - started
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        ownerId:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/RoomUserDto"
+        connectionCount:
+          type: integer
+          minimum: 0
+        started:
+          type: boolean
+    ListRoomsDto:
+      type: object
+      required:
+        - id
+        - name
         - connectionCount
       properties:
         id:
           type: string
         name:
           type: string
-        matchId:
-          type: string
-          nullable: true
-        userIds:
-          type: array
-          items:
-            type: string
-        createdAt:
-          type: string
-          format: date-time
-        endedAt:
-          type: string
-          format: date-time
-          nullable: true
         connectionCount:
           type: integer
           minimum: 0
-
     CreateRoomRequestBody:
       type: object
       required:
@@ -213,13 +549,10 @@ components:
     CreateRoomResponse:
       type: object
       required:
-        - roomId
-        - roomName
+        - room
       properties:
-        roomId:
-          type: string
-        roomName:
-          type: string
+        room:
+          $ref: "#/components/schemas/RoomDto"
 
     ConnectRoomRequest:
       type: object
@@ -232,22 +565,71 @@ components:
     ConnectRoomResponse:
       type: object
       required:
+        - room
+      properties:
+        room:
+          $ref: "#/components/schemas/RoomDto"
+    StartMatchRequest:
+      type: object
+      required:
+        - ownerId
+      properties:
+        ownerId:
+          type: string
+    StartMatchResponse:
+      type: object
+      required:
+        - matchId
         - roomId
       properties:
+        matchId:
+          type: string
         roomId:
+          type: string
+    UpdateRoomUserStatusRequestBody:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - Ready
+            - NotReady
+    UpdateRoomUserStatusResponse:
+      type: object
+      required:
+        - roomId
+        - userId
+        - status
+      properties:
+        roomId:
+          type: string
+        userId:
+          type: string
+        status:
+          type: string
+          enum:
+            - Ready
+            - NotReady
+
+    DisconnectRoomRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
           type: string
 
     ErrorResponse:
       type: object
       required:
-        - error
+        - type
+        - message
       properties:
-        error:
+        type:
           type: string
-        statusCode:
-          type: integer
-        timestamp:
+        message:
           type: string
-          format: date-time
-        path:
-          type: string
+        info:
+          type: object

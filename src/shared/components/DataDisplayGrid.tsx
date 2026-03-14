@@ -71,7 +71,7 @@ export const Root = <T,>({
             }}
         >
             <div
-                className={twMerge("bg-rave-black text-rave-white font-chakraBold", className)}
+                className={twMerge(" text-rave-white font-chakraBold", className)}
                 {...rest}
             >
                 {children}
@@ -125,9 +125,9 @@ interface ContentProps<T> extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const DefaultEmpty = () => (
-    <div className="border border-rave-white/15 bg-rave-black p-8">
+    <div className="border border-rave-white/15 bg-rave-white/5 p-8">
         <div className="text-[11px] tracking-[0.22em] text-rave-white/60">RESULT</div>
-        <div className="mt-2 text-3xl tracking-tight">NO RESULTS</div>
+        <div className="mt-2 text-2xl tracking-tight">NO RESULTS</div>
         <div className="mt-2 text-sm tracking-[0.14em] text-rave-white/70">
             Try a different search.
         </div>
@@ -136,7 +136,7 @@ const DefaultEmpty = () => (
 
 const Tile = ({ title }: { title: string }) => {
     return (
-        <div className="border border-rave-white/15 bg-rave-black p-5">
+        <div className="border border-rave-white/15 bg-rave-white/5 p-5">
             <div className="text-2xl tracking-tight text-rave-white">{title}</div>
         </div>
     );
@@ -162,7 +162,7 @@ const Content = <T,>({
             {filtered.length === 0 ? (
                 <DefaultEmpty />
             ) : (
-                <div className={`grid ${gridCols} gap-4`}>
+                <div className={`grid ${gridCols} gap-4 `}>
                     {filtered.map((item, index) => (
                         <React.Fragment key={index}>
                             {renderItem
