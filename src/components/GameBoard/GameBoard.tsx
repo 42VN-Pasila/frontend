@@ -1,15 +1,17 @@
 import { useState } from "react";
 
+import { useParams } from "react-router-dom";
+
+import { useUserStore } from "@/shared/stores/useUserStore";
+
+import CardSelectionPanel from "./CardSelectionPanel/CardSelectionPanel";
 import type { SelectedCard } from "./CardSelectionPanel/CardSelector";
+import { GameControlPanel } from "./GameControlPanel/GameControlPanel";
+import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
+import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 import type { CardRank, CardSuit } from "./types";
 import type { Card } from "./types";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "./types";
-
-import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
-import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
-import { GameControlPanel } from "./GameControlPanel/GameControlPanel";
-import CardSelectionPanel from "./CardSelectionPanel/CardSelectionPanel";
-import { useUserStore } from "@/shared/stores/useUserStore";
 
 const generateMockHand = (): Card[] => {
   const handSize = Math.floor(Math.random() * 20) + 1;
@@ -37,6 +39,11 @@ export type GameRequestPayload = {
 
 export const GameBoard = () => {
   const userId = useUserStore().userId;
+  const { matchId } = useParams<{ matchId: string }>();
+  if (!matchId) {
+    return <div>Match not found</div>;
+  }
+  console.log("Current match:", matchId);
 
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(
     null,

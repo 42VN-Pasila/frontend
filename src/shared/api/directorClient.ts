@@ -83,4 +83,7 @@ export const directorClient = {
     async updateUserStatus(roomId: string, userId: string, body: UpdateRoomUserStatusRequestBody) {
         return RoomsService.updateRoomUserStatus({ roomId, userId, requestBody: body });
     },
+    async disconnectRoom(roomId: string, userId: string) {
+        return RoomsService.disconnectRoom({ roomId, requestBody: { userId } });
+    },
 };

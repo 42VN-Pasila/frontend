@@ -42,11 +42,12 @@ export const CreateRoomModal = () => {
                 </div>
             </header>
 
-            {error && (
-                <div className="mb-4 border border-rave-red bg-rave-red/10 px-3 py-2 text-sm tracking-[0.18em] text-rave-red">
-                    {error.message}
-                </div>
-            )}
+            {
+                error && (
+                    <div className="mb-4 border border-rave-red bg-rave-red/10 px-3 py-2 text-sm tracking-[0.18em] text-rave-red">
+                        {error.message}
+                    </div>
+                )}
 
             <div className="flex items-center gap-2">
                 <input

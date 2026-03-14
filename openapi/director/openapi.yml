@@ -302,6 +302,46 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /rooms/{roomId}/disconnect:
+    post:
+      tags:
+        - Rooms
+      summary: Disconnect a user from room
+      operationId: disconnectRoom
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DisconnectRoomRequest"
+      responses:
+        "204":
+          description: Disconnected successfully
+        "404":
+          description: User or room not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /rooms/{roomId}/users/{userId}:
     patch:
       tags:
@@ -464,6 +504,7 @@ components:
         - ownerId
         - users
         - connectionCount
+        - started
       properties:
         id:
           type: string
@@ -478,6 +519,8 @@ components:
         connectionCount:
           type: integer
           minimum: 0
+        started:
+          type: boolean
     ListRoomsDto:
       type: object
       required:
@@ -569,6 +612,14 @@ components:
           enum:
             - Ready
             - NotReady
+
+    DisconnectRoomRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
 
     ErrorResponse:
       type: object

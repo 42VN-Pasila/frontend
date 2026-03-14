@@ -16,12 +16,26 @@ import type {
     UpdateUserAvatarResponse,
 } from "@/gen/director";
 
+//------------------------------------------------
+// QUERIES
+//------------------------------------------------
 export const useListRoomsQuery = () => {
     return useQuery<ListRoomsDto[]>({
         queryKey: ["rooms"],
         queryFn: () => directorClient.listRooms(),
     });
 };
+
+export const useListAvatarsQuery = () => {
+    return useQuery<Avatar[]>({
+        queryKey: ["avatars"],
+        queryFn: () => directorClient.listAvatars(),
+    });
+};
+
+//------------------------------------------------
+// MUTATIONS
+//------------------------------------------------
 
 export const useCreateRoomMutation = () => {
     const queryClient = useQueryClient();
@@ -78,13 +92,6 @@ export const useStartMatchMutation = () => {
     });
 };
 
-export const useListAvatarsQuery = () => {
-    return useQuery<Avatar[]>({
-        queryKey: ["avatars"],
-        queryFn: () => directorClient.listAvatars(),
-    });
-};
-
 export const useUpdateUserAvatarMutation = () => {
     const queryClient = useQueryClient();
 
@@ -102,6 +109,18 @@ export const useUpdateUserAvatarMutation = () => {
         },
     });
 };
+
+export const useDisconnectRoomMutation = () => {
+    return useMutation<void, Error, { roomId: string; userId: string }>({
+        mutationFn: ({ roomId, userId }) => {
+            return directorClient.disconnectRoom(roomId, userId);
+        },
+    });
+};
+
+//------------------------------------------------
+// POLLING QUERIES
+//------------------------------------------------
 
 type PollingOptions = {
     enabled?: boolean;
@@ -145,3 +164,4 @@ export const useUpdateUserStatusMutation = () => {
         },
     });
 };
+
