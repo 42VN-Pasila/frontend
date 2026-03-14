@@ -13,15 +13,15 @@ export const DevUserModal = () => {
     const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(avatarUrl ?? "");
 
     const { data: avatars = [], isLoading: isLoadingAvatars } = useListAvatarsQuery();
-    const [updateUserAvatar] = useUpdateUserAvatarMutation();
-    const handleApply = () => {
+    const { mutateAsync: updateUserAvatar } = useUpdateUserAvatarMutation();
+    const handleApply = async () => {
         setUsername(userNameInput.trim());
         setUserId(userIdInput.trim());
         setAvatarUrl(selectedAvatarUrl);
 
         const selectedAvatar = avatars.find((avatar) => avatar.url === selectedAvatarUrl);
         if (selectedAvatar && userIdInput.trim()) {
-            void updateUserAvatar({
+            await updateUserAvatar({
                 userId: userIdInput.trim(),
                 avatarId: selectedAvatar.id,
             });

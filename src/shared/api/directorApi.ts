@@ -1,89 +1,147 @@
-import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { directorClient } from "./directorClient";
+
 import type { ConnectRoomResponse } from "@/gen/director/models/ConnectRoomResponse";
 import type { CreateRoomResponse } from "@/gen/director/models/CreateRoomResponse";
-import type { Avatar, ConnectRoomRequest, CreateRoomRequestBody, ErrorResponse, ListRoomsDto, RoomDto, StartMatchResponse, UpdateRoomUserStatusRequestBody, UpdateRoomUserStatusResponse, UpdateUserAvatarRequestBody, UpdateUserAvatarResponse } from "@/gen/director";
+import type {
+    Avatar,
+    ConnectRoomRequest,
+    CreateRoomRequestBody,
+    ListRoomsDto,
+    RoomDto,
+    StartMatchResponse,
+    UpdateRoomUserStatusRequestBody,
+    UpdateRoomUserStatusResponse,
+    UpdateUserAvatarRequestBody,
+    UpdateUserAvatarResponse,
+} from "@/gen/director";
 
+export const useListRoomsQuery = () => {
+    return useQuery<ListRoomsDto[]>({
+        queryKey: ["rooms"],
+        queryFn: () => directorClient.listRooms(),
+    });
+};
 
+export const useCreateRoomMutation = () => {
+    const queryClient = useQueryClient();
 
-export const directorApi = createApi({
-    reducerPath: "directorApi",
-    baseQuery: fakeBaseQuery<ErrorResponse>(),
-    tagTypes: ["Room"],
-    endpoints: (builder) => ({
-        listRooms: builder.query<ListRoomsDto[], void>({
-            async queryFn() {
-                const data = await directorClient.listRooms();
-                return { data };
-            },
-            providesTags: ["Room"],
-        }),
-        createRoom: builder.mutation<CreateRoomResponse, { userId: string; roomName: string }>({
-            async queryFn({ userId, roomName }) {
-                const bodyPayload: CreateRoomRequestBody = { userId, roomName };
-                const data = await directorClient.createRoom(bodyPayload);
-                return { data };
+    return useMutation<
+        CreateRoomResponse,
+        Error,
+        { userId: string; roomName: string }
+    >({
+        mutationFn: async ({ userId, roomName }) => {
+            const bodyPayload: CreateRoomRequestBody = { userId, roomName };
+            return directorClient.createRoom(bodyPayload);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["rooms"] });
+        },
+    });
+};
 
-            },
-            invalidatesTags: ["Room"],
-        }),
-        connectRoom: builder.mutation<
-            ConnectRoomResponse,
-            { roomId: string; userId: string }
-        >({
-            async queryFn({ roomId, userId }) {
-                const bodyPayload: ConnectRoomRequest = { userId };
-                const data = await directorClient.connectRoom(roomId, bodyPayload);
-                return { data };
-            },
-            invalidatesTags: ["Room"],
-        }),
-        startMatch: builder.mutation<StartMatchResponse, { roomId: string; ownerId: string }>({
-            async queryFn({ roomId, ownerId }) {
-                const data = await directorClient.startMatch(roomId, { ownerId });
-                return { data };
-            },
-            invalidatesTags: ["Room"],
-        }),
-        listAvatars: builder.query<Avatar[], void>({
-            async queryFn() {
-                const data = await directorClient.listAvatars();
-                return { data };
+export const useConnectRoomMutation = () => {
+    const queryClient = useQueryClient();
 
-            },
-        }),
-        updateUserAvatar: builder.mutation<UpdateUserAvatarResponse, { userId: string; avatarId: string }>({
-            async queryFn({ userId, avatarId }) {
-                const bodyPayload: UpdateUserAvatarRequestBody = { avatarId };
-                const data = await directorClient.updateUserAvatar(userId, bodyPayload);
-                return { data };
-            },
-            invalidatesTags: ["Room"],
-        }),
-        getRoomStatus: builder.query<RoomDto, string>({
-            async queryFn(roomId) {
-                const data = await directorClient.getRoomStatus(roomId);
-                return { data };
-            },
-        }),
-        updateUserStatus: builder.mutation<UpdateRoomUserStatusResponse, { userId: string; roomId: string; status: "Ready" | "NotReady" }>({
-            async queryFn({ userId, roomId, status }) {
-                const bodyPayload: UpdateRoomUserStatusRequestBody = { status: status as UpdateRoomUserStatusRequestBody.status };
-                const data = await directorClient.updateUserStatus(roomId, userId, bodyPayload);
-                return { data };
-            },
-            invalidatesTags: ["Room"],
-        }),
-    }),
-});
+    return useMutation<
+        ConnectRoomResponse,
+        Error,
+        { roomId: string; userId: string }
+    >({
+        mutationFn: async ({ roomId, userId }) => {
+            const bodyPayload: ConnectRoomRequest = { userId };
+            return directorClient.connectRoom(roomId, bodyPayload);
+        },
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({ queryKey: ["rooms"] });
+            queryClient.invalidateQueries({ queryKey: ["rooms", variables.roomId] });
+        },
+    });
+};
 
-export const {
-    useListRoomsQuery,
-    useCreateRoomMutation,
-    useConnectRoomMutation,
-    useStartMatchMutation,
-    useListAvatarsQuery,
-    useUpdateUserAvatarMutation,
-    useGetRoomStatusQuery,
-    useUpdateUserStatusMutation,
-} = directorApi;
+export const useStartMatchMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation<
+        StartMatchResponse,
+        Error,
+        { roomId: string; ownerId: string }
+    >({
+        mutationFn: ({ roomId, ownerId }) => {
+            return directorClient.startMatch(roomId, { ownerId });
+        },
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({ queryKey: ["rooms"] });
+            queryClient.invalidateQueries({ queryKey: ["rooms", variables.roomId] });
+        },
+    });
+};
+
+export const useListAvatarsQuery = () => {
+    return useQuery<Avatar[]>({
+        queryKey: ["avatars"],
+        queryFn: () => directorClient.listAvatars(),
+    });
+};
+
+export const useUpdateUserAvatarMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation<
+        UpdateUserAvatarResponse,
+        Error,
+        { userId: string; avatarId: string }
+    >({
+        mutationFn: ({ userId, avatarId }) => {
+            const bodyPayload: UpdateUserAvatarRequestBody = { avatarId };
+            return directorClient.updateUserAvatar(userId, bodyPayload);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["rooms"] });
+        },
+    });
+};
+
+type PollingOptions = {
+    enabled?: boolean;
+    pollingInterval?: number;
+    refetchOnWindowFocus?: boolean;
+    refetchOnReconnect?: boolean;
+};
+
+export const useGetRoomStatusQuery = (
+    roomId: string,
+    options?: PollingOptions,
+) => {
+    return useQuery<RoomDto>({
+        queryKey: ["rooms", roomId],
+        queryFn: () => directorClient.getRoomStatus(roomId),
+        enabled: options?.enabled ?? Boolean(roomId),
+        refetchInterval: options?.pollingInterval,
+        refetchOnWindowFocus: options?.refetchOnWindowFocus,
+        refetchOnReconnect: options?.refetchOnReconnect,
+    });
+};
+
+export const useUpdateUserStatusMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation<
+        UpdateRoomUserStatusResponse,
+        Error,
+        { userId: string; roomId: string; status: "Ready" | "NotReady" }
+    >({
+        mutationFn: ({ userId, roomId, status }) => {
+            const bodyPayload: UpdateRoomUserStatusRequestBody = {
+                status: status as UpdateRoomUserStatusRequestBody.status,
+            };
+
+            return directorClient.updateUserStatus(roomId, userId, bodyPayload);
+        },
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({ queryKey: ["rooms"] });
+            queryClient.invalidateQueries({ queryKey: ["rooms", variables.roomId] });
+        },
+    });
+};

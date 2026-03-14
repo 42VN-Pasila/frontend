@@ -1,8 +1,12 @@
 import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
+import {
+    useGetRoomStatusQuery,
+    useStartMatchMutation,
+    useUpdateUserStatusMutation,
+} from "@/shared/api/directorApi";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
-import { directorApi } from "@/shared/api/directorApi";
 import { useNavigate } from "react-router-dom";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 
@@ -16,16 +20,16 @@ type Slot = {
 
 export const RoomSlot = () => {
     const { id: roomId, ownerId, users } = useRoomStore();
-    const { data: roomStatus, refetch: refetchRoomStatus } = directorApi.useGetRoomStatusQuery(roomId, {
-        skip: !roomId,
+    const { data: roomStatus, refetch: refetchRoomStatus } = useGetRoomStatusQuery(roomId, {
+        enabled: Boolean(roomId),
         pollingInterval: 3_000,
-        refetchOnFocus: true,
+        refetchOnWindowFocus: true,
         refetchOnReconnect: true,
     });
     const { userId, username, avatarUrl } = useUserStore();
     const navigate = useNavigate();
-    const [updateUserStatus] = directorApi.useUpdateUserStatusMutation();
-    const [startMatch] = directorApi.useStartMatchMutation();
+    const { mutateAsync: updateUserStatus } = useUpdateUserStatusMutation();
+    const { mutateAsync: startMatch } = useStartMatchMutation();
     const { setRoomId: setGameRoomId, setMatchId } = useGameSessionStore();
     const currentOwnerId = roomStatus?.ownerId ?? ownerId;
     const currentUsers = roomStatus?.users ?? users;
@@ -55,18 +59,13 @@ export const RoomSlot = () => {
 
     const handleStartMatch = async () => {
         if (!userId || !roomId || !isHost) return;
-        const { data, error } = await startMatch({
+        const data = await startMatch({
             roomId,
             ownerId: userId,
         });
-        if (data) {
-            setGameRoomId(data.roomId);
-            setMatchId(data.matchId);
-            navigate(`/match/${data.matchId}`);
-        }
-        if (error) {
-            console.error(error);
-        }
+        setGameRoomId(data.roomId);
+        setMatchId(data.matchId);
+        navigate(`/match/${data.matchId}`);
     };
 
     const handleExitRoom = async () => {
@@ -91,8 +90,6 @@ export const RoomSlot = () => {
             avatarUrl: user.id === userId ? avatarUrl : user.avatarUrl,
         })),
     ];
-
-    console.log(occupiedSlots);
 
     const slots: Slot[] = [...occupiedSlots];
     while (slots.length < 4) {

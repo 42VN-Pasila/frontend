@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import type { RoomDto } from "@/gen/director";
-import { directorApi } from "@/shared/api/directorApi";
+import type { ListRoomsDto } from "@/gen/director";
+import { useListRoomsQuery } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
 import { DataDisplayGrid } from "@/shared/components/DataDisplayGrid";
 import RoomCard from "./RoomCard";
@@ -26,10 +26,10 @@ export const RoomList = () => {
     isFetching,
     error,
     refetch,
-  } = directorApi.useListRoomsQuery();
+  } = useListRoomsQuery();
 
   const roomItems: Room[] = [
-    ...rooms.map((room: RoomDto) => {
+    ...rooms.map((room: ListRoomsDto) => {
       const userCount = room.connectionCount;
       return {
         id: room.id,
@@ -90,7 +90,7 @@ export const RoomList = () => {
             variant="inverse"
             emphasis="low"
             size="small"
-            onClick={refetch}
+            onClick={() => refetch()}
             disabled={isFetching}
           >
             {isFetching ? "REFRESHING..." : "REFRESH"}

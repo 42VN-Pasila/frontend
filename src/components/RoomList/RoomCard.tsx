@@ -1,11 +1,10 @@
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 
-import { directorApi } from "@/shared/api/directorApi";
+import { useConnectRoomMutation } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 import { Tag } from "../../shared/components/Tag";
-import { handleConnectRoomError } from "./errorConnectHandling";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { MAX_PLAYERS } from "@/common/constants";
 
@@ -28,25 +27,19 @@ export const RoomCard = ({ room }: RoomCardProps) => {
     const { id: roomId, setRoomId, setUsers, setOwnerId, setConnectionCount } = useRoomStore();
     const { userId, setUserId } = useUserStore();
 
-    const [connectRoom] = directorApi.useConnectRoomMutation();
+    const { mutateAsync: connectRoom } = useConnectRoomMutation();
 
 
     const disabled = full || !!roomId;
 
     const handleConnectRoom = async (roomId: string) => {
         if (!userId || !roomId) return;
-        const { data, error } = await connectRoom({ roomId, userId });
-        if (data) {
-            setRoomId(roomId);
-            setUserId(userId);
-            setUsers(data.room.users);
-            setOwnerId(data.room.ownerId);
-            setConnectionCount(data.room.connectionCount);
-        }
-        if (error) {
-            const errorMessage = handleConnectRoomError(error);
-            room.onConnectError(errorMessage);
-        }
+        const data = await connectRoom({ roomId, userId });
+        setRoomId(roomId);
+        setUserId(userId);
+        setUsers(data.room.users);
+        setOwnerId(data.room.ownerId);
+        setConnectionCount(data.room.connectionCount);
     };
 
     return (

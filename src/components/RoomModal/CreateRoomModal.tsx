@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-import { directorApi } from "@/shared/api/directorApi";
+import { useCreateRoomMutation } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
 import { useUserStore } from "@/shared/stores/useUserStore";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 
-import { handleCreateRoomError } from "./errorCreateHandling";
 import { MAX_PLAYERS } from "@/common/constants";
 
 export const CreateRoomModal = () => {
@@ -13,33 +12,28 @@ export const CreateRoomModal = () => {
     const { setRoomId, setUsers, setOwnerId, setConnectionCount } = useRoomStore();
 
     const [roomName, setRoomName] = useState("");
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [createRoom, { isLoading }] = directorApi.useCreateRoomMutation();
+
+    const { mutateAsync: createRoom, isPending: isCreatingRoom, error } = useCreateRoomMutation();
 
     const handleCreateRoom = async () => {
         const normalizedRoomName = roomName.trim();
-        if (!userId || !normalizedRoomName) return;
+        if (!userId || !normalizedRoomName || isCreatingRoom) return;
 
-        const { data, error } = await createRoom({
+        const data = await createRoom({
             userId,
             roomName: normalizedRoomName,
-        })
-        if (data) {
-            setRoomId(data.room.id);
-            setUserId(userId);
-            setUsers(data.room.users);
-            setOwnerId(data.room.ownerId);
-            setConnectionCount(data.room.connectionCount);
-        }
-        if (error) {
-            const message = handleCreateRoomError(error);
-            setErrorMessage(message);
-        }
+        });
+
+        setRoomId(data.room.id);
+        setUserId(userId);
+        setUsers(data.room.users);
+        setOwnerId(data.room.ownerId);
+        setConnectionCount(data.room.connectionCount);
     };
 
     return (
         <>
-            <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-4">
+            <header className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <h2 className="text-2xl font-bold tracking-widest">NEW ROOM</h2>
                 <div className="flex items-center gap-2">
                     <div className="border border-rave-red bg-rave-red/10 px-3 py-2 text-xs tracking-[0.18em]">
@@ -47,19 +41,19 @@ export const CreateRoomModal = () => {
                     </div>
                 </div>
             </header>
-            {/* TODO: Handle error */}
-            {errorMessage && (
-                <div className="text-rave-red text-sm border border-rave-red bg-rave-red/10 px-3 py-2 tracking-[0.18em] mb-4">
-                    {errorMessage}
+
+            {error && (
+                <div className="mb-4 border border-rave-red bg-rave-red/10 px-3 py-2 text-sm tracking-[0.18em] text-rave-red">
+                    {error.message}
                 </div>
             )}
+
             <div className="flex items-center gap-2">
                 <input
                     type="text"
                     value={roomName}
                     onChange={(e) => {
                         setRoomName(e.target.value);
-                        setErrorMessage(null);
                     }}
                     placeholder="Room Name"
                     className="h-12 w-full border border-rave-white/20 bg-rave-white/5 px-4 outline-none focus:border-rave-red"
@@ -70,9 +64,9 @@ export const CreateRoomModal = () => {
                     size="small"
                     className="min-w-40"
                     onClick={handleCreateRoom}
-                    disabled={isLoading || !roomName.trim() || !userId}
+                    disabled={isCreatingRoom || !roomName.trim() || !userId}
                 >
-                    {isLoading ? "CREATING..." : "CREATE ROOM"}
+                    {isCreatingRoom ? "CREATING..." : "CREATE ROOM"}
                 </Button>
             </div>
         </>

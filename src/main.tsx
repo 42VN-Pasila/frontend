@@ -3,15 +3,15 @@ import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import ReactDOM from "react-dom/client";
-import { Provider } from "react-redux";
-import { appStore } from "@shared/stores/appStore";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@shared/api/queryClient";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
-    <Provider store={appStore}>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </Provider>
+    </QueryClientProvider>
   </StrictMode>
 );
