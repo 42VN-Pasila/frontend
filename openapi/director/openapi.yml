@@ -122,12 +122,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ListRoomsDto"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
         "500":
           description: Internal server error
           content:
@@ -392,14 +386,23 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
-    AskCardEvent:
+    Card:
+      type: object
+      required:
+        - suit
+        - rank
+      properties:
+        suit:
+          type: string
+        rank:
+          type: string
+    RequestCardEvent:
       type: object
       required:
         - matchId
         - userId
         - opponentId
-        - rank
-        - suit
+        - card
       properties:
         matchId:
           type: string
@@ -407,11 +410,9 @@ components:
           type: string
         opponentId:
           type: string
-        rank:
-          type: string
-        suit:
-          type: string
-    ConnectMatchEvent:
+        card:
+          $ref: "#/components/schemas/Card"
+    JoinMatchEvent:
       type: object
       required:
         - matchId
@@ -421,7 +422,7 @@ components:
           type: string
         userId:
           type: string
-    DisConnectMatchEvent:
+    LeaveMatchEvent:
       type: object
       required:
         - matchId
@@ -431,7 +432,7 @@ components:
           type: string
         userId:
           type: string
-    CreateRoomEvent:
+    CreateMatchEvent:
       type: object
       required:
         - matchId
@@ -448,7 +449,6 @@ components:
       properties:
         rudexUserId:
           type: string
-
     CreateUserResponse:
       type: object
       required:
@@ -535,6 +535,82 @@ components:
         connectionCount:
           type: integer
           minimum: 0
+    HandDto:
+      type: object
+      required:
+        - cards
+        - userId
+      properties:
+        cards:
+          items:
+            $ref: "#/components/schemas/Card"
+        userId:
+          type: string
+    BookDto:
+      type: object
+      required:
+        - cards
+        - userId
+      properties:
+        cards:
+          type: array
+          items:
+            $ref: "#/components/schemas/Card"
+        userId:
+          type: string
+    HandCountDto:
+      type: object
+      required:
+        - userId
+        - handCount
+      properties:
+        userId:
+          type: string
+        handCount:
+          type: integer
+    BookCountDto:
+      type: object
+      required:
+        - userId
+        - count
+      properties:
+        userId:
+          type: string
+        count:
+          type: integer
+    MatchDto:
+      type: object
+      required:
+        - id
+        - status
+        - hands
+        - books
+        - userHandCounts
+        - userBookCounts
+        - roomId
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        hands:
+          type: array
+          items:
+            $ref: "#/components/schemas/HandDto"
+        books:
+          type: array
+          items:
+            $ref: "#/components/schemas/BookDto"
+        userHandCounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/HandCountDto"
+        userBookCounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/BookCountDto"
+        roomId:
+          type: string
     CreateRoomRequestBody:
       type: object
       required:
@@ -545,7 +621,6 @@ components:
           type: string
         roomName:
           type: string
-
     CreateRoomResponse:
       type: object
       required:
@@ -580,11 +655,8 @@ components:
       type: object
       required:
         - matchId
-        - roomId
       properties:
         matchId:
-          type: string
-        roomId:
           type: string
     UpdateRoomUserStatusRequestBody:
       type: object

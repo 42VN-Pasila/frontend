@@ -1,7 +1,18 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useParams } from "react-router-dom";
 
+import {
+  connectSocket,
+  disconnectSocket,
+  onMatchState,
+  onSocketConnect,
+  socketAskCardMatch,
+  socketJoinMatch,
+  socketLeaveMatch,
+  socketPingMatch,
+} from "@/shared/api/directorClient";
+import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 import CardSelectionPanel from "./CardSelectionPanel/CardSelectionPanel";
@@ -10,25 +21,7 @@ import { GameControlPanel } from "./GameControlPanel/GameControlPanel";
 import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 import type { CardRank, CardSuit } from "./types";
-import type { Card } from "./types";
-import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "./types";
-
-const generateMockHand = (): Card[] => {
-  const handSize = Math.floor(Math.random() * 20) + 1;
-
-  const deck: Card[] = ALL_CARD_SUITS.flatMap((suit) =>
-    ALL_CARD_RANKS.map((rank) => ({ suit, rank })),
-  );
-
-  for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [deck[i], deck[j]] = [deck[j], deck[i]];
-  }
-
-  return deck.slice(0, handSize);
-};
-
-const MOCK_PLAYER_HAND = generateMockHand();
+import type { MatchDto } from "@/gen/director";
 
 export type GameRequestPayload = {
   userId: string;
@@ -39,11 +32,18 @@ export type GameRequestPayload = {
 
 export const GameBoard = () => {
   const userId = useUserStore().userId;
-  const { matchId } = useParams<{ matchId: string }>();
-  if (!matchId) {
-    return <div>Match not found</div>;
-  }
-  console.log("Current match:", matchId);
+  const {
+    setMatchId,
+    setRoomId,
+    setOpponentIds,
+    setOpponents,
+    setTurnOrder,
+    setHands,
+    setBooks,
+  } = useGameSessionStore();
+  const { matchId: matchIdParam } = useParams<{ matchId: string }>();
+  const matchId = matchIdParam ?? "";
+  const pingIntervalRef = useRef<number | null>(null);
 
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(
     null,
@@ -64,8 +64,76 @@ export const GameBoard = () => {
     setSelection((prev) => ({ ...prev, ...updates }));
   };
 
-  const handleRequest = () => {
-    if (!isSelectionComplete || !userId || !selectedOpponentId) return;
+  useEffect(() => {
+    if (!matchId || !userId) return;
+
+    setMatchId(matchId);
+
+    const applyMatchState = (match: MatchDto) => {
+      const orderedIds = match.userHandCounts.map((item) => item.userId);
+      const filteredTurnOrder = orderedIds.length > 0 ? orderedIds : [userId];
+      const opponentIds = filteredTurnOrder.filter((id) => id !== userId);
+
+      setHands(match.hands);
+      setBooks(match.books);
+      setRoomId(match.roomId);
+      setTurnOrder(filteredTurnOrder);
+      setOpponentIds(opponentIds);
+      setOpponents(
+        opponentIds.map((id, index) => ({
+          id,
+          username: `Opponent ${index + 1}`,
+          avatarUrl: "",
+          cardCount:
+            match.userHandCounts.find((count) => count.userId === id)?.handCount ?? 0,
+        })),
+      );
+    };
+
+    const joinAndSync = async () => {
+      const match = await socketJoinMatch({ matchId, userId });
+      applyMatchState(match);
+    };
+
+    connectSocket();
+    joinAndSync();
+
+    const unsubscribeMatchState = onMatchState((match) => {
+      applyMatchState(match);
+    });
+
+    const unsubscribeSocketConnect = onSocketConnect(() => {
+      void joinAndSync();
+    });
+
+    pingIntervalRef.current = window.setInterval(() => {
+      void socketPingMatch({ matchId, userId });
+    }, 10_000);
+
+    return () => {
+      if (pingIntervalRef.current !== null) {
+        window.clearInterval(pingIntervalRef.current);
+        pingIntervalRef.current = null;
+      }
+      unsubscribeMatchState();
+      unsubscribeSocketConnect();
+      void socketLeaveMatch({ matchId, userId });
+      disconnectSocket();
+    };
+  }, [
+    matchId,
+    userId,
+    setMatchId,
+    setRoomId,
+    setOpponentIds,
+    setOpponents,
+    setTurnOrder,
+    setHands,
+    setBooks,
+  ]);
+
+  const handleRequest = async () => {
+    if (!isSelectionComplete || !userId || !selectedOpponentId || !matchId) return;
 
     const payload: GameRequestPayload = {
       userId: userId,
@@ -73,7 +141,15 @@ export const GameBoard = () => {
       suit: selection.suit!,
       rank: selection.rank!,
     };
-    console.log("Mock game request payload", payload);
+    await socketAskCardMatch({
+      matchId,
+      userId: payload.userId,
+      opponentId: payload.opponentId,
+      card: {
+        suit: payload.suit,
+        rank: payload.rank,
+      },
+    });
 
     setSelection({ suit: null, rank: null }); // UI reset
     setSelectedOpponentId(null);
@@ -81,6 +157,10 @@ export const GameBoard = () => {
 
   // TODO: remove this once we have a proper authentication system
   const disabled = true;
+
+  if (!matchId) {
+    return <div>Match not found</div>;
+  }
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden bg-rave-black">

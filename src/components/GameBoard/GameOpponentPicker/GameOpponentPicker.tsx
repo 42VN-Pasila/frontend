@@ -55,8 +55,6 @@ const GameOpponentPicker = ({
     [opponents, turnOrder, userId]
   );
 
-  console.log(sortedPositions)
-
   return (
     <section
       {...props}

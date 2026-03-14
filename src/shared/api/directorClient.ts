@@ -1,57 +1,133 @@
 import { OpenAPI } from '@/gen/director/core/OpenAPI';
 import { UsersService } from '@/gen/director/services/UsersService';
 import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
-import { type AskCardEvent, type ConnectMatchEvent, type ConnectRoomRequest, type CreateRoomRequestBody, type DisConnectMatchEvent, ResourcesService, RoomsService, type StartMatchRequest, UpdateRoomUserStatusRequestBody, type UpdateUserAvatarRequestBody } from '@/gen/director';
+import {
+    type ConnectRoomRequest,
+    type CreateRoomRequestBody,
+    type JoinMatchEvent,
+    type LeaveMatchEvent,
+    type MatchDto,
+    type RequestCardEvent,
+    ResourcesService,
+    RoomsService,
+    type StartMatchRequest,
+    type UpdateRoomUserStatusRequestBody,
+    type UpdateUserAvatarRequestBody,
+} from '@/gen/director';
 import { toDevPath } from './path.dev';
-import { Socket, io } from "socket.io-client";
+import { Socket, io } from 'socket.io-client';
+
+type SocketAck = {
+    ok: boolean;
+    error?: string;
+};
+
+type JoinMatchAck =
+    | { ok: true; match: MatchDto }
+    | { ok: false; error: string };
+
+type MatchPingEvent = {
+    matchId: string;
+    userId: string;
+};
 
 export const socket: Socket = io(import.meta.env.VITE_DIRECTOR_URL, {
-    transports: ["websocket"], // optional: prefer websocket
-    autoConnect: false,        // we control when to connect
-    withCredentials: true,     // if you use cookies
+    transports: ['websocket'],
+    autoConnect: false,
+    withCredentials: true,
 });
 
-type SocketResponse = {
-    ok: boolean;
-    error: string;
+export const connectSocket = () => {
+    if (!socket.connected) {
+        socket.connect();
+    }
 };
 
-// socket.connect();
+export const disconnectSocket = () => {
+    if (socket.connected) {
+        socket.disconnect();
+    }
+};
 
-export const socketJoinMatch = (payload: ConnectMatchEvent) => {
-    socket.emit("match:join", payload, (res: SocketResponse) => {
-        if (!res?.ok) {
-            console.error("join failed", res?.error);
-            return;
-        }
-        console.log("joined!");
+export const socketJoinMatch = (
+    payload: JoinMatchEvent,
+): Promise<MatchDto> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:join', payload, (res: JoinMatchAck) => {
+            if (!res?.ok) {
+                console.error('join failed', res?.error);
+                reject(new Error(res?.error || 'JOIN_FAILED'));
+                return;
+            }
+
+            resolve(res.match);
+        });
     });
 };
 
-export const socketLeaveMatch = (payload: DisConnectMatchEvent) => {
-    socket.emit("match:leave", payload, (res: SocketResponse) => {
-        if (!res?.ok) {
-            console.error("leave failed", res?.error);
-            return;
-        }
-        console.log("left!");
+export const socketLeaveMatch = (
+    payload: LeaveMatchEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:leave', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('leave failed', res?.error);
+                reject(new Error(res?.error || 'LEAVE_FAILED'));
+                return;
+            }
+
+            resolve();
+        });
     });
 };
 
-export const socketAskCardMatch = (payload: AskCardEvent) => {
-    socket.emit("match:ask-card", payload, (res: SocketResponse) => {
-        if (!res?.ok) {
-            console.error("ask card failed", res?.error);
-            return;
-        }
-        console.log("card asked!");
+export const socketAskCardMatch = (
+    payload: RequestCardEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:requestCard', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('ask card failed', res?.error);
+                reject(new Error(res?.error || 'REQUEST_CARD_FAILED'));
+                return;
+            }
+
+            resolve();
+        });
     });
 };
 
-export const socketAttachMatchDebugListeners = () => {
-    socket.on("match:connected", (evt) => console.log("someone joined", evt));
-    socket.on("match:ping", (evt) => console.log("ping received", evt));
+export const socketPingMatch = (
+    payload: MatchPingEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:ping', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('ping failed', res?.error);
+                reject(new Error(res?.error || 'PING_FAILED'));
+                return;
+            }
+
+            resolve();
+        });
+    });
 };
+
+export const onMatchState = (handler: (match: MatchDto) => void) => {
+    socket.on('match:state', handler);
+    return () => socket.off('match:state', handler);
+};
+
+export const onSocketConnect = (handler: () => void) => {
+    socket.on('connect', handler);
+    return () => socket.off('connect', handler);
+};
+
+export const onSocketDisconnect = (handler: (reason: Socket.DisconnectReason) => void) => {
+    socket.on('disconnect', handler);
+    return () => socket.off('disconnect', handler);
+};
+
 
 OpenAPI.BASE = toDevPath(import.meta.env.VITE_DIRECTOR_URL ?? "");
 
