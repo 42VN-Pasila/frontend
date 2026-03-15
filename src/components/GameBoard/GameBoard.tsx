@@ -39,7 +39,7 @@ export const GameBoard = () => {
     setRoomId,
     setOpponentIds,
     setOpponents,
-    setTurnOrder,
+    setSeats,
     setHands,
     setBooks,
   } = useGameSessionStore();
@@ -77,17 +77,20 @@ export const GameBoard = () => {
     setMatchId(matchId);
     setErrorMessage(null);
 
-    const applyMatchState = (match: MatchDto) => {
-      const orderedIds = match.userHandCounts.map((item) => item.userId);
-      const filteredTurnOrder = orderedIds.length > 0 ? orderedIds : [userId];
-      const opponentIds = filteredTurnOrder.filter((id) => id !== userId);
-
+    const applyMatchState = (match: MatchDto, metadataOpponentIds?: string[]) => {
       setHands(match.hands);
       setBooks(match.books);
-      setRoomId(match.roomId);
-      setTurnOrder(filteredTurnOrder);
-      setOpponentIds(opponentIds);
-      const latestOpponents = useGameSessionStore.getState().opponents;
+      const latestState = useGameSessionStore.getState();
+      const latestOpponents = latestState.opponents;
+      const opponentIds =
+        metadataOpponentIds && metadataOpponentIds.length > 0
+          ? metadataOpponentIds
+          : latestState.opponentIds.length > 0
+            ? latestState.opponentIds
+            : match.userHandCounts
+              .map((count) => count.userId)
+              .filter((id) => id !== userId);
+
       setOpponents(
         opponentIds.map((id) => {
           const existing = latestOpponents.find((opponent) => opponent.id === id);
@@ -104,25 +107,20 @@ export const GameBoard = () => {
 
     const applyMatchMetadata = (
       metadata: MatchMetaDataDto,
-      handCounts?: MatchDto["userHandCounts"],
     ) => {
+      setMatchId(metadata.id);
+      setRoomId(metadata.roomId);
+      setSeats(metadata.seats);
       setOpponentIds(metadata.users.map((user) => user.id));
-      setOpponents(
-        metadata.users.map((user) => ({
-          id: user.id,
-          username: user.id,
-          avatarUrl: user.avatarUrl ?? "",
-          cardCount:
-            handCounts?.find((count) => count.userId === user.id)?.handCount ?? 0,
-        })),
-      );
+
     };
 
     const joinAndSync = async () => {
       try {
         const { match, metadata } = await socketJoinMatch({ matchId, userId });
-        applyMatchState(match);
-        applyMatchMetadata(metadata, match.userHandCounts);
+        const metadataOpponentIds = metadata.users.map((user) => user.id);
+        applyMatchMetadata(metadata);
+        applyMatchState(match, metadataOpponentIds);
         setErrorMessage(null);
       } catch {
         setErrorMessage("Unable to join match");
@@ -162,7 +160,7 @@ export const GameBoard = () => {
     setRoomId,
     setOpponentIds,
     setOpponents,
-    setTurnOrder,
+    setSeats,
     setHands,
     setBooks,
   ]);

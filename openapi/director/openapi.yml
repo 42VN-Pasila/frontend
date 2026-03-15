@@ -637,6 +637,19 @@ components:
           type: string
         count:
           type: integer
+    SeatDto:
+      type: object
+      required:
+        - order
+        - userId
+        - isActive
+      properties:
+        order:
+          type: integer
+        userId:
+          type: string
+        isActive:
+          type: boolean
     MatchDto:
       type: object
       required:
@@ -677,6 +690,7 @@ components:
         - status
         - roomId
         - users
+        - seats
         - createdAt
         - lastUpdated
         - completedAt
@@ -691,6 +705,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/UserDto"
+        seats:
+          type: array
+          items:
+            $ref: "#/components/schemas/SeatDto"
         createdAt:
           type: string
           format: date-time

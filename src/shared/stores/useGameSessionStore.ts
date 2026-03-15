@@ -1,5 +1,5 @@
 import type { Opponent } from "@/components/GameBoard/types"
-import type { BookDto, HandDto } from "@/gen/director";
+import type { BookDto, HandDto, SeatDto } from "@/gen/director";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -8,14 +8,14 @@ type GameSessionState = {
     matchId: string;
     opponentIds: string[];
     opponents: Opponent[];
-    turnOrder: string[];
+    seats: SeatDto[];
     hands: HandDto[];
     books: BookDto[];
     setOpponentIds: (opponentIds: string[]) => void;
     setRoomId: (roomId: string) => void;
     setMatchId: (matchId: string) => void;
     setOpponents: (opponents: Opponent[]) => void;
-    setTurnOrder: (turnOrder: string[]) => void;
+    setSeats: (seats: SeatDto[]) => void;
     setHands: (hands: HandDto[]) => void;
     setBooks: (books: BookDto[]) => void;
     resetGameSession: () => void;
@@ -28,13 +28,13 @@ export const useGameSessionStore = create<GameSessionState>()(
             matchId: "",
             opponentIds: [],
             opponents: [],
-            turnOrder: [],
+            seats: [],
             hands: [],
             books: [],
             setOpponentIds: (opponentIds: string[]) => set({ opponentIds }),
             setRoomId: (roomId: string) => set({ roomId }),
             setMatchId: (matchId: string) => set({ matchId }),
-            setTurnOrder: (turnOrder: string[]) => set({ turnOrder }),
+            setSeats: (seats: SeatDto[]) => set({ seats }),
             setOpponents: (opponents: Opponent[]) => set({ opponents }),
             setHands: (hands: HandDto[]) => set({ hands }),
             setBooks: (books: BookDto[]) => set({ books }),
@@ -42,7 +42,7 @@ export const useGameSessionStore = create<GameSessionState>()(
                 roomId: "",
                 matchId: "",
                 opponentIds: [],
-                turnOrder: []
+                seats: [],
             }),
         }),
         {
@@ -52,7 +52,7 @@ export const useGameSessionStore = create<GameSessionState>()(
                 opponentIds: state.opponentIds,
                 roomId: state.roomId,
                 matchId: state.matchId,
-                turnOrder: state.turnOrder,
+                seats: state.seats,
                 opponents: state.opponents,
                 hands: state.hands,
                 books: state.books,
