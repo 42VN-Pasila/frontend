@@ -6,7 +6,7 @@ export const CardEmptySlot = ({ children, className = "", ...props }: React.Comp
   <div
     {...props}
     className={`
-      aspect-[2/3] border-2 border-dashed border-(--rave-red) 
+      aspect-2/3 border-2 border-dashed border-(--rave-red) 
       bg-rave-light-red rounded-xl flex items-center justify-center 
       text--color-light-gray text-sm text-center p-4 ${className}
     `}
@@ -21,12 +21,16 @@ interface CardSvgProps extends React.ComponentPropsWithoutRef<"div"> {
 }
 
 const CardSvg = ({ card, className = "", ...props }: CardSvgProps) => {
-  const SelectedCard = CARD_IMAGES[card.suit][card.rank];
+  const SelectedCard = CARD_IMAGES[card?.suit]?.[card?.rank];
+
+  if (!SelectedCard) {
+    return <CardEmptySlot className={className}>Invalid card</CardEmptySlot>;
+  }
 
   return (
     <div
       {...props}
-      className={`aspect-[2/3] drop-shadow-md transition-all duration-200 ${className}`}
+      className={`aspect-2/3 drop-shadow-md transition-all duration-200 ${className}`}
     >
       <SelectedCard className="w-full h-full rounded-xl object-contain" />
     </div>

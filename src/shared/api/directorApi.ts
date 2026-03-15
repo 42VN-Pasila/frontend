@@ -9,6 +9,7 @@ import type {
     CreateRoomRequestBody,
     ListRoomsDto,
     RoomDto,
+    RoomMetaDataDto,
     StartMatchResponse,
     UpdateRoomUserStatusRequestBody,
     UpdateRoomUserStatusResponse,
@@ -118,31 +119,6 @@ export const useDisconnectRoomMutation = () => {
     });
 };
 
-//------------------------------------------------
-// POLLING QUERIES
-//------------------------------------------------
-
-type PollingOptions = {
-    enabled?: boolean;
-    pollingInterval?: number;
-    refetchOnWindowFocus?: boolean;
-    refetchOnReconnect?: boolean;
-};
-
-export const useGetRoomStatusQuery = (
-    roomId: string,
-    options?: PollingOptions,
-) => {
-    return useQuery<RoomDto>({
-        queryKey: ["rooms", roomId],
-        queryFn: () => directorClient.getRoomStatus(roomId),
-        enabled: options?.enabled ?? Boolean(roomId),
-        refetchInterval: options?.pollingInterval,
-        refetchOnWindowFocus: options?.refetchOnWindowFocus,
-        refetchOnReconnect: options?.refetchOnReconnect,
-    });
-};
-
 export const useUpdateUserStatusMutation = () => {
     const queryClient = useQueryClient();
 
@@ -165,3 +141,41 @@ export const useUpdateUserStatusMutation = () => {
     });
 };
 
+//------------------------------------------------
+// POLLING QUERIES
+//------------------------------------------------
+
+type QueryOptions = {
+    enabled?: boolean;
+    pollingInterval?: number;
+    refetchOnWindowFocus?: boolean;
+    refetchOnReconnect?: boolean;
+};
+
+export const useGetRoomStatusQuery = (
+    roomId: string,
+    options?: QueryOptions,
+) => {
+    return useQuery<RoomDto>({
+        queryKey: ["rooms", roomId],
+        queryFn: () => directorClient.getRoomStatus(roomId),
+        enabled: options?.enabled ?? Boolean(roomId),
+        refetchInterval: options?.pollingInterval,
+        refetchOnWindowFocus: options?.refetchOnWindowFocus,
+        refetchOnReconnect: options?.refetchOnReconnect,
+    });
+};
+
+export const useGetRoomMetaDataQuery = (
+    roomId: string,
+    options?: QueryOptions,
+) => {
+    return useQuery<RoomMetaDataDto>({
+        queryKey: ["roomMetadata", roomId],
+        queryFn: () => directorClient.getRoomMetaData(roomId),
+        enabled: options?.enabled ?? Boolean(roomId),
+        refetchInterval: options?.pollingInterval,
+        refetchOnWindowFocus: options?.refetchOnWindowFocus,
+        refetchOnReconnect: options?.refetchOnReconnect,
+    });
+};

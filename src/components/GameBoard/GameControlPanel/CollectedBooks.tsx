@@ -1,10 +1,15 @@
 import { Label } from "@/shared/components/Label";
+import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
 export const CollectedBooks = () => {
+    const { userId } = useUserStore();
+    const { books } = useGameSessionStore();
+    const bookCount = books.filter((book) => book.userId === userId).length;
     return (
         <div id="collected-books" className="h-fit p-4  border-b-2 border-rave-white/10 ">
             <Label className="text-5xl text-rave-red/80">
-                SCORE <span className="text-6xl font-mono text-rave-white">{15}</span>
+                SCORE <span className="text-6xl font-mono text-rave-white">{bookCount}</span>
             </Label>
         </div>
     );

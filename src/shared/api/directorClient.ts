@@ -7,6 +7,7 @@ import {
     type JoinMatchEvent,
     type LeaveMatchEvent,
     type MatchDto,
+    type MatchMetaDataDto,
     type RequestCardEvent,
     ResourcesService,
     RoomsService,
@@ -23,7 +24,7 @@ type SocketAck = {
 };
 
 type JoinMatchAck =
-    | { ok: true; match: MatchDto }
+    | { ok: true; match: MatchDto; metadata: MatchMetaDataDto }
     | { ok: false; error: string };
 
 type MatchPingEvent = {
@@ -31,7 +32,33 @@ type MatchPingEvent = {
     userId: string;
 };
 
-export const socket: Socket = io(import.meta.env.VITE_DIRECTOR_URL, {
+const rawDirectorUrl = import.meta.env.VITE_DIRECTOR_URL as string | undefined;
+
+const resolveDirectorBaseUrl = () => {
+    const fallbackUrl = window.location.origin;
+    const input = rawDirectorUrl?.trim();
+
+    if (!input) {
+        return fallbackUrl;
+    }
+
+    try {
+        return toDevPath(input);
+    } catch {
+        if (import.meta.env.DEV) {
+            console.warn(
+                `Invalid VITE_DIRECTOR_URL "${input}". Falling back to "${fallbackUrl}" in dev.`,
+            );
+            return fallbackUrl;
+        }
+        throw new Error(`Invalid VITE_DIRECTOR_URL: "${input}"`);
+    }
+};
+
+const directorBaseUrl = resolveDirectorBaseUrl();
+const directorSocketOrigin = new URL(directorBaseUrl).origin;
+
+export const socket: Socket = io(directorSocketOrigin, {
     transports: ['websocket'],
     autoConnect: false,
     withCredentials: true,
@@ -51,7 +78,7 @@ export const disconnectSocket = () => {
 
 export const socketJoinMatch = (
     payload: JoinMatchEvent,
-): Promise<MatchDto> => {
+): Promise<{ match: MatchDto; metadata: MatchMetaDataDto }> => {
     return new Promise((resolve, reject) => {
         socket.emit('match:join', payload, (res: JoinMatchAck) => {
             if (!res?.ok) {
@@ -60,7 +87,7 @@ export const socketJoinMatch = (
                 return;
             }
 
-            resolve(res.match);
+            resolve({ match: res.match, metadata: res.metadata });
         });
     });
 };
@@ -128,8 +155,12 @@ export const onSocketDisconnect = (handler: (reason: Socket.DisconnectReason) =>
     return () => socket.off('disconnect', handler);
 };
 
+export const onSocketMatchMetadata = (handler: (metadata: MatchMetaDataDto) => void) => {
+    socket.on('match:metadata', handler);
+    return () => socket.off('match:metadata', handler);
+};
 
-OpenAPI.BASE = toDevPath(import.meta.env.VITE_DIRECTOR_URL ?? "");
+OpenAPI.BASE = directorBaseUrl;
 
 export const directorClient = {
     async createUser(body: CreateUserRequestBody) {
@@ -161,5 +192,8 @@ export const directorClient = {
     },
     async disconnectRoom(roomId: string, userId: string) {
         return RoomsService.disconnectRoom({ roomId, requestBody: { userId } });
+    },
+    async getRoomMetaData(roomId: string) {
+        return RoomsService.getRoomMetaData({ roomId });
     },
 };

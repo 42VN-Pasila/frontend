@@ -203,6 +203,37 @@ paths:
         "500":
           description: Internal server error
           content:
+  /rooms/{roomId}/metadata:
+    get:
+      tags:
+        - Rooms
+      summary: Get room metadata by id
+      operationId: getRoomMetaData
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Room metadata fetched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoomMetaDataDto"
+        "404":
+          description: Room not found or already ended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /rooms/{roomId}/connect:
     post:
       tags:
@@ -483,7 +514,7 @@ components:
           type: string
         url:
           type: string
-    RoomUserDto:
+    UserDto:
       type: object
       required:
         - id
@@ -515,12 +546,40 @@ components:
         users:
           type: array
           items:
-            $ref: "#/components/schemas/RoomUserDto"
+            $ref: "#/components/schemas/UserDto"
         connectionCount:
           type: integer
           minimum: 0
         started:
           type: boolean
+    RoomMetaDataDto:
+      type: object
+      required:
+        - id
+        - name
+        - ownerId
+        - users
+        - connectionCount
+        - started
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        ownerId:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserDto"
+        connectionCount:
+          type: integer
+          minimum: 0
+        started:
+          type: boolean
+        matchId:
+          type: string
+          nullable: true
     ListRoomsDto:
       type: object
       required:
@@ -611,6 +670,37 @@ components:
             $ref: "#/components/schemas/BookCountDto"
         roomId:
           type: string
+    MatchMetaDataDto:
+      type: object
+      required:
+        - id
+        - status
+        - roomId
+        - users
+        - createdAt
+        - lastUpdated
+        - completedAt
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        roomId:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserDto"
+        createdAt:
+          type: string
+          format: date-time
+        lastUpdated:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
     CreateRoomRequestBody:
       type: object
       required:
