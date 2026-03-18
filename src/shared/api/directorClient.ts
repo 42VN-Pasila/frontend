@@ -7,7 +7,6 @@ import {
     type JoinMatchEvent,
     type LeaveMatchEvent,
     type MatchDto,
-    type MatchMetaDataDto,
     type RequestCardEvent,
     ResourcesService,
     RoomsService,
@@ -24,7 +23,7 @@ type SocketAck = {
 };
 
 type JoinMatchAck =
-    | { ok: true; match: MatchDto; metadata: MatchMetaDataDto }
+    | { ok: true; match: MatchDto }
     | { ok: false; error: string };
 
 type MatchPingEvent = {
@@ -78,7 +77,7 @@ export const disconnectSocket = () => {
 
 export const socketJoinMatch = (
     payload: JoinMatchEvent,
-): Promise<{ match: MatchDto; metadata: MatchMetaDataDto }> => {
+): Promise<{ match: MatchDto }> => {
     return new Promise((resolve, reject) => {
         socket.emit('match:join', payload, (res: JoinMatchAck) => {
             if (!res?.ok) {
@@ -87,7 +86,7 @@ export const socketJoinMatch = (
                 return;
             }
 
-            resolve({ match: res.match, metadata: res.metadata });
+            resolve({ match: res.match });
         });
     });
 };
@@ -153,11 +152,6 @@ export const onSocketConnect = (handler: () => void) => {
 export const onSocketDisconnect = (handler: (reason: Socket.DisconnectReason) => void) => {
     socket.on('disconnect', handler);
     return () => socket.off('disconnect', handler);
-};
-
-export const onSocketMatchMetadata = (handler: (metadata: MatchMetaDataDto) => void) => {
-    socket.on('match:metadata', handler);
-    return () => socket.off('match:metadata', handler);
 };
 
 OpenAPI.BASE = directorBaseUrl;

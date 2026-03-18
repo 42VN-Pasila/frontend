@@ -23,7 +23,7 @@ type Slot = {
 
 export const RoomSlot = () => {
     const navigate = useNavigate();
-    const { id: roomId, ownerId, users, resetRoom } = useRoomStore();
+    const { id: roomId, ownerId, users, setUsers, resetRoom, setName, setOwnerId, setConnectionCount } = useRoomStore();
     const { userId, username, avatarUrl } = useUserStore();
 
     const { data: roomStatus, refetch: refetchRoomStatus } = useGetRoomStatusQuery(roomId, {
@@ -32,6 +32,17 @@ export const RoomSlot = () => {
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
     });
+
+
+    useEffect(() => {
+        if (roomStatus) {
+            setUsers(roomStatus.users);
+            setName(roomStatus.name);
+            setOwnerId(roomStatus.ownerId);
+            setConnectionCount(roomStatus.connectionCount);
+        }
+    }, [roomStatus, setUsers, setName, setOwnerId, setConnectionCount]);
+
     const currentOwnerId = roomStatus?.ownerId ?? ownerId;
     const currentUsers = roomStatus?.users ?? users;
     const currentUserName = username || "You";

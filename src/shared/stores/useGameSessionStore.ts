@@ -43,6 +43,9 @@ export const useGameSessionStore = create<GameSessionState>()(
                 matchId: "",
                 opponentIds: [],
                 seats: [],
+                opponents: [],
+                hands: [],
+                books: [],
             }),
         }),
         {

@@ -655,16 +655,23 @@ components:
       required:
         - id
         - status
+        - users
         - hands
         - books
         - userHandCounts
         - userBookCounts
         - roomId
+        - seats
+        - currentSeat
       properties:
         id:
           type: string
         status:
           type: string
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserDto"
         hands:
           type: array
           items:
@@ -683,42 +690,12 @@ components:
             $ref: "#/components/schemas/BookCountDto"
         roomId:
           type: string
-    MatchMetaDataDto:
-      type: object
-      required:
-        - id
-        - status
-        - roomId
-        - users
-        - seats
-        - createdAt
-        - lastUpdated
-        - completedAt
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-        roomId:
-          type: string
-        users:
-          type: array
-          items:
-            $ref: "#/components/schemas/UserDto"
         seats:
           type: array
           items:
             $ref: "#/components/schemas/SeatDto"
-        createdAt:
-          type: string
-          format: date-time
-        lastUpdated:
-          type: string
-          format: date-time
-        completedAt:
-          type: string
-          format: date-time
-          nullable: true
+        currentSeat:
+          $ref: "#/components/schemas/SeatDto"
     CreateRoomRequestBody:
       type: object
       required:

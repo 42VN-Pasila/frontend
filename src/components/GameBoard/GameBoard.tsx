@@ -8,10 +8,9 @@ import {
   onMatchState,
   onSocketConnect,
   onSocketDisconnect,
-  onSocketMatchMetadata,
+  socket,
   socketAskCardMatch,
   socketJoinMatch,
-  socketLeaveMatch,
 } from "@/shared/api/directorClient";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
@@ -22,7 +21,7 @@ import { GameControlPanel } from "./GameControlPanel/GameControlPanel";
 import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 import type { Card, CardRank, CardSuit } from "./types";
-import type { MatchDto, MatchMetaDataDto } from "@/gen/director";
+import type { MatchDto } from "@/gen/director";
 
 export type GameRequestPayload = {
   userId: string;
@@ -76,59 +75,41 @@ export const GameBoard = () => {
 
     setMatchId(matchId);
     setErrorMessage(null);
+    let isEffectActive = true;
 
-    const applyMatchState = (match: MatchDto, metadataOpponentIds?: string[]) => {
+    const applyMatchState = (match: MatchDto) => {
+      if (!isEffectActive) return;
+      setRoomId(match.roomId);
+      setMatchId(match.id);
       setHands(match.hands);
       setBooks(match.books);
-      const latestState = useGameSessionStore.getState();
-      const latestOpponents = latestState.opponents;
-      const opponentIds =
-        metadataOpponentIds && metadataOpponentIds.length > 0
-          ? metadataOpponentIds
-          : latestState.opponentIds.length > 0
-            ? latestState.opponentIds
-            : match.userHandCounts
-              .map((count) => count.userId)
-              .filter((id) => id !== userId);
-
-      setOpponents(
-        opponentIds.map((id) => {
-          const existing = latestOpponents.find((opponent) => opponent.id === id);
-          return {
-            id,
-            username: existing?.username ?? id,
-            avatarUrl: existing?.avatarUrl ?? "",
-            cardCount:
-              match.userHandCounts.find((count) => count.userId === id)?.handCount ?? 0,
-          };
-        }),
-      );
+      setOpponentIds(match.users.filter((user) => user.id !== userId).map((user) => user.id));
+      setSeats(match.seats);
+      setOpponents(match.users.map((user) => ({
+        id: user.id,
+        username: user.id,
+        avatarUrl: user.avatarUrl ?? "",
+        cardCount: 0,
+      })));
     };
 
-    const applyMatchMetadata = (
-      metadata: MatchMetaDataDto,
-    ) => {
-      setMatchId(metadata.id);
-      setRoomId(metadata.roomId);
-      setSeats(metadata.seats);
-      setOpponentIds(metadata.users.map((user) => user.id));
-
-    };
 
     const joinAndSync = async () => {
       try {
-        const { match, metadata } = await socketJoinMatch({ matchId, userId });
-        const metadataOpponentIds = metadata.users.map((user) => user.id);
-        applyMatchMetadata(metadata);
-        applyMatchState(match, metadataOpponentIds);
+        const { match } = await socketJoinMatch({ matchId, userId });
+        if (!isEffectActive) return;
+        applyMatchState(match);
         setErrorMessage(null);
       } catch {
+        if (!isEffectActive) return;
         setErrorMessage("Unable to join match");
       }
     };
 
     connectSocket();
-    joinAndSync();
+    if (socket.connected) {
+      void joinAndSync();
+    }
 
     const unsubscribeMatchState = onMatchState((match) => {
       applyMatchState(match);
@@ -141,16 +122,12 @@ export const GameBoard = () => {
     const unsubscribeSocketDisconnect = onSocketDisconnect((reason) => {
       setErrorMessage(`Socket disconnected: ${reason}`);
     });
-    const unsubscribeSocketMatchMetadata = onSocketMatchMetadata((metadata) => {
-      applyMatchMetadata(metadata);
-    });
 
     return () => {
+      isEffectActive = false;
       unsubscribeMatchState();
       unsubscribeSocketConnect();
       unsubscribeSocketDisconnect();
-      unsubscribeSocketMatchMetadata();
-      void socketLeaveMatch({ matchId, userId }).catch(() => undefined);
       disconnectSocket();
     };
   }, [
