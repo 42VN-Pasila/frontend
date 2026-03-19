@@ -6,9 +6,16 @@ interface OpponentDisplayProps {
   selectedId: string | null;
   onSelect: (id: string) => void;
   disabled: boolean;
+  activeTurnOpponentId: string | null;
 }
 
-const OpponentDisplay = ({ positions, selectedId, onSelect, disabled }: OpponentDisplayProps) => {
+const OpponentDisplay = ({
+  positions,
+  selectedId,
+  onSelect,
+  disabled,
+  activeTurnOpponentId,
+}: OpponentDisplayProps) => {
   const layout = [
     { data: positions.top, side: "top" as const },
     { data: positions.left, side: "left" as const },
@@ -23,6 +30,7 @@ const OpponentDisplay = ({ positions, selectedId, onSelect, disabled }: Opponent
             {...data}
             selected={selectedId === data.id}
             onClick={() => !disabled && onSelect(data.id)}
+            isActiveTurn={activeTurnOpponentId === data.id}
           />
         </div>
       ))}

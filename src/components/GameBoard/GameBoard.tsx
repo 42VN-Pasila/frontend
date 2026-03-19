@@ -89,7 +89,7 @@ export const GameBoard = () => {
         id: user.id,
         username: user.id,
         avatarUrl: user.avatarUrl ?? "",
-        cardCount: 0,
+        cardCount: match.userHandCounts.find((handCount) => handCount.userId === user.id)?.handCount ?? 0,
       })));
     };
 
