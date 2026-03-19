@@ -3,6 +3,7 @@ import CardBackImg from "@assets/card-back-2.png";
 import type { Opponent } from "../types";
 import Avatar from "./Avatar";
 import Badge from "../Badge";
+import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 
 interface OpponentProfileProps extends Opponent {
   selected?: boolean;
@@ -10,12 +11,16 @@ interface OpponentProfileProps extends Opponent {
 }
 
 const OpponentProfile = ({
+  id,
   username,
   avatarUrl,
   cardCount,
   selected = false,
   onClick,
 }: OpponentProfileProps) => {
+  const { books } = useGameSessionStore();
+  const bookCount = books.filter((book) => book.userId === id).length;
+
   return (
     <button
       type="button"
@@ -73,7 +78,7 @@ const OpponentProfile = ({
         {username}
       </div>
 
-      <OpponentScore score={10} isSelected={selected} />
+      <OpponentScore score={bookCount} isSelected={selected} />
     </button>
   );
 };

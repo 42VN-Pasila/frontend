@@ -2,6 +2,7 @@ import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
 import {
     useDisconnectRoomMutation,
+    useGetRoomMetaDataQuery,
     useGetRoomStatusQuery,
     useStartMatchMutation,
     useUpdateUserStatusMutation,
@@ -10,6 +11,7 @@ import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 import { useNavigate } from "react-router-dom";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+import { useEffect } from "react";
 
 type SlotStatus = "HOST" | "JOINED" | "EMPTY";
 type Slot = {
@@ -20,31 +22,55 @@ type Slot = {
 };
 
 export const RoomSlot = () => {
-    const { id: roomId, ownerId, users, resetRoom } = useRoomStore();
+    const navigate = useNavigate();
+    const { id: roomId, ownerId, users, setUsers, resetRoom, setName, setOwnerId, setConnectionCount } = useRoomStore();
+    const { userId, username, avatarUrl } = useUserStore();
+
     const { data: roomStatus, refetch: refetchRoomStatus } = useGetRoomStatusQuery(roomId, {
         enabled: Boolean(roomId),
         pollingInterval: 3_000,
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
     });
-    const { userId, username, avatarUrl } = useUserStore();
-    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        if (roomStatus) {
+            setUsers(roomStatus.users);
+            setName(roomStatus.name);
+            setOwnerId(roomStatus.ownerId);
+            setConnectionCount(roomStatus.connectionCount);
+        }
+    }, [roomStatus, setUsers, setName, setOwnerId, setConnectionCount]);
+
+    const currentOwnerId = roomStatus?.ownerId ?? ownerId;
+    const currentUsers = roomStatus?.users ?? users;
+    const currentUserName = username || "You";
+    const isHost = userId === currentOwnerId;
+    const { data: roomMetaData } = useGetRoomMetaDataQuery(roomId, {
+        enabled: Boolean(roomId && roomStatus?.started),
+    });
+
     const { mutateAsync: updateUserStatus } = useUpdateUserStatusMutation();
     const { mutateAsync: startMatch } = useStartMatchMutation();
     const { mutateAsync: disconnectFromRoom } = useDisconnectRoomMutation();
     const { setRoomId: setGameRoomId, setMatchId } = useGameSessionStore();
-    const currentOwnerId = roomStatus?.ownerId ?? ownerId;
-    const currentUsers = roomStatus?.users ?? users;
 
-    const currentUserName = username || "You";
-    const isHost = userId === currentOwnerId;
+    useEffect(() => {
+        if (roomStatus?.started && roomMetaData?.matchId) {
+            setGameRoomId(roomId);
+            setMatchId(roomMetaData.matchId);
+            navigate(`/match/${roomMetaData.matchId}`);
+        }
+    }, [roomStatus?.started, roomMetaData?.matchId, navigate, roomId, setGameRoomId, setMatchId]);
+
     const isUserReady = (targetUserId: string) =>
         currentUsers.some(
             (user) => user.id === targetUserId && user.status === "Ready",
         );
 
     const handleReady = async () => {
-        if (!userId || !roomId || isHost) return;
+        if (!userId || !roomId) return;
 
         const currentUser = currentUsers.find((user) => user.id === userId);
         const shouldBeReady = currentUser?.status !== "Ready";
@@ -60,13 +86,10 @@ export const RoomSlot = () => {
 
     const handleStartMatch = async () => {
         if (!userId || !roomId || !isHost) return;
-        const data = await startMatch({
+        await startMatch({
             roomId,
             ownerId: userId,
         });
-        setGameRoomId(data.roomId);
-        setMatchId(data.matchId);
-        navigate(`/match/${data.matchId}`);
     };
 
     const handleExitRoom = async () => {
@@ -112,7 +135,6 @@ export const RoomSlot = () => {
         joinedUsers.length > 0 &&
         joinedUsers.every((user) => user.status === "Ready");
 
-    const actionButtonLabel = isHost ? "START" : isReady ? "UNREADY" : "READY";
 
     const isActionButtonDisabled = !userId || !roomId || (isHost && !allReady);
 
@@ -139,16 +161,28 @@ export const RoomSlot = () => {
                     >
                         EXIT
                     </Button>
+
                     <Button
+                        variant="inverse"
+                        emphasis="high"
+                        size="small"
+                        className="h-10! sm:h-10!"
+                        onClick={handleReady}
+                        disabled={isActionButtonDisabled}
+                    >
+                        {isReady ? "UNREADY" : "READY"}
+                    </Button>
+
+                    {isHost && <Button
                         variant="primary"
                         emphasis="high"
                         size="small"
                         className="h-10! sm:h-10!"
-                        onClick={isHost ? handleStartMatch : handleReady}
+                        onClick={handleStartMatch}
                         disabled={isActionButtonDisabled}
                     >
-                        {actionButtonLabel}
-                    </Button>
+                        START
+                    </Button>}
                 </div>
             </header>
 

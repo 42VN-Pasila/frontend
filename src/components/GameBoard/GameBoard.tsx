@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
 
@@ -7,10 +7,10 @@ import {
   disconnectSocket,
   onMatchState,
   onSocketConnect,
+  onSocketDisconnect,
+  socket,
   socketAskCardMatch,
   socketJoinMatch,
-  socketLeaveMatch,
-  socketPingMatch,
 } from "@/shared/api/directorClient";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
@@ -20,7 +20,7 @@ import type { SelectedCard } from "./CardSelectionPanel/CardSelector";
 import { GameControlPanel } from "./GameControlPanel/GameControlPanel";
 import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
-import type { CardRank, CardSuit } from "./types";
+import type { Card, CardRank, CardSuit } from "./types";
 import type { MatchDto } from "@/gen/director";
 
 export type GameRequestPayload = {
@@ -33,17 +33,18 @@ export type GameRequestPayload = {
 export const GameBoard = () => {
   const userId = useUserStore().userId;
   const {
+    hands,
     setMatchId,
     setRoomId,
     setOpponentIds,
     setOpponents,
-    setTurnOrder,
+    setSeats,
     setHands,
     setBooks,
   } = useGameSessionStore();
   const { matchId: matchIdParam } = useParams<{ matchId: string }>();
   const matchId = matchIdParam ?? "";
-  const pingIntervalRef = useRef<number | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(
     null,
@@ -59,44 +60,56 @@ export const GameBoard = () => {
     selection.rank &&
     selectedOpponentId
   );
+  const currentUserHand = hands.find((hand) => hand.userId === userId);
+  const currentUserCards: Card[] = Array.isArray(currentUserHand?.cards)
+    ? currentUserHand.cards
+    : [];
 
   const handleUpdate = (updates: Partial<SelectedCard>) => {
     setSelection((prev) => ({ ...prev, ...updates }));
   };
 
+
   useEffect(() => {
     if (!matchId || !userId) return;
 
     setMatchId(matchId);
+    setErrorMessage(null);
+    let isEffectActive = true;
 
     const applyMatchState = (match: MatchDto) => {
-      const orderedIds = match.userHandCounts.map((item) => item.userId);
-      const filteredTurnOrder = orderedIds.length > 0 ? orderedIds : [userId];
-      const opponentIds = filteredTurnOrder.filter((id) => id !== userId);
-
+      if (!isEffectActive) return;
+      setRoomId(match.roomId);
+      setMatchId(match.id);
       setHands(match.hands);
       setBooks(match.books);
-      setRoomId(match.roomId);
-      setTurnOrder(filteredTurnOrder);
-      setOpponentIds(opponentIds);
-      setOpponents(
-        opponentIds.map((id, index) => ({
-          id,
-          username: `Opponent ${index + 1}`,
-          avatarUrl: "",
-          cardCount:
-            match.userHandCounts.find((count) => count.userId === id)?.handCount ?? 0,
-        })),
-      );
+      setOpponentIds(match.users.filter((user) => user.id !== userId).map((user) => user.id));
+      setSeats(match.seats);
+      setOpponents(match.users.map((user) => ({
+        id: user.id,
+        username: user.id,
+        avatarUrl: user.avatarUrl ?? "",
+        cardCount: 0,
+      })));
     };
 
+
     const joinAndSync = async () => {
-      const match = await socketJoinMatch({ matchId, userId });
-      applyMatchState(match);
+      try {
+        const { match } = await socketJoinMatch({ matchId, userId });
+        if (!isEffectActive) return;
+        applyMatchState(match);
+        setErrorMessage(null);
+      } catch {
+        if (!isEffectActive) return;
+        setErrorMessage("Unable to join match");
+      }
     };
 
     connectSocket();
-    joinAndSync();
+    if (socket.connected) {
+      void joinAndSync();
+    }
 
     const unsubscribeMatchState = onMatchState((match) => {
       applyMatchState(match);
@@ -106,18 +119,15 @@ export const GameBoard = () => {
       void joinAndSync();
     });
 
-    pingIntervalRef.current = window.setInterval(() => {
-      void socketPingMatch({ matchId, userId });
-    }, 10_000);
+    const unsubscribeSocketDisconnect = onSocketDisconnect((reason) => {
+      setErrorMessage(`Socket disconnected: ${reason}`);
+    });
 
     return () => {
-      if (pingIntervalRef.current !== null) {
-        window.clearInterval(pingIntervalRef.current);
-        pingIntervalRef.current = null;
-      }
+      isEffectActive = false;
       unsubscribeMatchState();
       unsubscribeSocketConnect();
-      void socketLeaveMatch({ matchId, userId });
+      unsubscribeSocketDisconnect();
       disconnectSocket();
     };
   }, [
@@ -127,7 +137,7 @@ export const GameBoard = () => {
     setRoomId,
     setOpponentIds,
     setOpponents,
-    setTurnOrder,
+    setSeats,
     setHands,
     setBooks,
   ]);
@@ -141,18 +151,22 @@ export const GameBoard = () => {
       suit: selection.suit!,
       rank: selection.rank!,
     };
-    await socketAskCardMatch({
-      matchId,
-      userId: payload.userId,
-      opponentId: payload.opponentId,
-      card: {
-        suit: payload.suit,
-        rank: payload.rank,
-      },
-    });
-
-    setSelection({ suit: null, rank: null }); // UI reset
-    setSelectedOpponentId(null);
+    try {
+      await socketAskCardMatch({
+        matchId,
+        userId: payload.userId,
+        opponentId: payload.opponentId,
+        card: {
+          suit: payload.suit,
+          rank: payload.rank,
+        },
+      });
+      setErrorMessage(null);
+      setSelection({ suit: null, rank: null }); // UI reset
+      setSelectedOpponentId(null);
+    } catch {
+      setErrorMessage("Failed to send request");
+    }
   };
 
   // TODO: remove this once we have a proper authentication system
@@ -164,6 +178,11 @@ export const GameBoard = () => {
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden bg-rave-black">
+      {errorMessage ? (
+        <div className="absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-md border border-red-400/40 bg-red-900/60 px-4 py-2 text-sm text-red-100">
+          {errorMessage}
+        </div>
+      ) : null}
       <CardSelectionPanel
         selection={selection}
         onChange={handleUpdate}
@@ -182,7 +201,7 @@ export const GameBoard = () => {
             />
           </div>
           <div className="min-h-0">
-            <GamePlayerCard cards={MOCK_PLAYER_HAND} disabled={disabled} />
+            <GamePlayerCard cards={currentUserCards} disabled={disabled} />
           </div>
         </div>
       </main>
