@@ -169,8 +169,7 @@ export const GameBoard = () => {
     }
   };
 
-  // TODO: remove this once we have a proper authentication system
-  const disabled = true;
+  const isMyTurn = useGameSessionStore().seats.find((seat) => seat.userId === userId)?.isActive ?? false;
 
   if (!matchId) {
     return <div>Match not found</div>;
@@ -188,7 +187,7 @@ export const GameBoard = () => {
         onChange={handleUpdate}
         onSubmit={handleRequest}
         isSelectionComplete={isSelectionComplete}
-        disabled={!disabled}
+        disabled={!isMyTurn}
       />
 
       <main className="flex-1 min-w-0 h-full flex flex-col">
@@ -197,11 +196,11 @@ export const GameBoard = () => {
             <GameOpponentPicker
               selectedOpponentId={selectedOpponentId}
               onSelectOpponent={setSelectedOpponentId}
-              disabled={!disabled}
+              disabled={!isMyTurn}
             />
           </div>
           <div className="min-h-0">
-            <GamePlayerCard cards={currentUserCards} disabled={disabled} />
+            <GamePlayerCard cards={currentUserCards} disabled={!isMyTurn} />
           </div>
         </div>
       </main>
