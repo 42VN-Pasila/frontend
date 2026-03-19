@@ -22,6 +22,7 @@ import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 import type { Card, CardRank, CardSuit } from "./types";
 import type { MatchDto } from "@/gen/director";
+import BookDisplayModal from "./BookDisplayModal/BookDisplayModal";
 
 export type GameRequestPayload = {
   userId: string;
@@ -190,9 +191,12 @@ export const GameBoard = () => {
         disabled={!isMyTurn}
       />
 
-      <main className="flex-1 min-w-0 h-full flex flex-col">
+      <main className="flex-1 min-w-0 h-full flex flex-col p-6">
+        <div className="shrink-0">
+          <BookDisplayModal />
+        </div>
         <div className="flex-1 min-h-0 grid grid-rows-[7fr_3fr]">
-          <div className="border-b-2 border-rave-white/10  h-full">
+          <div className="border-b-2 border-rave-white/10 min-h-0">
             <GameOpponentPicker
               selectedOpponentId={selectedOpponentId}
               onSelectOpponent={setSelectedOpponentId}
