@@ -59,7 +59,7 @@ export const FriendList = () => {
                             <div>
                                 <p className="text-sm font-semibold tracking-wide">{friend.username}</p>
                                 <span
-                                    className={`inline-flex border px-2 py-[2px] text-[10px] tracking-[0.15em] ${STATUS_CLASSES[friend.status]}`}
+                                    className={`inline-flex border px-2 py-0.5 text-[10px] tracking-[0.15em] ${STATUS_CLASSES[friend.status]}`}
                                 >
                                     {friend.status.replace("_", " ")}
                                 </span>
