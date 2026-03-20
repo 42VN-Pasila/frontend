@@ -30,8 +30,8 @@ export const Dashboard = () => {
                     </div>
                     <div className="grid grid-cols-1 gap-4 xl:col-span-4 xl:sticky xl:top-6">
                         <DevUserModal />
-                        <FriendList />
                         <FriendSearchAdd />
+                        <FriendList />
                     </div>
                 </div>
             </div>
