@@ -64,6 +64,17 @@ const GameOpponentPicker = ({
     getPositions(opponents, seats, userId),
     [opponents, seats, userId]
   );
+  const activeSeat = useMemo(
+    () => seats.find((seat) => seat.isActive),
+    [seats],
+  );
+  const activeTurnOpponentId = useMemo(() => {
+    const activeUserId = activeSeat?.userId;
+    if (!activeUserId || activeUserId === userId) {
+      return null;
+    }
+    return activeUserId;
+  }, [activeSeat?.userId, userId]);
 
   return (
     <section
@@ -75,6 +86,7 @@ const GameOpponentPicker = ({
           selectedId={selectedOpponentId}
           onSelect={(id: string) => onSelectOpponent(id)}
           disabled={disabled}
+          activeTurnOpponentId={activeTurnOpponentId}
         />
       )}
     </section>

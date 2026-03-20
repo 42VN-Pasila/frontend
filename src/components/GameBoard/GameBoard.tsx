@@ -22,6 +22,7 @@ import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 import type { Card, CardRank, CardSuit } from "./types";
 import type { MatchDto } from "@/gen/director";
+import BookDisplayModal from "./BookDisplayModal/BookDisplayModal";
 
 export type GameRequestPayload = {
   userId: string;
@@ -89,7 +90,7 @@ export const GameBoard = () => {
         id: user.id,
         username: user.id,
         avatarUrl: user.avatarUrl ?? "",
-        cardCount: 0,
+        cardCount: match.userHandCounts.find((handCount) => handCount.userId === user.id)?.handCount ?? 0,
       })));
     };
 
@@ -169,8 +170,7 @@ export const GameBoard = () => {
     }
   };
 
-  // TODO: remove this once we have a proper authentication system
-  const disabled = true;
+  const isMyTurn = useGameSessionStore().seats.find((seat) => seat.userId === userId)?.isActive ?? false;
 
   if (!matchId) {
     return <div>Match not found</div>;
@@ -188,20 +188,23 @@ export const GameBoard = () => {
         onChange={handleUpdate}
         onSubmit={handleRequest}
         isSelectionComplete={isSelectionComplete}
-        disabled={!disabled}
+        disabled={!isMyTurn}
       />
 
-      <main className="flex-1 min-w-0 h-full flex flex-col">
+      <main className="flex-1 min-w-0 h-full flex flex-col p-6">
+        <div className="shrink-0">
+          <BookDisplayModal />
+        </div>
         <div className="flex-1 min-h-0 grid grid-rows-[7fr_3fr]">
-          <div className="border-b-2 border-rave-white/10  h-full">
+          <div className="border-b-2 border-rave-white/10 min-h-0">
             <GameOpponentPicker
               selectedOpponentId={selectedOpponentId}
               onSelectOpponent={setSelectedOpponentId}
-              disabled={!disabled}
+              disabled={!isMyTurn}
             />
           </div>
           <div className="min-h-0">
-            <GamePlayerCard cards={currentUserCards} disabled={disabled} />
+            <GamePlayerCard cards={currentUserCards} disabled={!isMyTurn} />
           </div>
         </div>
       </main>
