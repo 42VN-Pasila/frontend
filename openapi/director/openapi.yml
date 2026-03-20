@@ -473,6 +473,16 @@ components:
           type: string
         userId:
           type: string
+    SkipTurnEvent:
+      type: object
+      required:
+        - matchId
+        - userId
+      properties:
+        matchId:
+          type: string
+        userId:
+          type: string
     CreateUserRequestBody:
       type: object
       required:

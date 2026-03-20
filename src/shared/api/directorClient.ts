@@ -10,6 +10,7 @@ import {
     type RequestCardEvent,
     ResourcesService,
     RoomsService,
+    type SkipTurnEvent,
     type StartMatchRequest,
     type UpdateRoomUserStatusRequestBody,
     type UpdateUserAvatarRequestBody,
@@ -118,6 +119,21 @@ export const socketAskCardMatch = (
                 return;
             }
 
+            resolve();
+        });
+    });
+};
+
+export const socketSkipTurn = (
+    payload: SkipTurnEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:skipTurn', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('skip turn failed', res?.error);
+                reject(new Error(res?.error || 'SKIP_TURN_FAILED'));
+                return;
+            }
             resolve();
         });
     });

@@ -1,17 +1,44 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Label } from "@/shared/components/Label";
+import { socketSkipTurn } from "@/shared/api/directorClient";
+import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+import { useUserStore } from "@/shared/stores/useUserStore";
+
+const TURN_SECONDS = 60;
 
 export const Timer = () => {
-  const [timeLeft, setTimeLeft] = useState(15);
+  const [timeLeft, setTimeLeft] = useState(TURN_SECONDS);
+  const hasEmittedSkipRef = useRef(false);
+  const { userId } = useUserStore();
+  const { matchId, seats } = useGameSessionStore();
+  const isMyTurn = seats.find((seat) => seat.userId === userId)?.isActive ?? false;
 
   useEffect(() => {
+    setTimeLeft(TURN_SECONDS);
+    hasEmittedSkipRef.current = false;
+  }, [isMyTurn]);
+
+  useEffect(() => {
+    if (!isMyTurn) return;
+
     const id = setInterval(() => {
       setTimeLeft((t) => Math.max(t - 1, 0));
     }, 1000);
 
     return () => clearInterval(id);
-  }, []);
+  }, [isMyTurn]);
+
+  useEffect(() => {
+    if (!isMyTurn || timeLeft > 0 || hasEmittedSkipRef.current || !matchId || !userId) {
+      return;
+    }
+
+    hasEmittedSkipRef.current = true;
+    void socketSkipTurn({ matchId, userId }).catch(() => {
+      hasEmittedSkipRef.current = false;
+    });
+  }, [isMyTurn, matchId, timeLeft, userId]);
 
   return (
     <div
