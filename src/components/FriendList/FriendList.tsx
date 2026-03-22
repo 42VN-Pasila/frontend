@@ -23,19 +23,19 @@ type PendingUser = {
   relationship?: string;
   requestFriendStatus?: string;
   rudexUserId?: string;
-  requesterId?: string;
-  addresseeId?: string;
+  userId?: string;
+  otherUserId?: string;
 };
 
 const resolvePendingDirection = (
   pendingUser: PendingUser,
   currentUserId: string,
 ): PendingDirection => {
-  if (pendingUser.requesterId && pendingUser.requesterId === currentUserId) {
+  if (pendingUser.userId && pendingUser.userId === currentUserId) {
     return "outgoing";
   }
 
-  if (pendingUser.addresseeId && pendingUser.addresseeId === currentUserId) {
+  if (pendingUser.otherUserId && pendingUser.otherUserId === currentUserId) {
     return "incoming";
   }
 
@@ -66,10 +66,9 @@ export const FriendList = () => {
     isFetching: isFetchingRequests,
     isError: isRequestsError,
     error: requestsError,
-  } =
-    useListFriendRequestsQuery(userId, {
-      enabled: Boolean(userId),
-    });
+  } = useListFriendRequestsQuery(userId, {
+    enabled: Boolean(userId),
+  });
   const { mutateAsync: respondFriendRequest, isPending: isRespondingRequest } =
     useRespondFriendRequestMutation();
 
@@ -122,30 +121,26 @@ export const FriendList = () => {
   });
 
   const handleRespondPendingRequest = async (
-    requesterId: string,
-    action: "Accepted" | "Declined",
+    otherUserId: string,
+    action: "Accepted" | "Canceled",
   ) => {
-    if (!userId) {
-      return;
-    }
+    if (!userId) return;
 
     setPendingActionError("");
 
     try {
       await respondFriendRequest({
-        userId,
-        requesterId,
+        userId, // current user
+        otherUserId, // target user
         action,
-        invalidateUserIds: [requesterId],
+        invalidateUserIds: [userId],
       });
     } catch {
-      setPendingActionError(
-        "Cannot process incoming request.",
-      );
+      setPendingActionError("Cannot process incoming request.");
     }
   };
 
-  const handleCancelPendingRequest = async (targetUserId: string) => {
+  const handleCancelPendingRequest = async (otherUserId: string) => {
     if (!userId) {
       return;
     }
@@ -154,9 +149,9 @@ export const FriendList = () => {
 
     try {
       await respondFriendRequest({
-        userId: targetUserId,
-        requesterId: userId,
-        action: "Declined",
+        userId: otherUserId,
+        otherUserId: userId,
+        action: "Canceled",
         invalidateUserIds: [userId],
       });
     } catch {
@@ -255,7 +250,8 @@ export const FriendList = () => {
           </p>
         ) : isRequestsError ? (
           <p className="rounded-lg border border-rave-white/20 bg-rave-white/10 px-3 py-2 text-xs tracking-wide text-rave-white">
-            Failed to load pending requests: {requestsError?.message ?? "Unknown error"}
+            Failed to load pending requests:{" "}
+            {requestsError?.message ?? "Unknown error"}
           </p>
         ) : pendingRequestItems.length === 0 ? (
           <p className="rounded-lg border border-rave-white/10 bg-rave-white/5 px-3 py-2 text-xs tracking-wide text-rave-white/70">
@@ -306,7 +302,9 @@ export const FriendList = () => {
                         size="small"
                         className="h-8! px-3! text-xs"
                         disabled={isRespondingRequest}
-                        onClick={() => handleCancelPendingRequest(requestUser.id)}
+                        onClick={() =>
+                          handleCancelPendingRequest(requestUser.id)
+                        }
                       >
                         Cancel
                       </Button>
@@ -319,7 +317,10 @@ export const FriendList = () => {
                           className="h-8! px-3! text-xs"
                           disabled={isRespondingRequest}
                           onClick={() =>
-                            handleRespondPendingRequest(requestUser.id, "Declined")
+                            handleRespondPendingRequest(
+                              requestUser.id,
+                              "Canceled",
+                            )
                           }
                         >
                           Reject
@@ -331,7 +332,10 @@ export const FriendList = () => {
                           className="h-8! px-3! text-xs"
                           disabled={isRespondingRequest}
                           onClick={() =>
-                            handleRespondPendingRequest(requestUser.id, "Accepted")
+                            handleRespondPendingRequest(
+                              requestUser.id,
+                              "Accepted",
+                            )
                           }
                         >
                           Accept

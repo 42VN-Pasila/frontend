@@ -1,14 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
-  AddFriendRequestBody,
-  AddFriendResponse,
+  RequestFriendRequestBody,
   Avatar,
   ConnectRoomRequest,
   CreateRoomRequestBody,
   ListRoomsDto,
-  RespondAddFriendRequestBody,
-  RespondAddFriendResponse,
+  RespondToFriendRequestRequestBody,
+  RespondToFriendRequestResponse,
   RoomDto,
   RoomMetaDataDto,
   SocialUserDto,
@@ -169,9 +168,9 @@ export const useUpdateUserStatusMutation = () => {
 export const useSendFriendRequestMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<AddFriendResponse, Error, { userId: string; targetUserId: string }>({
-    mutationFn: ({ userId, targetUserId }) => {
-      const bodyPayload: AddFriendRequestBody = { targetUserId };
+  return useMutation<void, Error, { userId: string; otherUserId: string }>({
+    mutationFn: ({ userId, otherUserId }) => {
+      const bodyPayload: RequestFriendRequestBody = { otherUserId };
       return directorClient.sendFriendRequest(userId, bodyPayload);
     },
     onSuccess: (_data, variables) => {
@@ -186,21 +185,21 @@ export const useRespondFriendRequestMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation<
-    RespondAddFriendResponse,
+    RespondToFriendRequestResponse,
     Error,
     {
       userId: string;
-      requesterId: string;
-      action: 'Accepted' | 'Declined';
+      otherUserId: string;
+      action: 'Accepted' | 'Canceled';
       invalidateUserIds?: string[];
     }
   >({
-    mutationFn: ({ userId, requesterId, action }) => {
-      const bodyPayload: RespondAddFriendRequestBody = {
-        action: action as RespondAddFriendRequestBody.action
+    mutationFn: ({ userId, otherUserId, action }) => {
+      const bodyPayload: RespondToFriendRequestRequestBody = {
+        action: action as RespondToFriendRequestRequestBody.action
       };
 
-      return directorClient.respondFriendRequest(userId, requesterId, bodyPayload);
+      return directorClient.respondFriendRequest(userId, otherUserId, bodyPayload);
     },
     onSuccess: (_data, variables) => {
       const affectedUserIds = new Set<string>([

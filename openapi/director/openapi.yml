@@ -14,6 +14,7 @@ paths:
   /_ping:
     get:
       summary: Check if the service is running
+      description: Endpoint to ping the service
       responses:
         "200":
           description: Service is running
@@ -51,15 +52,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /users/search:
     get:
       tags:
         - Users
       summary: Search by exact user id
+      description: Search for a user by their exact user id
+      operationId: searchByExactUserId
       parameters:
         - in: query
-          name: query
-          description: User Id to search
+          name: rudexUserId
           required: true
           schema:
             type: string
@@ -94,6 +95,7 @@ paths:
       tags:
         - Users
       summary: Update user avatar
+      description: Update the avatar of a specific user
       operationId: updateUserAvatar
       parameters:
         - in: path
@@ -130,7 +132,8 @@ paths:
     get:
       tags:
         - Friends
-      summary: Get user's friends
+      summary: List user's friends
+      operationId: listUserFriends
       parameters:
         - in: path
           name: userId
@@ -139,7 +142,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Friend list
+          description: User found
           content:
             application/json:
               schema:
@@ -158,11 +161,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /users/{userId}/friends/{friendId}:
+  /users/{userId}/friends/{otherUserId}:
     delete:
       tags:
         - Friends
       summary: Remove a friend
+      operationId: removeFriendship
       parameters:
         - in: path
           name: userId
@@ -170,18 +174,19 @@ paths:
           schema:
             type: string
         - in: path
-          name: friendId
+          name: otherUserId
           required: true
           schema:
             type: string
       responses:
         "204":
           description: Friend removed
-  /users/{userId}/friend-requests:
+  /users/{userId}/friends/requests:
     get:
       tags:
         - Friends
-      summary: Get incoming/outcoming friend requests
+      summary: List incoming/outcoming friend requests
+      operationId: listAllFriendRequests
       parameters:
         - in: path
           name: userId
@@ -190,7 +195,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Incoming/outcoming requests
+          description: User found
           content:
             application/json:
               schema:
@@ -201,6 +206,7 @@ paths:
       tags:
         - Friends
       summary: Send a friend request
+      operationId: sendFriendRequest
       parameters:
         - in: path
           name: userId
@@ -212,14 +218,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AddFriendRequestBody"
+              $ref: "#/components/schemas/RequestFriendRequestBody"
       responses:
-        "201":
+        "204":
           description: Friend request sent
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AddFriendResponse"
         "400":
           description: Bad request
           content:
@@ -244,11 +246,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /users/{userId}/friend-requests/{requesterId}:
+  /users/{userId}/friends/requests/{otherUserId}:
     patch:
       tags:
         - Friends
       summary: Respond to a friend request
+      operationId: respondToFriendRequest
       parameters:
         - in: path
           name: userId
@@ -256,7 +259,7 @@ paths:
           schema:
             type: string
         - in: path
-          name: requesterId
+          name: otherUserId
           required: true
           schema:
             type: string
@@ -265,14 +268,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RespondAddFriendRequestBody"
+              $ref: "#/components/schemas/RespondToFriendRequestRequestBody"
       responses:
         "200":
           description: Request updated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RespondAddFriendResponse"
+                $ref: "#/components/schemas/RespondToFriendRequestResponse"
         "404":
           description: User or request not found
           content:
@@ -400,6 +403,9 @@ paths:
         "500":
           description: Internal server error
           content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /rooms/{roomId}/metadata:
     get:
       tags:
@@ -711,59 +717,6 @@ components:
           type: string
         url:
           type: string
-    UserDto:
-      type: object
-      required:
-        - id
-        - status
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-        avatarUrl:
-          type: string
-          format: uri
-    AddFriendRequestBody:
-      type: object
-      required:
-        - targetUserId
-      properties:
-        targetUserId:
-          type: string
-
-    AddFriendResponse:
-      type: object
-      required:
-        - requesterId
-        - addresseeId
-        - requestFriendStatus
-      properties:
-        requesterId:
-          type: string
-        addresseeId:
-          type: string
-        requestFriendStatus:
-          type: string
-          enum: [Pending]
-
-    RespondAddFriendRequestBody:
-      type: object
-      required:
-        - action
-      properties:
-        action:
-          type: string
-          enum: [Accepted, Declined]
-
-    RespondAddFriendResponse:
-      type: object
-      required:
-        - requestFriendStatus
-      properties:
-        requestFriendStatus:
-          type: string
-          enum: [Accepted, Declined]
 
     SocialUserDto:
       type: object
@@ -783,6 +736,45 @@ components:
         relationship:
           type: string
           enum: [None, Pending, Accepted]
+    UserDto:
+      type: object
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        avatarUrl:
+          type: string
+          format: uri
+    RequestFriendRequestBody:
+      type: object
+      required:
+        - otherUserId
+      properties:
+        otherUserId:
+          type: string
+
+    RespondToFriendRequestRequestBody:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum: [Accepted, Canceled]
+
+    RespondToFriendRequestResponse:
+      type: object
+      required:
+        - requestFriendStatus
+      properties:
+        requestFriendStatus:
+          type: string
+          enum: [Accepted, Canceled]
+
     RoomDto:
       type: object
       required:

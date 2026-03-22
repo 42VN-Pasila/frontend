@@ -1,7 +1,7 @@
 import { Socket, io } from 'socket.io-client';
 
 import {
-  type AddFriendRequestBody,
+  type RequestFriendRequestBody,
   type ConnectRoomRequest,
   type CreateRoomRequestBody,
   FriendsService,
@@ -10,7 +10,7 @@ import {
   type MatchDto,
   type RequestCardEvent,
   ResourcesService,
-  type RespondAddFriendRequestBody,
+  type RespondToFriendRequestRequestBody,
   RoomsService,
   type SocialUserDto,
   type StartMatchRequest,
@@ -186,27 +186,30 @@ export const directorClient = {
   async getRoomMetaData(roomId: string) {
     return RoomsService.getRoomMetaData({ roomId });
   },
-  async searchUsers(query: string, requesterId: string) {
-    return UsersService.getUsersSearch({ query, requesterId });
+  async searchUsers(rudexUserId: string, requesterId: string): Promise<SocialUserDto[]> {
+    return UsersService.searchByExactUserId({ rudexUserId, requesterId });
   },
-  async sendFriendRequest(userId: string, body: AddFriendRequestBody) {
-    return FriendsService.postUsersFriendRequests({ userId, requestBody: body });
+  async sendFriendRequest(userId: string, body: RequestFriendRequestBody) {
+    return FriendsService.sendFriendRequest({ userId, requestBody: body });
   },
   async listFriends(userId: string): Promise<SocialUserDto[]> {
-    return FriendsService.getUsersFriends({ userId });
+    return FriendsService.listUserFriends({ userId });
   },
   async listFriendRequests(userId: string): Promise<SocialUserDto[]> {
-    return FriendsService.getUsersFriendRequests({ userId });
+    return FriendsService.listAllFriendRequests({ userId });
   },
   async respondFriendRequest(
     userId: string,
-    requesterId: string,
-    body: RespondAddFriendRequestBody
+    otherUserId: string,
+    body: RespondToFriendRequestRequestBody
   ) {
-    return FriendsService.patchUsersFriendRequests({
+    return FriendsService.respondToFriendRequest({
       userId,
-      requesterId,
+      otherUserId,
       requestBody: body
     });
+  },
+  async removeFriendship(userId: string, otherUserId: string): Promise<void> {
+    return FriendsService.removeFriendship({ userId, otherUserId });
   }
 };

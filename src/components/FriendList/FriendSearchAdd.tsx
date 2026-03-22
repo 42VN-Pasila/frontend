@@ -28,10 +28,10 @@ export const FriendSearchAdd = () => {
 
   const hasQuery = Boolean(normalizedSearch);
 
-  const handleSendRequest = async (targetUserId: string) => {
-    if (sentRequestIds.includes(targetUserId) || !userId) return;
-    await sendFriendRequest({ userId, targetUserId });
-    setSentRequestIds((prev) => [...prev, targetUserId]);
+  const handleSendRequest = async (otherUserId: string) => {
+    if (sentRequestIds.includes(otherUserId) || !userId) return;
+    await sendFriendRequest({ userId, otherUserId });
+    setSentRequestIds((prev) => [...prev, otherUserId]);
   };
 
   return (
