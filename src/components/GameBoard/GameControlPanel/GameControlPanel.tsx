@@ -3,11 +3,16 @@ import { ButtonController } from "./ButtonController";
 import { Timer } from "./Timer";
 import { CollectedBooks } from "./CollectedBooks";
 
-export const GameControlPanel = () => {
+type GameControlPanelProps = {
+    onExitGame: () => void;
+    isExiting: boolean;
+};
+
+export const GameControlPanel = ({ onExitGame, isExiting }: GameControlPanelProps) => {
     return (
         <aside className="w-72 lg:w-80 shrink-0 h-full border-l-2 border-rave-white/10 bg-rave-black flex flex-col overflow-hidden">
-            <ButtonController />
-            <Timer />
+            <ButtonController onExitGame={onExitGame} isExiting={isExiting} />
+            <Timer isDisabled={isExiting} />
             <CollectedBooks />
             <GameLiveChat />
         </aside>

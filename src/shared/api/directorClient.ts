@@ -4,6 +4,7 @@ import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequ
 import {
     type ConnectRoomRequest,
     type CreateRoomRequestBody,
+    type ExitMatchEvent,
     type JoinMatchEvent,
     type LeaveMatchEvent,
     type MatchDto,
@@ -108,6 +109,21 @@ export const socketLeaveMatch = (
     });
 };
 
+export const socketExitMatch = (
+    payload: ExitMatchEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:exit', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('exit failed', res?.error);
+                reject(new Error(res?.error || 'EXIT_FAILED'));
+                return;
+            }
+            resolve();
+        });
+    });
+};
+
 export const socketAskCardMatch = (
     payload: RequestCardEvent,
 ): Promise<void> => {
@@ -165,7 +181,7 @@ export const onSocketConnect = (handler: () => void) => {
     return () => socket.off('connect', handler);
 };
 
-export const onSocketDisconnect = (handler: (reason: Socket.DisconnectReason) => void) => {
+export const onSocketDisconnect = (handler: () => void) => {
     socket.on('disconnect', handler);
     return () => socket.off('disconnect', handler);
 };

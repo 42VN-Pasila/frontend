@@ -7,30 +7,35 @@ import { useUserStore } from "@/shared/stores/useUserStore";
 
 const TURN_SECONDS = 60;
 
-export const Timer = () => {
+type TimerProps = {
+  isDisabled?: boolean;
+};
+
+export const Timer = ({ isDisabled = false }: TimerProps) => {
   const [timeLeft, setTimeLeft] = useState(TURN_SECONDS);
   const hasEmittedSkipRef = useRef(false);
   const { userId } = useUserStore();
   const { matchId, seats } = useGameSessionStore();
-  const isMyTurn = seats.find((seat) => seat.userId === userId)?.isActive ?? false;
+  const isMyTurn = seats.find((seat) => seat.userId === userId)?.isTurn ?? false;
+  const isTimerActive = isMyTurn && !isDisabled;
 
   useEffect(() => {
     setTimeLeft(TURN_SECONDS);
     hasEmittedSkipRef.current = false;
-  }, [isMyTurn]);
+  }, [isTimerActive]);
 
   useEffect(() => {
-    if (!isMyTurn) return;
+    if (!isTimerActive) return;
 
     const id = setInterval(() => {
       setTimeLeft((t) => Math.max(t - 1, 0));
     }, 1000);
 
     return () => clearInterval(id);
-  }, [isMyTurn]);
+  }, [isTimerActive]);
 
   useEffect(() => {
-    if (!isMyTurn || timeLeft > 0 || hasEmittedSkipRef.current || !matchId || !userId) {
+    if (!isTimerActive || timeLeft > 0 || hasEmittedSkipRef.current || !matchId || !userId) {
       return;
     }
 
@@ -38,7 +43,7 @@ export const Timer = () => {
     void socketSkipTurn({ matchId, userId }).catch(() => {
       hasEmittedSkipRef.current = false;
     });
-  }, [isMyTurn, matchId, timeLeft, userId]);
+  }, [isTimerActive, matchId, timeLeft, userId]);
 
   return (
     <div

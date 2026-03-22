@@ -65,7 +65,7 @@ const GameOpponentPicker = ({
     [opponents, seats, userId]
   );
   const activeSeat = useMemo(
-    () => seats.find((seat) => seat.isActive),
+    () => seats.find((seat) => seat.isTurn),
     [seats],
   );
   const activeTurnOpponentId = useMemo(() => {

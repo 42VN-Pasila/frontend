@@ -54,15 +54,14 @@ export const RoomSlot = () => {
     const { mutateAsync: updateUserStatus } = useUpdateUserStatusMutation();
     const { mutateAsync: startMatch } = useStartMatchMutation();
     const { mutateAsync: disconnectFromRoom } = useDisconnectRoomMutation();
-    const { setRoomId: setGameRoomId, setMatchId } = useGameSessionStore();
+    const { setMatchId } = useGameSessionStore();
 
     useEffect(() => {
         if (roomStatus?.started && roomMetaData?.matchId) {
-            setGameRoomId(roomId);
             setMatchId(roomMetaData.matchId);
             navigate(`/match/${roomMetaData.matchId}`);
         }
-    }, [roomStatus?.started, roomMetaData?.matchId, navigate, roomId, setGameRoomId, setMatchId]);
+    }, [roomStatus?.started, roomMetaData?.matchId, navigate, roomId, setMatchId]);
 
     const isUserReady = (targetUserId: string) =>
         currentUsers.some(

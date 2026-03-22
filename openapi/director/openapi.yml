@@ -483,6 +483,16 @@ components:
           type: string
         userId:
           type: string
+    ExitMatchEvent:
+      type: object
+      required:
+        - matchId
+        - userId
+      properties:
+        matchId:
+          type: string
+        userId:
+          type: string
     CreateUserRequestBody:
       type: object
       required:
@@ -652,13 +662,13 @@ components:
       required:
         - order
         - userId
-        - isActive
+        - isTurn
       properties:
         order:
           type: integer
         userId:
           type: string
-        isActive:
+        isTurn:
           type: boolean
     MatchDto:
       type: object

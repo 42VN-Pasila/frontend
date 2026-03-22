@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
   connectSocket,
@@ -10,9 +10,12 @@ import {
   onSocketDisconnect,
   socket,
   socketAskCardMatch,
+  socketExitMatch,
   socketJoinMatch,
+  socketLeaveMatch,
 } from "@/shared/api/directorClient";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 import CardSelectionPanel from "./CardSelectionPanel/CardSelectionPanel";
@@ -31,21 +34,27 @@ export type GameRequestPayload = {
   rank: CardRank;
 };
 
+const HIDDEN_TAB_LEAVE_DELAY_MS = 30_000;
+
 export const GameBoard = () => {
+  const navigate = useNavigate();
   const userId = useUserStore().userId;
   const {
     hands,
+    seats,
     setMatchId,
-    setRoomId,
     setOpponentIds,
     setOpponents,
     setSeats,
     setHands,
     setBooks,
+    resetGameSession,
   } = useGameSessionStore();
+  const { resetRoom } = useRoomStore();
   const { matchId: matchIdParam } = useParams<{ matchId: string }>();
   const matchId = matchIdParam ?? "";
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isExitingGame, setIsExitingGame] = useState(false);
 
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(
     null,
@@ -70,6 +79,27 @@ export const GameBoard = () => {
     setSelection((prev) => ({ ...prev, ...updates }));
   };
 
+  const applyMatchState = useCallback((match: MatchDto) => {
+    setMatchId(match.id);
+    setHands(match.hands);
+    setBooks(match.books);
+    setOpponentIds(match.users.filter((user) => user.id !== userId).map((user) => user.id));
+    setSeats(match.seats);
+    setOpponents(match.users.map((user) => ({
+      id: user.id,
+      username: user.id,
+      avatarUrl: user.avatarUrl ?? "",
+      cardCount: match.userHandCounts.find((handCount) => handCount.userId === user.id)?.handCount ?? 0,
+    })));
+  }, [
+    setMatchId,
+    setHands,
+    setBooks,
+    setOpponentIds,
+    setSeats,
+    setOpponents,
+    userId,
+  ]);
 
   useEffect(() => {
     if (!matchId || !userId) return;
@@ -77,24 +107,6 @@ export const GameBoard = () => {
     setMatchId(matchId);
     setErrorMessage(null);
     let isEffectActive = true;
-
-    const applyMatchState = (match: MatchDto) => {
-      if (!isEffectActive) return;
-      setRoomId(match.roomId);
-      setMatchId(match.id);
-      setHands(match.hands);
-      setBooks(match.books);
-      setOpponentIds(match.users.filter((user) => user.id !== userId).map((user) => user.id));
-      setSeats(match.seats);
-      setOpponents(match.users.map((user) => ({
-        id: user.id,
-        username: user.id,
-        avatarUrl: user.avatarUrl ?? "",
-        cardCount: match.userHandCounts.find((handCount) => handCount.userId === user.id)?.handCount ?? 0,
-      })));
-    };
-
-
     const joinAndSync = async () => {
       try {
         const { match } = await socketJoinMatch({ matchId, userId });
@@ -120,9 +132,7 @@ export const GameBoard = () => {
       void joinAndSync();
     });
 
-    const unsubscribeSocketDisconnect = onSocketDisconnect((reason) => {
-      setErrorMessage(`Socket disconnected: ${reason}`);
-    });
+    const unsubscribeSocketDisconnect = onSocketDisconnect(() => undefined);
 
     return () => {
       isEffectActive = false;
@@ -135,16 +145,84 @@ export const GameBoard = () => {
     matchId,
     userId,
     setMatchId,
-    setRoomId,
-    setOpponentIds,
-    setOpponents,
-    setSeats,
-    setHands,
-    setBooks,
+    applyMatchState,
   ]);
 
+  useEffect(() => {
+    if (!matchId || !userId) return;
+
+    let hiddenLeaveTimeoutId: number | null = null;
+    let hasLeftMatch = false;
+
+    const clearHiddenLeaveTimeout = () => {
+      if (hiddenLeaveTimeoutId === null) return;
+      window.clearTimeout(hiddenLeaveTimeoutId);
+      hiddenLeaveTimeoutId = null;
+    };
+
+    const leaveMatchForAbandonment = async () => {
+      if (hasLeftMatch) return;
+      hasLeftMatch = true;
+      clearHiddenLeaveTimeout();
+
+      try {
+        await socketLeaveMatch({ matchId, userId });
+      } finally {
+        disconnectSocket();
+      }
+    };
+
+    const rejoinAfterTemporaryLeave = async () => {
+      if (!hasLeftMatch || isExitingGame) return;
+
+      try {
+        connectSocket();
+        const { match } = await socketJoinMatch({ matchId, userId });
+        applyMatchState(match);
+        hasLeftMatch = false;
+        setErrorMessage(null);
+      } catch {
+        setErrorMessage("Unable to join match");
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        clearHiddenLeaveTimeout();
+        void rejoinAfterTemporaryLeave();
+        return;
+      }
+
+      clearHiddenLeaveTimeout();
+      hiddenLeaveTimeoutId = window.setTimeout(() => {
+        void leaveMatchForAbandonment();
+      }, HIDDEN_TAB_LEAVE_DELAY_MS);
+    };
+
+    const handlePageHide = () => {
+      void leaveMatchForAbandonment();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pagehide", handlePageHide);
+
+    return () => {
+      clearHiddenLeaveTimeout();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pagehide", handlePageHide);
+    };
+  }, [
+    applyMatchState,
+    isExitingGame,
+    matchId,
+    userId,
+  ]);
+  const isMyTurn = seats.find((seat) => seat.userId === userId)?.isTurn ?? false;
+  const isInteractionDisabled = !isMyTurn || isExitingGame;
+
+
   const handleRequest = async () => {
-    if (!isSelectionComplete || !userId || !selectedOpponentId || !matchId) return;
+    if (!isSelectionComplete || !userId || !selectedOpponentId || !matchId || isExitingGame) return;
 
     const payload: GameRequestPayload = {
       userId: userId,
@@ -163,14 +241,26 @@ export const GameBoard = () => {
         },
       });
       setErrorMessage(null);
-      setSelection({ suit: null, rank: null }); // UI reset
+      setSelection({ suit: null, rank: null });
       setSelectedOpponentId(null);
     } catch {
       setErrorMessage("Failed to send request");
     }
   };
 
-  const isMyTurn = useGameSessionStore().seats.find((seat) => seat.userId === userId)?.isActive ?? false;
+  const handleExitGame = useCallback(() => {
+    if (!matchId || !userId || isExitingGame) return;
+
+    setIsExitingGame(true);
+    void socketExitMatch({ matchId, userId })
+      .catch(() => undefined)
+      .finally(() => {
+        resetGameSession();
+        resetRoom();
+        disconnectSocket();
+        navigate("/dashboard");
+      });
+  }, [isExitingGame, matchId, navigate, resetGameSession, resetRoom, userId]);
 
   if (!matchId) {
     return <div>Match not found</div>;
@@ -188,7 +278,7 @@ export const GameBoard = () => {
         onChange={handleUpdate}
         onSubmit={handleRequest}
         isSelectionComplete={isSelectionComplete}
-        disabled={!isMyTurn}
+        disabled={isInteractionDisabled}
       />
 
       <main className="flex-1 min-w-0 h-full flex flex-col p-6">
@@ -200,16 +290,16 @@ export const GameBoard = () => {
             <GameOpponentPicker
               selectedOpponentId={selectedOpponentId}
               onSelectOpponent={setSelectedOpponentId}
-              disabled={!isMyTurn}
+              disabled={isInteractionDisabled}
             />
           </div>
           <div className="min-h-0">
-            <GamePlayerCard cards={currentUserCards} disabled={!isMyTurn} />
+            <GamePlayerCard cards={currentUserCards} disabled={isInteractionDisabled} />
           </div>
         </div>
       </main>
 
-      <GameControlPanel />
+      <GameControlPanel onExitGame={handleExitGame} isExiting={isExitingGame} />
     </div>
   );
 };
