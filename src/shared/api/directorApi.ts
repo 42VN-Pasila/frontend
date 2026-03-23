@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
-  RequestFriendRequestBody,
   Avatar,
   ConnectRoomRequest,
   CreateRoomRequestBody,
   ListRoomsDto,
+  RequestFriendRequestBody,
   RespondToFriendRequestRequestBody,
   RespondToFriendRequestResponse,
   RoomDto,
@@ -212,6 +212,30 @@ export const useRespondFriendRequestMutation = () => {
         queryClient.invalidateQueries({ queryKey: ['users', 'friends', id] });
         queryClient.invalidateQueries({ queryKey: ['users', 'search', id] });
       });
+    }
+  });
+};
+
+export const useRemoveFriendshipMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, { userId: string; otherUserId: string }>({
+    mutationFn: ({ userId, otherUserId }) => {
+      return directorClient.removeFriendship(userId, otherUserId);
+    },
+    onSuccess: async (_data, variables) => {
+      const friendsQueryKey = ['users', 'friends', variables.userId] as const;
+
+      queryClient.setQueryData<SocialUserDto[]>(friendsQueryKey, (prev = []) =>
+        prev.filter((friend) => friend.id !== variables.otherUserId)
+      );
+
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: friendsQueryKey }),
+        queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests', variables.userId] }),
+        queryClient.invalidateQueries({ queryKey: ['users', 'search', variables.userId] }),
+        queryClient.refetchQueries({ queryKey: friendsQueryKey, type: 'active' })
+      ]);
     }
   });
 };

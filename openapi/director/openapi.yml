@@ -736,6 +736,22 @@ components:
         relationship:
           type: string
           enum: [None, Pending, Accepted]
+        userId:
+          type: string
+          nullable: true
+          description: "ID of the user who sent the friend request (only in friend requests endpoints)"
+        otherUserId:
+          type: string
+          nullable: true
+          description: "ID of the user who received the friend request (only in friend requests endpoints)"
+        rudexUserId:
+          type: string
+          nullable: true
+          description: "Rudex User ID for display purposes"
+        requestFriendStatus:
+          type: string
+          nullable: true
+          description: "Status of the friend request (alternative field for relationship)"
     UserDto:
       type: object
       required:

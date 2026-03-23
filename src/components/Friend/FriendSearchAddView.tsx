@@ -1,39 +1,33 @@
-import { useState } from "react";
-
-import {
-  useSearchUsersQuery,
-  useSendFriendRequestMutation,
-} from "@/shared/api/directorApi";
+import type { SocialUserDto } from "@/gen/director";
 import { Button } from "@/shared/components";
-import { useUserStore } from "@/shared/stores/useUserStore";
 
-export const FriendSearchAdd = () => {
-  const searchMode = "rudexUserId" as const;
-  const [searchText, setSearchText] = useState("");
-  const [sentRequestIds, setSentRequestIds] = useState<string[]>([]);
-  const { userId } = useUserStore();
-  const normalizedSearch =
-    searchMode === "rudexUserId"
-      ? searchText.trim()
-      : searchText.trim().toLowerCase();
+type CandidateWithRudexId = SocialUserDto & { rudexUserId?: string };
 
-  const { data: searchedUsers = [], isFetching } = useSearchUsersQuery(
-    userId,
-    normalizedSearch,
-    { enabled: Boolean(userId && normalizedSearch) },
-  );
+type FriendSearchAddViewProps = {
+  searchText: string;
+  normalizedInput: string;
+  hasQuery: boolean;
+  isFetching: boolean;
+  isSendingRequest: boolean;
+  searchedUsers: SocialUserDto[];
+  sentRequestIds: string[];
+  onSearchTextChange: (value: string) => void;
+  onSearch: () => void;
+  onSendRequest: (otherUserId: string) => Promise<void>;
+};
 
-  const { mutateAsync: sendFriendRequest, isPending: isSendingRequest } =
-    useSendFriendRequestMutation();
-
-  const hasQuery = Boolean(normalizedSearch);
-
-  const handleSendRequest = async (otherUserId: string) => {
-    if (sentRequestIds.includes(otherUserId) || !userId) return;
-    await sendFriendRequest({ userId, otherUserId });
-    setSentRequestIds((prev) => [...prev, otherUserId]);
-  };
-
+export const FriendSearchAddView = ({
+  searchText,
+  normalizedInput,
+  hasQuery,
+  isFetching,
+  isSendingRequest,
+  searchedUsers,
+  sentRequestIds,
+  onSearchTextChange,
+  onSearch,
+  onSendRequest,
+}: FriendSearchAddViewProps) => {
   return (
     <section className="rounded-lg border-2 border-rave-white/10 p-6 text-rave-white">
       <div className="mb-3 flex items-center justify-between gap-3">
@@ -51,13 +45,33 @@ export const FriendSearchAdd = () => {
       >
         RUDEX USER ID
       </label>
-      <input
-        id="friend-search-input"
-        value={searchText}
-        onChange={(event) => setSearchText(event.target.value)}
-        placeholder="Search by rudexUserId..."
-        className="mb-4 h-11 w-full border border-rave-white/20 bg-rave-white/5 px-3 text-sm tracking-wide text-rave-white outline-none placeholder:text-rave-white/40 focus:border-rave-red"
-      />
+
+      <div className="mb-4 flex gap-2">
+        <input
+          id="friend-search-input"
+          value={searchText}
+          onChange={(event) => onSearchTextChange(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              onSearch();
+            }
+          }}
+          placeholder="Search exact rudexUserId..."
+          className="h-12 flex-1 border border-rave-white/20 bg-rave-white/5 px-3 text-sm tracking-wide text-rave-white outline-none placeholder:text-rave-white/40 focus:border-rave-red"
+        />
+
+        <Button
+          variant="primary"
+          emphasis="high"
+          size="small"
+          className="h-11 px-5 text-xs"
+          disabled={!normalizedInput || isFetching}
+          onClick={onSearch}
+        >
+          Search
+        </Button>
+      </div>
 
       <div>
         {hasQuery && isFetching ? (
@@ -70,9 +84,9 @@ export const FriendSearchAdd = () => {
           </p>
         ) : hasQuery ? (
           searchedUsers.map((candidate) => {
+            const parsedCandidate = candidate as CandidateWithRudexId;
             const candidateRudexUserId =
-              (candidate as { rudexUserId?: string }).rudexUserId ??
-              candidate.id;
+              parsedCandidate.rudexUserId ?? candidate.id;
             const requested = sentRequestIds.includes(candidate.id);
             const normalizedRelationship = String(
               candidate.relationship ?? "NONE",
@@ -118,7 +132,9 @@ export const FriendSearchAdd = () => {
                   size="small"
                   className="h-8! min-w-23! px-3! text-xs"
                   disabled={isActionDisabled}
-                  onClick={() => handleSendRequest(candidate.id)}
+                  onClick={() => {
+                    void onSendRequest(candidate.id);
+                  }}
                 >
                   {buttonLabel}
                 </Button>
