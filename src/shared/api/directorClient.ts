@@ -193,10 +193,10 @@ export const directorClient = {
     return FriendsService.sendFriendRequest({ userId, requestBody: body });
   },
   async listFriends(userId: string): Promise<SocialUserDto[]> {
-    return FriendsService.listUserFriends({ userId });
+    return FriendsService.getUserFriends({ userId });
   },
   async listFriendRequests(userId: string): Promise<SocialUserDto[]> {
-    return FriendsService.listAllFriendRequests({ userId });
+    return FriendsService.getAllFriendRequests({ userId });
   },
   async respondFriendRequest(
     userId: string,

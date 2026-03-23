@@ -132,8 +132,8 @@ paths:
     get:
       tags:
         - Friends
-      summary: List user's friends
-      operationId: listUserFriends
+      summary: Get user's friends
+      operationId: getUserFriends
       parameters:
         - in: path
           name: userId
@@ -185,8 +185,8 @@ paths:
     get:
       tags:
         - Friends
-      summary: List incoming/outcoming friend requests
-      operationId: listAllFriendRequests
+      summary: Get incoming/outcoming friend requests
+      operationId: getAllFriendRequests
       parameters:
         - in: path
           name: userId
