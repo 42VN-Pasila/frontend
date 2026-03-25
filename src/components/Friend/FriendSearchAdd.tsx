@@ -13,7 +13,7 @@ export const FriendSearchAdd = () => {
     setSearchText,
     handleSearch,
     handleSendRequest,
-    currentUserId
+    requestError
   } = useFriendSearchAdd();
 
   return (
@@ -28,7 +28,7 @@ export const FriendSearchAdd = () => {
       onSearchTextChange={setSearchText}
       onSearch={handleSearch}
       onSendRequest={handleSendRequest}
-      currentUserId={currentUserId}
+      requestError={requestError}
     />
   );
 };

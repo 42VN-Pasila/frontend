@@ -12,7 +12,7 @@ export type FriendSearchAddState = {
   isSendingRequest: boolean;
   searchedUsers: SocialUserDto[];
   searchTargetId: string[];
-  currentUserId: string;
+  requestError: string | null;
 };
 
 export type FriendSearchAddActions = {
@@ -25,13 +25,17 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
   const [searchText, setSearchText] = useState('');
   const [submittedSearch, setSubmittedSearch] = useState('');
   const [searchTargetId, setSearchTargetId] = useState<string[]>([]);
-  // const { userId } = useUserStore();
+  const [requestError, setRequestError] = useState<string | null>(null);
   const currentUserId = useUserStore((state) => state.userId);
 
   const normalizedInput = searchText.trim();
   const normalizedSearch = submittedSearch;
 
-  const { data: searchedUsers = [], isFetching } = useSearchUsersQuery(currentUserId, normalizedSearch, {
+  const {
+    data: searchedUsers = [],
+    isFetching,
+    refetch
+  } = useSearchUsersQuery(currentUserId, normalizedSearch, {
     enabled: Boolean(currentUserId && normalizedSearch)
   });
 
@@ -39,13 +43,28 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
     useSendFriendRequestMutation();
 
   const handleSearch = () => {
-    setSubmittedSearch(searchText.trim());
-  };
+  const trimmed = searchText.trim();
+  if (!trimmed) return;
+
+  setRequestError(null);
+  setSearchTargetId([]);
+
+  if (trimmed === submittedSearch) {
+    //request for the exact same term
+    void refetch();
+  } else {
+    setSubmittedSearch(trimmed);
+  }
+};
 
   const handleSendRequest = async (otherUserId: string) => {
     if (searchTargetId.includes(otherUserId) || !currentUserId) return;
-    await sendFriendRequest({ userId:currentUserId, otherUserId });
-    setSearchTargetId((prev) => [...prev, otherUserId]);
+    try {
+      await sendFriendRequest({ userId: currentUserId, otherUserId });
+      setSearchTargetId((prev) => [...prev, otherUserId]);
+    } catch (error) {
+      setRequestError(error instanceof Error ? error.message : "Failed to send request");
+    }
   };
 
   return {
@@ -59,6 +78,6 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
     setSearchText,
     handleSearch,
     handleSendRequest,
-    currentUserId
+    requestError
   };
 };

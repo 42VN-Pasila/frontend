@@ -724,6 +724,7 @@ components:
         - id
         - status
         - relationship
+        - direction
       properties:
         id:
           type: string
@@ -736,6 +737,10 @@ components:
         relationship:
           type: string
           enum: [None, Pending, Accepted]
+        direction:
+          type: string
+          enum: ['In', 'Out', 'None']
+          description: "Direction of the friend request if exists"
         userId:
           type: string
           nullable: true
@@ -1077,3 +1082,4 @@ components:
           type: string
         info:
           type: object
+  

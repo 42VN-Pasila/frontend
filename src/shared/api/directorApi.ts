@@ -210,6 +210,7 @@ export const useRespondFriendRequestMutation = () => {
       affectedUserIds.forEach((id) => {
         queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests', id] });
         queryClient.invalidateQueries({ queryKey: ['users', 'friends', id] });
+        // queryClient.invalidateQueries({ queryKey: ['users', 'search', id] });
         queryClient.invalidateQueries({ queryKey: ['users', 'search', id] });
       });
     }
