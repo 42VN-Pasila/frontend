@@ -11,7 +11,8 @@ export type FriendSearchAddState = {
   isFetching: boolean;
   isSendingRequest: boolean;
   searchedUsers: SocialUserDto[];
-  sentRequestIds: string[];
+  searchTargetId: string[];
+  currentUserId: string;
 };
 
 export type FriendSearchAddActions = {
@@ -23,14 +24,15 @@ export type FriendSearchAddActions = {
 export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActions => {
   const [searchText, setSearchText] = useState('');
   const [submittedSearch, setSubmittedSearch] = useState('');
-  const [sentRequestIds, setSentRequestIds] = useState<string[]>([]);
-  const { userId } = useUserStore();
+  const [searchTargetId, setSearchTargetId] = useState<string[]>([]);
+  // const { userId } = useUserStore();
+  const currentUserId = useUserStore((state) => state.userId);
 
   const normalizedInput = searchText.trim();
   const normalizedSearch = submittedSearch;
 
-  const { data: searchedUsers = [], isFetching } = useSearchUsersQuery(userId, normalizedSearch, {
-    enabled: Boolean(userId && normalizedSearch)
+  const { data: searchedUsers = [], isFetching } = useSearchUsersQuery(currentUserId, normalizedSearch, {
+    enabled: Boolean(currentUserId && normalizedSearch)
   });
 
   const { mutateAsync: sendFriendRequest, isPending: isSendingRequest } =
@@ -41,9 +43,9 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
   };
 
   const handleSendRequest = async (otherUserId: string) => {
-    if (sentRequestIds.includes(otherUserId) || !userId) return;
-    await sendFriendRequest({ userId, otherUserId });
-    setSentRequestIds((prev) => [...prev, otherUserId]);
+    if (searchTargetId.includes(otherUserId) || !currentUserId) return;
+    await sendFriendRequest({ userId:currentUserId, otherUserId });
+    setSearchTargetId((prev) => [...prev, otherUserId]);
   };
 
   return {
@@ -53,9 +55,10 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
     isFetching,
     isSendingRequest,
     searchedUsers,
-    sentRequestIds,
+    searchTargetId,
     setSearchText,
     handleSearch,
-    handleSendRequest
+    handleSendRequest,
+    currentUserId
   };
 };

@@ -9,10 +9,11 @@ export const FriendSearchAdd = () => {
     isFetching,
     isSendingRequest,
     searchedUsers,
-    sentRequestIds,
+    searchTargetId,
     setSearchText,
     handleSearch,
-    handleSendRequest
+    handleSendRequest,
+    currentUserId
   } = useFriendSearchAdd();
 
   return (
@@ -23,10 +24,11 @@ export const FriendSearchAdd = () => {
       isFetching={isFetching}
       isSendingRequest={isSendingRequest}
       searchedUsers={searchedUsers}
-      sentRequestIds={sentRequestIds}
+      searchTargetId={searchTargetId}
       onSearchTextChange={setSearchText}
       onSearch={handleSearch}
       onSendRequest={handleSendRequest}
+      currentUserId={currentUserId}
     />
   );
 };

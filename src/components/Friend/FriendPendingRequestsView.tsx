@@ -76,7 +76,7 @@ export const FriendPendingRequestsView = ({
         ) : (
           <>
             {pendingActionError ? (
-              <p className="rounded-lg border border-rave-white/20 bg-rave-white/10 px-3 py-2 text-xs tracking-wide text-rave-white">
+              <p className="text-rave-red/90 text-sm mb-4">
                 {pendingActionError}
               </p>
             ) : null}

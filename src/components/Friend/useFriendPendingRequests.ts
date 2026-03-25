@@ -6,7 +6,7 @@ import {
 } from '@/shared/api/directorApi';
 import { useUserStore } from '@/shared/stores/useUserStore';
 
-type PendingDirection = 'incoming' | 'outgoing' | 'unknown';
+export type PendingDirection = 'incoming' | 'outgoing' | 'unknown';
 
 type PendingUser = {
   id: string;
@@ -101,8 +101,12 @@ export const useFriendPendingRequests = () => {
         action,
         invalidateUserIds: [userId]
       });
-    } catch {
-      setPendingActionError('Cannot process incoming request.');
+    } catch (error) {
+      if (error instanceof Error) {
+        setPendingActionError(error.message);
+      } else {
+        setPendingActionError('Cannot process incoming request.');
+      }
     }
   };
 
@@ -120,8 +124,12 @@ export const useFriendPendingRequests = () => {
         action: 'Canceled',
         invalidateUserIds: [userId]
       });
-    } catch {
-      setPendingActionError('Cannot cancel outgoing request. Backend may not support cancel yet.');
+    } catch (error) {
+      if (error instanceof Error) {
+        setPendingActionError(error.message);
+      } else {
+        setPendingActionError('Cannot cancel outgoing request. Backend may not support cancel yet.');
+      }
     }
   };
 

@@ -272,3 +272,4 @@ export const useGetRoomMetaDataQuery = (roomId: string, options?: QueryOptions) 
     refetchOnReconnect: options?.refetchOnReconnect
   });
 };
+
