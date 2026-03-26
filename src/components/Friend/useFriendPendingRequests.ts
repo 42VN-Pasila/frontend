@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import type { SocialUserDto } from '@/gen/director';
 import {
   useListFriendRequestsQuery,
   useRespondFriendRequestMutation
@@ -14,33 +15,24 @@ type PendingUser = {
   relationship?: string;
   requestFriendStatus?: string | null;
   rudexUserId?: string | null;
-  userId?: string | null;
-  otherUserId?: string | null;
+  direction?: SocialUserDto['direction'];
 };
 
 export type PendingRequestItem = {
   id: string;
   avatarUrl?: string | null;
   relationship?: string;
-  requestFriendStatus?: string | null;
-  rudexUserId?: string | null;
-  userId?: string | null;
-  otherUserId?: string | null;
-  displayName: string;
+  rudexUserId: string;
   direction: PendingDirection;
 };
 
-const resolvePendingDirection = (
-  pendingUser: PendingUser,
-  currentUserId: string
-): PendingDirection => {
-  if (pendingUser.userId && pendingUser.otherUserId) {
-    if (pendingUser.userId === currentUserId) {
-      return 'outgoing';
-    }
-    if (pendingUser.otherUserId === currentUserId) {
-      return 'incoming';
-    }
+const resolvePendingDirection = (pendingUser: PendingUser): PendingDirection => {
+  if (pendingUser.direction === 'Out') {
+    return 'outgoing';
+  }
+
+  if (pendingUser.direction === 'In') {
+    return 'incoming';
   }
 
   return 'unknown';
@@ -61,11 +53,7 @@ export const useFriendPendingRequests = () => {
     useRespondFriendRequestMutation();
 
   const filteredPendingRequests = socialRequests.filter((item) => {
-    const normalizedRequestState = String(
-      (item as { relationship?: string; requestFriendStatus?: string }).relationship ??
-        (item as { relationship?: string; requestFriendStatus?: string }).requestFriendStatus ??
-        ''
-    ).toUpperCase();
+    const normalizedRequestState = String(item.relationship ?? '').toUpperCase();
 
     return normalizedRequestState.includes('PENDING');
   });
@@ -75,13 +63,13 @@ export const useFriendPendingRequests = () => {
 
   const pendingRequestItems: PendingRequestItem[] = pendingRequests.map((item) => {
     const pendingUser = item as PendingUser;
-    const direction = resolvePendingDirection(pendingUser, userId);
+    const direction = resolvePendingDirection(pendingUser);
 
     return {
-      ...item,
-      userId: pendingUser.userId,
-      otherUserId: pendingUser.otherUserId,
-      displayName: pendingUser.rudexUserId ?? item.id,
+      id: item.id,
+      avatarUrl: item.avatarUrl,
+      relationship: item.relationship,
+      rudexUserId: pendingUser.rudexUserId ?? item.id,
       direction
     };
   });
@@ -119,8 +107,8 @@ export const useFriendPendingRequests = () => {
 
     try {
       await respondFriendRequest({
-        userId: otherUserId,
-        otherUserId: userId,
+        userId,
+        otherUserId,
         action: 'Canceled',
         invalidateUserIds: [userId]
       });
@@ -128,7 +116,9 @@ export const useFriendPendingRequests = () => {
       if (error instanceof Error) {
         setPendingActionError(error.message);
       } else {
-        setPendingActionError('Cannot cancel outgoing request. Backend may not support cancel yet.');
+        setPendingActionError(
+          'Cannot cancel outgoing request. Backend may not support cancel yet.'
+        );
       }
     }
   };

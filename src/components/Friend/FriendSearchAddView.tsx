@@ -116,7 +116,7 @@ export const FriendSearchAddView = ({
         )}
 
         {hasQuery && showResults && !isFetching && searchedUsers.map((candidate) => {
-          const candidateName = candidate.rudexUserId ?? candidate.id;
+          const candidateName = candidate.rudexUserId as string;
           const relationship = String(candidate.relationship ?? "NONE").toUpperCase();
           const isOutgoing = candidate.direction === 'Out' || searchTargetId.includes(candidate.id);
           const isIncoming = candidate.direction === 'In';

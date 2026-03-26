@@ -12,10 +12,10 @@ type FriendPendingRequestsViewProps = {
   isRespondingRequest: boolean;
   pendingActionError: string;
   onRespondRequest: (
-    otherUserId: string,
+    rudexUserId: string,
     action: "Accepted" | "Canceled",
   ) => Promise<void>;
-  onCancelRequest: (otherUserId: string) => Promise<void>;
+  onCancelRequest: (rudexUserId: string) => Promise<void>;
 };
 
 export const FriendPendingRequestsView = ({
@@ -82,6 +82,7 @@ export const FriendPendingRequestsView = ({
             ) : null}
 
             {pendingRequestItems.map((requestUser) => {
+              const displayName = requestUser.rudexUserId || requestUser.id;
               const actionLabel =
                 requestUser.direction === "outgoing"
                   ? "OUTGOING REQUEST"
@@ -97,12 +98,12 @@ export const FriendPendingRequestsView = ({
                   <div className="flex items-center gap-3">
                     <img
                       src={requestUser.avatarUrl ?? ""}
-                      alt={requestUser.displayName}
+                      alt={displayName}
                       className="h-10 w-10 rounded-full object-cover"
                     />
                     <div>
                       <p className="text-sm font-semibold tracking-wide">
-                        {requestUser.displayName}
+                        {displayName}
                       </p>
                       <p className="text-[10px] tracking-[0.14em] text-rave-white/60">
                         {actionLabel}
@@ -122,7 +123,7 @@ export const FriendPendingRequestsView = ({
                       >
                         Cancel
                       </Button>
-                    ) : (
+                    ) : requestUser.direction === "incoming" ? (
                       <>
                         <Button
                           variant="inverse"
@@ -149,6 +150,16 @@ export const FriendPendingRequestsView = ({
                           Accept
                         </Button>
                       </>
+                    ) : (
+                      <Button
+                        variant="inverse"
+                        emphasis="low"
+                        size="small"
+                        className="h-8! px-3! text-xs"
+                        disabled={true}
+                      >
+                        Unknown
+                      </Button>
                     )}
                   </div>
                 </article>

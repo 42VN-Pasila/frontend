@@ -725,6 +725,7 @@ components:
         - status
         - relationship
         - direction
+        - rudexUserId
       properties:
         id:
           type: string
@@ -741,14 +742,6 @@ components:
           type: string
           enum: ['In', 'Out', 'None']
           description: "Direction of the friend request if exists"
-        userId:
-          type: string
-          nullable: true
-          description: "ID of the user who sent the friend request (only in friend requests endpoints)"
-        otherUserId:
-          type: string
-          nullable: true
-          description: "ID of the user who received the friend request (only in friend requests endpoints)"
         rudexUserId:
           type: string
           nullable: true
@@ -1082,4 +1075,3 @@ components:
           type: string
         info:
           type: object
-  
