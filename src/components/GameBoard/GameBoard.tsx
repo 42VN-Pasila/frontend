@@ -80,6 +80,14 @@ export const GameBoard = () => {
   };
 
   const applyMatchState = useCallback((match: MatchDto) => {
+    if (match.status === "COMPLETED") {
+      resetGameSession();
+      resetRoom();
+      disconnectSocket();
+      navigate("/dashboard");
+      return;
+    }
+
     setMatchId(match.id);
     setHands(match.hands);
     setBooks(match.books);
@@ -92,6 +100,9 @@ export const GameBoard = () => {
       cardCount: match.userHandCounts.find((handCount) => handCount.userId === user.id)?.handCount ?? 0,
     })));
   }, [
+    navigate,
+    resetGameSession,
+    resetRoom,
     setMatchId,
     setHands,
     setBooks,
