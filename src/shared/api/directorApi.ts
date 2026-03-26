@@ -112,9 +112,15 @@ export const useUpdateUserAvatarMutation = () => {
 };
 
 export const useDisconnectRoomMutation = () => {
+    const queryClient = useQueryClient();
+
     return useMutation<void, Error, { roomId: string; userId: string }>({
         mutationFn: ({ roomId, userId }) => {
             return directorClient.disconnectRoom(roomId, userId);
+        },
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({ queryKey: ["rooms"] });
+            queryClient.invalidateQueries({ queryKey: ["rooms", variables.roomId] });
         },
     });
 };
