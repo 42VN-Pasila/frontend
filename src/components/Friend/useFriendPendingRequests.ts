@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import type { SocialUserDto } from '@/gen/director';
 import {
-  useListFriendRequestsQuery,
+  useGetFriendPendingDataQuery,
   useRespondFriendRequestMutation
 } from '@/shared/api/directorApi';
 import { useUserStore } from '@/shared/stores/useUserStore';
@@ -46,8 +46,13 @@ export const useFriendPendingRequests = () => {
     data: socialRequests = [],
     isFetching,
     isError,
-    error
-  } = useListFriendRequestsQuery(userId, { enabled: Boolean(userId) });
+    error,
+    refetch: refetchPendingRequests
+  } = useGetFriendPendingDataQuery(userId, {
+    enabled: Boolean(userId),
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true
+  });
 
   const { mutateAsync: respondFriendRequest, isPending: isRespondingRequest } =
     useRespondFriendRequestMutation();
@@ -131,6 +136,7 @@ export const useFriendPendingRequests = () => {
     isRespondingRequest,
     pendingActionError,
     handleRespondPendingRequest,
-    handleCancelPendingRequest
+    handleCancelPendingRequest,
+    refetchPendingRequests
   };
 };

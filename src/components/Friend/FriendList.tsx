@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FriendListView } from "./FriendListView";
 import { FriendPendingRequestsView } from "./FriendPendingRequestsView";
@@ -15,6 +15,7 @@ export const FriendList = () => {
     isRemovingFriend,
     removingFriendId,
     handleRemoveFriend,
+    refetchFriends,
     STATUS_CLASSES
   } = useFriendList();
   const {
@@ -26,7 +27,17 @@ export const FriendList = () => {
     pendingActionError,
     handleRespondPendingRequest,
     handleCancelPendingRequest,
+    refetchPendingRequests,
   } = useFriendPendingRequests();
+
+  useEffect(() => {
+    if (activeTab === "friends") {
+      void refetchFriends();
+      return;
+    }
+
+    void refetchPendingRequests();
+  }, [activeTab, refetchFriends, refetchPendingRequests]);
 
   return activeTab === "friends" ? (
     <FriendListView

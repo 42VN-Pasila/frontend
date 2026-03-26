@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useListFriendsQuery, useRemoveFriendshipMutation } from "@/shared/api/directorApi";
+import { useGetFriendListDataQuery, useRemoveFriendshipMutation } from "@/shared/api/directorApi";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 export type FriendItem = {
@@ -20,10 +20,17 @@ const STATUS_CLASSES: Record<FriendItem["status"], string> = {
 export const useFriendList = () => {
   const [removingFriendId, setRemovingFriendId] = useState<string | null>(null);
   const { userId } = useUserStore();
-  const { data: socialFriends = [], isFetching, isError, error } = useListFriendsQuery(
-    userId,
-    { enabled: Boolean(userId) }
-  );
+  const {
+    data: socialFriends = [],
+    isFetching,
+    isError,
+    error,
+    refetch: refetchFriends,
+  } = useGetFriendListDataQuery(userId, {
+    enabled: Boolean(userId),
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
   const { mutateAsync: removeFriendship, isPending: isRemovingFriend } =
     useRemoveFriendshipMutation();
 
@@ -69,6 +76,7 @@ export const useFriendList = () => {
     isRemovingFriend,
     removingFriendId,
     handleRemoveFriend,
+    refetchFriends,
     STATUS_CLASSES,
   };
 };

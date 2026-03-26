@@ -52,28 +52,6 @@ export const useSearchUsersQuery = (
   });
 };
 
-export const useListFriendsQuery = (
-  rudexUserId: string,
-  options?: { enabled?: boolean }
-) => {
-  return useQuery<SocialUserDto[]>({
-    queryKey: ['users', 'friends', rudexUserId],
-    queryFn: () => directorClient.listFriends(rudexUserId),
-    enabled: options?.enabled ?? Boolean(rudexUserId)
-  });
-};
-
-export const useListFriendRequestsQuery = (
-  userId: string,
-  options?: { enabled?: boolean }
-) => {
-  return useQuery<SocialUserDto[]>({
-    queryKey: ['users', 'friend-requests', userId],
-    queryFn: () => directorClient.listFriendRequests(userId),
-    enabled: options?.enabled ?? Boolean(userId)
-  });
-};
-
 //------------------------------------------------
 // MUTATIONS
 //------------------------------------------------
@@ -274,3 +252,28 @@ export const useGetRoomMetaDataQuery = (roomId: string, options?: QueryOptions) 
   });
 };
 
+//------------------------------------------------
+// REFETCH QUERIES
+//------------------------------------------------
+
+export const useGetFriendPendingDataQuery = (userId: string, options?: QueryOptions) => {
+  return useQuery<SocialUserDto[]>({
+    queryKey: ['users', 'friend-requests', userId],
+    queryFn: () => directorClient.listFriendRequests(userId),
+    enabled: options?.enabled ?? Boolean(userId),
+    refetchInterval: options?.pollingInterval,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus,
+    refetchOnReconnect: options?.refetchOnReconnect
+  });
+};
+
+export const useGetFriendListDataQuery = (userId: string, options?: QueryOptions) => {
+  return useQuery<SocialUserDto[]>({
+    queryKey: ['users', 'friends', userId],
+    queryFn: () => directorClient.listFriends(userId),
+    enabled: options?.enabled ?? Boolean(userId),
+    refetchInterval: options?.pollingInterval,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus,
+    refetchOnReconnect: options?.refetchOnReconnect
+  });
+};
