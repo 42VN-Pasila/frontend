@@ -8,6 +8,7 @@ import {
     type JoinMatchEvent,
     type LeaveMatchEvent,
     type MatchDto,
+    type MatchResultDto,
     type RequestCardEvent,
     ResourcesService,
     RoomsService,
@@ -171,7 +172,7 @@ export const socketPingMatch = (
     });
 };
 
-export const onMatchState = (handler: (match: MatchDto) => void) => {
+export const onMatchState = (handler: (match: MatchDto, matchResult?: MatchResultDto) => void) => {
     socket.on('match:state', handler);
     return () => socket.off('match:state', handler);
 };

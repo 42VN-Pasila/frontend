@@ -24,8 +24,9 @@ import { GameControlPanel } from "./GameControlPanel/GameControlPanel";
 import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
 import type { Card, CardRank, CardSuit } from "./types";
-import type { MatchDto } from "@/gen/director";
+import type { MatchDto, MatchResultDto } from "@/gen/director";
 import BookDisplayModal from "./BookDisplayModal/BookDisplayModal";
+import { GameResultModal } from "./GameResultModal/GameResultModal";
 
 export type GameRequestPayload = {
   userId: string;
@@ -56,6 +57,7 @@ export const GameBoard = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isExitingGame, setIsExitingGame] = useState(false);
   const [resetTurn, setResetTurn] = useState(false);
+  const [matchResult, setMatchResult] = useState<MatchResultDto | null>(null);
 
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(
     null,
@@ -80,11 +82,12 @@ export const GameBoard = () => {
     setSelection((prev) => ({ ...prev, ...updates }));
   };
 
-  const applyMatchState = useCallback((match: MatchDto) => {
+  const applyMatchState = useCallback((match: MatchDto, result?: MatchResultDto) => {
     if (match.status === "Completed") {
-      resetGameSession();
       disconnectSocket();
-      navigate("/dashboard");
+      if (result) {
+        setMatchResult(result);
+      }
       return;
     }
 
@@ -100,8 +103,6 @@ export const GameBoard = () => {
       cardCount: match.userHandCounts.find((handCount) => handCount.userId === user.id)?.handCount ?? 0,
     })));
   }, [
-    navigate,
-    resetGameSession,
     setMatchId,
     setHands,
     setBooks,
@@ -134,11 +135,11 @@ export const GameBoard = () => {
       void joinAndSync();
     }
 
-    const unsubscribeMatchState = onMatchState((match) => {
+    const unsubscribeMatchState = onMatchState((match, matchResult) => {
       if (match.currentSeat?.userId === userId && match.currentSeat?.isTurn) {
         setResetTurn((prev) => !prev);
       }
-      applyMatchState(match);
+      applyMatchState(match, matchResult);
     });
 
     const unsubscribeSocketConnect = onSocketConnect(() => {
@@ -275,6 +276,11 @@ export const GameBoard = () => {
       });
   }, [isExitingGame, matchId, navigate, resetGameSession, resetRoom, userId]);
 
+  const handleResultClose = useCallback(() => {
+    resetGameSession();
+    navigate("/dashboard");
+  }, [navigate, resetGameSession]);
+
   if (!matchId) {
     return <div>Match not found</div>;
   }
@@ -313,6 +319,10 @@ export const GameBoard = () => {
       </main>
 
       <GameControlPanel onExitGame={handleExitGame} isExiting={isExitingGame} resetTurn={resetTurn} />
+
+      {matchResult && (
+        <GameResultModal result={matchResult} onClose={handleResultClose} />
+      )}
     </div>
   );
 };

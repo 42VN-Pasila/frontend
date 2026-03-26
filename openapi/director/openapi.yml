@@ -716,6 +716,26 @@ components:
             $ref: "#/components/schemas/SeatDto"
         currentSeat:
           $ref: "#/components/schemas/SeatDto"
+    MatchResultDto:
+      type: object
+      required:
+        - roomId
+        - winnerUserId
+        - endedReason
+        - startedAt
+        - completedAt
+      properties:
+        roomId:
+          type: string
+        winnerUserId:
+          type: string
+          nullable: true
+        endedReason:
+          type: string
+        startedAt:
+          type: string
+        completedAt:
+          type: string
     CreateRoomRequestBody:
       type: object
       required:
