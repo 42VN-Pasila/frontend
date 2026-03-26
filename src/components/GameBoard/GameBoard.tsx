@@ -82,7 +82,6 @@ export const GameBoard = () => {
   const applyMatchState = useCallback((match: MatchDto) => {
     if (match.status === "COMPLETED") {
       resetGameSession();
-      resetRoom();
       disconnectSocket();
       navigate("/dashboard");
       return;
@@ -102,7 +101,6 @@ export const GameBoard = () => {
   }, [
     navigate,
     resetGameSession,
-    resetRoom,
     setMatchId,
     setHands,
     setBooks,
