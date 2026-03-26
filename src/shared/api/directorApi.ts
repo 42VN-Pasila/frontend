@@ -24,6 +24,8 @@ export const useListRoomsQuery = () => {
     return useQuery<ListRoomsDto[]>({
         queryKey: ["rooms"],
         queryFn: () => directorClient.listRooms(),
+        refetchInterval: 3_000,
+        refetchOnWindowFocus: true,
     });
 };
 
