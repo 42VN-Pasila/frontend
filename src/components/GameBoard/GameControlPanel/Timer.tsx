@@ -9,9 +9,10 @@ const TURN_SECONDS = 60;
 
 type TimerProps = {
   isDisabled?: boolean;
+  resetTurn: boolean;
 };
 
-export const Timer = ({ isDisabled = false }: TimerProps) => {
+export const Timer = ({ isDisabled = false, resetTurn }: TimerProps) => {
   const [timeLeft, setTimeLeft] = useState(TURN_SECONDS);
   const hasEmittedSkipRef = useRef(false);
   const { userId } = useUserStore();
@@ -22,7 +23,7 @@ export const Timer = ({ isDisabled = false }: TimerProps) => {
   useEffect(() => {
     setTimeLeft(TURN_SECONDS);
     hasEmittedSkipRef.current = false;
-  }, [isTimerActive]);
+  }, [isTimerActive, resetTurn]);
 
   useEffect(() => {
     if (!isTimerActive) return;

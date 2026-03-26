@@ -55,6 +55,7 @@ export const GameBoard = () => {
   const matchId = matchIdParam ?? "";
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isExitingGame, setIsExitingGame] = useState(false);
+  const [resetTurn, setResetTurn] = useState(false);
 
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(
     null,
@@ -80,7 +81,7 @@ export const GameBoard = () => {
   };
 
   const applyMatchState = useCallback((match: MatchDto) => {
-    if (match.status === "COMPLETED") {
+    if (match.status === "Completed") {
       resetGameSession();
       disconnectSocket();
       navigate("/dashboard");
@@ -134,6 +135,9 @@ export const GameBoard = () => {
     }
 
     const unsubscribeMatchState = onMatchState((match) => {
+      if (match.currentSeat?.userId === userId && match.currentSeat?.isTurn) {
+        setResetTurn((prev) => !prev);
+      }
       applyMatchState(match);
     });
 
@@ -308,7 +312,7 @@ export const GameBoard = () => {
         </div>
       </main>
 
-      <GameControlPanel onExitGame={handleExitGame} isExiting={isExitingGame} />
+      <GameControlPanel onExitGame={handleExitGame} isExiting={isExitingGame} resetTurn={resetTurn} />
     </div>
   );
 };
