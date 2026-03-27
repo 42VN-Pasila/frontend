@@ -14,6 +14,7 @@ paths:
   /_ping:
     get:
       summary: Check if the service is running
+      description: Endpoint to ping the service
       responses:
         "200":
           description: Service is running
@@ -51,11 +52,50 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+    get:
+      tags:
+        - Users
+      summary: Search by exact user id
+      description: Search for a user by their exact user id
+      operationId: searchByExactUserId
+      parameters:
+        - in: query
+          name: rudexUserId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: requesterId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SocialUserDto"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /users/{userId}/avatar:
     patch:
       tags:
         - Users
       summary: Update user avatar
+      description: Update the avatar of a specific user
       operationId: updateUserAvatar
       parameters:
         - in: path
@@ -78,6 +118,166 @@ paths:
                 $ref: "#/components/schemas/UpdateUserAvatarResponse"
         "404":
           description: User or avatar not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /users/{userId}/friends:
+    get:
+      tags:
+        - Friends
+      summary: Get user's friends
+      operationId: getUserFriends
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SocialUserDto"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /users/{userId}/friends/{otherUserId}:
+    delete:
+      tags:
+        - Friends
+      summary: Remove a friend
+      operationId: removeFriendship
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: otherUserId
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Friend removed
+  /users/{userId}/friends/requests:
+    get:
+      tags:
+        - Friends
+      summary: Get incoming/outcoming friend requests
+      operationId: getAllFriendRequests
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SocialUserDto"
+    post:
+      tags:
+        - Friends
+      summary: Send a friend request
+      operationId: sendFriendRequest
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestFriendRequestBody"
+      responses:
+        "204":
+          description: Friend request sent
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Already friends or request exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /users/{userId}/friends/requests/{otherUserId}:
+    patch:
+      tags:
+        - Friends
+      summary: Respond to a friend request
+      operationId: respondToFriendRequest
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: otherUserId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RespondToFriendRequestRequestBody"
+      responses:
+        "200":
+          description: Request updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RespondToFriendRequestResponse"
+        "404":
+          description: User or request not found
           content:
             application/json:
               schema:
@@ -203,6 +403,9 @@ paths:
         "500":
           description: Internal server error
           content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /rooms/{roomId}/metadata:
     get:
       tags:
@@ -534,6 +737,39 @@ components:
           type: string
         url:
           type: string
+
+    SocialUserDto:
+      type: object
+      required:
+        - id
+        - status
+        - relationship
+        - direction
+        - rudexUserId
+      properties:
+        id:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [Offline, Online, InRoom, InMatch]
+        relationship:
+          type: string
+          enum: [None, Pending, Accepted]
+        direction:
+          type: string
+          enum: ["In", "Out", "None"]
+          description: "Direction of the friend request if exists"
+        rudexUserId:
+          type: string
+          nullable: true
+          description: "Rudex User ID for display purposes"
+        requestFriendStatus:
+          type: string
+          nullable: true
+          description: "Status of the friend request (alternative field for relationship)"
     UserDto:
       type: object
       required:
@@ -547,6 +783,32 @@ components:
         avatarUrl:
           type: string
           format: uri
+    RequestFriendRequestBody:
+      type: object
+      required:
+        - otherUserId
+      properties:
+        otherUserId:
+          type: string
+
+    RespondToFriendRequestRequestBody:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum: [Accepted, Canceled]
+
+    RespondToFriendRequestResponse:
+      type: object
+      required:
+        - requestFriendStatus
+      properties:
+        requestFriendStatus:
+          type: string
+          enum: [Accepted, Canceled]
+
     RoomDto:
       type: object
       required:
@@ -721,6 +983,7 @@ components:
       required:
         - roomId
         - winnerUserId
+        - hasCoWinners
         - endedReason
         - startedAt
         - completedAt
@@ -730,6 +993,8 @@ components:
         winnerUserId:
           type: string
           nullable: true
+        hasCoWinners:
+          type: boolean
         endedReason:
           type: string
         startedAt:
