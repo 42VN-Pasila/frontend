@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { MatchResultDto } from "@/gen/director";
 import Button from "@/shared/components/Button";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
@@ -25,16 +25,10 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
   );
   const [activeIndex, setActiveIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(!result.hasCoWinners);
-  const revealTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const players = opponents.length > 0 ? opponents : [];
   const winnerIdx = players.findIndex((p) => p.id === result.winnerUserId);
   const totalSteps = players.length * CYCLE_COUNT + Math.max(winnerIdx, 0);
-
-  const transitionToResult = useCallback(() => {
-    setPhase("result");
-    requestAnimationFrame(() => setFadeIn(true));
-  }, []);
 
   useEffect(() => {
     if (phase !== "picking" || players.length === 0) return;
@@ -48,7 +42,6 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
 
       if (tick >= totalSteps) {
         setPhase("reveal");
-        revealTimerRef.current = setTimeout(transitionToResult, REVEAL_PAUSE_MS);
         return;
       }
 
@@ -58,11 +51,19 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
     };
 
     timeout = setTimeout(step, 500);
-    return () => {
-      clearTimeout(timeout);
-      clearTimeout(revealTimerRef.current);
-    };
-  }, [phase, players.length, totalSteps, transitionToResult]);
+    return () => clearTimeout(timeout);
+  }, [phase, players.length, totalSteps]);
+
+  useEffect(() => {
+    if (phase !== "reveal") return;
+
+    const timeout = setTimeout(() => {
+      setPhase("result");
+      requestAnimationFrame(() => setFadeIn(true));
+    }, REVEAL_PAUSE_MS);
+
+    return () => clearTimeout(timeout);
+  }, [phase]);
 
   const isWinner = result.winnerUserId === userId;
   const isAbandoned = result.endedReason === "abandoned";
@@ -84,12 +85,12 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
   if (phase === "picking" || phase === "reveal") {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-        <div className="flex w-full max-w-md flex-col items-center gap-8 border-2 border-rave-white/10 bg-rave-black p-10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)]">
-          <span className="text-sm font-bold tracking-[0.3em] text-rave-white/50">
+        <div className="flex w-full max-w-lg flex-col items-center gap-10 border-2 border-rave-white/10 bg-rave-black p-14 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)]">
+          <span className="text-lg font-bold tracking-[0.3em] text-rave-white/50">
             PICKING THE LUCKY ONE
           </span>
 
-          <div className="flex w-full flex-col gap-2">
+          <div className="flex w-full flex-col gap-3">
             {players.map((player, i) => {
               const isHighlighted = i === activeIndex;
               const isRevealed = phase === "reveal" && i === activeIndex;
@@ -97,7 +98,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
               return (
                 <div
                   key={player.id}
-                  className={`flex items-center gap-3 rounded-lg border px-4 py-3 transition-all duration-150 ${
+                  className={`flex items-center gap-4 rounded-xl border-2 px-6 py-5 transition-all duration-150 ${
                     isRevealed
                       ? "scale-105 border-emerald-400 bg-emerald-400/15 shadow-[0_0_24px_-6px_rgba(52,211,153,0.4)]"
                       : isHighlighted
@@ -109,16 +110,16 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
                     <img
                       src={player.avatarUrl}
                       alt=""
-                      className="h-8 w-8 rounded-full object-cover"
+                      className="h-12 w-12 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-rave-white/10 text-xs font-bold text-rave-white/60">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rave-white/10 text-base font-bold text-rave-white/60">
                       {player.username.charAt(0).toUpperCase()}
                     </div>
                   )}
 
                   <span
-                    className={`text-lg font-bold tracking-widest transition-colors duration-150 ${
+                    className={`text-2xl font-bold tracking-widest transition-colors duration-150 ${
                       isRevealed
                         ? "text-emerald-400"
                         : isHighlighted
@@ -130,7 +131,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
                   </span>
 
                   {isRevealed && (
-                    <span className="ml-auto text-xs font-semibold tracking-[0.2em] text-emerald-400 animate-pulse">
+                    <span className="ml-auto text-sm font-semibold tracking-[0.2em] text-emerald-400 animate-pulse">
                       WINNER
                     </span>
                   )}
