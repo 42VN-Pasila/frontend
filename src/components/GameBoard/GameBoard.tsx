@@ -83,14 +83,6 @@ export const GameBoard = () => {
   };
 
   const applyMatchState = useCallback((match: MatchDto, result?: MatchResultDto) => {
-    if (match.status === "Completed") {
-      disconnectSocket();
-      if (result) {
-        setMatchResult(result);
-      }
-      return;
-    }
-
     setMatchId(match.id);
     setHands(match.hands);
     setBooks(match.books);
@@ -102,6 +94,14 @@ export const GameBoard = () => {
       avatarUrl: user.avatarUrl ?? "",
       cardCount: match.userHandCounts.find((handCount) => handCount.userId === user.id)?.handCount ?? 0,
     })));
+
+    if (match.status === "Completed") {
+      disconnectSocket();
+      if (result) {
+        setMatchResult(result);
+      }
+      return;
+    }
   }, [
     setMatchId,
     setHands,
