@@ -34,14 +34,17 @@ export const useGameSessionStore = create<GameSessionState>()(
             setOpponents: (opponents: Opponent[]) => set({ opponents }),
             setHands: (hands: HandDto[]) => set({ hands }),
             setBooks: (books: BookDto[]) => set({ books }),
-            resetGameSession: () => set({
-                matchId: "",
-                opponentIds: [],
-                seats: [],
-                opponents: [],
-                hands: [],
-                books: [],
-            }),
+            resetGameSession: () => {
+                set({
+                    matchId: "",
+                    opponentIds: [],
+                    seats: [],
+                    opponents: [],
+                    hands: [],
+                    books: [],
+                });
+                useGameSessionStore.persist.clearStorage();
+            },
         }),
         {
             name: "game-session",

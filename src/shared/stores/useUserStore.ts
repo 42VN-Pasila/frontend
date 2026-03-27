@@ -19,7 +19,10 @@ export const useUserStore = create<UserState>()(
             setUserId: (userId: string) => set({ userId }),
             setUsername: (username: string) => set({ username }),
             setAvatarUrl: (avatarUrl: string) => set({ avatarUrl }),
-            resetUser: () => set({ userId: "", username: "", avatarUrl: undefined }),
+            resetUser: () => {
+                set({ userId: "", username: "", avatarUrl: undefined });
+                useUserStore.persist.clearStorage();
+            },
         }),
         {
             name: "user",

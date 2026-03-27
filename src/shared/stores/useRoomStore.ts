@@ -29,13 +29,16 @@ export const useRoomStore = create<RoomState>()(
             setOwnerId: (ownerId: string) => set({ ownerId }),
             setUsers: (users: UserDto[]) => set({ users }),
             setConnectionCount: (connectionCount: number) => set({ connectionCount }),
-            resetRoom: () => set({
-                id: "",
-                name: "",
-                ownerId: "",
-                users: [],
-                connectionCount: 0,
-            }),
+            resetRoom: () => {
+                set({
+                    id: "",
+                    name: "",
+                    ownerId: "",
+                    users: [],
+                    connectionCount: 0,
+                });
+                useRoomStore.persist.clearStorage();
+            },
         }),
         {
             name: "room",
