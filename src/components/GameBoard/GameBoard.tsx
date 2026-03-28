@@ -39,8 +39,14 @@ export const GameBoard = () => {
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(null);
   const [selection, setSelection] = useState<SelectedCard>({ suit: null, rank: null });
 
+  const handleAbandoned = useCallback(() => {
+    resetGameSession();
+    resetRoom();
+    navigate("/dashboard");
+  }, [resetGameSession, resetRoom, navigate]);
+
   const { matchResult, errorMessage, setErrorMessage, resetTurn } =
-    useMatchConnection(matchId, userId);
+    useMatchConnection(matchId, userId, handleAbandoned);
 
   useAbandonmentGuard(matchId, userId, isExitingGame, setErrorMessage);
 

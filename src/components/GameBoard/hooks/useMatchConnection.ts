@@ -11,7 +11,11 @@ import {
 } from "@/shared/api/directorClient";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 
-export function useMatchConnection(matchId: string, userId: string) {
+export function useMatchConnection(
+  matchId: string,
+  userId: string,
+  onAbandoned: () => void,
+) {
   const syncMatchState = useGameSessionStore((s) => s.syncMatchState);
 
   const [matchResult, setMatchResult] = useState<MatchResultDto | null>(null);
@@ -25,9 +29,12 @@ export function useMatchConnection(matchId: string, userId: string) {
       if (match.status === "Completed" && result) {
         disconnectSocket();
         setMatchResult(result);
+        if (result.endedReason === "Abandoned") {
+          onAbandoned();
+        }
       }
     },
-    [syncMatchState, userId],
+    [syncMatchState, userId, onAbandoned],
   );
 
   useEffect(() => {
