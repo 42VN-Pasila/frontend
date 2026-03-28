@@ -6,6 +6,7 @@ import LoginPage from "./pages/Auth/LoginPage";
 import AboutPage from "./pages/HomePage/AboutPage";
 import { Dashboard } from "./components/Dashboard/Dashboard";
 import { GameBoard } from "./components/GameBoard/GameBoard";
+import { SettingsPage } from "./components/Dashboard/SettingsPage";
 
 const App: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
             }
           /> */}
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/settings" element={<SettingsPage />} />
           <Route path="/match/:matchId" element={<GameBoard />} />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
