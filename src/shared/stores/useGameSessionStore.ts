@@ -38,21 +38,18 @@ export const useGameSessionStore = create<GameSessionState>()(
                     cardCount: match.userHandCounts.find((hc) => hc.userId === u.id)?.handCount ?? 0,
                 })),
             }),
-            resetGameSession: () => {
-                set({
-                    matchId: "",
-                    opponentIds: [],
-                    seats: [],
-                    opponents: [],
-                    hands: [],
-                    books: [],
-                });
-                useGameSessionStore.persist.clearStorage();
-            },
+            resetGameSession: () => set({
+                matchId: "",
+                opponentIds: [],
+                seats: [],
+                opponents: [],
+                hands: [],
+                books: [],
+            }),
         }),
         {
             name: "game-session",
-            storage: createJSONStorage(() => localStorage),
+            storage: createJSONStorage(() => sessionStorage),
             partialize: (state) => ({
                 opponentIds: state.opponentIds,
                 matchId: state.matchId,

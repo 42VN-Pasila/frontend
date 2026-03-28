@@ -42,7 +42,7 @@ export const useRoomStore = create<RoomState>()(
         }),
         {
             name: "room",
-            storage: createJSONStorage(() => localStorage),
+            storage: createJSONStorage(() => sessionStorage),
             partialize: (state) => ({
                 id: state.id,
                 name: state.name,
