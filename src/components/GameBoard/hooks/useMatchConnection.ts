@@ -15,7 +15,6 @@ export function useMatchConnection(matchId: string, userId: string) {
   const syncMatchState = useGameSessionStore((s) => s.syncMatchState);
 
   const [matchResult, setMatchResult] = useState<MatchResultDto | null>(null);
-  const [isMatchOver, setIsMatchOver] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [resetTurn, setResetTurn] = useState(false);
 
@@ -23,12 +22,9 @@ export function useMatchConnection(matchId: string, userId: string) {
     (match: MatchDto, result?: MatchResultDto) => {
       syncMatchState(match, userId);
 
-      if (match.status === "Completed") {
+      if (match.status === "Completed" && result) {
         disconnectSocket();
-        setIsMatchOver(true);
-        if (result) {
-          setMatchResult(result);
-        }
+        setMatchResult(result);
       }
     },
     [syncMatchState, userId],
@@ -76,5 +72,5 @@ export function useMatchConnection(matchId: string, userId: string) {
     };
   }, [matchId, userId, applyMatchState]);
 
-  return { matchResult, isMatchOver, errorMessage, setErrorMessage, resetTurn };
+  return { matchResult, errorMessage, setErrorMessage, resetTurn };
 }
