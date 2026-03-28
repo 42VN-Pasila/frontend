@@ -41,9 +41,8 @@ export const GameBoard = () => {
 
   const handleAbandoned = useCallback(() => {
     resetGameSession();
-    resetRoom();
     navigate("/dashboard");
-  }, [resetGameSession, resetRoom, navigate]);
+  }, [resetGameSession, navigate]);
 
   const { matchResult, errorMessage, setErrorMessage, resetTurn } =
     useMatchConnection(matchId, userId, handleAbandoned);
