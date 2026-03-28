@@ -10,7 +10,6 @@ import {
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 import { useNavigate } from "react-router-dom";
-import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useEffect } from "react";
 
 type SlotStatus = "HOST" | "JOINED" | "EMPTY";
@@ -54,14 +53,12 @@ export const RoomSlot = () => {
     const { mutateAsync: updateUserStatus } = useUpdateUserStatusMutation();
     const { mutateAsync: startMatch } = useStartMatchMutation();
     const { mutateAsync: disconnectFromRoom } = useDisconnectRoomMutation();
-    const { setMatchId } = useGameSessionStore();
 
     useEffect(() => {
         if (roomStatus?.started && roomMetaData?.matchId) {
-            setMatchId(roomMetaData.matchId);
             navigate(`/match/${roomMetaData.matchId}`);
         }
-    }, [roomStatus?.started, roomMetaData?.matchId, navigate, roomId, setMatchId]);
+    }, [roomStatus?.started, roomMetaData?.matchId, navigate, roomId]);
 
     const isUserReady = (targetUserId: string) =>
         currentUsers.some(

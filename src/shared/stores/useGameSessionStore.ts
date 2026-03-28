@@ -10,7 +10,6 @@ type GameSessionState = {
     seats: SeatDto[];
     hands: HandDto[];
     books: BookDto[];
-    setMatchId: (matchId: string) => void;
     syncMatchState: (match: MatchDto, userId: string) => void;
     resetGameSession: () => void;
 };
@@ -24,7 +23,6 @@ export const useGameSessionStore = create<GameSessionState>()(
             seats: [],
             hands: [],
             books: [],
-            setMatchId: (matchId: string) => set({ matchId }),
             syncMatchState: (match: MatchDto, userId: string) => set({
                 matchId: match.id,
                 hands: match.hands,
