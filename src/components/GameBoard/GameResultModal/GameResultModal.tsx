@@ -66,7 +66,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
   }, [phase]);
 
   const isWinner = result.winnerUserId === userId;
-  const isAbandoned = result.endedReason === "abandoned";
+  const isAbandoned = result.endedReason === "Abandoned";
 
   const headingText = isAbandoned
     ? isWinner
@@ -98,13 +98,12 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
               return (
                 <div
                   key={player.id}
-                  className={`flex items-center gap-4 rounded-xl border-2 px-6 py-5 transition-all duration-150 ${
-                    isRevealed
+                  className={`flex items-center gap-4 rounded-xl border-2 px-6 py-5 transition-all duration-150 ${isRevealed
                       ? "scale-105 border-emerald-400 bg-emerald-400/15 shadow-[0_0_24px_-6px_rgba(52,211,153,0.4)]"
                       : isHighlighted
                         ? "border-rave-red bg-rave-red/10"
                         : "border-rave-white/5 bg-transparent"
-                  }`}
+                    }`}
                 >
                   {player.avatarUrl ? (
                     <img
@@ -119,13 +118,12 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
                   )}
 
                   <span
-                    className={`text-2xl font-bold tracking-widest transition-colors duration-150 ${
-                      isRevealed
+                    className={`text-2xl font-bold tracking-widest transition-colors duration-150 ${isRevealed
                         ? "text-emerald-400"
                         : isHighlighted
                           ? "text-rave-white"
                           : "text-rave-white/30"
-                    }`}
+                      }`}
                   >
                     {player.username}
                   </span>
@@ -147,20 +145,18 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
-        className={`flex w-full max-w-md flex-col items-center gap-6 border-2 border-rave-white/10 bg-rave-black p-10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)] transition-all duration-500 ${
-          fadeIn ? "scale-100 opacity-100" : "scale-95 opacity-0"
-        }`}
+        className={`flex w-full max-w-md flex-col items-center gap-6 border-2 border-rave-white/10 bg-rave-black p-10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)] transition-all duration-500 ${fadeIn ? "scale-100 opacity-100" : "scale-95 opacity-0"
+          }`}
       >
         {/* Result heading */}
         <div className="flex flex-col items-center gap-2">
           <span
-            className={`text-4xl font-black tracking-widest ${
-              isAbandoned
+            className={`text-4xl font-black tracking-widest ${isAbandoned
                 ? "text-amber-400"
                 : isWinner
                   ? "text-emerald-400"
                   : "text-rave-red"
-            }`}
+              }`}
           >
             {headingText}
           </span>

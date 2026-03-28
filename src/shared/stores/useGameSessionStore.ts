@@ -1,5 +1,5 @@
 import type { Opponent } from "@/components/GameBoard/types"
-import type { BookDto, HandDto, SeatDto } from "@/gen/director";
+import type { BookDto, HandDto, MatchDto, SeatDto } from "@/gen/director";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -10,12 +10,8 @@ type GameSessionState = {
     seats: SeatDto[];
     hands: HandDto[];
     books: BookDto[];
-    setOpponentIds: (opponentIds: string[]) => void;
     setMatchId: (matchId: string) => void;
-    setOpponents: (opponents: Opponent[]) => void;
-    setSeats: (seats: SeatDto[]) => void;
-    setHands: (hands: HandDto[]) => void;
-    setBooks: (books: BookDto[]) => void;
+    syncMatchState: (match: MatchDto, userId: string) => void;
     resetGameSession: () => void;
 };
 
@@ -28,12 +24,20 @@ export const useGameSessionStore = create<GameSessionState>()(
             seats: [],
             hands: [],
             books: [],
-            setOpponentIds: (opponentIds: string[]) => set({ opponentIds }),
             setMatchId: (matchId: string) => set({ matchId }),
-            setSeats: (seats: SeatDto[]) => set({ seats }),
-            setOpponents: (opponents: Opponent[]) => set({ opponents }),
-            setHands: (hands: HandDto[]) => set({ hands }),
-            setBooks: (books: BookDto[]) => set({ books }),
+            syncMatchState: (match: MatchDto, userId: string) => set({
+                matchId: match.id,
+                hands: match.hands,
+                books: match.books,
+                opponentIds: match.users.filter((u) => u.id !== userId).map((u) => u.id),
+                seats: match.seats,
+                opponents: match.users.map((u) => ({
+                    id: u.id,
+                    username: u.id,
+                    avatarUrl: u.avatarUrl ?? "",
+                    cardCount: match.userHandCounts.find((hc) => hc.userId === u.id)?.handCount ?? 0,
+                })),
+            }),
             resetGameSession: () => {
                 set({
                     matchId: "",
