@@ -985,7 +985,7 @@ components:
         - hasCoWinners
         - endedReason
         - startedAt
-        - completedAt
+        - endedAt
       properties:
         roomId:
           type: string
@@ -998,7 +998,7 @@ components:
           type: string
         startedAt:
           type: string
-        completedAt:
+        endedAt:
           type: string
     CreateRoomRequestBody:
       type: object

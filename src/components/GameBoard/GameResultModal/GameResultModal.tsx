@@ -77,8 +77,8 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
       : "YOU LOSE";
 
   const startedAt = new Date(result.startedAt);
-  const completedAt = new Date(result.completedAt);
-  const durationMs = completedAt.getTime() - startedAt.getTime();
+  const endedAt = new Date(result.endedAt);
+  const durationMs = endedAt.getTime() - startedAt.getTime();
   const durationMin = Math.floor(durationMs / 60_000);
   const durationSec = Math.floor((durationMs % 60_000) / 1_000);
 
@@ -99,10 +99,10 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
                 <div
                   key={player.id}
                   className={`flex items-center gap-4 rounded-xl border-2 px-6 py-5 transition-all duration-150 ${isRevealed
-                      ? "scale-105 border-emerald-400 bg-emerald-400/15 shadow-[0_0_24px_-6px_rgba(52,211,153,0.4)]"
-                      : isHighlighted
-                        ? "border-rave-red bg-rave-red/10"
-                        : "border-rave-white/5 bg-transparent"
+                    ? "scale-105 border-emerald-400 bg-emerald-400/15 shadow-[0_0_24px_-6px_rgba(52,211,153,0.4)]"
+                    : isHighlighted
+                      ? "border-rave-red bg-rave-red/10"
+                      : "border-rave-white/5 bg-transparent"
                     }`}
                 >
                   {player.avatarUrl ? (
@@ -119,10 +119,10 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
 
                   <span
                     className={`text-2xl font-bold tracking-widest transition-colors duration-150 ${isRevealed
-                        ? "text-emerald-400"
-                        : isHighlighted
-                          ? "text-rave-white"
-                          : "text-rave-white/30"
+                      ? "text-emerald-400"
+                      : isHighlighted
+                        ? "text-rave-white"
+                        : "text-rave-white/30"
                       }`}
                   >
                     {player.username}
@@ -152,10 +152,10 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
         <div className="flex flex-col items-center gap-2">
           <span
             className={`text-4xl font-black tracking-widest ${isAbandoned
-                ? "text-amber-400"
-                : isWinner
-                  ? "text-emerald-400"
-                  : "text-rave-red"
+              ? "text-amber-400"
+              : isWinner
+                ? "text-emerald-400"
+                : "text-rave-red"
               }`}
           >
             {headingText}
