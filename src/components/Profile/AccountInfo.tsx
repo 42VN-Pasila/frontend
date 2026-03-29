@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Button } from "@/shared/components";
 import { Form } from "@/shared/components/Form";
 import { useUserStore } from "@/shared/stores/useUserStore";
@@ -15,6 +14,18 @@ const MOCK_USER: AccountUser = {
   email: "user@example.com",
   password: "examplepassword",
 };
+
+const passwordRules = [
+  { regex: /.{8,16}/, error: 'Password length must be 8-16' },
+  { regex: /[a-z]/, error: 'Password requires at least 1 lowercase letter' },
+  { regex: /[A-Z]/, error: 'Password requires at least 1 uppercase letter' },
+  { regex: /\d/, error: 'Password requires at least 1 number' },
+  { regex: /[\W_]/, error: 'Password requires at least 1 special character' },
+  {
+    regex: /^[^\s'"\\;]+$/,
+    error: 'Password cannot contain quotes, backflash or whitespace'
+  }
+];
 
 export const AccountInfo = () => {
   const email = MOCK_USER.email; // later replace with Rudex API

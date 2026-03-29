@@ -6,55 +6,8 @@ import {
 } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
 import { useUserStore } from "@/shared/stores/useUserStore";
-
 import { AccountInfo } from "../Profile/AccountInfo";
 import { AvatarSection } from "../Profile/AvatarSection";
-
-type UserProfilePage = {
-  id: string;
-  username: string;
-  imageUrl: string;
-  status: "ONLINE" | "IN_GAME" | "OFFLINE";
-  email: string;
-  password: string;
-};
-
-const MOCK_FRIENDS: UserProfilePage[] = [
-  {
-    id: "f-001",
-    username: "Tan",
-    imageUrl:
-      "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535d195197053fe1a71f4b_peep-98.png",
-    status: "ONLINE",
-    email: "example@.example.com",
-    password: "examplepassword",
-  },
-  {
-    id: "f-002",
-    username: "Triet",
-    imageUrl:
-      "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535d35550b761a3af880d9_peep-99.png",
-    status: "IN_GAME",
-    email: "example@.example.com",
-    password: "examplepassword",
-  },
-  {
-    id: "f-003",
-    username: "Huong",
-    imageUrl:
-      "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535cfb4600807d898fc75b_peep-97.png",
-    status: "OFFLINE",
-    email: "example@.example.com",
-    password: "examplepassword",
-  },
-];
-
-const STATUS_CLASSES: Record<UserProfilePage["status"], string> = {
-  ONLINE: "border-emerald-400/40 bg-emerald-400/15 text-emerald-300",
-  IN_GAME: "border-rave-red/50 bg-rave-red/20 text-rave-white",
-  OFFLINE: "border-rave-white/20 bg-rave-white/10 text-rave-white/60",
-};
-
 
 export const SettingsPage = () => {
   const navigate = useNavigate();
