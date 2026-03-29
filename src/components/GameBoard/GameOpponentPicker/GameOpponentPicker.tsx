@@ -34,11 +34,18 @@ function getPositions(opponents: Opponent[], seats: SeatDto[], userId: string): 
   }
 
   const fallbackOpponents = opponents.filter((opponent) => opponent.id !== userId);
+  const left = opponents.find((o) => o.id === positionOrder[0]) ?? fallbackOpponents[0];
+  const top = opponents.find((o) => o.id === positionOrder[1]) ?? fallbackOpponents[1];
+  const right = opponents.find((o) => o.id === positionOrder[2]) ?? fallbackOpponents[2];
+
+  if (!left || !top || !right) {
+    return null;
+  }
 
   return {
-    left: opponents.find((o) => o.id === positionOrder[0]) ?? fallbackOpponents[0],
-    top: opponents.find((o) => o.id === positionOrder[1]) ?? fallbackOpponents[1],
-    right: opponents.find((o) => o.id === positionOrder[2]) ?? fallbackOpponents[2],
+    left,
+    top,
+    right,
   };
 }
 

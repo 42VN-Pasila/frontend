@@ -1,4 +1,4 @@
-import type { Opponent } from "@/components/GameBoard/types"
+import type { Opponent } from "@/components/GameBoard/types";
 import type { BookDto, HandDto, MatchDto, SeatDto } from "@/gen/director";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -14,36 +14,35 @@ type GameSessionState = {
     resetGameSession: () => void;
 };
 
+const initialState = {
+    matchId: "",
+    opponentIds: [],
+    opponents: [],
+    seats: [],
+    hands: [],
+    books: [],
+};
+
 export const useGameSessionStore = create<GameSessionState>()(
     persist(
-        (set) => ({
-            matchId: "",
-            opponentIds: [],
-            opponents: [],
-            seats: [],
-            hands: [],
-            books: [],
-            syncMatchState: (match: MatchDto, userId: string) => set({
-                matchId: match.id,
-                hands: match.hands,
-                books: match.books,
-                opponentIds: match.users.filter((u) => u.id !== userId).map((u) => u.id),
-                seats: match.seats,
-                opponents: match.users.map((u) => ({
-                    id: u.id,
-                    username: u.id,
-                    avatarUrl: u.avatarUrl ?? "",
-                    cardCount: match.userHandCounts.find((hc) => hc.userId === u.id)?.handCount ?? 0,
-                })),
-            }),
-            resetGameSession: () => set({
-                matchId: "",
-                opponentIds: [],
-                seats: [],
-                opponents: [],
-                hands: [],
-                books: [],
-            }),
+        (set, _get, store) => ({
+            ...initialState,
+            syncMatchState: (match: MatchDto, userId: string) =>
+                set({
+                    matchId: match.id,
+                    hands: match.hands,
+                    books: match.books,
+                    opponentIds: match.users.filter((u) => u.id !== userId).map((u) => u.id),
+                    seats: match.seats,
+                    opponents: match.users.map((u) => ({
+                        id: u.id,
+                        username: u.id,
+                        avatarUrl: u.avatarUrl ?? "",
+                        cardCount:
+                            match.userHandCounts.find((hc) => hc.userId === u.id)?.handCount ?? 0,
+                    })),
+                }),
+            resetGameSession: () => set(store.getInitialState()),
         }),
         {
             name: "game-session",

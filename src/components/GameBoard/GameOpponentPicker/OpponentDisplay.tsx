@@ -20,7 +20,7 @@ const OpponentDisplay = ({
     { data: positions.top, side: "top" as const },
     { data: positions.left, side: "left" as const },
     { data: positions.right, side: "right" as const },
-  ];
+  ].filter((item) => item.data);
 
   return (
     <div className="flex grow gap-x-[4vw] w-full items-center justify-center p-10">

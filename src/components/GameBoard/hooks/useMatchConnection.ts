@@ -14,27 +14,32 @@ import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 export function useMatchConnection(
   matchId: string,
   userId: string,
-  onAbandoned: () => void,
 ) {
   const syncMatchState = useGameSessionStore((s) => s.syncMatchState);
+  const resetGameSession = useGameSessionStore((s) => s.resetGameSession);
 
   const [matchResult, setMatchResult] = useState<MatchResultDto | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isMatchOver, setIsMatchOver] = useState(false);
   const [resetTurn, setResetTurn] = useState(false);
 
   const applyMatchState = useCallback(
     (match: MatchDto, result?: MatchResultDto) => {
-      syncMatchState(match, userId);
-
-      if (match.status === "Completed" && result) {
+      if (match.status === "Completed") {
+        setIsMatchOver(true);
         disconnectSocket();
-        setMatchResult(result);
-        if (result.endedReason === "Abandoned") {
-          onAbandoned();
+        if (result) {
+          setMatchResult(result);
+          return;
         }
+
+        resetGameSession();
+        return;
       }
+
+      syncMatchState(match, userId);
     },
-    [syncMatchState, userId, onAbandoned],
+    [syncMatchState, resetGameSession, userId],
   );
 
   useEffect(() => {
@@ -76,8 +81,9 @@ export function useMatchConnection(
       unsubConnect();
       unsubDisconnect();
       disconnectSocket();
+      resetGameSession();
     };
-  }, [matchId, userId, applyMatchState]);
+  }, [matchId, userId, applyMatchState, resetGameSession]);
 
-  return { matchResult, errorMessage, setErrorMessage, resetTurn };
+  return { matchResult, errorMessage, isMatchOver, setErrorMessage, resetTurn };
 }

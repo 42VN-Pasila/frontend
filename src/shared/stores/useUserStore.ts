@@ -13,16 +13,13 @@ type UserState = {
 
 export const useUserStore = create<UserState>()(
     persist(
-        (set) => ({
+        (set, _get, store) => ({
             userId: "",
             username: "",
             setUserId: (userId: string) => set({ userId }),
             setUsername: (username: string) => set({ username }),
             setAvatarUrl: (avatarUrl: string) => set({ avatarUrl }),
-            resetUser: () => {
-                set({ userId: "", username: "", avatarUrl: undefined });
-                useUserStore.persist.clearStorage();
-            },
+            resetUser: () => set(store.getInitialState()),
         }),
         {
             name: "user",

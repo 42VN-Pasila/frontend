@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
@@ -39,15 +39,15 @@ export const GameBoard = () => {
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(null);
   const [selection, setSelection] = useState<SelectedCard>({ suit: null, rank: null });
 
-  const handleAbandoned = useCallback(() => {
-    resetGameSession();
+  const { matchResult, errorMessage, isMatchOver, setErrorMessage, resetTurn } =
+    useMatchConnection(matchId, userId);
+
+  useAbandonmentGuard(matchId, userId, isExitingGame, isMatchOver, setErrorMessage);
+
+  useEffect(() => {
+    if (!isMatchOver || matchResult) return;
     navigate("/dashboard");
-  }, [resetGameSession, navigate]);
-
-  const { matchResult, errorMessage, setErrorMessage, resetTurn } =
-    useMatchConnection(matchId, userId, handleAbandoned);
-
-  useAbandonmentGuard(matchId, userId, isExitingGame, setErrorMessage);
+  }, [isMatchOver, matchResult, navigate]);
 
   const isMyTurn = seats.find((s) => s.userId === userId)?.isTurn ?? false;
   const isInteractionDisabled = !isMyTurn || isExitingGame;

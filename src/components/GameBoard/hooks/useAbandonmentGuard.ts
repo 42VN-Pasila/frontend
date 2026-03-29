@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import type { MatchDto } from "@/gen/director";
 import {
   connectSocket,
   disconnectSocket,
@@ -13,9 +14,12 @@ export function useAbandonmentGuard(
   matchId: string,
   userId: string,
   isExitingGame: boolean,
+  isMatchOver: boolean,
   setErrorMessage: (msg: string | null) => void,
 ) {
   const syncMatchState = useGameSessionStore((s) => s.syncMatchState);
+
+  const canSyncMatchState = (match: MatchDto) => match.status !== "Completed";
 
   useEffect(() => {
     if (!matchId || !userId) return;
@@ -30,7 +34,7 @@ export function useAbandonmentGuard(
     };
 
     const leaveMatchForAbandonment = async () => {
-      if (hasLeftMatch) return;
+      if (hasLeftMatch || isExitingGame || isMatchOver) return;
       hasLeftMatch = true;
       clearHiddenLeaveTimeout();
 
@@ -42,12 +46,16 @@ export function useAbandonmentGuard(
     };
 
     const rejoinAfterTemporaryLeave = async () => {
-      if (!hasLeftMatch || isExitingGame) return;
+      if (!hasLeftMatch || isExitingGame || isMatchOver) return;
 
       try {
         connectSocket();
         const { match } = await socketJoinMatch({ matchId, userId });
-        syncMatchState(match, userId);
+        if (canSyncMatchState(match)) {
+          syncMatchState(match, userId);
+        } else {
+          disconnectSocket();
+        }
         hasLeftMatch = false;
         setErrorMessage(null);
       } catch {
@@ -56,6 +64,11 @@ export function useAbandonmentGuard(
     };
 
     const handleVisibilityChange = () => {
+      if (isMatchOver) {
+        clearHiddenLeaveTimeout();
+        return;
+      }
+
       if (document.visibilityState === "visible") {
         clearHiddenLeaveTimeout();
         void rejoinAfterTemporaryLeave();
@@ -69,6 +82,7 @@ export function useAbandonmentGuard(
     };
 
     const handlePageHide = () => {
+      if (isMatchOver) return;
       void leaveMatchForAbandonment();
     };
 
@@ -80,5 +94,5 @@ export function useAbandonmentGuard(
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("pagehide", handlePageHide);
     };
-  }, [matchId, userId, isExitingGame, syncMatchState, setErrorMessage]);
+  }, [matchId, userId, isExitingGame, isMatchOver, syncMatchState, setErrorMessage]);
 }

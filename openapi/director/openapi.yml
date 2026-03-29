@@ -944,7 +944,6 @@ components:
         - userBookCounts
         - roomId
         - seats
-        - currentSeat
       properties:
         id:
           type: string
