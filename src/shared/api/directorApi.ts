@@ -158,6 +158,8 @@ type QueryOptions = {
     pollingInterval?: number;
     refetchOnWindowFocus?: boolean;
     refetchOnReconnect?: boolean;
+    refetchOnMount?: boolean | "always";
+    staleTime?: number;
 };
 
 export const useGetRoomStatusQuery = (
@@ -171,6 +173,8 @@ export const useGetRoomStatusQuery = (
         refetchInterval: options?.pollingInterval,
         refetchOnWindowFocus: options?.refetchOnWindowFocus,
         refetchOnReconnect: options?.refetchOnReconnect,
+        refetchOnMount: options?.refetchOnMount,
+        staleTime: options?.staleTime,
     });
 };
 
@@ -185,5 +189,7 @@ export const useGetRoomMetaDataQuery = (
         refetchInterval: options?.pollingInterval,
         refetchOnWindowFocus: options?.refetchOnWindowFocus,
         refetchOnReconnect: options?.refetchOnReconnect,
+        refetchOnMount: options?.refetchOnMount,
+        staleTime: options?.staleTime,
     });
 };

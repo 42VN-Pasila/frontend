@@ -30,6 +30,8 @@ export const RoomSlot = () => {
         pollingInterval: 3_000,
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
+        refetchOnMount: "always",
+        staleTime: 0,
     });
 
 
@@ -48,6 +50,8 @@ export const RoomSlot = () => {
     const isHost = userId === currentOwnerId;
     const { data: roomMetaData } = useGetRoomMetaDataQuery(roomId, {
         enabled: Boolean(roomId && roomStatus?.started),
+        refetchOnMount: "always",
+        staleTime: 0,
     });
 
     const { mutateAsync: updateUserStatus } = useUpdateUserStatusMutation();

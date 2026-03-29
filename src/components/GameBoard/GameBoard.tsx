@@ -6,6 +6,7 @@ import {
   socketAskCardMatch,
   socketExitMatch,
 } from "@/shared/api/directorClient";
+import { queryClient } from "@/shared/api/queryClient";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
@@ -32,7 +33,7 @@ export const GameBoard = () => {
   const navigate = useNavigate();
   const { userId } = useUserStore();
   const { hands, seats, resetGameSession } = useGameSessionStore();
-  const { resetRoom } = useRoomStore();
+  const { id: roomId, resetRoom } = useRoomStore();
   const matchId = useParams<{ matchId: string }>().matchId ?? "";
 
   const [isExitingGame, setIsExitingGame] = useState(false);
@@ -44,10 +45,19 @@ export const GameBoard = () => {
 
   useAbandonmentGuard(matchId, userId, isExitingGame, isMatchOver, setErrorMessage);
 
+  const navigateToDashboard = useCallback(async () => {
+    if (roomId) {
+      queryClient.removeQueries({ queryKey: ["roomMetadata", roomId] });
+      await queryClient.invalidateQueries({ queryKey: ["rooms", roomId] });
+    }
+
+    navigate("/dashboard", { replace: true });
+  }, [navigate, roomId]);
+
   useEffect(() => {
     if (!isMatchOver || matchResult) return;
-    navigate("/dashboard");
-  }, [isMatchOver, matchResult, navigate]);
+    void navigateToDashboard();
+  }, [isMatchOver, matchResult, navigateToDashboard]);
 
   const isMyTurn = seats.find((s) => s.userId === userId)?.isTurn ?? false;
   const isInteractionDisabled = !isMyTurn || isExitingGame;
@@ -92,8 +102,8 @@ export const GameBoard = () => {
 
   const handleResultClose = useCallback(() => {
     resetGameSession();
-    navigate("/dashboard");
-  }, [navigate, resetGameSession]);
+    void navigateToDashboard();
+  }, [navigateToDashboard, resetGameSession]);
 
   if (!matchId) {
     return <div>Match not found</div>;
