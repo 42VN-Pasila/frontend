@@ -34,7 +34,7 @@ export const useGameSessionStore = create<GameSessionState>()(
                     books: match.books,
                     opponentIds: match.users.filter((u) => u.id !== userId).map((u) => u.id),
                     seats: match.seats,
-                    opponents: match.users.filter((u) => u.id !== userId)x.map((u) => ({
+                    opponents: match.users.filter((u) => u.id !== userId).map((u) => ({
                         id: u.id,
                         username: u.id,
                         avatarUrl: u.avatarUrl ?? "",
