@@ -4,12 +4,15 @@ import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequ
 import {
     type ConnectRoomRequest,
     type CreateRoomRequestBody,
+    type ExitMatchEvent,
     type JoinMatchEvent,
     type LeaveMatchEvent,
     type MatchDto,
+    type MatchResultDto,
     type RequestCardEvent,
     ResourcesService,
     RoomsService,
+    type SkipTurnEvent,
     type StartMatchRequest,
     type UpdateRoomUserStatusRequestBody,
     type UpdateUserAvatarRequestBody,
@@ -31,7 +34,33 @@ type MatchPingEvent = {
     userId: string;
 };
 
-export const socket: Socket = io(import.meta.env.VITE_DIRECTOR_URL, {
+const rawDirectorUrl = import.meta.env.VITE_DIRECTOR_URL as string | undefined;
+
+const resolveDirectorBaseUrl = () => {
+    const fallbackUrl = window.location.origin;
+    const input = rawDirectorUrl?.trim();
+
+    if (!input) {
+        return fallbackUrl;
+    }
+
+    try {
+        return toDevPath(input);
+    } catch {
+        if (import.meta.env.DEV) {
+            console.warn(
+                `Invalid VITE_DIRECTOR_URL "${input}". Falling back to "${fallbackUrl}" in dev.`,
+            );
+            return fallbackUrl;
+        }
+        throw new Error(`Invalid VITE_DIRECTOR_URL: "${input}"`);
+    }
+};
+
+const directorBaseUrl = resolveDirectorBaseUrl();
+const directorSocketOrigin = new URL(directorBaseUrl).origin;
+
+export const socket: Socket = io(directorSocketOrigin, {
     transports: ['websocket'],
     autoConnect: false,
     withCredentials: true,
@@ -51,7 +80,7 @@ export const disconnectSocket = () => {
 
 export const socketJoinMatch = (
     payload: JoinMatchEvent,
-): Promise<MatchDto> => {
+): Promise<{ match: MatchDto }> => {
     return new Promise((resolve, reject) => {
         socket.emit('match:join', payload, (res: JoinMatchAck) => {
             if (!res?.ok) {
@@ -60,7 +89,7 @@ export const socketJoinMatch = (
                 return;
             }
 
-            resolve(res.match);
+            resolve({ match: res.match });
         });
     });
 };
@@ -76,6 +105,21 @@ export const socketLeaveMatch = (
                 return;
             }
 
+            resolve();
+        });
+    });
+};
+
+export const socketExitMatch = (
+    payload: ExitMatchEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:exit', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('exit failed', res?.error);
+                reject(new Error(res?.error || 'EXIT_FAILED'));
+                return;
+            }
             resolve();
         });
     });
@@ -97,6 +141,21 @@ export const socketAskCardMatch = (
     });
 };
 
+export const socketSkipTurn = (
+    payload: SkipTurnEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:skipTurn', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('skip turn failed', res?.error);
+                reject(new Error(res?.error || 'SKIP_TURN_FAILED'));
+                return;
+            }
+            resolve();
+        });
+    });
+};
+
 export const socketPingMatch = (
     payload: MatchPingEvent,
 ): Promise<void> => {
@@ -113,7 +172,7 @@ export const socketPingMatch = (
     });
 };
 
-export const onMatchState = (handler: (match: MatchDto) => void) => {
+export const onMatchState = (handler: (match: MatchDto, matchResult?: MatchResultDto) => void) => {
     socket.on('match:state', handler);
     return () => socket.off('match:state', handler);
 };
@@ -123,13 +182,12 @@ export const onSocketConnect = (handler: () => void) => {
     return () => socket.off('connect', handler);
 };
 
-export const onSocketDisconnect = (handler: (reason: Socket.DisconnectReason) => void) => {
+export const onSocketDisconnect = (handler: () => void) => {
     socket.on('disconnect', handler);
     return () => socket.off('disconnect', handler);
 };
 
-
-OpenAPI.BASE = toDevPath(import.meta.env.VITE_DIRECTOR_URL ?? "");
+OpenAPI.BASE = directorBaseUrl;
 
 export const directorClient = {
     async createUser(body: CreateUserRequestBody) {
@@ -161,5 +219,8 @@ export const directorClient = {
     },
     async disconnectRoom(roomId: string, userId: string) {
         return RoomsService.disconnectRoom({ roomId, requestBody: { userId } });
+    },
+    async getRoomMetaData(roomId: string) {
+        return RoomsService.getRoomMetaData({ roomId });
     },
 };

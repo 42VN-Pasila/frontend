@@ -3,25 +3,40 @@ import CardBackImg from "@assets/card-back-2.png";
 import type { Opponent } from "../types";
 import Avatar from "./Avatar";
 import Badge from "../Badge";
+import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+import TurnIndicator from "./TurnIndicator";
 
 interface OpponentProfileProps extends Opponent {
   selected?: boolean;
   onClick?: () => void;
+  isActiveTurn?: boolean;
 }
 
 const OpponentProfile = ({
+  id,
   username,
   avatarUrl,
   cardCount,
   selected = false,
   onClick,
+  isActiveTurn = false,
 }: OpponentProfileProps) => {
+  const { books } = useGameSessionStore();
+  const bookCount = books.filter((book) => book.userId === id).length;
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={selected}
-      className={`
+    <div className="relative">
+      {isActiveTurn ? (
+        <TurnIndicator
+          label="THEIR TURN"
+          className="pointer-events-none absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2"
+        />
+      ) : null}
+      <button
+        type="button"
+        onClick={onClick}
+        aria-pressed={selected}
+        className={`
         group relative w-[240px] h-[330px] p-5
         flex flex-col items-center gap-4
         rounded-2xl overflow-hidden
@@ -31,50 +46,41 @@ const OpponentProfile = ({
         hover:border-rave-red hover:bg-rave-red/10
         ${selected ? "border-rave-red bg-rave-red/10 shadow-[0_16px_40px_-22px_rgba(0,0,0,0.75)]" : "border-rave-white/10 bg-rave-white/5"}
       `}
-    >
-      {/* subtle sheen */}
-      {/* <div
-        className={`
-          pointer-events-none absolute inset-x-4 top-3 h-16 rounded-xl
-          bg-gradient-to-b from-white/10 to-transparent
-          transition-opacity duration-300
-          ${selected ? "opacity-90" : "opacity-50 group-hover:opacity-80"}
-        `}
-      /> */}
-
-      <div
-        className={`
+      >
+        <div
+          className={`
     pointer-events-none absolute inset-x-4 top-3 h-16 rounded-xl
     transition-opacity duration-300
     ${selected ? "opacity-90" : "opacity-50 group-hover:opacity-80"}
   `}
-        style={{
-          // halftone dots (subtle)
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.18) 1px, transparent 1.6px)",
-          backgroundSize: "8px 8px",
+          style={{
+            // halftone dots (subtle)
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.18) 1px, transparent 1.6px)",
+            backgroundSize: "8px 8px",
 
-          // fade out downward like your old gradient
-          maskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
-        }}
-      />
+            // fade out downward like your old gradient
+            maskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
+          }}
+        />
 
-      <div className="relative flex flex-col items-center gap-4">
-        <Avatar src={avatarUrl} alt={username} isSelected={selected} />
+        <div className="relative flex flex-col items-center gap-4">
+          <Avatar src={avatarUrl} alt={username} isSelected={selected} />
 
-        {/* badge anchor + nicer placement */}
-        <div className="absolute -right-2 top-[88px]">
-          <Badge count={cardCount} imageUrl={CardBackImg} />
+          {/* badge anchor + nicer placement */}
+          <div className="absolute -right-2 top-[88px]">
+            <Badge count={cardCount} imageUrl={CardBackImg} />
+          </div>
         </div>
-      </div>
 
-      <div className="max-w-full px-2 text-center text-2xl font-bold text-rave-white tracking-widest truncate">
-        {username}
-      </div>
+        <div className="max-w-full px-2 text-center text-2xl font-bold text-rave-white tracking-widest truncate">
+          {username}
+        </div>
 
-      <OpponentScore score={10} isSelected={selected} />
-    </button>
+        <OpponentScore score={bookCount} isSelected={selected} />
+      </button>
+    </div>
   );
 };
 
