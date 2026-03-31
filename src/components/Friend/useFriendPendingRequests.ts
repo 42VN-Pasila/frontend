@@ -44,6 +44,10 @@ export const useFriendPendingRequests = () => {
   const [pendingActionError, setPendingActionError] = useState('');
   const { userId } = useUserStore();
 
+  const clearPendingActionError = () => {
+    setPendingActionError('');
+  };
+
   const {
     data: socialRequests = [],
     isFetching,
@@ -97,6 +101,7 @@ export const useFriendPendingRequests = () => {
         action,
         invalidateUserIds: [userId]
       });
+      await refetchPendingRequests();
     } catch (error) {
       if (error instanceof Error) {
         setPendingActionError(error.message);
@@ -120,6 +125,7 @@ export const useFriendPendingRequests = () => {
         action: 'Canceled',
         invalidateUserIds: [userId]
       });
+      await refetchPendingRequests();
     } catch (error) {
       if (error instanceof Error) {
         setPendingActionError(error.message);
@@ -138,6 +144,7 @@ export const useFriendPendingRequests = () => {
     error,
     isRespondingRequest,
     pendingActionError,
+    clearPendingActionError,
     handleRespondPendingRequest,
     handleCancelPendingRequest,
     refetchPendingRequests

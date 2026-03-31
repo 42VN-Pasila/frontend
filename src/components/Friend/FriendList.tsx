@@ -25,10 +25,16 @@ export const FriendList = () => {
     error: pendingError,
     isRespondingRequest,
     pendingActionError,
+    clearPendingActionError,
     handleRespondPendingRequest,
     handleCancelPendingRequest,
     refetchPendingRequests,
   } = useFriendPendingRequests();
+
+  const handleTabChange = (tab: "friends" | "pending") => {
+    clearPendingActionError();
+    setActiveTab(tab);
+  };
 
   useEffect(() => {
     if (activeTab === "friends") {
@@ -42,7 +48,7 @@ export const FriendList = () => {
   return activeTab === "friends" ? (
     <FriendListView
       activeTab={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={handleTabChange}
       friends={friends}
       isFetching={isFetching}
       isError={isError}
@@ -55,7 +61,7 @@ export const FriendList = () => {
   ) : (
     <FriendPendingRequestsView
       activeTab={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={handleTabChange}
       pendingRequestItems={pendingRequestItems}
       isFetching={isFetchingPending}
       isError={isPendingError}

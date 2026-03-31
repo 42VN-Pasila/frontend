@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+
 import { Button } from "@/shared/components";
 
 import type { PendingRequestItem } from "./useFriendPendingRequests";
@@ -30,8 +32,35 @@ export const FriendPendingRequestsView = ({
   onRespondRequest,
   onCancelRequest,
 }: FriendPendingRequestsViewProps) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const [pendingErr, setPendingErr] = useState("");
+  useEffect(() => {
+    setPendingErr(pendingActionError ?? "");
+  }, [pendingActionError]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setPendingErr("");
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <section className="rounded-lg border-2 border-rave-white/10 p-6 text-rave-white">
+    <section
+      ref={containerRef}
+      className="rounded-lg border-2 border-rave-white/10 p-6 text-rave-white"
+    >
       <header className="mb-4 flex items-center justify-between">
         <h2 className="text-2xl font-bold tracking-widest">PENDING REQUESTS</h2>
         <span className="border border-rave-white/20 bg-rave-white/5 px-2 py-1 text-[10px] tracking-[0.18em]">
@@ -75,16 +104,15 @@ export const FriendPendingRequestsView = ({
           </p>
         ) : (
           <>
-            {pendingActionError ? (
-              <p className="text-rave-red/90 text-sm mb-4">
-                {pendingActionError}
-              </p>
+            {pendingErr ? (
+              <p className="text-rave-red/90 text-sm mb-4">{pendingErr}</p>
             ) : null}
 
             {pendingRequestItems.map((requestUser) => {
               const normalizedUsername =
                 requestUser.username?.trim() || requestUser.id;
-              const displayName = requestUser.displayName?.trim() || normalizedUsername;
+              const displayName =
+                requestUser.displayName?.trim() || normalizedUsername;
               const actionLabel =
                 requestUser.direction === "outgoing"
                   ? "OUTGOING REQUEST"
@@ -124,7 +152,10 @@ export const FriendPendingRequestsView = ({
                         size="small"
                         className="h-8! px-3! text-xs"
                         disabled={isRespondingRequest}
-                        onClick={() => onCancelRequest(requestUser.id)}
+                        onClick={async () => {
+                          setPendingErr("");
+                          await onCancelRequest(requestUser.id);
+                        }}
                       >
                         Cancel
                       </Button>
@@ -136,9 +167,10 @@ export const FriendPendingRequestsView = ({
                           size="small"
                           className="h-8! px-3! text-xs"
                           disabled={isRespondingRequest}
-                          onClick={() =>
-                            onRespondRequest(requestUser.id, "Canceled")
-                          }
+                          onClick={async () => {
+                            setPendingErr("");
+                            await onRespondRequest(requestUser.id, "Canceled");
+                          }}
                         >
                           Reject
                         </Button>
@@ -148,9 +180,10 @@ export const FriendPendingRequestsView = ({
                           size="small"
                           className="h-8! px-3! text-xs"
                           disabled={isRespondingRequest}
-                          onClick={() =>
-                            onRespondRequest(requestUser.id, "Accepted")
-                          }
+                          onClick={async () => {
+                            setPendingErr("");
+                            await onRespondRequest(requestUser.id, "Accepted");
+                          }}
                         >
                           Accept
                         </Button>

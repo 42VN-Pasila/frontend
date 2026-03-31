@@ -31,9 +31,9 @@ export const FriendSearchAddView = ({
   onSendRequest,
 }: FriendSearchAddViewProps) => {
   const [showResults, setShowResults] = useState(false);
-  const [displayError, setDisplayError] = useState("");
   const containerRef = useRef<HTMLDivElement | null>(null);
-
+  
+  const [displayError, setDisplayError] = useState("");
   useEffect(() => {
     if (requestError) setDisplayError(requestError);
   }, [requestError]);
