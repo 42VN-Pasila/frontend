@@ -7,7 +7,7 @@ info:
   x-displayName: Authentication service
 
 servers:
-  - url: https://app.42pasila.vn/rudex
+  - url: http://localhost:4000
     description: Production
 
 paths:
@@ -67,34 +67,6 @@ paths:
           $ref: "#/components/responses/APIErrorResponse"
         "500":
           $ref: "#/components/responses/APIErrorResponse"
-  /users/usernames:
-    get:
-      operationId: getUserNames
-      summary: Get all user names
-      description: >
-        Get all user names based on .
-      tags:
-        - Users
-      parameters:
-        - in: query
-          name: rudexUserIds
-          required: false
-          style: form
-          explode: false
-          schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/rudexUserId"
-      responses:
-        "200":
-          $ref: "#/components/responses/GetUserNamesResponseBody"
-        "400":
-          $ref: "#/components/responses/APIErrorResponse"
-        "404":
-          $ref: "#/components/responses/APIErrorResponse"
-        "500":
-          $ref: "#/components/responses/APIErrorResponse"
-
 components:
   parameters:
     rudexUserIdQuery:
@@ -131,7 +103,6 @@ components:
         - accessToken
         - accessTokenExpiryDate
         - refreshToken
-        - userId
       properties:
         accessToken:
           type: string
@@ -143,8 +114,6 @@ components:
         refreshToken:
           type: string
           description: Token used to refresh access tokens.
-        userId:
-          type: string
 
     RegisterRequestBody:
       type: object
@@ -169,29 +138,8 @@ components:
       properties:
         rudexUserId:
           $ref: "#/components/schemas/rudexUserId"
-    GetUserNamesResponseBody:
-      type: object
-      additionalProperties: false
-      required:
-        - users
-      properties:
-        users:
-          type: array
-          items:
-            type: object
-            additionalProperties: false
-            properties:
-              username:
-                type: string
-              id:
-                $ref: "#/components/schemas/rudexUserId"
+
   responses:
-    GetUserNamesResponseBody:
-      description: Successful response with user names
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/GetUserNamesResponseBody"
     APIErrorResponse:
       description: API error response
       content:
