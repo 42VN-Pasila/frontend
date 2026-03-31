@@ -18,7 +18,7 @@ export type RoomState = {
 
 export const useRoomStore = create<RoomState>()(
     persist(
-        (set) => ({
+        (set, _get, store) => ({
             id: "",
             name: "",
             ownerId: "",
@@ -29,17 +29,11 @@ export const useRoomStore = create<RoomState>()(
             setOwnerId: (ownerId: string) => set({ ownerId }),
             setUsers: (users: UserDto[]) => set({ users }),
             setConnectionCount: (connectionCount: number) => set({ connectionCount }),
-            resetRoom: () => set({
-                id: "",
-                name: "",
-                ownerId: "",
-                users: [],
-                connectionCount: 0,
-            }),
+            resetRoom: () => set(store.getInitialState()),
         }),
         {
             name: "room",
-            storage: createJSONStorage(() => localStorage),
+            storage: createJSONStorage(() => sessionStorage),
             partialize: (state) => ({
                 id: state.id,
                 name: state.name,

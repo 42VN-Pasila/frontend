@@ -5,41 +5,33 @@ import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 import type { SeatDto } from "@/gen/director";
 
-type Positions = {
-  left: Opponent;
-  top: Opponent;
-  right: Opponent;
-};
-
-function getPositions(opponents: Opponent[], seats: SeatDto[], userId: string): Positions | null {
-  if (!userId || opponents.length < 3 || seats.length < 4) {
-    return null;
+function getOrderedOpponents(opponents: Opponent[], seats: SeatDto[], userId: string): Opponent[] {
+  if (!userId) {
+    return [];
   }
 
   const orderedSeats = [...seats].sort((a, b) => a.order - b.order);
   const playerIndex = orderedSeats.findIndex((seat) => seat.userId === userId);
   if (playerIndex === -1) {
-    return null;
+    return opponents.filter((opponent) => opponent.id !== userId);
   }
 
-  const positionOrder = [
+  const seatOrder = [
     ...orderedSeats.slice(playerIndex + 1),
     ...orderedSeats.slice(0, playerIndex),
   ]
     .map((seat) => seat.userId)
     .filter((id) => id !== userId);
 
-  if (positionOrder.length < 3) {
-    return null;
-  }
+  const orderedOpponents = seatOrder
+    .map((id) => opponents.find((opponent) => opponent.id === id))
+    .filter((opponent): opponent is Opponent => Boolean(opponent));
 
-  const fallbackOpponents = opponents.filter((opponent) => opponent.id !== userId);
+  const remainingOpponents = opponents.filter(
+    (opponent) => opponent.id !== userId && !orderedOpponents.some((ordered) => ordered.id === opponent.id),
+  );
 
-  return {
-    left: opponents.find((o) => o.id === positionOrder[0]) ?? fallbackOpponents[0],
-    top: opponents.find((o) => o.id === positionOrder[1]) ?? fallbackOpponents[1],
-    right: opponents.find((o) => o.id === positionOrder[2]) ?? fallbackOpponents[2],
-  };
+  return [...orderedOpponents, ...remainingOpponents];
 }
 
 interface GameOpponentPickerProps extends React.ComponentPropsWithoutRef<"section"> {
@@ -60,12 +52,12 @@ const GameOpponentPicker = ({
   const opponents = useGameSessionStore().opponents;
   const seats = useGameSessionStore().seats;
 
-  const sortedPositions = useMemo(() =>
-    getPositions(opponents, seats, userId),
+  const orderedOpponents = useMemo(() =>
+    getOrderedOpponents(opponents, seats, userId),
     [opponents, seats, userId]
   );
   const activeSeat = useMemo(
-    () => seats.find((seat) => seat.isActive),
+    () => seats.find((seat) => seat.isTurn),
     [seats],
   );
   const activeTurnOpponentId = useMemo(() => {
@@ -80,9 +72,9 @@ const GameOpponentPicker = ({
     <section
       {...props}
       className={`${className} flex flex-col bg-rave-black   relative h-full overflow-hidden`}>
-      {sortedPositions && (
+      {orderedOpponents.length > 0 && (
         <OpponentDisplay
-          positions={sortedPositions}
+          opponents={orderedOpponents}
           selectedId={selectedOpponentId}
           onSelect={(id: string) => onSelectOpponent(id)}
           disabled={disabled}

@@ -1,17 +1,50 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Label } from "@/shared/components/Label";
+import { socketSkipTurn } from "@/shared/api/directorClient";
+import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
-export const Timer = () => {
-  const [timeLeft, setTimeLeft] = useState(15);
+const TURN_SECONDS = 60;
+
+type TimerProps = {
+  isDisabled?: boolean;
+  resetTurn: boolean;
+};
+
+export const Timer = ({ isDisabled = false, resetTurn }: TimerProps) => {
+  const [timeLeft, setTimeLeft] = useState(TURN_SECONDS);
+  const hasEmittedSkipRef = useRef(false);
+  const { userId } = useUserStore();
+  const { matchId, seats } = useGameSessionStore();
+  const isMyTurn = seats.find((seat) => seat.userId === userId)?.isTurn ?? false;
+  const isTimerActive = isMyTurn && !isDisabled;
 
   useEffect(() => {
+    setTimeLeft(TURN_SECONDS);
+    hasEmittedSkipRef.current = false;
+  }, [isTimerActive, resetTurn]);
+
+  useEffect(() => {
+    if (!isTimerActive) return;
+
     const id = setInterval(() => {
       setTimeLeft((t) => Math.max(t - 1, 0));
     }, 1000);
 
     return () => clearInterval(id);
-  }, []);
+  }, [isTimerActive]);
+
+  useEffect(() => {
+    if (!isTimerActive || timeLeft > 0 || hasEmittedSkipRef.current || !matchId || !userId) {
+      return;
+    }
+
+    hasEmittedSkipRef.current = true;
+    void socketSkipTurn({ matchId, userId }).catch(() => {
+      hasEmittedSkipRef.current = false;
+    });
+  }, [isTimerActive, matchId, timeLeft, userId]);
 
   return (
     <div

@@ -13,6 +13,7 @@ servers:
 paths:
   /login:
     post:
+      operationId: loginUser
       summary: Login a user and return authentication tokens
       description: >
         Authenticates a user using email/username and password, returning
@@ -41,6 +42,7 @@ paths:
 
   /register:
     post:
+      operationId: registerUser
       summary: Register a user
       description: >
         Create a new user with provided input.

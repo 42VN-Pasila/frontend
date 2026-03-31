@@ -39,40 +39,53 @@ export const BookDisplayModal = () => {
     const { userId } = useUserStore();
     const { books } = useGameSessionStore();
 
-    const collectedRanks = useMemo(() => {
-        const ranks = new Set<string>();
+    const { userRanks, otherRanks } = useMemo(() => {
+        const user = new Set<string>();
+        const other = new Set<string>();
 
-        books.forEach((book) => {
-            if (book.userId !== userId) return;
+        for (const book of books) {
             const rank = book.cards[0]?.rank;
-            if (rank) {
-                ranks.add(rank);
-            }
-        });
+            if (!rank) continue;
 
-        return ranks;
+            if (book.userId === userId) {
+                user.add(rank);
+            } else {
+                other.add(rank);
+            }
+        }
+
+        return { userRanks: user, otherRanks: other };
     }, [books, userId]);
 
     return (
         <section className="h-fit w-full">
             <div className="flex justify-center items-center gap-1.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {RANK_ORDER.map((rank) => {
-                    const isCollected = collectedRanks.has(rank);
+                    const isUser = userRanks.has(rank);
+                    const isOther = otherRanks.has(rank);
+
                     return (
-                        <div
-                            key={rank}
-                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-[10px] font-black leading-none tracking-wide transition-colors ${isCollected
-                                ? "border-rave-red bg-rave-red/15 text-rave-red"
-                                : "border-rave-white/15 bg-rave-white/5 text-rave-white/50"
+                        <div key={rank} className="relative flex flex-col items-center">
+                            <div
+                                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-[10px] font-black leading-none tracking-wide transition-colors ${
+                                    isUser
+                                        ? "border-rave-red bg-rave-red/15 text-rave-red"
+                                        : isOther
+                                            ? "border-rave-white/30 bg-rave-white/10 text-rave-white/70"
+                                            : "border-rave-white/15 bg-rave-white/5 text-rave-white/50"
                                 }`}
-                            title={rank}
-                        >
-                            {RANK_LABEL[rank]}
+                                title={rank}
+                            >
+                                {RANK_LABEL[rank]}
+                            </div>
+                            {isUser && (
+                                <div className="mt-1 h-1 w-1 rounded-full bg-rave-red" />
+                            )}
                         </div>
                     );
                 })}
             </div>
-        </section >
+        </section>
     );
 };
 

@@ -10,7 +10,6 @@ import {
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 import { useNavigate } from "react-router-dom";
-import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useEffect } from "react";
 
 type SlotStatus = "HOST" | "JOINED" | "EMPTY";
@@ -31,6 +30,8 @@ export const RoomSlot = () => {
         pollingInterval: 3_000,
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
+        refetchOnMount: "always",
+        staleTime: 0,
     });
 
 
@@ -49,20 +50,19 @@ export const RoomSlot = () => {
     const isHost = userId === currentOwnerId;
     const { data: roomMetaData } = useGetRoomMetaDataQuery(roomId, {
         enabled: Boolean(roomId && roomStatus?.started),
+        refetchOnMount: "always",
+        staleTime: 0,
     });
 
     const { mutateAsync: updateUserStatus } = useUpdateUserStatusMutation();
     const { mutateAsync: startMatch } = useStartMatchMutation();
     const { mutateAsync: disconnectFromRoom } = useDisconnectRoomMutation();
-    const { setRoomId: setGameRoomId, setMatchId } = useGameSessionStore();
 
     useEffect(() => {
         if (roomStatus?.started && roomMetaData?.matchId) {
-            setGameRoomId(roomId);
-            setMatchId(roomMetaData.matchId);
             navigate(`/match/${roomMetaData.matchId}`);
         }
-    }, [roomStatus?.started, roomMetaData?.matchId, navigate, roomId, setGameRoomId, setMatchId]);
+    }, [roomStatus?.started, roomMetaData?.matchId, navigate, roomId]);
 
     const isUserReady = (targetUserId: string) =>
         currentUsers.some(

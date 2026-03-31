@@ -1,28 +1,26 @@
-import { useEffect, useState } from "react";
-
-import { useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
-  connectSocket,
   disconnectSocket,
-  onMatchState,
-  onSocketConnect,
-  onSocketDisconnect,
-  socket,
   socketAskCardMatch,
-  socketJoinMatch,
+  socketExitMatch,
 } from "@/shared/api/directorClient";
+import { queryClient } from "@/shared/api/queryClient";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
+import BookDisplayModal from "./BookDisplayModal/BookDisplayModal";
 import CardSelectionPanel from "./CardSelectionPanel/CardSelectionPanel";
 import type { SelectedCard } from "./CardSelectionPanel/CardSelector";
 import { GameControlPanel } from "./GameControlPanel/GameControlPanel";
 import GameOpponentPicker from "./GameOpponentPicker/GameOpponentPicker";
 import GamePlayerCard from "./GamePlayerCard/GamePlayerCard";
+import { GameResultModal } from "./GameResultModal/GameResultModal";
+import { useAbandonmentGuard } from "./hooks/useAbandonmentGuard";
+import { useMatchConnection } from "./hooks/useMatchConnection";
 import type { Card, CardRank, CardSuit } from "./types";
-import type { MatchDto } from "@/gen/director";
-import BookDisplayModal from "./BookDisplayModal/BookDisplayModal";
 
 export type GameRequestPayload = {
   userId: string;
@@ -32,147 +30,80 @@ export type GameRequestPayload = {
 };
 
 export const GameBoard = () => {
-  const userId = useUserStore().userId;
-  const {
-    hands,
-    setMatchId,
-    setRoomId,
-    setOpponentIds,
-    setOpponents,
-    setSeats,
-    setHands,
-    setBooks,
-  } = useGameSessionStore();
-  const { matchId: matchIdParam } = useParams<{ matchId: string }>();
-  const matchId = matchIdParam ?? "";
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { userId } = useUserStore();
+  const { hands, seats, resetGameSession } = useGameSessionStore();
+  const { id: roomId, resetRoom } = useRoomStore();
+  const matchId = useParams<{ matchId: string }>().matchId ?? "";
 
-  const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(
-    null,
-  );
+  const [isExitingGame, setIsExitingGame] = useState(false);
+  const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(null);
+  const [selection, setSelection] = useState<SelectedCard>({ suit: null, rank: null });
 
-  const [selection, setSelection] = useState<SelectedCard>({
-    suit: null,
-    rank: null,
-  });
+  const { matchResult, errorMessage, isMatchOver, setErrorMessage, resetTurn } =
+    useMatchConnection(matchId, userId);
 
-  const isSelectionComplete: boolean = !!(
-    selection.suit &&
-    selection.rank &&
-    selectedOpponentId
-  );
-  const currentUserHand = hands.find((hand) => hand.userId === userId);
-  const currentUserCards: Card[] = Array.isArray(currentUserHand?.cards)
-    ? currentUserHand.cards
-    : [];
+  useAbandonmentGuard(matchId, userId, isExitingGame, isMatchOver, setErrorMessage);
 
-  const handleUpdate = (updates: Partial<SelectedCard>) => {
-    setSelection((prev) => ({ ...prev, ...updates }));
-  };
-
-
-  useEffect(() => {
-    if (!matchId || !userId) return;
-
-    setMatchId(matchId);
-    setErrorMessage(null);
-    let isEffectActive = true;
-
-    const applyMatchState = (match: MatchDto) => {
-      if (!isEffectActive) return;
-      const users = match.users ?? [];
-      const seats = match.seats ?? [];
-      setRoomId(match.roomId);
-      setMatchId(match.id);
-      setHands(match.hands);
-      setBooks(match.books);
-      setOpponentIds(users.filter((user) => user.id !== userId).map((user) => user.id));
-      setSeats(seats);
-      setOpponents(users.map((user) => ({
-        id: user.id,
-        username: user.id,
-        avatarUrl: user.avatarUrl ?? "",
-        cardCount: match.userHandCounts.find((handCount) => handCount.userId === user.id)?.handCount ?? 0,
-      })));
-    };
-
-
-    const joinAndSync = async () => {
-      try {
-        const { match } = await socketJoinMatch({ matchId, userId });
-        if (!isEffectActive) return;
-        applyMatchState(match);
-        setErrorMessage(null);
-      } catch {
-        if (!isEffectActive) return;
-        setErrorMessage("Unable to join match");
-      }
-    };
-
-    connectSocket();
-    if (socket.connected) {
-      void joinAndSync();
+  const navigateToDashboard = useCallback(async () => {
+    if (roomId) {
+      queryClient.removeQueries({ queryKey: ["roomMetadata", roomId] });
+      await queryClient.invalidateQueries({ queryKey: ["rooms", roomId] });
     }
 
-    const unsubscribeMatchState = onMatchState((match) => {
-      applyMatchState(match);
-    });
+    navigate("/dashboard", { replace: true });
+  }, [navigate, roomId]);
 
-    const unsubscribeSocketConnect = onSocketConnect(() => {
-      void joinAndSync();
-    });
+  useEffect(() => {
+    if (!isMatchOver || matchResult) return;
+    void navigateToDashboard();
+  }, [isMatchOver, matchResult, navigateToDashboard]);
 
-    const unsubscribeSocketDisconnect = onSocketDisconnect((reason) => {
-      setErrorMessage(`Socket disconnected: ${reason}`);
-    });
+  const isMyTurn = seats.find((s) => s.userId === userId)?.isTurn ?? false;
+  const isInteractionDisabled = !isMyTurn || isExitingGame;
+  const isSelectionComplete = !!(selection.suit && selection.rank && selectedOpponentId);
+  const currentUserCards: Card[] = hands.find((h) => h.userId === userId)?.cards ?? [];
 
-    return () => {
-      isEffectActive = false;
-      unsubscribeMatchState();
-      unsubscribeSocketConnect();
-      unsubscribeSocketDisconnect();
-      disconnectSocket();
-    };
-  }, [
-    matchId,
-    userId,
-    setMatchId,
-    setRoomId,
-    setOpponentIds,
-    setOpponents,
-    setSeats,
-    setHands,
-    setBooks,
-  ]);
+  const handleUpdate = useCallback((updates: Partial<SelectedCard>) => {
+    setSelection((prev) => ({ ...prev, ...updates }));
+  }, []);
 
-  const handleRequest = async () => {
-    if (!isSelectionComplete || !userId || !selectedOpponentId || !matchId) return;
+  const handleRequest = useCallback(async () => {
+    if (!isSelectionComplete || !userId || !selectedOpponentId || !matchId || isExitingGame) return;
 
-    const payload: GameRequestPayload = {
-      userId: userId,
-      opponentId: selectedOpponentId,
-      suit: selection.suit!,
-      rank: selection.rank!,
-    };
     try {
       await socketAskCardMatch({
         matchId,
-        userId: payload.userId,
-        opponentId: payload.opponentId,
-        card: {
-          suit: payload.suit,
-          rank: payload.rank,
-        },
+        userId,
+        opponentId: selectedOpponentId,
+        card: { suit: selection.suit!, rank: selection.rank! },
       });
       setErrorMessage(null);
-      setSelection({ suit: null, rank: null }); // UI reset
+      setSelection({ suit: null, rank: null });
       setSelectedOpponentId(null);
     } catch {
       setErrorMessage("Failed to send request");
     }
-  };
+  }, [isSelectionComplete, userId, selectedOpponentId, matchId, isExitingGame, selection, setErrorMessage]);
 
-  const isMyTurn = useGameSessionStore().seats.find((seat) => seat.userId === userId)?.isActive ?? false;
+  const handleExitGame = useCallback(() => {
+    if (!matchId || !userId || isExitingGame) return;
+
+    setIsExitingGame(true);
+    void socketExitMatch({ matchId, userId })
+      .catch(() => undefined)
+      .finally(() => {
+        resetGameSession();
+        resetRoom();
+        disconnectSocket();
+        navigate("/dashboard");
+      });
+  }, [isExitingGame, matchId, navigate, resetGameSession, resetRoom, userId]);
+
+  const handleResultClose = useCallback(() => {
+    resetGameSession();
+    void navigateToDashboard();
+  }, [navigateToDashboard, resetGameSession]);
 
   if (!matchId) {
     return <div>Match not found</div>;
@@ -180,17 +111,18 @@ export const GameBoard = () => {
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden bg-rave-black">
-      {errorMessage ? (
+      {errorMessage && (
         <div className="absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-md border border-red-400/40 bg-red-900/60 px-4 py-2 text-sm text-red-100">
           {errorMessage}
         </div>
-      ) : null}
+      )}
+
       <CardSelectionPanel
         selection={selection}
         onChange={handleUpdate}
         onSubmit={handleRequest}
         isSelectionComplete={isSelectionComplete}
-        disabled={!isMyTurn}
+        disabled={isInteractionDisabled}
       />
 
       <main className="flex-1 min-w-0 h-full flex flex-col p-6">
@@ -202,16 +134,20 @@ export const GameBoard = () => {
             <GameOpponentPicker
               selectedOpponentId={selectedOpponentId}
               onSelectOpponent={setSelectedOpponentId}
-              disabled={!isMyTurn}
+              disabled={isInteractionDisabled}
             />
           </div>
           <div className="min-h-0">
-            <GamePlayerCard cards={currentUserCards} disabled={!isMyTurn} />
+            <GamePlayerCard cards={currentUserCards} disabled={isInteractionDisabled} />
           </div>
         </div>
       </main>
 
-      <GameControlPanel />
+      <GameControlPanel onExitGame={handleExitGame} isExiting={isExitingGame} resetTurn={resetTurn} />
+
+      {matchResult && (
+        <GameResultModal result={matchResult} onClose={handleResultClose} />
+      )}
     </div>
   );
 };

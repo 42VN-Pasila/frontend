@@ -30,11 +30,11 @@ OpenAPI.BASE = resolveRudexBaseUrl();
 
 export const rudexClient = {
   async login(body: LoginRequestBody) {
-    return UserLoginService.postLogin({ requestBody: body });
+    return UserLoginService.loginUser({ requestBody: body });
   },
 
   async register(body: RegisterRequestBody) {
-    return UserRegistrationService.postRegister({ requestBody: body });
+    return UserRegistrationService.registerUser({ requestBody: body });
   }
 };
 

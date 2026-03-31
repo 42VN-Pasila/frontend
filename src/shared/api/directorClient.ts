@@ -1,27 +1,29 @@
+import { OpenAPI } from '@/gen/director/core/OpenAPI';
+import { UsersService } from '@/gen/director/services/UsersService';
+import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
+import {
+    type ConnectRoomRequest,
+    type CreateRoomRequestBody,
+    type ExitMatchEvent,
+    FriendsService,
+    type JoinMatchEvent,
+    type LeaveMatchEvent,
+    type MatchDto,
+    type MatchResultDto,
+    type RequestCardEvent,
+    type RequestFriendRequestBody,
+    ResourcesService,
+    RespondToFriendRequestRequestBody,
+    RoomsService,
+    type SkipTurnEvent,
+    SocialUserDto,
+    type StartMatchRequest,
+    type UpdateRoomUserStatusRequestBody,
+    type UpdateUserAvatarRequestBody,
+} from '@/gen/director';
+import { toDevPath } from './path.dev';
 import { Socket, io } from 'socket.io-client';
 
-import {
-  type ConnectRoomRequest,
-  type CreateRoomRequestBody,
-  FriendsService,
-  type JoinMatchEvent,
-  type LeaveMatchEvent,
-  type MatchDto,
-  type RequestCardEvent,
-  type RequestFriendRequestBody,
-  ResourcesService,
-  type RespondToFriendRequestRequestBody,
-  RoomsService,
-  type SocialUserDto,
-  type StartMatchRequest,
-  type UpdateRoomUserStatusRequestBody,
-  type UpdateUserAvatarRequestBody
-} from '@/gen/director';
-import { OpenAPI } from '@/gen/director/core/OpenAPI';
-import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
-import { UsersService } from '@/gen/director/services/UsersService';
-
-import { toDevPath } from './path.dev';
 
 type SocketAck = {
   ok: boolean;
@@ -114,37 +116,71 @@ export const socketLeaveMatch = (payload: LeaveMatchEvent): Promise<void> => {
   });
 };
 
-export const socketAskCardMatch = (payload: RequestCardEvent): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    socket.emit('match:requestCard', payload, (res: SocketAck) => {
-      if (!res?.ok) {
-        console.error('ask card failed', res?.error);
-        reject(new Error(res?.error || 'REQUEST_CARD_FAILED'));
-        return;
-      }
+export const socketExitMatch = (
+    payload: ExitMatchEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:exit', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('exit failed', res?.error);
+                reject(new Error(res?.error || 'EXIT_FAILED'));
+                return;
+            }
+            resolve();
+        });
+    });
+};
+
+export const socketAskCardMatch = (
+    payload: RequestCardEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:requestCard', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('ask card failed', res?.error);
+                reject(new Error(res?.error || 'REQUEST_CARD_FAILED'));
+                return;
+            }
 
       resolve();
     });
   });
 };
 
-export const socketPingMatch = (payload: MatchPingEvent): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    socket.emit('match:ping', payload, (res: SocketAck) => {
-      if (!res?.ok) {
-        console.error('ping failed', res?.error);
-        reject(new Error(res?.error || 'PING_FAILED'));
-        return;
-      }
+export const socketSkipTurn = (
+    payload: SkipTurnEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:skipTurn', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('skip turn failed', res?.error);
+                reject(new Error(res?.error || 'SKIP_TURN_FAILED'));
+                return;
+            }
+            resolve();
+        });
+    });
+};
+
+export const socketPingMatch = (
+    payload: MatchPingEvent,
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        socket.emit('match:ping', payload, (res: SocketAck) => {
+            if (!res?.ok) {
+                console.error('ping failed', res?.error);
+                reject(new Error(res?.error || 'PING_FAILED'));
+                return;
+            }
 
       resolve();
     });
   });
 };
 
-export const onMatchState = (handler: (match: MatchDto) => void) => {
-  socket.on('match:state', handler);
-  return () => socket.off('match:state', handler);
+export const onMatchState = (handler: (match: MatchDto, matchResult?: MatchResultDto) => void) => {
+    socket.on('match:state', handler);
+    return () => socket.off('match:state', handler);
 };
 
 export const onSocketConnect = (handler: () => void) => {
@@ -152,9 +188,9 @@ export const onSocketConnect = (handler: () => void) => {
   return () => socket.off('connect', handler);
 };
 
-export const onSocketDisconnect = (handler: (reason: Socket.DisconnectReason) => void) => {
-  socket.on('disconnect', handler);
-  return () => socket.off('disconnect', handler);
+export const onSocketDisconnect = (handler: () => void) => {
+    socket.on('disconnect', handler);
+    return () => socket.off('disconnect', handler);
 };
 
 OpenAPI.BASE = directorBaseUrl;
