@@ -1,7 +1,6 @@
 import { Socket, io } from 'socket.io-client';
 
 import {
-  type RequestFriendRequestBody,
   type ConnectRoomRequest,
   type CreateRoomRequestBody,
   FriendsService,
@@ -9,6 +8,7 @@ import {
   type LeaveMatchEvent,
   type MatchDto,
   type RequestCardEvent,
+  type RequestFriendRequestBody,
   ResourcesService,
   type RespondToFriendRequestRequestBody,
   RoomsService,
@@ -38,7 +38,7 @@ type MatchPingEvent = {
 const rawDirectorUrl = import.meta.env.VITE_DIRECTOR_URL as string | undefined;
 
 const resolveDirectorBaseUrl = () => {
-  const fallbackUrl = window.location.origin;
+  const fallbackUrl = OpenAPI.BASE;
   const input = rawDirectorUrl?.trim();
 
   if (!input) {
@@ -59,7 +59,14 @@ const resolveDirectorBaseUrl = () => {
 };
 
 const directorBaseUrl = resolveDirectorBaseUrl();
-const directorSocketOrigin = new URL(directorBaseUrl).origin;
+const resolveDirectorSocketOrigin = () => {
+  try {
+    return new URL(directorBaseUrl).origin;
+  } catch {
+    return window.location.origin;
+  }
+};
+const directorSocketOrigin = resolveDirectorSocketOrigin();
 
 export const socket: Socket = io(directorSocketOrigin, {
   transports: ['websocket'],
@@ -186,8 +193,8 @@ export const directorClient = {
   async getRoomMetaData(roomId: string) {
     return RoomsService.getRoomMetaData({ roomId });
   },
-  async searchUsers(rudexUserId: string, requesterId: string): Promise<SocialUserDto[]> {
-    return UsersService.searchByExactUserId({ rudexUserId, requesterId });
+  async searchUsers(username: string, requesterId: string): Promise<SocialUserDto[]> {
+    return UsersService.searchByExactUserName({ username, requesterId });
   },
   async sendFriendRequest(userId: string, body: RequestFriendRequestBody) {
     return FriendsService.sendFriendRequest({ userId, requestBody: body });

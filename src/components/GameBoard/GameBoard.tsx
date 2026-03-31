@@ -80,13 +80,15 @@ export const GameBoard = () => {
 
     const applyMatchState = (match: MatchDto) => {
       if (!isEffectActive) return;
+      const users = match.users ?? [];
+      const seats = match.seats ?? [];
       setRoomId(match.roomId);
       setMatchId(match.id);
       setHands(match.hands);
       setBooks(match.books);
-      setOpponentIds(match.users.filter((user) => user.id !== userId).map((user) => user.id));
-      setSeats(match.seats);
-      setOpponents(match.users.map((user) => ({
+      setOpponentIds(users.filter((user) => user.id !== userId).map((user) => user.id));
+      setSeats(seats);
+      setOpponents(users.map((user) => ({
         id: user.id,
         username: user.id,
         avatarUrl: user.avatarUrl ?? "",

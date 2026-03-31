@@ -71,56 +71,63 @@ export const FriendListView = ({
             No friends yet.
           </p>
         ) : (
-          friends.map((friend) => (
-            <article
-              key={friend.id}
-              className="flex items-center justify-between rounded-lg border border-rave-white/15 bg-rave-white/5 px-3 py-2"
-            >
-              <div className="flex items-center gap-3">
-                <img
-                  src={friend.imageUrl}
-                  alt={friend.rudexUserId}
-                  className="h-10 w-10 rounded-full object-cover"
-                />
-                <div>
-                  <p className="text-sm font-semibold tracking-wide">
-                    {friend.rudexUserId}
-                  </p>
-                  <p className="text-[10px] font-semibold tracking-wide">
-                    {friend.id}
-                  </p>
-                  <span
-                    className={`inline-flex border px-2 py-0.5 text-[10px] tracking-[0.15em] ${statusClasses[friend.status]}`}
-                  >
-                    {friend.status.replace("_", " ")}
-                  </span>
-                </div>
-              </div>
+          friends.map((friend) => {
+            const normalizedUsername = friend.username?.trim() || friend.id;
+            const displayName = friend.displayName?.trim() || normalizedUsername;
 
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="inverse"
-                  emphasis="low"
-                  size="small"
-                  className="h-8! px-3! text-xs"
-                  disabled={isRemovingFriend}
-                  onClick={() => {
-                    void onRemoveFriend(friend.id);
-                  }}
-                >
-                  {isRemovingFriend && removingFriendId === friend.id ? "Deleting..." : "Delete"}
-                </Button>
-                <Button
-                  variant="inverse"
-                  emphasis="high"
-                  size="small"
-                  className="h-8! px-3! text-xs"
-                >
-                  Invite
-                </Button>
-              </div>
-            </article>
-          ))
+            return (
+              <article
+                key={friend.id}
+                className="flex items-center justify-between rounded-lg border border-rave-white/15 bg-rave-white/5 px-3 py-2"
+              >
+                <div className="flex items-center gap-3">
+                  <img
+                    src={friend.imageUrl}
+                    alt={displayName}
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold tracking-wide">
+                      {displayName}
+                    </p>
+                    <p className="text-[10px] font-semibold tracking-wide text-rave-white/60">
+                      @{normalizedUsername}
+                    </p>
+                    <span
+                      className={`inline-flex border px-2 py-0.5 text-[10px] tracking-[0.15em] ${statusClasses[friend.status]}`}
+                    >
+                      {friend.status.replace("_", " ")}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="inverse"
+                    emphasis="low"
+                    size="small"
+                    className="h-8! px-3! text-xs"
+                    disabled={isRemovingFriend}
+                    onClick={() => {
+                      void onRemoveFriend(friend.id);
+                    }}
+                  >
+                    {isRemovingFriend && removingFriendId === friend.id
+                      ? "Deleting..."
+                      : "Delete"}
+                  </Button>
+                  <Button
+                    variant="inverse"
+                    emphasis="high"
+                    size="small"
+                    className="h-8! px-3! text-xs"
+                  >
+                    Invite
+                  </Button>
+                </div>
+              </article>
+            );
+          })
         )}
       </div>
     </section>

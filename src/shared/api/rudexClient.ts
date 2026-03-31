@@ -5,7 +5,28 @@ import type { LoginRequestBody } from '@/gen/rudex/models/LoginRequestBody';
 import type { RegisterRequestBody } from '@/gen/rudex/models/RegisterRequestBody';
 import { toDevPath } from './path.dev';
 
-OpenAPI.BASE = toDevPath(import.meta.env.VITE_RUDEX_URL ?? "");
+const resolveRudexBaseUrl = () => {
+  const fallbackUrl = OpenAPI.BASE;
+  const input = (import.meta.env.VITE_RUDEX_URL as string | undefined)?.trim();
+
+  if (!input) {
+    return fallbackUrl;
+  }
+
+  try {
+    return toDevPath(input);
+  } catch {
+    if (import.meta.env.DEV) {
+      console.warn(
+        `Invalid VITE_RUDEX_URL "${input}". Falling back to "${fallbackUrl}" in dev.`
+      );
+      return fallbackUrl;
+    }
+    throw new Error(`Invalid VITE_RUDEX_URL: "${input}"`);
+  }
+};
+
+OpenAPI.BASE = resolveRudexBaseUrl();
 
 export const rudexClient = {
   async login(body: LoginRequestBody) {

@@ -3,11 +3,11 @@ info:
   title: Director
   description: >
     Game service
-  version: "0.1"
+  version: '0.1'
   x-displayName: Game service
 
 servers:
-  - url: https://app.42pasila.vn/director
+  - url: http://localhost:5000
     description: Production
 
 paths:
@@ -16,7 +16,7 @@ paths:
       summary: Check if the service is running
       description: Endpoint to ping the service
       responses:
-        "200":
+        '200':
           description: Service is running
           content:
             application/json:
@@ -32,35 +32,35 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateUserRequestBody"
+              $ref: '#/components/schemas/CreateUserRequestBody'
       responses:
-        "201":
-          description: User created
+        '202':
+          description: User creation job accepted
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateUserResponse"
-        "400":
+                $ref: '#/components/schemas/CreateUserResponse'
+        '400':
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
     get:
       tags:
         - Users
-      summary: Search by exact user id
-      description: Search for a user by their exact user id
-      operationId: searchByExactUserId
+      summary: Search by exact username
+      description: Search for a user by their exact username
+      operationId: searchByExactUserName
       parameters:
         - in: query
-          name: rudexUserId
+          name: username
           required: true
           schema:
             type: string
@@ -70,26 +70,26 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: User found
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/SocialUserDto"
-        "404":
+                  $ref: '#/components/schemas/SocialUserDto'
+        '404':
           description: User not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
   /users/{userId}/avatar:
     patch:
       tags:
@@ -108,26 +108,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateUserAvatarRequestBody"
+              $ref: '#/components/schemas/UpdateUserAvatarRequestBody'
       responses:
-        "200":
+        '200':
           description: User avatar updated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateUserAvatarResponse"
-        "404":
+                $ref: '#/components/schemas/UpdateUserAvatarResponse'
+        '404':
           description: User or avatar not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
   /users/{userId}/friends:
     get:
       tags:
@@ -141,26 +141,26 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: User found
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/SocialUserDto"
-        "404":
+                  $ref: '#/components/schemas/SocialUserDto'
+        '404':
           description: User not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
   /users/{userId}/friends/{otherUserId}:
     delete:
       tags:
@@ -179,7 +179,7 @@ paths:
           schema:
             type: string
       responses:
-        "204":
+        '204':
           description: Friend removed
   /users/{userId}/friends/requests:
     get:
@@ -194,14 +194,14 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: User found
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/SocialUserDto"
+                  $ref: '#/components/schemas/SocialUserDto'
     post:
       tags:
         - Friends
@@ -218,34 +218,34 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RequestFriendRequestBody"
+              $ref: '#/components/schemas/RequestFriendRequestBody'
       responses:
-        "204":
+        '204':
           description: Friend request sent
-        "400":
+        '400':
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: User not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "409":
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
           description: Already friends or request exists
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
   /users/{userId}/friends/requests/{otherUserId}:
     patch:
       tags:
@@ -268,66 +268,66 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RespondToFriendRequestRequestBody"
+              $ref: '#/components/schemas/RespondToFriendRequestRequestBody'
       responses:
-        "200":
+        '200':
           description: Request updated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RespondToFriendRequestResponse"
-        "404":
+                $ref: '#/components/schemas/RespondToFriendRequestResponse'
+        '404':
           description: User or request not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
   /resources/avatars:
     get:
       tags:
         - Resources
       summary: Get all avatars
       responses:
-        "200":
+        '200':
           description: Avatars fetched
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Avatar"
-        "500":
+                  $ref: '#/components/schemas/Avatar'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
   /rooms:
     get:
       tags:
         - Rooms
       summary: Get all rooms
       responses:
-        "200":
+        '200':
           description: Rooms fetched
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/ListRoomsDto"
-        "500":
+                  $ref: '#/components/schemas/ListRoomsDto'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
         - Rooms
@@ -337,38 +337,38 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateRoomRequestBody"
+              $ref: '#/components/schemas/CreateRoomRequestBody'
       responses:
-        "201":
+        '201':
           description: Room created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateRoomResponse"
-        "400":
+                $ref: '#/components/schemas/CreateRoomResponse'
+        '400':
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: User not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "409":
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
           description: User already in room
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
   /rooms/{roomId}:
     get:
       tags:
@@ -382,30 +382,30 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Room fetched
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RoomDto"
-        "400":
+                $ref: '#/components/schemas/RoomDto'
+        '400':
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: Room not found or already ended
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
   /rooms/{roomId}/metadata:
     get:
       tags:
@@ -419,24 +419,24 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Room metadata fetched
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RoomMetaDataDto"
-        "404":
+                $ref: '#/components/schemas/RoomMetaDataDto'
+        '404':
           description: Room not found or already ended
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
   /rooms/{roomId}/connect:
     post:
       tags:
@@ -454,38 +454,38 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ConnectRoomRequest"
+              $ref: '#/components/schemas/ConnectRoomRequest'
       responses:
-        "200":
+        '200':
           description: Connected successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConnectRoomResponse"
-        "400":
+                $ref: '#/components/schemas/ConnectRoomResponse'
+        '400':
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: Room not found or already ended
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "409":
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
           description: User already in room or room maximum players reached
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
 
   /rooms/{roomId}/matches:
     post:
@@ -504,32 +504,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/StartMatchRequest"
+              $ref: '#/components/schemas/StartMatchRequest'
       responses:
-        "200":
+        '200':
           description: Match started
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/StartMatchResponse"
-        "403":
+                $ref: '#/components/schemas/StartMatchResponse'
+        '403':
           description: Only room owner can start match
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: Room not found or already ended
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
   /rooms/{roomId}/disconnect:
     post:
       tags:
@@ -547,28 +547,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DisconnectRoomRequest"
+              $ref: '#/components/schemas/DisconnectRoomRequest'
       responses:
-        "204":
+        '204':
           description: Disconnected successfully
-        "404":
+        '404':
           description: User or room not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "400":
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
 
   /rooms/{roomId}/users/{userId}:
     patch:
@@ -592,32 +592,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateRoomUserStatusRequestBody"
+              $ref: '#/components/schemas/UpdateRoomUserStatusRequestBody'
       responses:
-        "200":
+        '200':
           description: Room user status updated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateRoomUserStatusResponse"
-        "400":
+                $ref: '#/components/schemas/UpdateRoomUserStatusResponse'
+        '400':
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
           description: Room, user, or room membership not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
     Card:
@@ -645,7 +645,7 @@ components:
         opponentId:
           type: string
         card:
-          $ref: "#/components/schemas/Card"
+          $ref: '#/components/schemas/Card'
     JoinMatchEvent:
       type: object
       required:
@@ -676,19 +676,39 @@ components:
           type: string
         userId:
           type: string
+    SkipTurnEvent:
+      type: object
+      required:
+        - matchId
+        - userId
+      properties:
+        matchId:
+          type: string
+        userId:
+          type: string
+    ExitMatchEvent:
+      type: object
+      required:
+        - matchId
+        - userId
+      properties:
+        matchId:
+          type: string
+        userId:
+          type: string
     CreateUserRequestBody:
       type: object
       required:
-        - rudexUserId
+        - username
       properties:
-        rudexUserId:
+        username:
           type: string
     CreateUserResponse:
       type: object
       required:
-        - userId
+        - jobId
       properties:
-        userId:
+        jobId:
           type: string
     UpdateUserAvatarRequestBody:
       type: object
@@ -725,7 +745,8 @@ components:
         - status
         - relationship
         - direction
-        - rudexUserId
+        - username
+        - displayName
       properties:
         id:
           type: string
@@ -741,15 +762,19 @@ components:
         direction:
           type: string
           enum: ['In', 'Out', 'None']
-          description: "Direction of the friend request if exists"
-        rudexUserId:
+          description: 'Direction of the friend request if exists'
+        username:
           type: string
           nullable: true
-          description: "Rudex User ID for display purposes"
+          description: 'Username for display purposes'
+        displayName:
+          type: string
+          nullable: true
+          description: 'Display name for frontend rendering'
         requestFriendStatus:
           type: string
           nullable: true
-          description: "Status of the friend request (alternative field for relationship)"
+          description: 'Status of the friend request (alternative field for relationship)'
     UserDto:
       type: object
       required:
@@ -808,7 +833,7 @@ components:
         users:
           type: array
           items:
-            $ref: "#/components/schemas/UserDto"
+            $ref: '#/components/schemas/UserDto'
         connectionCount:
           type: integer
           minimum: 0
@@ -833,7 +858,7 @@ components:
         users:
           type: array
           items:
-            $ref: "#/components/schemas/UserDto"
+            $ref: '#/components/schemas/UserDto'
         connectionCount:
           type: integer
           minimum: 0
@@ -864,7 +889,7 @@ components:
       properties:
         cards:
           items:
-            $ref: "#/components/schemas/Card"
+            $ref: '#/components/schemas/Card'
         userId:
           type: string
     BookDto:
@@ -876,7 +901,7 @@ components:
         cards:
           type: array
           items:
-            $ref: "#/components/schemas/Card"
+            $ref: '#/components/schemas/Card'
         userId:
           type: string
     HandCountDto:
@@ -904,83 +929,82 @@ components:
       required:
         - order
         - userId
-        - isActive
+        - isTurn
       properties:
         order:
           type: integer
         userId:
           type: string
-        isActive:
+        isTurn:
           type: boolean
     MatchDto:
       type: object
       required:
         - id
         - status
+        - users
         - hands
         - books
         - userHandCounts
         - userBookCounts
         - roomId
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-        hands:
-          type: array
-          items:
-            $ref: "#/components/schemas/HandDto"
-        books:
-          type: array
-          items:
-            $ref: "#/components/schemas/BookDto"
-        userHandCounts:
-          type: array
-          items:
-            $ref: "#/components/schemas/HandCountDto"
-        userBookCounts:
-          type: array
-          items:
-            $ref: "#/components/schemas/BookCountDto"
-        roomId:
-          type: string
-    MatchMetaDataDto:
-      type: object
-      required:
-        - id
-        - status
-        - roomId
-        - users
         - seats
-        - createdAt
-        - lastUpdated
-        - completedAt
       properties:
         id:
           type: string
         status:
-          type: string
-        roomId:
           type: string
         users:
           type: array
           items:
-            $ref: "#/components/schemas/UserDto"
+            $ref: '#/components/schemas/UserDto'
+        hands:
+          type: array
+          items:
+            $ref: '#/components/schemas/HandDto'
+        books:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookDto'
+        userHandCounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/HandCountDto'
+        userBookCounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookCountDto'
+        roomId:
+          type: string
         seats:
           type: array
           items:
-            $ref: "#/components/schemas/SeatDto"
-        createdAt:
+            $ref: '#/components/schemas/SeatDto'
+        currentSeat:
+          $ref: '#/components/schemas/SeatDto'
+    MatchResultDto:
+      type: object
+      required:
+        - roomId
+        - winnerUserId
+        - hasCoWinners
+        - endedReason
+        - startedAt
+        - endedAt
+      properties:
+        roomId:
           type: string
-          format: date-time
-        lastUpdated:
+        winnerUserId:
           type: string
-          format: date-time
-        completedAt:
-          type: string
-          format: date-time
           nullable: true
+        hasCoWinners:
+          type: boolean
+        endedReason:
+          type: string
+        startedAt:
+          type: string
+        endedAt:
+          type: string
     CreateRoomRequestBody:
       type: object
       required:
@@ -997,7 +1021,7 @@ components:
         - room
       properties:
         room:
-          $ref: "#/components/schemas/RoomDto"
+          $ref: '#/components/schemas/RoomDto'
 
     ConnectRoomRequest:
       type: object
@@ -1013,7 +1037,7 @@ components:
         - room
       properties:
         room:
-          $ref: "#/components/schemas/RoomDto"
+          $ref: '#/components/schemas/RoomDto'
     StartMatchRequest:
       type: object
       required:

@@ -5,7 +5,8 @@ import { useUserStore } from "@/shared/stores/useUserStore";
 
 export type FriendItem = {
   id: string;
-  rudexUserId: string;
+  displayName: string;
+  username: string;
   imageUrl: string;
   status: "ONLINE" | "IN_GAME" | "IN_ROOM" | "OFFLINE";
 };
@@ -35,8 +36,10 @@ export const useFriendList = () => {
     useRemoveFriendshipMutation();
 
   const friends: FriendItem[] = socialFriends.map((friend) => {
-    const friendRudexUserId =
-      (friend as { rudexUserId?: string }).rudexUserId ?? friend.id;
+    const friendusername =
+      (friend as { username?: string }).username ?? friend.id;
+    const friendDisplayName =
+      (friend as { displayName?: string }).displayName ?? friendusername;
     const normalizedStatus = friend.status.toUpperCase();
     const mappedStatus: FriendItem["status"] =
       normalizedStatus === "INMATCH"
@@ -49,7 +52,8 @@ export const useFriendList = () => {
 
     return {
       id: friend.id,
-      rudexUserId: friendRudexUserId,
+      displayName: friendDisplayName,
+      username: friendusername,
       imageUrl: friend.avatarUrl ?? "",
       status: mappedStatus,
     };

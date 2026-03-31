@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { SocialUserDto } from '@/gen/director';
 import { useSearchUsersQuery, useSendFriendRequestMutation } from '@/shared/api/directorApi';
@@ -34,28 +34,39 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
   const {
     data: searchedUsers = [],
     isFetching,
+    error: searchError,
     refetch
   } = useSearchUsersQuery(currentUserId, normalizedSearch, {
     enabled: Boolean(currentUserId && normalizedSearch)
   });
 
+  useEffect(() => {
+    if (!searchError) return;
+    setRequestError(searchError instanceof Error ? searchError.message : 'Failed to search user');
+  }, [searchError]);
+
   const { mutateAsync: sendFriendRequest, isPending: isSendingRequest } =
     useSendFriendRequestMutation();
 
   const handleSearch = () => {
-  const trimmed = searchText.trim();
-  if (!trimmed) return;
+    const trimmed = searchText.trim();
+    if (!trimmed) return;
 
-  setRequestError(null);
-  setSearchTargetId([]);
+    if (!currentUserId) {
+      setRequestError('Missing requesterId. Please login again before searching.');
+      return;
+    }
 
-  if (trimmed === submittedSearch) {
-    //request for the exact same term
-    void refetch();
-  } else {
-    setSubmittedSearch(trimmed);
-  }
-};
+    setRequestError(null);
+    setSearchTargetId([]);
+
+    if (trimmed === submittedSearch) {
+      //request for the exact same term
+      void refetch();
+    } else {
+      setSubmittedSearch(trimmed);
+    }
+  };
 
   const handleSendRequest = async (otherUserId: string) => {
     if (searchTargetId.includes(otherUserId) || !currentUserId) return;
@@ -63,7 +74,7 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
       await sendFriendRequest({ userId: currentUserId, otherUserId });
       setSearchTargetId((prev) => [...prev, otherUserId]);
     } catch (error) {
-      setRequestError(error instanceof Error ? error.message : "Failed to send request");
+      setRequestError(error instanceof Error ? error.message : 'Failed to send request');
     }
   };
 

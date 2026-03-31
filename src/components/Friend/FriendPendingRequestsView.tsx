@@ -12,10 +12,10 @@ type FriendPendingRequestsViewProps = {
   isRespondingRequest: boolean;
   pendingActionError: string;
   onRespondRequest: (
-    rudexUserId: string,
+    username: string,
     action: "Accepted" | "Canceled",
   ) => Promise<void>;
-  onCancelRequest: (rudexUserId: string) => Promise<void>;
+  onCancelRequest: (username: string) => Promise<void>;
 };
 
 export const FriendPendingRequestsView = ({
@@ -82,7 +82,9 @@ export const FriendPendingRequestsView = ({
             ) : null}
 
             {pendingRequestItems.map((requestUser) => {
-              const displayName = requestUser.rudexUserId || requestUser.id;
+              const normalizedUsername =
+                requestUser.username?.trim() || requestUser.id;
+              const displayName = requestUser.displayName?.trim() || normalizedUsername;
               const actionLabel =
                 requestUser.direction === "outgoing"
                   ? "OUTGOING REQUEST"
@@ -104,6 +106,9 @@ export const FriendPendingRequestsView = ({
                     <div>
                       <p className="text-sm font-semibold tracking-wide">
                         {displayName}
+                      </p>
+                      <p className="text-[10px] font-semibold tracking-wide text-rave-white/60">
+                        @{normalizedUsername}
                       </p>
                       <p className="text-[10px] tracking-[0.14em] text-rave-white/60">
                         {actionLabel}

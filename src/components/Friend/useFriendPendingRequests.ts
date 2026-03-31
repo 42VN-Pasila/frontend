@@ -11,18 +11,20 @@ export type PendingDirection = 'incoming' | 'outgoing' | 'unknown';
 
 type PendingUser = {
   id: string;
+  displayName?: string | null;
   avatarUrl?: string | null;
   relationship?: string;
   requestFriendStatus?: string | null;
-  rudexUserId?: string | null;
+  username?: string | null;
   direction?: SocialUserDto['direction'];
 };
 
 export type PendingRequestItem = {
   id: string;
+  displayName: string;
   avatarUrl?: string | null;
   relationship?: string;
-  rudexUserId: string;
+  username: string;
   direction: PendingDirection;
 };
 
@@ -72,9 +74,10 @@ export const useFriendPendingRequests = () => {
 
     return {
       id: item.id,
+      displayName: pendingUser.displayName ?? pendingUser.username ?? item.id,
       avatarUrl: item.avatarUrl,
       relationship: item.relationship,
-      rudexUserId: pendingUser.rudexUserId ?? item.id,
+      username: pendingUser.username ?? item.id,
       direction
     };
   });
