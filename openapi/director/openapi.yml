@@ -96,7 +96,6 @@ paths:
         - Users
       summary: Update user avatar
       description: Update the avatar of a specific user
-      description: Update the avatar of a specific user
       operationId: updateUserAvatar
       parameters:
         - in: path
@@ -815,32 +814,6 @@ components:
           type: string
           enum: [Accepted, Canceled]
 
-    RequestFriendRequestBody:
-      type: object
-      required:
-        - otherUserId
-      properties:
-        otherUserId:
-          type: string
-
-    RespondToFriendRequestRequestBody:
-      type: object
-      required:
-        - action
-      properties:
-        action:
-          type: string
-          enum: [Accepted, Canceled]
-
-    RespondToFriendRequestResponse:
-      type: object
-      required:
-        - requestFriendStatus
-      properties:
-        requestFriendStatus:
-          type: string
-          enum: [Accepted, Canceled]
-
     RoomDto:
       type: object
       required:
@@ -957,13 +930,11 @@ components:
         - order
         - userId
         - isTurn
-        - isTurn
       properties:
         order:
           type: integer
         userId:
           type: string
-        isTurn:
         isTurn:
           type: boolean
     MatchDto:

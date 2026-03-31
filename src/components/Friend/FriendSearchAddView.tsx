@@ -81,20 +81,25 @@ export const FriendSearchAddView = ({
       )}
 
       <div className="mb-4 flex gap-2">
-        <input
-          id="friend-search-input"
-          value={searchText}
-          onChange={(event) => onSearchTextChange(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              onSearch();
-              setShowResults(true);
-            }
-          }}
-          placeholder="Search exact username..."
-          className="h-12 flex-1 border border-rave-white/20 bg-rave-white/5 px-3 text-sm tracking-wide text-rave-white outline-none placeholder:text-rave-white/40 focus:border-rave-red"
-        />
+        <div className="h-12 flex-1 relative">
+          <span className="absolute left-3 top-1/2  -translate-y-1/2 text-lg text-rave-white/60">
+            @
+          </span>
+          <input
+            id="friend-search-input"
+            value={searchText}
+            onChange={(event) => onSearchTextChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                onSearch();
+                setShowResults(true);
+              }
+            }}
+            placeholder="username..."
+            className="h-full w-full border border-rave-white/20 bg-rave-white/5 pl-7 pr-3 text-sm tracking-wide text-rave-white outline-none placeholder:text-rave-white/40 focus:border-rave-red"
+          />
+        </div>
 
         <Button
           variant="primary"
