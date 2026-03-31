@@ -108,15 +108,15 @@ export const RoomSlot = () => {
     const occupiedSlots: Slot[] = [
         {
             id: hostUser?.id ?? `host-${currentOwnerId || "unknown"}`,
-            username: hostUser?.id === userId ? currentUserName : "HOST",
+            username: hostUser?.id === userId ? currentUserName : (hostUser?.displayName || hostUser?.username || "HOST"),
             status: "HOST" as const,
-            avatarUrl: hostUser?.id === userId ? avatarUrl : hostUser?.avatarUrl,
+            avatarUrl: hostUser?.id === userId ? avatarUrl : (hostUser?.avatarUrl ?? undefined),
         },
-        ...joinedUsers.map((user, index) => ({
+        ...joinedUsers.map((user) => ({
             id: user.id,
-            username: user.id === userId ? currentUserName : `Opponent ${index + 1}`,
+            username: user.id === userId ? currentUserName : (user.displayName || user.username || "Unknown"),
             status: "JOINED" as const,
-            avatarUrl: user.id === userId ? avatarUrl : user.avatarUrl,
+            avatarUrl: user.id === userId ? avatarUrl : (user.avatarUrl ?? undefined),
         })),
     ];
 
@@ -196,7 +196,7 @@ export const RoomSlot = () => {
                         <article
                             key={slot.id}
                             className={[
-                                "group relative min-w-[180px] flex-1",
+                                "group relative min-w-45 flex-1",
                                 "rounded-lg border-2 px-4 py-4",
                                 "transition-all duration-300",
                                 "hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-22px_rgba(0,0,0,0.75)]",

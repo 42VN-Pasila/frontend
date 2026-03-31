@@ -778,11 +778,18 @@ components:
       properties:
         id:
           type: string
+        username:
+          type: string
+          nullable: true
+        displayName:
+          type: string
+          nullable: true
         status:
           type: string
         avatarUrl:
           type: string
           format: uri
+          nullable: true
     RequestFriendRequestBody:
       type: object
       required:
