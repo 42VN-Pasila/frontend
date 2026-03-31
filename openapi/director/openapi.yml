@@ -15,7 +15,6 @@ paths:
     get:
       summary: Check if the service is running
       description: Endpoint to ping the service
-      description: Endpoint to ping the service
       responses:
         '200':
           description: Service is running
