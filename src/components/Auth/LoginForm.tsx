@@ -1,15 +1,18 @@
 import { rudexClient } from "@/shared/api/rudexClient";
+import { useAuth } from "@/shared/auth/useAuth";
 import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GoogleIcon } from "@/components/Auth/GoogleIcon";
 import {
   ValidationField,
-  useFormInputValidation,
+  useFormInputValidation as validateFormInput,
 } from "@/components/Auth/useFormInputValdiation";
 
 export const LoginForm = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -25,17 +28,16 @@ export const LoginForm = () => {
         password,
       });
 
-      localStorage.setItem('accessToken', response.accessToken);
-      localStorage.setItem('accessTokenExpiryDate', response.accessTokenExpiryDate);
-      localStorage.setItem('refreshToken', response.refreshToken);
+      login(response);
+      navigate("/dashboard", { replace: true });
 
-    } catch (error) {
+    } catch {
       //Display pop up error noti
     }
   };
 
   return (
-    <Form.Root className="mx-auto bg-[var(--color-form-gray)]" gap={20}>
+    <Form.Root className="mx-auto bg-rave-red" gap={20}>
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
           Welcome to Blank
@@ -44,7 +46,7 @@ export const LoginForm = () => {
           Don’t have an account?{" "}
           <Link
             to="/register"
-            className="text-[var(--color-primary)] hover:underline cursor-pointer"
+            className="text-rave-red hover:underline cursor-pointer"
           >
             Sign up
           </Link>
@@ -58,7 +60,7 @@ export const LoginForm = () => {
         onChange={(e) => setUsername(e.target.value)}
         onBlur={(e) =>
           setUsernameError(
-            useFormInputValidation(
+            validateFormInput(
               ValidationField.usernameLogin,
               e.target.value,
             ),
@@ -83,9 +85,9 @@ export const LoginForm = () => {
         Login
       </Button>
       <div className="flex items-center gap-4">
-        <div className="flex-1 h-px bg-[var(--color-light-gray)]"></div>
+        <div className="flex-1 h-px bg-rave-white/20"></div>
         <span className="test-xs">OR</span>
-        <div className="flex-1 h-px bg-[var(--color-light-gray)]"></div>
+        <div className="flex-1 h-px bg-rave-white/20"></div>
       </div>
       <Button
         type="button"

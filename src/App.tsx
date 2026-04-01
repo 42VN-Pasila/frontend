@@ -6,6 +6,7 @@ import LoginPage from "./pages/Auth/LoginPage";
 import AboutPage from "./pages/HomePage/AboutPage";
 import { Dashboard } from "./components/Dashboard/Dashboard";
 import { GameBoard } from "./components/GameBoard/GameBoard";
+import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 
 const App: React.FC = () => {
   return (
@@ -15,16 +16,22 @@ const App: React.FC = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          {/* <Route
+          <Route
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <DashBoard />
+                <Dashboard />
               </ProtectedRoute>
             }
-          /> */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/match/:matchId" element={<GameBoard />} />
+          />
+          <Route
+            path="/match/:matchId"
+            element={
+              <ProtectedRoute>
+                <GameBoard />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>

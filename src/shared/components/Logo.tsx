@@ -1,11 +1,10 @@
 import logoSrc from "../../assets/jokercard.png";
 import { Link } from "react-router-dom";
-import { isExpired } from "../utils/sessionVerify";
+import { useAuth } from "../auth/useAuth";
 
 const Logo = () => {
-  const accessToken = localStorage.getItem('accessToken');
-
-  const redirectPath = ((accessToken && !isExpired(accessToken))? '/dashboard' : '/');
+  const { isAuthenticated } = useAuth();
+  const redirectPath = isAuthenticated ? "/dashboard" : "/";
   return (
     <div>
       <Link to={redirectPath} className="inline-flex items-center gap-2">
