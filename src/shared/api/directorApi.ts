@@ -5,8 +5,6 @@ import type { ConnectRoomResponse } from "@/gen/director/models/ConnectRoomRespo
 import type { CreateRoomResponse } from "@/gen/director/models/CreateRoomResponse";
 import type {
     Avatar,
-    ConnectRoomRequest,
-    CreateRoomRequestBody,
     ListRoomsDto,
     RoomDto,
     RoomMetaDataDto,
@@ -46,10 +44,10 @@ export const useCreateRoomMutation = () => {
     return useMutation<
         CreateRoomResponse,
         Error,
-        { userId: string; roomName: string }
+    { roomName: string }
     >({
-        mutationFn: async ({ userId, roomName }) => {
-            const bodyPayload: CreateRoomRequestBody = { userId, roomName };
+    mutationFn: async ({ roomName }) => {
+      const bodyPayload: { roomName: string } = { roomName };
             return directorClient.createRoom(bodyPayload);
         },
         onSuccess: () => {
@@ -64,11 +62,10 @@ export const useConnectRoomMutation = () => {
     return useMutation<
         ConnectRoomResponse,
         Error,
-        { roomId: string; userId: string }
+    { roomId: string }
     >({
-        mutationFn: async ({ roomId, userId }) => {
-            const bodyPayload: ConnectRoomRequest = { userId };
-            return directorClient.connectRoom(roomId, bodyPayload);
+    mutationFn: async ({ roomId }) => {
+      return directorClient.connectRoom(roomId);
         },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ["rooms"] });
@@ -83,10 +80,10 @@ export const useStartMatchMutation = () => {
     return useMutation<
         StartMatchResponse,
         Error,
-        { roomId: string; ownerId: string }
+    { roomId: string }
     >({
-        mutationFn: ({ roomId, ownerId }) => {
-            return directorClient.startMatch(roomId, { ownerId });
+    mutationFn: ({ roomId }) => {
+      return directorClient.startMatch(roomId);
         },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ["rooms"] });
@@ -101,11 +98,11 @@ export const useUpdateUserAvatarMutation = () => {
     return useMutation<
         UpdateUserAvatarResponse,
         Error,
-        { userId: string; avatarId: string }
+    { avatarId: string }
     >({
-        mutationFn: ({ userId, avatarId }) => {
+    mutationFn: ({ avatarId }) => {
             const bodyPayload: UpdateUserAvatarRequestBody = { avatarId };
-            return directorClient.updateUserAvatar(userId, bodyPayload);
+      return directorClient.updateUserAvatar(bodyPayload);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["rooms"] });
@@ -116,9 +113,9 @@ export const useUpdateUserAvatarMutation = () => {
 export const useDisconnectRoomMutation = () => {
     const queryClient = useQueryClient();
 
-    return useMutation<void, Error, { roomId: string; userId: string }>({
-        mutationFn: ({ roomId, userId }) => {
-            return directorClient.disconnectRoom(roomId, userId);
+  return useMutation<void, Error, { roomId: string }>({
+    mutationFn: ({ roomId }) => {
+      return directorClient.disconnectRoom(roomId);
         },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ["rooms"] });
@@ -133,14 +130,14 @@ export const useUpdateUserStatusMutation = () => {
     return useMutation<
         UpdateRoomUserStatusResponse,
         Error,
-        { userId: string; roomId: string; status: "Ready" | "NotReady" }
+    { roomId: string; status: "Ready" | "NotReady" }
     >({
-        mutationFn: ({ userId, roomId, status }) => {
+    mutationFn: ({ roomId, status }) => {
             const bodyPayload: UpdateRoomUserStatusRequestBody = {
                 status: status as UpdateRoomUserStatusRequestBody.status,
             };
 
-            return directorClient.updateUserStatus(roomId, userId, bodyPayload);
+      return directorClient.updateUserStatus(roomId, bodyPayload);
         },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ["rooms"] });

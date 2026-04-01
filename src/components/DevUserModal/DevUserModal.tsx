@@ -22,7 +22,6 @@ export const DevUserModal = () => {
         const selectedAvatar = avatars.find((avatar) => avatar.url === selectedAvatarUrl);
         if (selectedAvatar && userIdInput.trim()) {
             await updateUserAvatar({
-                userId: userIdInput.trim(),
                 avatarId: selectedAvatar.id,
             });
         }

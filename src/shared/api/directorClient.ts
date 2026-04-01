@@ -2,8 +2,6 @@ import { OpenAPI } from '@/gen/director/core/OpenAPI';
 import { UsersService } from '@/gen/director/services/UsersService';
 import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
 import {
-    type ConnectRoomRequest,
-    type CreateRoomRequestBody,
     type ExitMatchEvent,
     type JoinMatchEvent,
     type LeaveMatchEvent,
@@ -13,10 +11,10 @@ import {
     ResourcesService,
     RoomsService,
     type SkipTurnEvent,
-    type StartMatchRequest,
     type UpdateRoomUserStatusRequestBody,
     type UpdateUserAvatarRequestBody,
 } from '@/gen/director';
+import { readStoredAuthSession } from '@/shared/auth/authStorage';
 import { toDevPath } from './path.dev';
 import { Socket, io } from 'socket.io-client';
 
@@ -59,6 +57,7 @@ const resolveDirectorBaseUrl = () => {
 
 const directorBaseUrl = resolveDirectorBaseUrl();
 const directorSocketOrigin = new URL(directorBaseUrl).origin;
+const getStoredAccessToken = async () => readStoredAuthSession()?.accessToken ?? '';
 
 export const socket: Socket = io(directorSocketOrigin, {
     transports: ['websocket'],
@@ -68,6 +67,13 @@ export const socket: Socket = io(directorSocketOrigin, {
 
 export const connectSocket = () => {
     if (!socket.connected) {
+        const accessToken = readStoredAuthSession()?.accessToken;
+        socket.auth = accessToken
+            ? {
+                token: accessToken,
+                authorization: `Bearer ${accessToken}`,
+            }
+            : {};
         socket.connect();
     }
 };
@@ -188,19 +194,21 @@ export const onSocketDisconnect = (handler: () => void) => {
 };
 
 OpenAPI.BASE = directorBaseUrl;
+OpenAPI.WITH_CREDENTIALS = true;
+OpenAPI.TOKEN = getStoredAccessToken;
 
 export const directorClient = {
     async createUser(body: CreateUserRequestBody) {
         return UsersService.postUsers({ requestBody: body });
     },
-    async createRoom(body: CreateRoomRequestBody) {
+    async createRoom(body: { roomName: string }) {
         return RoomsService.postRooms({ requestBody: body });
     },
-    async connectRoom(roomId: string, body: ConnectRoomRequest) {
-        return RoomsService.connectRoom({ roomId, requestBody: body });
+    async connectRoom(roomId: string) {
+        return RoomsService.connectRoom({ roomId });
     },
-    async startMatch(roomId: string, body: StartMatchRequest) {
-        return RoomsService.startMatch({ roomId, requestBody: body });
+    async startMatch(roomId: string) {
+        return RoomsService.startMatch({ roomId });
     },
     async listRooms() {
         return RoomsService.getRooms();
@@ -208,17 +216,17 @@ export const directorClient = {
     async listAvatars() {
         return ResourcesService.getResourcesAvatars();
     },
-    async updateUserAvatar(userId: string, body: UpdateUserAvatarRequestBody) {
-        return UsersService.updateUserAvatar({ userId, requestBody: body });
+    async updateUserAvatar(body: UpdateUserAvatarRequestBody) {
+        return UsersService.updateUserAvatar({ requestBody: body });
     },
     async getRoomStatus(roomId: string) {
         return RoomsService.getRoomStatus({ roomId });
     },
-    async updateUserStatus(roomId: string, userId: string, body: UpdateRoomUserStatusRequestBody) {
-        return RoomsService.updateRoomUserStatus({ roomId, userId, requestBody: body });
+    async updateUserStatus(roomId: string, body: UpdateRoomUserStatusRequestBody) {
+        return RoomsService.updateRoomUserStatus({ roomId, requestBody: body });
     },
-    async disconnectRoom(roomId: string, userId: string) {
-        return RoomsService.disconnectRoom({ roomId, requestBody: { userId } });
+    async disconnectRoom(roomId: string) {
+        return RoomsService.disconnectRoom({ roomId });
     },
     async getRoomMetaData(roomId: string) {
         return RoomsService.getRoomMetaData({ roomId });

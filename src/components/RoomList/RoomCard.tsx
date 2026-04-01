@@ -34,7 +34,7 @@ export const RoomCard = ({ room }: RoomCardProps) => {
 
     const handleConnectRoom = async (roomId: string) => {
         if (!userId || !roomId) return;
-        const data = await connectRoom({ roomId, userId });
+        const data = await connectRoom({ roomId });
         setRoomId(roomId);
         setUserId(userId);
         setUsers(data.room.users);

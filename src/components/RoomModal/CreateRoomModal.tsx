@@ -20,7 +20,6 @@ export const CreateRoomModal = () => {
         if (!userId || !normalizedRoomName || isCreatingRoom) return;
 
         const data = await createRoom({
-            userId,
             roomName: normalizedRoomName,
         });
 

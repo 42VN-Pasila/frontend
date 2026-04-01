@@ -77,7 +77,6 @@ export const RoomSlot = () => {
         const nextStatus = shouldBeReady ? "Ready" : "NotReady";
 
         await updateUserStatus({
-            userId,
             roomId,
             status: nextStatus,
         });
@@ -88,7 +87,6 @@ export const RoomSlot = () => {
         if (!userId || !roomId || !isHost) return;
         await startMatch({
             roomId,
-            ownerId: userId,
         });
     };
 
@@ -97,7 +95,6 @@ export const RoomSlot = () => {
 
         await disconnectFromRoom({
             roomId,
-            userId,
         });
         resetRoom();
     };
