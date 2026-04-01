@@ -5,10 +5,6 @@ import Form from "../../shared/components/Form";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleIcon } from "@/components/Auth/GoogleIcon";
-import {
-  ValidationField,
-  useFormInputValidation as validateFormInput,
-} from "@/components/Auth/useFormInputValdiation";
 
 export const LoginForm = () => {
   const navigate = useNavigate();
@@ -31,13 +27,14 @@ export const LoginForm = () => {
       login(response);
       navigate("/dashboard", { replace: true });
 
-    } catch {
+    } catch (error) {
       //Display pop up error noti
+      console.log("Error", error);
     }
   };
 
   return (
-    <Form.Root className="mx-auto bg-rave-red" gap={20}>
+    <Form.Root className="mx-auto bg-rave-black" gap={20} onSubmit={handleLogin}>
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
           Welcome to Blank
@@ -57,15 +54,12 @@ export const LoginForm = () => {
         required
         placeholder="Username"
         value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        onBlur={(e) =>
-          setUsernameError(
-            validateFormInput(
-              ValidationField.usernameLogin,
-              e.target.value,
-            ),
-          )
-        }
+        onChange={(e) => {
+          setUsername(e.target.value);
+          if (usernameError) {
+            setUsernameError(null);
+          }
+        }}
         error={usernameError}
       />
       <div className="flex flex-col gap-1">
@@ -81,7 +75,7 @@ export const LoginForm = () => {
         </p>
       </div>
 
-      <Button type="submit" size="medium" fullWidth onClick={handleLogin}>
+      <Button type="submit" size="medium" fullWidth>
         Login
       </Button>
       <div className="flex items-center gap-4">

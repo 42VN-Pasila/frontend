@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useMemo, useState } from "react";
 
-import { AuthContext, type AuthContextValue } from "./authContext";
+import { AuthContext, type AuthContextValue } from "./authContextValue";
 import type { AuthSession } from "./authStorage";
 import {
   clearStoredAuthSession,
