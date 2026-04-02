@@ -36,8 +36,9 @@ const RANK_LABEL: Record<(typeof RANK_ORDER)[number], string> = {
 };
 
 export const BookDisplayModal = () => {
-    const { userId } = useUserStore();
+    const { username } = useUserStore();
     const { books } = useGameSessionStore();
+    const currentUserId = username.trim();
 
     const { userRanks, otherRanks } = useMemo(() => {
         const user = new Set<string>();
@@ -47,7 +48,7 @@ export const BookDisplayModal = () => {
             const rank = book.cards[0]?.rank;
             if (!rank) continue;
 
-            if (book.userId === userId) {
+            if (book.userId === currentUserId) {
                 user.add(rank);
             } else {
                 other.add(rank);
@@ -55,7 +56,7 @@ export const BookDisplayModal = () => {
         }
 
         return { userRanks: user, otherRanks: other };
-    }, [books, userId]);
+    }, [books, currentUserId]);
 
     return (
         <section className="h-fit w-full">

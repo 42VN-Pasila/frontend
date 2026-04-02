@@ -17,8 +17,9 @@ const BASE_INTERVAL_MS = 80;
 const MAX_INTERVAL_MS = 350;
 
 export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
-  const { userId } = useUserStore();
+  const { username } = useUserStore();
   const { opponents } = useGameSessionStore();
+  const currentUserId = username.trim();
 
   const [phase, setPhase] = useState<Phase>(
     result.hasCoWinners ? "picking" : "result",
@@ -65,7 +66,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
     return () => clearTimeout(timeout);
   }, [phase]);
 
-  const isWinner = result.winnerUserId === userId;
+  const isWinner = result.winnerUserId === currentUserId;
   const isAbandoned = result.endedReason === "Abandoned";
 
   const headingText = isAbandoned

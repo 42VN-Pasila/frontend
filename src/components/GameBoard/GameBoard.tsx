@@ -31,19 +31,20 @@ export type GameRequestPayload = {
 
 export const GameBoard = () => {
   const navigate = useNavigate();
-  const { userId } = useUserStore();
+  const { username } = useUserStore();
   const { hands, seats, resetGameSession } = useGameSessionStore();
   const { id: roomId, resetRoom } = useRoomStore();
   const matchId = useParams<{ matchId: string }>().matchId ?? "";
+  const currentUserId = username.trim();
 
   const [isExitingGame, setIsExitingGame] = useState(false);
   const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(null);
   const [selection, setSelection] = useState<SelectedCard>({ suit: null, rank: null });
 
   const { matchResult, errorMessage, isMatchOver, setErrorMessage, resetTurn } =
-    useMatchConnection(matchId, userId);
+    useMatchConnection(matchId, currentUserId);
 
-  useAbandonmentGuard(matchId, userId, isExitingGame, isMatchOver, setErrorMessage);
+  useAbandonmentGuard(matchId, currentUserId, isExitingGame, isMatchOver, setErrorMessage);
 
   const navigateToDashboard = useCallback(async () => {
     if (roomId) {
@@ -59,22 +60,22 @@ export const GameBoard = () => {
     void navigateToDashboard();
   }, [isMatchOver, matchResult, navigateToDashboard]);
 
-  const isMyTurn = seats.find((s) => s.userId === userId)?.isTurn ?? false;
+  const isMyTurn = seats.find((s) => s.userId === currentUserId)?.isTurn ?? false;
   const isInteractionDisabled = !isMyTurn || isExitingGame;
   const isSelectionComplete = !!(selection.suit && selection.rank && selectedOpponentId);
-  const currentUserCards: Card[] = hands.find((h) => h.userId === userId)?.cards ?? [];
+  const currentUserCards: Card[] = hands.find((h) => h.userId === currentUserId)?.cards ?? [];
 
   const handleUpdate = useCallback((updates: Partial<SelectedCard>) => {
     setSelection((prev) => ({ ...prev, ...updates }));
   }, []);
 
   const handleRequest = useCallback(async () => {
-    if (!isSelectionComplete || !userId || !selectedOpponentId || !matchId || isExitingGame) return;
+    if (!isSelectionComplete || !currentUserId || !selectedOpponentId || !matchId || isExitingGame) return;
 
     try {
       await socketAskCardMatch({
         matchId,
-        userId,
+        userId: currentUserId,
         opponentId: selectedOpponentId,
         card: { suit: selection.suit!, rank: selection.rank! },
       });
@@ -84,13 +85,13 @@ export const GameBoard = () => {
     } catch {
       setErrorMessage("Failed to send request");
     }
-  }, [isSelectionComplete, userId, selectedOpponentId, matchId, isExitingGame, selection, setErrorMessage]);
+  }, [isSelectionComplete, currentUserId, selectedOpponentId, matchId, isExitingGame, selection, setErrorMessage]);
 
   const handleExitGame = useCallback(() => {
-    if (!matchId || !userId || isExitingGame) return;
+    if (!matchId || !currentUserId || isExitingGame) return;
 
     setIsExitingGame(true);
-    void socketExitMatch({ matchId, userId })
+    void socketExitMatch({ matchId, userId: currentUserId })
       .catch(() => undefined)
       .finally(() => {
         resetGameSession();
@@ -98,7 +99,7 @@ export const GameBoard = () => {
         disconnectSocket();
         navigate("/dashboard");
       });
-  }, [isExitingGame, matchId, navigate, resetGameSession, resetRoom, userId]);
+  }, [isExitingGame, matchId, navigate, resetGameSession, resetRoom, currentUserId]);
 
   const handleResultClose = useCallback(() => {
     resetGameSession();

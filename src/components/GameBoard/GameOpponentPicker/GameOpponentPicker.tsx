@@ -48,13 +48,13 @@ const GameOpponentPicker = ({
   ...props
 }: GameOpponentPickerProps) => {
 
-  const userId = useUserStore().userId;
+  const currentUserId = useUserStore().username.trim();
   const opponents = useGameSessionStore().opponents;
   const seats = useGameSessionStore().seats;
 
   const orderedOpponents = useMemo(() =>
-    getOrderedOpponents(opponents, seats, userId),
-    [opponents, seats, userId]
+    getOrderedOpponents(opponents, seats, currentUserId),
+    [opponents, seats, currentUserId]
   );
   const activeSeat = useMemo(
     () => seats.find((seat) => seat.isTurn),
@@ -62,11 +62,11 @@ const GameOpponentPicker = ({
   );
   const activeTurnOpponentId = useMemo(() => {
     const activeUserId = activeSeat?.userId;
-    if (!activeUserId || activeUserId === userId) {
+    if (!activeUserId || activeUserId === currentUserId) {
       return null;
     }
     return activeUserId;
-  }, [activeSeat?.userId, userId]);
+  }, [activeSeat?.userId, currentUserId]);
 
   return (
     <section

@@ -1,6 +1,5 @@
 import { OpenAPI } from '@/gen/director/core/OpenAPI';
 import { UsersService } from '@/gen/director/services/UsersService';
-import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
 import {
     type ExitMatchEvent,
     type JoinMatchEvent,
@@ -188,9 +187,6 @@ OpenAPI.BASE = directorBaseUrl;
 OpenAPI.WITH_CREDENTIALS = true;
 
 export const directorClient = {
-    async createUser(body: CreateUserRequestBody) {
-        return UsersService.postUsers({ requestBody: body });
-    },
     async createRoom(body: { roomName: string }) {
         return RoomsService.postRooms({ requestBody: body });
     },

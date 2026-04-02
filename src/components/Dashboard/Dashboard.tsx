@@ -2,7 +2,6 @@ import { FriendList } from "../FriendList/FriendList";
 import { RoomList } from "../RoomList/RoomList";
 import { UserProfile } from "./UserProfile";
 import GameStats from "./GameStats";
-import { DevUserModal } from "../DevUserModal/DevUserModal";
 import { RoomModal } from "../RoomModal/RoomModal";
 
 
@@ -28,7 +27,6 @@ export const Dashboard = () => {
                         <RoomList />
                     </div>
                     <div className="grid grid-cols-1 gap-4 xl:col-span-4 xl:sticky xl:top-6">
-                        <DevUserModal />
                         <FriendList />
                     </div>
                 </div>

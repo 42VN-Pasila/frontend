@@ -23,7 +23,7 @@ type Slot = {
 export const RoomSlot = () => {
     const navigate = useNavigate();
     const { id: roomId, ownerId, users, setUsers, resetRoom, setName, setOwnerId, setConnectionCount } = useRoomStore();
-    const { userId, username, avatarUrl } = useUserStore();
+    const { username, avatarUrl } = useUserStore();
 
     const { data: roomStatus, refetch: refetchRoomStatus } = useGetRoomStatusQuery(roomId, {
         enabled: Boolean(roomId),
@@ -46,8 +46,9 @@ export const RoomSlot = () => {
 
     const currentOwnerId = roomStatus?.ownerId ?? ownerId;
     const currentUsers = roomStatus?.users ?? users;
+    const currentUserId = username.trim();
     const currentUserName = username || "You";
-    const isHost = userId === currentOwnerId;
+    const isHost = currentUserId === currentOwnerId;
     const { data: roomMetaData } = useGetRoomMetaDataQuery(roomId, {
         enabled: Boolean(roomId && roomStatus?.started),
         refetchOnMount: "always",
@@ -70,9 +71,9 @@ export const RoomSlot = () => {
         );
 
     const handleReady = async () => {
-        if (!userId || !roomId) return;
+        if (!currentUserId || !roomId) return;
 
-        const currentUser = currentUsers.find((user) => user.id === userId);
+        const currentUser = currentUsers.find((user) => user.id === currentUserId);
         const shouldBeReady = currentUser?.status !== "Ready";
         const nextStatus = shouldBeReady ? "Ready" : "NotReady";
 
@@ -84,14 +85,14 @@ export const RoomSlot = () => {
     };
 
     const handleStartMatch = async () => {
-        if (!userId || !roomId || !isHost) return;
+        if (!currentUserId || !roomId || !isHost) return;
         await startMatch({
             roomId,
         });
     };
 
     const handleExitRoom = async () => {
-        if (!userId || !roomId) return;
+        if (!currentUserId || !roomId) return;
 
         await disconnectFromRoom({
             roomId,
@@ -105,15 +106,15 @@ export const RoomSlot = () => {
     const occupiedSlots: Slot[] = [
         {
             id: hostUser?.id ?? `host-${currentOwnerId || "unknown"}`,
-            username: hostUser?.id === userId ? currentUserName : "HOST",
+            username: hostUser?.id === currentUserId ? currentUserName : "HOST",
             status: "HOST" as const,
-            avatarUrl: hostUser?.id === userId ? avatarUrl : hostUser?.avatarUrl,
+            avatarUrl: hostUser?.id === currentUserId ? avatarUrl : hostUser?.avatarUrl,
         },
         ...joinedUsers.map((user, index) => ({
             id: user.id,
-            username: user.id === userId ? currentUserName : `Opponent ${index + 1}`,
+            username: user.id === currentUserId ? currentUserName : `Opponent ${index + 1}`,
             status: "JOINED" as const,
-            avatarUrl: user.id === userId ? avatarUrl : user.avatarUrl,
+            avatarUrl: user.id === currentUserId ? avatarUrl : user.avatarUrl,
         })),
     ];
 
@@ -127,13 +128,13 @@ export const RoomSlot = () => {
         });
     }
 
-    const isReady = !!userId && isUserReady(userId);
+    const isReady = !!currentUserId && isUserReady(currentUserId);
     const allReady =
         joinedUsers.length > 0 &&
         joinedUsers.every((user) => user.status === "Ready");
 
 
-    const isActionButtonDisabled = !userId || !roomId || (isHost && !allReady);
+    const isActionButtonDisabled = !currentUserId || !roomId || (isHost && !allReady);
 
     return (
         <>
@@ -236,7 +237,7 @@ export const RoomSlot = () => {
                                 />
                                 <span>
                                     {isHost
-                                        ? slot.id === userId
+                                        ? slot.id === currentUserId
                                             ? "YOU ARE HOST"
                                             : "HOST"
                                         : isJoined

@@ -15,9 +15,10 @@ type TimerProps = {
 export const Timer = ({ isDisabled = false, resetTurn }: TimerProps) => {
   const [timeLeft, setTimeLeft] = useState(TURN_SECONDS);
   const hasEmittedSkipRef = useRef(false);
-  const { userId } = useUserStore();
+  const { username } = useUserStore();
   const { matchId, seats } = useGameSessionStore();
-  const isMyTurn = seats.find((seat) => seat.userId === userId)?.isTurn ?? false;
+  const currentUserId = username.trim();
+  const isMyTurn = seats.find((seat) => seat.userId === currentUserId)?.isTurn ?? false;
   const isTimerActive = isMyTurn && !isDisabled;
 
   useEffect(() => {
@@ -36,15 +37,15 @@ export const Timer = ({ isDisabled = false, resetTurn }: TimerProps) => {
   }, [isTimerActive]);
 
   useEffect(() => {
-    if (!isTimerActive || timeLeft > 0 || hasEmittedSkipRef.current || !matchId || !userId) {
+    if (!isTimerActive || timeLeft > 0 || hasEmittedSkipRef.current || !matchId || !currentUserId) {
       return;
     }
 
     hasEmittedSkipRef.current = true;
-    void socketSkipTurn({ matchId, userId }).catch(() => {
+    void socketSkipTurn({ matchId, userId: currentUserId }).catch(() => {
       hasEmittedSkipRef.current = false;
     });
-  }, [isTimerActive, matchId, timeLeft, userId]);
+  }, [isTimerActive, matchId, timeLeft, currentUserId]);
 
   return (
     <div

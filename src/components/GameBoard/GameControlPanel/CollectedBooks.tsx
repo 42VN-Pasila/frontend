@@ -3,9 +3,10 @@ import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 export const CollectedBooks = () => {
-    const { userId } = useUserStore();
+    const { username } = useUserStore();
     const { books } = useGameSessionStore();
-    const bookCount = books.filter((book) => book.userId === userId).length;
+    const currentUserId = username.trim();
+    const bookCount = books.filter((book) => book.userId === currentUserId).length;
     return (
         <div id="collected-books" className="h-fit p-4  border-b-2 border-rave-white/10 ">
             <Label className="text-5xl text-rave-red/80">

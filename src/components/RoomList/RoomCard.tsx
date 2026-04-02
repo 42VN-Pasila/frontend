@@ -25,7 +25,7 @@ export const RoomCard = ({ room }: RoomCardProps) => {
     const status = room.status ?? (full ? "FULL" : "OPEN");
 
     const { id: roomId, setRoomId, setUsers, setOwnerId, setConnectionCount } = useRoomStore();
-    const { userId, setUserId } = useUserStore();
+    const { username } = useUserStore();
 
     const { mutateAsync: connectRoom } = useConnectRoomMutation();
 
@@ -33,10 +33,9 @@ export const RoomCard = ({ room }: RoomCardProps) => {
     const disabled = full || !!roomId;
 
     const handleConnectRoom = async (roomId: string) => {
-        if (!userId || !roomId) return;
+        if (!username || !roomId) return;
         const data = await connectRoom({ roomId });
         setRoomId(roomId);
-        setUserId(userId);
         setUsers(data.room.users);
         setOwnerId(data.room.ownerId);
         setConnectionCount(data.room.connectionCount);

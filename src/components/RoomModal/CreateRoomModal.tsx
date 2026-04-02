@@ -8,7 +8,7 @@ import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { MAX_PLAYERS } from "@/common/constants";
 
 export const CreateRoomModal = () => {
-    const { userId, setUserId } = useUserStore();
+    const { username } = useUserStore();
     const { setRoomId, setUsers, setOwnerId, setConnectionCount } = useRoomStore();
 
     const [roomName, setRoomName] = useState("");
@@ -17,14 +17,13 @@ export const CreateRoomModal = () => {
 
     const handleCreateRoom = async () => {
         const normalizedRoomName = roomName.trim();
-        if (!userId || !normalizedRoomName || isCreatingRoom) return;
+        if (!username || !normalizedRoomName || isCreatingRoom) return;
 
         const data = await createRoom({
             roomName: normalizedRoomName,
         });
 
         setRoomId(data.room.id);
-        setUserId(userId);
         setUsers(data.room.users);
         setOwnerId(data.room.ownerId);
         setConnectionCount(data.room.connectionCount);
@@ -64,7 +63,7 @@ export const CreateRoomModal = () => {
                     size="small"
                     className="min-w-40"
                     onClick={handleCreateRoom}
-                    disabled={isCreatingRoom || !roomName.trim() || !userId}
+                    disabled={isCreatingRoom || !roomName.trim() || !username}
                 >
                     {isCreatingRoom ? "CREATING..." : "CREATE ROOM"}
                 </Button>
