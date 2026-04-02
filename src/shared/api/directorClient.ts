@@ -14,7 +14,6 @@ import {
     type UpdateRoomUserStatusRequestBody,
     type UpdateUserAvatarRequestBody,
 } from '@/gen/director';
-import { readStoredAuthSession } from '@/shared/auth/authStorage';
 import { toDevPath } from './path.dev';
 import { Socket, io } from 'socket.io-client';
 
@@ -57,7 +56,6 @@ const resolveDirectorBaseUrl = () => {
 
 const directorBaseUrl = resolveDirectorBaseUrl();
 const directorSocketOrigin = new URL(directorBaseUrl).origin;
-const getStoredAccessToken = async () => readStoredAuthSession()?.accessToken ?? '';
 
 export const socket: Socket = io(directorSocketOrigin, {
     transports: ['websocket'],
@@ -67,13 +65,6 @@ export const socket: Socket = io(directorSocketOrigin, {
 
 export const connectSocket = () => {
     if (!socket.connected) {
-        const accessToken = readStoredAuthSession()?.accessToken;
-        socket.auth = accessToken
-            ? {
-                token: accessToken,
-                authorization: `Bearer ${accessToken}`,
-            }
-            : {};
         socket.connect();
     }
 };
@@ -195,7 +186,6 @@ export const onSocketDisconnect = (handler: () => void) => {
 
 OpenAPI.BASE = directorBaseUrl;
 OpenAPI.WITH_CREDENTIALS = true;
-OpenAPI.TOKEN = getStoredAccessToken;
 
 export const directorClient = {
     async createUser(body: CreateUserRequestBody) {

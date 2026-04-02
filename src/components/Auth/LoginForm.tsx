@@ -19,12 +19,12 @@ export const LoginForm = () => {
     if (usernameError) return;
 
     try {
-      const response = await rudexClient.login({
+      await rudexClient.login({
         username,
         password,
       });
 
-      login(response);
+      login();
       navigate("/dashboard", { replace: true });
 
     } catch (error) {

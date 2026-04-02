@@ -1,11 +1,9 @@
 import { createContext } from "react";
 
-import type { AuthSession } from "./authStorage";
-
 export type AuthContextValue = {
   isAuthenticated: boolean;
-  session: AuthSession | null;
-  login: (session: AuthSession) => void;
+  isBootstrapping: boolean;
+  login: () => void;
   logout: () => void;
 };
 

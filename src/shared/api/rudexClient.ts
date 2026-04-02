@@ -6,6 +6,7 @@ import type { RegisterRequestBody } from '@/gen/rudex/models/RegisterRequestBody
 import { toDevPath } from './path.dev';
 
 OpenAPI.BASE = toDevPath(import.meta.env.VITE_RUDEX_URL ?? "");
+OpenAPI.WITH_CREDENTIALS = true;
 
 export const rudexClient = {
   async login(body: LoginRequestBody) {
