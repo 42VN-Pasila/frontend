@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 // later get these after media is merged
 // import {
@@ -8,9 +8,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 //   useSendFriendRequestMutation,
 //   useRespondFriendRequestMutation,
 // } from "@/shared/api/directorApi";
-import { Button, Form } from "@/shared/components";
+import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
-import { useUserStore } from "@/shared/stores/useUserStore";
+import NavBar from "@/shared/components/NavBar";
 
 type Relationship = "None" | "Pending" | "Accepted";
 type Direction = "In" | "Out";
@@ -80,8 +80,8 @@ const useMockUser = (userId?: string) => {
     setIsLoading(true);
 
     const timeout = setTimeout(() => {
-      const user = MOCK_USERS.find((u) => u.id === userId) || null;
-      setData(user);
+      const foundUser = MOCK_USERS.find((u) => u.id === userId) || null;
+      setData(foundUser);
       setIsLoading(false);
     }, 200);
 
@@ -93,149 +93,132 @@ const useMockUser = (userId?: string) => {
 
 export const ProfilePage = () => {
   const { userId } = useParams();
-
   const { data: user, isLoading } = useMockUser(userId);
-
   const [relationship, setRelationship] = useState<Relationship>("None");
-
   const navigate = useNavigate();
-
-  const handleReturn = () => {
-    navigate("/dashboard");
-  };
 
   useEffect(() => {
     if (user) setRelationship(user.relationship);
   }, [user]);
 
-  if (isLoading) return <p className="text-center mt-10">Loading...</p>;
-  if (!user) return <p className="text-center mt-10">User not found</p>;
+  if (isLoading) return <p className="mt-10 text-center">Loading...</p>;
+  if (!user) return <p className="mt-10 text-center">User not found</p>;
 
   const isIncoming = relationship === "Pending" && user.direction === "In";
-
   const isOutgoing = relationship === "Pending" && user.direction === "Out";
 
-  const handleAddFriend = () => setRelationship("Accepted"); // set to accepted for demo, change to pending when integrated with backend
-
+  const handleReturn = () => navigate("/dashboard");
+  const handleAddFriend = () => setRelationship("Accepted");
   const handleAccept = () => setRelationship("Accepted");
-
   const handleReject = () => setRelationship("None");
-
   const handleCancel = () => setRelationship("None");
 
   return (
     <div className="min-h-screen bg-rave-black text-rave-white">
-      <div className="mx-auto w-full max-w-[90vw] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <div className="mb-6 flex flex-col gap-4  sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-widest">
-              USER PROFILE
-            </h1>
-            <p className="mt-1 mb-4 text-rave-white/60">
-              Profile overview & quick actions
-            </p>
-            <Button
-              variant="inverse"
-              emphasis="low"
-              size="small"
-              onClick={handleReturn}
-            >
-              Back to Dashboard
-            </Button>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">
-          <div className="grid grid-cols-1 gap-4 xl:col-span-8">
-            <section className="rounded-lg border-2 border-rave-white/10 bg-rave-black p-6 text-rave-white flex flex-col">
-              <div className="mb-4 px-8 py-2 items-center">
-                <Avatar
-                  src={user.avatarUrl}
-                  shape="circle"
-                  alt={user.username}
-                  fallbackText={
-                    "This will be the first letter of username if no avatar available"
-                  } // remove all after rudex
-                  wrapperClassName="aspect-square overflow-hidden bg-rave-black border-2 border-rave-white/20 h-40 w-40 object-cover"
-                />
-              </div>
-              <div className="flex flex-col px-8 py-2">
-                <header className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold tracking-widest">
-                    {user.displayname ? user.displayname : user.username}
-                  </h2>
-                </header>
-                <p className="mt-1 mb-4 text-rave-white/60">@{user.username}</p>
-              </div>
-              <div className="mb-4 px-8 py-2 flex flex-wrap gap-2">
-                {relationship === "None" && (
+      <NavBar
+        button={{
+          onClick: handleReturn,
+          children: "Back to Dashboard",
+          className: "text-sm font-medium",
+        }}
+      />
+
+      <div className="mx-auto w-full max-w-[72vw] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <section className="grid gap-6 xl:grid-cols-12">
+          <article className="xl:col-span-8 rounded-lg border-2 border-rave-white/10 bg-rave-black sm:p-8 flex flex-col gap-6 sm:flex-row sm:items-center">
+            <div className="flex h-44 w-44 shrink-0 items-center justify-center rounded-full border-2 border-rave-red/80 bg-rave-red/20 p-2">
+              <Avatar
+                src={user.avatarUrl}
+                shape="circle"
+                alt={user.username}
+                fallbackText="This will be the first letter of username if no avatar available"
+                wrapperClassName="relative z-10 h-40 w-40 overflow-hidden rounded-full bg-rave-red object-cover"
+              />
+            </div>
+
+            <div className="flex flex-1 flex-col items-center gap-3 text-center sm:items-start sm:text-left">
+              <h2 className="text-4xl font-black tracking-[0.12em] text-rave-white sm:text-5xl">
+                {user.displayname || user.username}
+              </h2>
+              <p className="text-sm text-rave-white/40">@{user.username}</p>
+              <span
+                className={`inline-flex items-center border px-4 py-2 text-xs font-bold tracking-[0.2em] ${STATUS_CLASSES[user.status]}`}
+              >
+                <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-current" />
+                {user.status.replace("_", " ")}
+              </span>
+            </div>
+          </article>
+
+          <aside className="xl:col-span-4 rounded-lg border-2 border-rave-white/10 bg-rave-black p-6 sm:p-8">
+            <h3 className="mb-6 text-xs font-black tracking-widest text-rave-white/60 uppercase">
+              Quick Actions
+            </h3>
+
+            <div className="space-y-3">
+              {relationship === "None" && (
+                <Button
+                  variant="primary"
+                  onClick={handleAddFriend}
+                  size="small"
+                  className="w-full"
+                >
+                  Add Friend
+                </Button>
+              )}
+
+              {isIncoming && (
+                <>
                   <Button
-                    variant="primary"
-                    onClick={handleAddFriend}
+                    onClick={handleAccept}
                     size="small"
-                    className="col-span-2"
+                    className="w-full"
                   >
-                    Add Friend
+                    Accept
                   </Button>
-                )}
+                  <Button
+                    onClick={handleReject}
+                    variant="inverse"
+                    emphasis="low"
+                    size="small"
+                    className="w-full"
+                  >
+                    Reject
+                  </Button>
+                </>
+              )}
 
-                {isIncoming && (
-                  <div className="col-span-2 flex gap-2">
-                    <Button onClick={handleAccept} size="small">
-                      Accept
-                    </Button>
-                    <Button
-                      onClick={handleReject}
-                      variant="inverse"
-                      emphasis="low"
-                      size="small"
-                    >
-                      Reject
-                    </Button>
-                  </div>
-                )}
+              {isOutgoing && (
+                <Button
+                  onClick={handleCancel}
+                  variant="inverse"
+                  emphasis="low"
+                  size="small"
+                  className="w-full"
+                >
+                  Cancel
+                </Button>
+              )}
 
-                {isOutgoing && (
+              {relationship === "Accepted" && (
+                <>
+                  <Button disabled size="small" className="w-full">
+                    Friends
+                  </Button>
                   <Button
                     onClick={handleCancel}
                     variant="inverse"
                     emphasis="low"
                     size="small"
-                    className="col-span-2"
+                    className="w-full"
                   >
-                    Cancel Request
+                    Remove Friend
                   </Button>
-                )}
-
-                {relationship === "Accepted" && (
-                  <div className="col-span-2 flex gap-2">
-                    <Button disabled size="small" className="col-span-2">
-                      Friends
-                    </Button>
-                    <Button
-                      onClick={handleCancel}
-                      variant="inverse"
-                      emphasis="low"
-                      size="small"
-                      className="col-span-2"
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                )}
-              </div>
-              <div className="px-8 py-2">
-                <p className="text-sm text-rave-white/70 tracking-wide">
-                  Current status:
-                </p>
-                <span
-                  className={`inline-flex border px-2 py-0.5 text-[10px] tracking-[0.15em] ${STATUS_CLASSES[user.status]}`}
-                >
-                  {user.status.replace("_", " ")}
-                </span>
-              </div>
-            </section>
-          </div>
-        </div>
+                </>
+              )}
+            </div>
+          </aside>
+        </section>
       </div>
     </div>
   );
