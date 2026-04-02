@@ -87,13 +87,9 @@ export const RoomSlot = () => {
 
     const handleStartMatch = async () => {
         if (!currentUsername || !roomId || !isHost) return;
-        const data = await startMatch({
+        await startMatch({
             roomId,
         });
-
-        if (data.matchId) {
-            navigate(`/match/${data.matchId}`);
-        }
     };
 
     const handleExitRoom = async () => {
