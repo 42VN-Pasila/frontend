@@ -9,7 +9,7 @@ import { MAX_PLAYERS } from "@/common/constants";
 
 export const CreateRoomModal = () => {
     const { username } = useUserStore();
-    const { setRoomId, setUsers, setOwnerId, setConnectionCount } = useRoomStore();
+    const { setRoomId, setUsers, setOwnerUsername, setConnectionCount } = useRoomStore();
 
     const [roomName, setRoomName] = useState("");
 
@@ -25,7 +25,7 @@ export const CreateRoomModal = () => {
 
         setRoomId(data.room.id);
         setUsers(data.room.users);
-        setOwnerId(data.room.ownerId);
+        setOwnerUsername(data.room.ownerUsername);
         setConnectionCount(data.room.connectionCount);
     };
 

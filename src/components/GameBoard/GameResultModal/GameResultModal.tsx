@@ -19,7 +19,7 @@ const MAX_INTERVAL_MS = 350;
 export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
   const { username } = useUserStore();
   const { opponents } = useGameSessionStore();
-  const currentUserId = username.trim();
+  const currentUsername = username.trim();
 
   const [phase, setPhase] = useState<Phase>(
     result.hasCoWinners ? "picking" : "result",
@@ -28,7 +28,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
   const [fadeIn, setFadeIn] = useState(!result.hasCoWinners);
 
   const players = opponents.length > 0 ? opponents : [];
-  const winnerIdx = players.findIndex((p) => p.id === result.winnerUserId);
+  const winnerIdx = players.findIndex((p) => p.id === result.winnerUsername);
   const totalSteps = players.length * CYCLE_COUNT + Math.max(winnerIdx, 0);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
     return () => clearTimeout(timeout);
   }, [phase]);
 
-  const isWinner = result.winnerUserId === currentUserId;
+  const isWinner = result.winnerUsername === currentUsername;
   const isAbandoned = result.endedReason === "Abandoned";
 
   const headingText = isAbandoned

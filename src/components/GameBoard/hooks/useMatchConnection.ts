@@ -13,7 +13,7 @@ import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 
 export function useMatchConnection(
   matchId: string,
-  userId: string,
+  username: string,
 ) {
   const syncMatchState = useGameSessionStore((s) => s.syncMatchState);
   const resetGameSession = useGameSessionStore((s) => s.resetGameSession);
@@ -37,20 +37,20 @@ export function useMatchConnection(
         return;
       }
 
-      syncMatchState(match, userId);
+      syncMatchState(match, username);
     },
-    [syncMatchState, resetGameSession, userId],
+    [syncMatchState, resetGameSession, username],
   );
 
   useEffect(() => {
-    if (!matchId || !userId) return;
+    if (!matchId || !username) return;
 
     setErrorMessage(null);
     let active = true;
 
     const joinAndSync = async () => {
       try {
-        const { match } = await socketJoinMatch({ matchId, userId });
+        const { match } = await socketJoinMatch({ matchId, username });
         if (!active) return;
         applyMatchState(match);
         setErrorMessage(null);
@@ -66,7 +66,7 @@ export function useMatchConnection(
     }
 
     const unsubMatchState = onMatchState((match, result) => {
-      if (match.currentSeat?.userId === userId && match.currentSeat?.isTurn) {
+      if (match.currentSeat?.username === username && match.currentSeat?.isTurn) {
         setResetTurn((prev) => !prev);
       }
       applyMatchState(match, result);
@@ -83,7 +83,7 @@ export function useMatchConnection(
       disconnectSocket();
       resetGameSession();
     };
-  }, [matchId, userId, applyMatchState, resetGameSession]);
+  }, [matchId, username, applyMatchState, resetGameSession]);
 
   return { matchResult, errorMessage, isMatchOver, setErrorMessage, resetTurn };
 }

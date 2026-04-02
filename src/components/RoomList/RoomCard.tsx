@@ -24,7 +24,7 @@ export const RoomCard = ({ room }: RoomCardProps) => {
     const full = room.userCount === MAX_PLAYERS;
     const status = room.status ?? (full ? "FULL" : "OPEN");
 
-    const { id: roomId, setRoomId, setUsers, setOwnerId, setConnectionCount } = useRoomStore();
+    const { id: roomId, setRoomId, setUsers, setOwnerUsername, setConnectionCount } = useRoomStore();
     const { username } = useUserStore();
 
     const { mutateAsync: connectRoom } = useConnectRoomMutation();
@@ -37,7 +37,7 @@ export const RoomCard = ({ room }: RoomCardProps) => {
         const data = await connectRoom({ roomId });
         setRoomId(roomId);
         setUsers(data.room.users);
-        setOwnerId(data.room.ownerId);
+        setOwnerUsername(data.room.ownerUsername);
         setConnectionCount(data.room.connectionCount);
     };
 

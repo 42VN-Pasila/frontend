@@ -27,7 +27,7 @@ type JoinMatchAck =
 
 type MatchPingEvent = {
     matchId: string;
-    userId: string;
+    username: string;
 };
 
 const rawDirectorUrl = import.meta.env.VITE_DIRECTOR_URL as string | undefined;

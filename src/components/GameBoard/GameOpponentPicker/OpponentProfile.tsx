@@ -22,7 +22,7 @@ const OpponentProfile = ({
   isActiveTurn = false,
 }: OpponentProfileProps) => {
   const { books } = useGameSessionStore();
-  const bookCount = books.filter((book) => book.userId === id).length;
+  const bookCount = books.filter((book) => book.username === id).length;
 
   return (
     <div className="relative">

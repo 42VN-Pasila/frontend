@@ -5,30 +5,30 @@ import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 import type { SeatDto } from "@/gen/director";
 
-function getOrderedOpponents(opponents: Opponent[], seats: SeatDto[], userId: string): Opponent[] {
-  if (!userId) {
+function getOrderedOpponents(opponents: Opponent[], seats: SeatDto[], username: string): Opponent[] {
+  if (!username) {
     return [];
   }
 
   const orderedSeats = [...seats].sort((a, b) => a.order - b.order);
-  const playerIndex = orderedSeats.findIndex((seat) => seat.userId === userId);
+  const playerIndex = orderedSeats.findIndex((seat) => seat.username === username);
   if (playerIndex === -1) {
-    return opponents.filter((opponent) => opponent.id !== userId);
+    return opponents.filter((opponent) => opponent.id !== username);
   }
 
   const seatOrder = [
     ...orderedSeats.slice(playerIndex + 1),
     ...orderedSeats.slice(0, playerIndex),
   ]
-    .map((seat) => seat.userId)
-    .filter((id) => id !== userId);
+    .map((seat) => seat.username)
+    .filter((id) => id !== username);
 
   const orderedOpponents = seatOrder
     .map((id) => opponents.find((opponent) => opponent.id === id))
     .filter((opponent): opponent is Opponent => Boolean(opponent));
 
   const remainingOpponents = opponents.filter(
-    (opponent) => opponent.id !== userId && !orderedOpponents.some((ordered) => ordered.id === opponent.id),
+    (opponent) => opponent.id !== username && !orderedOpponents.some((ordered) => ordered.id === opponent.id),
   );
 
   return [...orderedOpponents, ...remainingOpponents];
@@ -47,26 +47,25 @@ const GameOpponentPicker = ({
   className,
   ...props
 }: GameOpponentPickerProps) => {
-
-  const currentUserId = useUserStore().username.trim();
+  const currentUsername = useUserStore().username.trim();
   const opponents = useGameSessionStore().opponents;
   const seats = useGameSessionStore().seats;
 
   const orderedOpponents = useMemo(() =>
-    getOrderedOpponents(opponents, seats, currentUserId),
-    [opponents, seats, currentUserId]
+    getOrderedOpponents(opponents, seats, currentUsername),
+    [opponents, seats, currentUsername]
   );
   const activeSeat = useMemo(
     () => seats.find((seat) => seat.isTurn),
     [seats],
   );
   const activeTurnOpponentId = useMemo(() => {
-    const activeUserId = activeSeat?.userId;
-    if (!activeUserId || activeUserId === currentUserId) {
+    const activeUsername = activeSeat?.username;
+    if (!activeUsername || activeUsername === currentUsername) {
       return null;
     }
-    return activeUserId;
-  }, [activeSeat?.userId, currentUserId]);
+    return activeUsername;
+  }, [activeSeat?.username, currentUsername]);
 
   return (
     <section

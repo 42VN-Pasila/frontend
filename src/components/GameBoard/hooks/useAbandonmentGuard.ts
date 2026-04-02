@@ -12,7 +12,7 @@ const HIDDEN_TAB_LEAVE_DELAY_MS = 30_000;
 
 export function useAbandonmentGuard(
   matchId: string,
-  userId: string,
+  username: string,
   isExitingGame: boolean,
   isMatchOver: boolean,
   setErrorMessage: (msg: string | null) => void,
@@ -22,7 +22,7 @@ export function useAbandonmentGuard(
   const canSyncMatchState = (match: MatchDto) => match.status !== "Completed";
 
   useEffect(() => {
-    if (!matchId || !userId) return;
+    if (!matchId || !username) return;
 
     let hiddenLeaveTimeoutId: number | null = null;
     let hasLeftMatch = false;
@@ -39,7 +39,7 @@ export function useAbandonmentGuard(
       clearHiddenLeaveTimeout();
 
       try {
-        await socketLeaveMatch({ matchId, userId });
+        await socketLeaveMatch({ matchId, username });
       } finally {
         disconnectSocket();
       }
@@ -50,9 +50,9 @@ export function useAbandonmentGuard(
 
       try {
         connectSocket();
-        const { match } = await socketJoinMatch({ matchId, userId });
+        const { match } = await socketJoinMatch({ matchId, username });
         if (canSyncMatchState(match)) {
-          syncMatchState(match, userId);
+          syncMatchState(match, username);
         } else {
           disconnectSocket();
         }
@@ -94,5 +94,5 @@ export function useAbandonmentGuard(
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("pagehide", handlePageHide);
     };
-  }, [matchId, userId, isExitingGame, isMatchOver, syncMatchState, setErrorMessage]);
+  }, [matchId, username, isExitingGame, isMatchOver, syncMatchState, setErrorMessage]);
 }

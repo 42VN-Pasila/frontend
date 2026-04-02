@@ -5,12 +5,12 @@ import { createJSONStorage, persist } from "zustand/middleware";
 export type RoomState = {
     id: string;
     name: string;
-    ownerId: string;
+    ownerUsername: string;
     users: UserDto[];
     connectionCount: number;
     setRoomId: (roomId: string) => void;
     setName: (name: string) => void;
-    setOwnerId: (ownerId: string) => void;
+    setOwnerUsername: (ownerUsername: string) => void;
     setUsers: (newUsers: UserDto[]) => void;
     setConnectionCount: (connectionCount: number) => void;
     resetRoom: () => void;
@@ -21,12 +21,12 @@ export const useRoomStore = create<RoomState>()(
         (set, _get, store) => ({
             id: "",
             name: "",
-            ownerId: "",
+            ownerUsername: "",
             users: [],
             connectionCount: 0,
             setRoomId: (roomId: string) => set({ id: roomId }),
             setName: (name: string) => set({ name }),
-            setOwnerId: (ownerId: string) => set({ ownerId }),
+            setOwnerUsername: (ownerUsername: string) => set({ ownerUsername }),
             setUsers: (users: UserDto[]) => set({ users }),
             setConnectionCount: (connectionCount: number) => set({ connectionCount }),
             resetRoom: () => set(store.getInitialState()),
@@ -37,7 +37,7 @@ export const useRoomStore = create<RoomState>()(
             partialize: (state) => ({
                 id: state.id,
                 name: state.name,
-                ownerId: state.ownerId,
+                ownerUsername: state.ownerUsername,
                 users: state.users,
                 connectionCount: state.connectionCount,
             }),
