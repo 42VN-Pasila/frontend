@@ -60,11 +60,6 @@ export function useMatchConnection(
       }
     };
 
-    connectSocket();
-    if (socket.connected) {
-      void joinAndSync();
-    }
-
     const unsubMatchState = onMatchState((match, result) => {
       if (match.currentSeat?.username === username && match.currentSeat?.isTurn) {
         setResetTurn((prev) => !prev);
@@ -74,6 +69,12 @@ export function useMatchConnection(
 
     const unsubConnect = onSocketConnect(() => void joinAndSync());
     const unsubDisconnect = onSocketDisconnect(() => undefined);
+
+    if (socket.connected) {
+      void joinAndSync();
+    } else {
+      connectSocket();
+    }
 
     return () => {
       active = false;
