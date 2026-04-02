@@ -1,4 +1,5 @@
 import { Button } from "@/shared/components";
+import { useNavigate } from "react-router-dom";
 
 type Friend = {
     id: string;
@@ -10,19 +11,25 @@ type Friend = {
 const MOCK_FRIENDS: Friend[] = [
     {
         id: "f-001",
-        username: "Tan",
+        username: "tan",
         imageUrl: "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535d195197053fe1a71f4b_peep-98.png",
         status: "ONLINE",
     },
     {
         id: "f-002",
-        username: "Triet",
+        username: "triet",
         imageUrl: "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535d35550b761a3af880d9_peep-99.png",
         status: "IN_GAME",
     },
     {
         id: "f-003",
-        username: "Huong",
+        username: "huong",
+        imageUrl: "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535cfb4600807d898fc75b_peep-97.png",
+        status: "OFFLINE",
+    },
+    {
+        id: "f-004",
+        username: "kha",
         imageUrl: "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535cfb4600807d898fc75b_peep-97.png",
         status: "OFFLINE",
     },
@@ -35,6 +42,7 @@ const STATUS_CLASSES: Record<Friend["status"], string> = {
 };
 
 export const FriendList = () => {
+    const navigate = useNavigate();
     return (
         <section className="rounded-lg border-2 border-rave-white/10 p-6 text-rave-white">
             <header className="mb-4 flex items-center justify-between">
@@ -67,8 +75,8 @@ export const FriendList = () => {
                         </div>
 
                         <div className="flex items-center gap-2">
-                            <Button variant="inverse" emphasis="low" size="small" className="h-8! px-3! text-xs">
-                                Invite
+                            <Button variant="inverse" emphasis="low" size="small" className="h-8! px-3! text-xs " onClick={() => navigate(`/profile/${friend.id}`)}>
+                                See Profile
                             </Button>
 
                         </div>
