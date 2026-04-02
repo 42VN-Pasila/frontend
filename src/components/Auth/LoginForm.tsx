@@ -5,6 +5,7 @@ import Form from "../../shared/components/Form";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleIcon } from "@/components/Auth/GoogleIcon";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
 export const LoginForm = () => {
   const navigate = useNavigate();
@@ -19,10 +20,13 @@ export const LoginForm = () => {
     if (usernameError) return;
 
     try {
-      await rudexClient.login({
+      const response = await rudexClient.login({
         username,
         password,
       });
+
+      const usernameResponse = response.username;
+      useUserStore.getState().setUsername(usernameResponse);
 
       login();
       navigate("/dashboard", { replace: true });

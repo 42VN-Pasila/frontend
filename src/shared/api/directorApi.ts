@@ -13,11 +13,20 @@ import type {
     UpdateRoomUserStatusResponse,
     UpdateUserAvatarRequestBody,
     UpdateUserAvatarResponse,
+    UserDto,
 } from "@/gen/director";
 
 //------------------------------------------------
 // QUERIES
 //------------------------------------------------
+
+export const useGetUserByUsernameQuery = (username: string) => {
+    return useQuery<UserDto>({
+        queryKey: ["users", username],
+        queryFn: () => directorClient.getUserByUsername(username),
+    });
+};
+
 export const useListRoomsQuery = () => {
     return useQuery<ListRoomsDto[]>({
         queryKey: ["rooms"],
@@ -44,10 +53,10 @@ export const useCreateRoomMutation = () => {
     return useMutation<
         CreateRoomResponse,
         Error,
-    { roomName: string }
+        { roomName: string }
     >({
-    mutationFn: async ({ roomName }) => {
-      const bodyPayload: { roomName: string } = { roomName };
+        mutationFn: async ({ roomName }) => {
+            const bodyPayload: { roomName: string } = { roomName };
             return directorClient.createRoom(bodyPayload);
         },
         onSuccess: () => {
@@ -62,10 +71,10 @@ export const useConnectRoomMutation = () => {
     return useMutation<
         ConnectRoomResponse,
         Error,
-    { roomId: string }
+        { roomId: string }
     >({
-    mutationFn: async ({ roomId }) => {
-      return directorClient.connectRoom(roomId);
+        mutationFn: async ({ roomId }) => {
+            return directorClient.connectRoom(roomId);
         },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ["rooms"] });
@@ -80,10 +89,10 @@ export const useStartMatchMutation = () => {
     return useMutation<
         StartMatchResponse,
         Error,
-    { roomId: string }
+        { roomId: string }
     >({
-    mutationFn: ({ roomId }) => {
-      return directorClient.startMatch(roomId);
+        mutationFn: ({ roomId }) => {
+            return directorClient.startMatch(roomId);
         },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ["rooms"] });
@@ -98,11 +107,11 @@ export const useUpdateUserAvatarMutation = () => {
     return useMutation<
         UpdateUserAvatarResponse,
         Error,
-    { avatarId: string }
+        { avatarId: string }
     >({
-    mutationFn: ({ avatarId }) => {
+        mutationFn: ({ avatarId }) => {
             const bodyPayload: UpdateUserAvatarRequestBody = { avatarId };
-      return directorClient.updateUserAvatar(bodyPayload);
+            return directorClient.updateUserAvatar(bodyPayload);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["rooms"] });
@@ -113,9 +122,9 @@ export const useUpdateUserAvatarMutation = () => {
 export const useDisconnectRoomMutation = () => {
     const queryClient = useQueryClient();
 
-  return useMutation<void, Error, { roomId: string }>({
-    mutationFn: ({ roomId }) => {
-      return directorClient.disconnectRoom(roomId);
+    return useMutation<void, Error, { roomId: string }>({
+        mutationFn: ({ roomId }) => {
+            return directorClient.disconnectRoom(roomId);
         },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ["rooms"] });
@@ -130,14 +139,14 @@ export const useUpdateUserStatusMutation = () => {
     return useMutation<
         UpdateRoomUserStatusResponse,
         Error,
-    { roomId: string; status: "Ready" | "NotReady" }
+        { roomId: string; status: "Ready" | "NotReady" }
     >({
-    mutationFn: ({ roomId, status }) => {
+        mutationFn: ({ roomId, status }) => {
             const bodyPayload: UpdateRoomUserStatusRequestBody = {
                 status: status as UpdateRoomUserStatusRequestBody.status,
             };
 
-      return directorClient.updateUserStatus(roomId, bodyPayload);
+            return directorClient.updateUserStatus(roomId, bodyPayload);
         },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ["rooms"] });

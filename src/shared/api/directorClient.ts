@@ -187,6 +187,9 @@ OpenAPI.BASE = directorBaseUrl;
 OpenAPI.WITH_CREDENTIALS = true;
 
 export const directorClient = {
+    async getUserByUsername(username: string) {
+        return UsersService.getUserByUsername({ username });
+    },
     async createRoom(body: { roomName: string }) {
         return RoomsService.postRooms({ requestBody: body });
     },
