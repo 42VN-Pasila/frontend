@@ -11,6 +11,7 @@ import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import type { UserDto } from "@/gen/director";
 
 type SlotStatus = "HOST" | "JOINED" | "EMPTY";
 type Slot = {
@@ -100,19 +101,19 @@ export const RoomSlot = () => {
         resetRoom();
     };
 
-    const hostUser = currentUsers.find((user) => user.username === currentOwnerUsername);
+    const hostUser = currentUsers.find((user) => user.username === currentOwnerUsername) as UserDto;
     const joinedUsers = currentUsers.filter((user) => user.username !== currentOwnerUsername);
 
     const occupiedSlots: Slot[] = [
         {
-            id: hostUser?.username ?? `host-${currentOwnerUsername || "unknown"}`,
-            username: hostUser?.username === currentUsername ? currentUserName : "HOST",
+            id: hostUser.username ?? `host-${currentOwnerUsername || "unknown"}`,
+            username: hostUser.username,
             status: "HOST" as const,
-            avatarUrl: hostUser?.username === currentUsername ? avatarUrl : hostUser?.avatarUrl,
+            avatarUrl: hostUser.username === currentUsername ? avatarUrl : hostUser.avatarUrl,
         },
-        ...joinedUsers.map((user, index) => ({
+        ...joinedUsers.map((user) => ({
             id: user.username,
-            username: user.username === currentUsername ? currentUserName : `Opponent ${index + 1}`,
+            username: user.username,
             status: "JOINED" as const,
             avatarUrl: user.username === currentUsername ? avatarUrl : user.avatarUrl,
         })),
