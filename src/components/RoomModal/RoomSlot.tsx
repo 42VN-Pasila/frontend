@@ -48,7 +48,7 @@ export const RoomSlot = () => {
     const currentOwnerUsername = roomStatus?.ownerUsername ?? ownerUsername;
     const currentUsers = roomStatus?.users ?? users;
     const currentUsername = username.trim();
-    const currentUserName = username || "You";
+    // const currentUserName = username || "You";
     const isHost = currentUsername === currentOwnerUsername;
     const { data: roomMetaData } = useGetRoomMetaDataQuery(roomId, {
         enabled: Boolean(roomId && roomStatus?.started),

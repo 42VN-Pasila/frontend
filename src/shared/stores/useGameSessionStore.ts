@@ -5,7 +5,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 type GameSessionState = {
     matchId: string;
-    opponentIds: string[];
+    opponentUsernames: string[];
     opponents: Opponent[];
     seats: SeatDto[];
     hands: HandDto[];
@@ -16,7 +16,7 @@ type GameSessionState = {
 
 const initialState = {
     matchId: "",
-    opponentIds: [],
+    opponentUsernames: [],
     opponents: [],
     seats: [],
     hands: [],
@@ -32,7 +32,7 @@ export const useGameSessionStore = create<GameSessionState>()(
                     matchId: match.id,
                     hands: match.hands,
                     books: match.books,
-                    opponentIds: match.users.filter((u) => u.username !== username).map((u) => u.username),
+                    opponentUsernames: match.users.filter((u) => u.username !== username).map((u) => u.username),
                     seats: match.seats,
                     opponents: match.users.filter((u) => u.username !== username).map((u) => ({
                         id: u.username,
@@ -48,7 +48,7 @@ export const useGameSessionStore = create<GameSessionState>()(
             name: "game-session",
             storage: createJSONStorage(() => sessionStorage),
             partialize: (state) => ({
-                opponentIds: state.opponentIds,
+                opponentUsernames: state.opponentUsernames,
                 matchId: state.matchId,
                 seats: state.seats,
                 opponents: state.opponents,

@@ -35,13 +35,13 @@ function getOrderedOpponents(opponents: Opponent[], seats: SeatDto[], username: 
 }
 
 interface GameOpponentPickerProps extends React.ComponentPropsWithoutRef<"section"> {
-  selectedOpponentId: string | null;
+  selectedOpponentUsername: string | null;
   onSelectOpponent: (id: string) => void;
   disabled: boolean;
 }
 
 const GameOpponentPicker = ({
-  selectedOpponentId,
+  selectedOpponentUsername,
   onSelectOpponent,
   disabled,
   className,
@@ -74,7 +74,7 @@ const GameOpponentPicker = ({
       {orderedOpponents.length > 0 && (
         <OpponentDisplay
           opponents={orderedOpponents}
-          selectedId={selectedOpponentId}
+          selectedId={selectedOpponentUsername}
           onSelect={(id: string) => onSelectOpponent(id)}
           disabled={disabled}
           activeTurnOpponentId={activeTurnOpponentId}

@@ -24,7 +24,7 @@ import type { Card, CardRank, CardSuit } from "./types";
 
 export type GameRequestPayload = {
   username: string;
-  opponentId: string;
+  opponentUsernames: string;
   suit: CardSuit;
   rank: CardRank;
 };
@@ -38,7 +38,7 @@ export const GameBoard = () => {
   const currentUsername = username.trim();
 
   const [isExitingGame, setIsExitingGame] = useState(false);
-  const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(null);
+  const [selectedOpponentUsername, setSelectedOpponentUsername] = useState<string | null>(null);
   const [selection, setSelection] = useState<SelectedCard>({ suit: null, rank: null });
 
   const { matchResult, errorMessage, isMatchOver, setErrorMessage, resetTurn } =
@@ -62,7 +62,7 @@ export const GameBoard = () => {
 
   const isMyTurn = seats.find((s) => s.username === currentUsername)?.isTurn ?? false;
   const isInteractionDisabled = !isMyTurn || isExitingGame;
-  const isSelectionComplete = !!(selection.suit && selection.rank && selectedOpponentId);
+  const isSelectionComplete = !!(selection.suit && selection.rank && selectedOpponentUsername);
   const currentUserCards: Card[] = hands.find((h) => h.username === currentUsername)?.cards ?? [];
 
   const handleUpdate = useCallback((updates: Partial<SelectedCard>) => {
@@ -70,22 +70,22 @@ export const GameBoard = () => {
   }, []);
 
   const handleRequest = useCallback(async () => {
-    if (!isSelectionComplete || !currentUsername || !selectedOpponentId || !matchId || isExitingGame) return;
+    if (!isSelectionComplete || !currentUsername || !selectedOpponentUsername || !matchId || isExitingGame) return;
 
     try {
       await socketAskCardMatch({
         matchId,
         username: currentUsername,
-        opponentId: selectedOpponentId,
+        opponentUsername: selectedOpponentUsername,
         card: { suit: selection.suit!, rank: selection.rank! },
       });
       setErrorMessage(null);
       setSelection({ suit: null, rank: null });
-      setSelectedOpponentId(null);
+      setSelectedOpponentUsername(null);
     } catch {
       setErrorMessage("Failed to send request");
     }
-  }, [isSelectionComplete, currentUsername, selectedOpponentId, matchId, isExitingGame, selection, setErrorMessage]);
+  }, [isSelectionComplete, currentUsername, selectedOpponentUsername, matchId, isExitingGame, selection, setErrorMessage]);
 
   const handleExitGame = useCallback(() => {
     if (!matchId || !currentUsername || isExitingGame) return;
@@ -133,8 +133,8 @@ export const GameBoard = () => {
         <div className="flex-1 min-h-0 grid grid-rows-[7fr_3fr]">
           <div className="border-b-2 border-rave-white/10 min-h-0">
             <GameOpponentPicker
-              selectedOpponentId={selectedOpponentId}
-              onSelectOpponent={setSelectedOpponentId}
+              selectedOpponentUsername={selectedOpponentUsername}
+              onSelectOpponent={setSelectedOpponentUsername}
               disabled={isInteractionDisabled}
             />
           </div>
