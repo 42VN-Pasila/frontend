@@ -18,9 +18,38 @@ const BASE_INTERVAL_MS = 80;
 const MAX_INTERVAL_MS = 350;
 
 export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
-  const { username } = useUserStore();
-  const { opponents } = useGameSessionStore();
+  const { username, avatarUrl } = useUserStore();
+  const { opponents, books } = useGameSessionStore();
   const currentUsername = username.trim();
+
+  const allPlayers = [
+    ...(currentUsername
+      ? [
+          {
+            id: currentUsername,
+            username: currentUsername,
+            avatarUrl: avatarUrl ?? "",
+          },
+        ]
+      : []),
+    ...opponents,
+  ];
+
+  const scoreByUsername = new Map<string, number>();
+  for (const player of allPlayers) {
+    scoreByUsername.set(player.username, 0);
+  }
+  for (const book of books) {
+    scoreByUsername.set(
+      book.username,
+      (scoreByUsername.get(book.username) ?? 0) + 1,
+    );
+  }
+
+  const maxScore = Math.max(...Array.from(scoreByUsername.values()), 0);
+  const players = allPlayers.filter(
+    (player) => (scoreByUsername.get(player.username) ?? 0) === maxScore,
+  );
 
   const [phase, setPhase] = useState<Phase>(
     result.hasCoWinners ? "picking" : "result",
@@ -28,7 +57,6 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(!result.hasCoWinners);
 
-  const players = opponents.length > 0 ? opponents : [];
   const winnerIdx = players.findIndex((p) => p.id === result.winnerUsername);
   const totalSteps = players.length * CYCLE_COUNT + Math.max(winnerIdx, 0);
 
