@@ -17,28 +17,73 @@ const BASE_INTERVAL_MS = 80;
 const MAX_INTERVAL_MS = 350;
 
 export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
+<<<<<<< Updated upstream
   const { userId } = useUserStore();
   const { opponents } = useGameSessionStore();
+=======
+  const { username, avatarUrl } = useUserStore();
+  const { opponents, books } = useGameSessionStore();
+  const currentUsername = username.trim();
+>>>>>>> Stashed changes
+
+  const players = [
+    ...(currentUsername
+      ? [
+        {
+          id: currentUsername,
+          username: currentUsername,
+          avatarUrl: avatarUrl ?? "",
+        },
+      ]
+      : []),
+    ...opponents,
+  ];
+  const scoreByUsername = new Map<string, number>();
+  for (const player of players) {
+    scoreByUsername.set(player.username, 0);
+  }
+  for (const book of books) {
+    scoreByUsername.set(
+      book.username,
+      (scoreByUsername.get(book.username) ?? 0) + 1,
+    );
+  }
+
+  const maxScore = Math.max(...Array.from(scoreByUsername.values()), 0);
+  const topPlayers = players.filter(
+    (player) => (scoreByUsername.get(player.username) ?? 0) === maxScore,
+  );
+
+  const winnerIdx = topPlayers.findIndex(
+    (p) => p.username === result.winnerUsername,
+  );
+  const shouldRunPicking =
+    result.hasCoWinners && topPlayers.length > 1 && winnerIdx >= 0;
 
   const [phase, setPhase] = useState<Phase>(
-    result.hasCoWinners ? "picking" : "result",
+    shouldRunPicking ? "picking" : "result",
   );
   const [activeIndex, setActiveIndex] = useState(0);
+<<<<<<< Updated upstream
   const [fadeIn, setFadeIn] = useState(!result.hasCoWinners);
 
   const players = opponents.length > 0 ? opponents : [];
   const winnerIdx = players.findIndex((p) => p.id === result.winnerUserId);
   const totalSteps = players.length * CYCLE_COUNT + Math.max(winnerIdx, 0);
+=======
+  const [fadeIn, setFadeIn] = useState(!shouldRunPicking);
+  const totalSteps = topPlayers.length * CYCLE_COUNT + Math.max(winnerIdx, 0);
+>>>>>>> Stashed changes
 
   useEffect(() => {
-    if (phase !== "picking" || players.length === 0) return;
+    if (phase !== "picking" || topPlayers.length === 0) return;
 
     let tick = 0;
     let timeout: ReturnType<typeof setTimeout>;
 
     const step = () => {
       tick++;
-      setActiveIndex(tick % players.length);
+      setActiveIndex(tick % topPlayers.length);
 
       if (tick >= totalSteps) {
         setPhase("reveal");
@@ -52,7 +97,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
 
     timeout = setTimeout(step, 500);
     return () => clearTimeout(timeout);
-  }, [phase, players.length, totalSteps]);
+  }, [phase, topPlayers.length, totalSteps]);
 
   useEffect(() => {
     if (phase !== "reveal") return;
@@ -91,7 +136,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
           </span>
 
           <div className="flex w-full flex-col gap-3">
-            {players.map((player, i) => {
+            {topPlayers.map((player, i) => {
               const isHighlighted = i === activeIndex;
               const isRevealed = phase === "reveal" && i === activeIndex;
 
