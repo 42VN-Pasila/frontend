@@ -1,11 +1,14 @@
+import React from "react";
+
+import { Link, useNavigate } from "react-router-dom";
+
+import { GoogleIcon } from "@/components/Auth/GoogleIcon";
 import { rudexClient } from "@/shared/api/rudexClient";
 import { useAuth } from "@/shared/auth/useAuth";
+import { useUserStore } from "@/shared/stores/useUserStore";
+
 import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { GoogleIcon } from "@/components/Auth/GoogleIcon";
-import { useUserStore } from "@/shared/stores/useUserStore";
 
 export const LoginForm = () => {
   const navigate = useNavigate();
@@ -30,7 +33,6 @@ export const LoginForm = () => {
 
       login();
       navigate("/dashboard", { replace: true });
-
     } catch (error) {
       //Display pop up error noti
       console.log("Error", error);
@@ -38,7 +40,11 @@ export const LoginForm = () => {
   };
 
   return (
-    <Form.Root className="mx-auto bg-rave-black" gap={20} onSubmit={handleLogin}>
+    <Form.Root
+      className="mx-auto bg-rave-black"
+      gap={20}
+      onSubmit={handleLogin}
+    >
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
           Welcome to Blank

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Label } from "@/shared/components/Label";
 import { socketSkipTurn } from "@/shared/api/directorClient";
+import { Label } from "@/shared/components/Label";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
@@ -18,7 +18,8 @@ export const Timer = ({ isDisabled = false, resetTurn }: TimerProps) => {
   const { username } = useUserStore();
   const { matchId, seats } = useGameSessionStore();
   const currentUsername = username.trim();
-  const isMyTurn = seats.find((seat) => seat.username === currentUsername)?.isTurn ?? false;
+  const isMyTurn =
+    seats.find((seat) => seat.username === currentUsername)?.isTurn ?? false;
   const isTimerActive = isMyTurn && !isDisabled;
 
   useEffect(() => {
@@ -37,7 +38,13 @@ export const Timer = ({ isDisabled = false, resetTurn }: TimerProps) => {
   }, [isTimerActive]);
 
   useEffect(() => {
-    if (!isTimerActive || timeLeft > 0 || hasEmittedSkipRef.current || !matchId || !currentUsername) {
+    if (
+      !isTimerActive ||
+      timeLeft > 0 ||
+      hasEmittedSkipRef.current ||
+      !matchId ||
+      !currentUsername
+    ) {
       return;
     }
 

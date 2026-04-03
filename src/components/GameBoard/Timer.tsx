@@ -35,7 +35,7 @@ const Timer = ({
       <span className="text-2xl pt-1 font-mono leading-none transition-colors duration-300">
         00:{String(timeLeft).padStart(2, "0")}
       </span>
-    </Tag >
+    </Tag>
   );
 };
 

@@ -1,17 +1,26 @@
-import OpponentDisplay from "./OpponentDisplay";
-import type { Opponent } from "../types";
 import { useMemo } from "react";
+
+import type { SeatDto } from "@/gen/director";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
-import type { SeatDto } from "@/gen/director";
 
-function getOrderedOpponents(opponents: Opponent[], seats: SeatDto[], username: string): Opponent[] {
+import type { Opponent } from "../types";
+
+import OpponentDisplay from "./OpponentDisplay";
+
+function getOrderedOpponents(
+  opponents: Opponent[],
+  seats: SeatDto[],
+  username: string,
+): Opponent[] {
   if (!username) {
     return [];
   }
 
   const orderedSeats = [...seats].sort((a, b) => a.order - b.order);
-  const playerIndex = orderedSeats.findIndex((seat) => seat.username === username);
+  const playerIndex = orderedSeats.findIndex(
+    (seat) => seat.username === username,
+  );
   if (playerIndex === -1) {
     return opponents.filter((opponent) => opponent.id !== username);
   }
@@ -28,7 +37,9 @@ function getOrderedOpponents(opponents: Opponent[], seats: SeatDto[], username: 
     .filter((opponent): opponent is Opponent => Boolean(opponent));
 
   const remainingOpponents = opponents.filter(
-    (opponent) => opponent.id !== username && !orderedOpponents.some((ordered) => ordered.id === opponent.id),
+    (opponent) =>
+      opponent.id !== username &&
+      !orderedOpponents.some((ordered) => ordered.id === opponent.id),
   );
 
   return [...orderedOpponents, ...remainingOpponents];
@@ -51,14 +62,11 @@ const GameOpponentPicker = ({
   const opponents = useGameSessionStore().opponents;
   const seats = useGameSessionStore().seats;
 
-  const orderedOpponents = useMemo(() =>
-    getOrderedOpponents(opponents, seats, currentUsername),
-    [opponents, seats, currentUsername]
+  const orderedOpponents = useMemo(
+    () => getOrderedOpponents(opponents, seats, currentUsername),
+    [opponents, seats, currentUsername],
   );
-  const activeSeat = useMemo(
-    () => seats.find((seat) => seat.isTurn),
-    [seats],
-  );
+  const activeSeat = useMemo(() => seats.find((seat) => seat.isTurn), [seats]);
   const activeTurnOpponentId = useMemo(() => {
     const activeUsername = activeSeat?.username;
     if (!activeUsername || activeUsername === currentUsername) {
@@ -70,7 +78,8 @@ const GameOpponentPicker = ({
   return (
     <section
       {...props}
-      className={`${className} flex flex-col bg-rave-black   relative h-full overflow-hidden`}>
+      className={`${className} flex flex-col bg-rave-black   relative h-full overflow-hidden`}
+    >
       {orderedOpponents.length > 0 && (
         <OpponentDisplay
           opponents={orderedOpponents}

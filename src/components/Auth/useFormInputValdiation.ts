@@ -1,8 +1,8 @@
 export enum ValidationField {
-  usernameRegister="usernameRegister",
-  usernameLogin="usernameLogin",
-  email="email",
-  password="password"
+  usernameRegister = 'usernameRegister',
+  usernameLogin = 'usernameLogin',
+  email = 'email',
+  password = 'password'
 }
 
 const usernameRegisterRules = [
@@ -12,15 +12,15 @@ const usernameRegisterRules = [
     error: 'Username can only contains letters, numbers, or [_.-]'
   }
 ];
-  
+
 const usernameLoginRules = [{ regex: /^[^\s]{8,16}$/, error: 'Invalid username' }];
 
-const validateUsernameRegister=(username: string): void => {
+const validateUsernameRegister = (username: string): void => {
   const error = usernameRegisterRules
     .filter((rule) => !rule.regex.test(username))
     .map((rule) => rule.error);
   if (error.length > 0) throw error[0];
-}
+};
 
 const emailRules = [
   {
@@ -33,12 +33,12 @@ const emailRules = [
   }
 ];
 
-const validateUsernameLogin=(username: string): void =>{
+const validateUsernameLogin = (username: string): void => {
   const error = usernameLoginRules
     .filter((rule) => !rule.regex.test(username))
     .map((rule) => rule.error);
   if (error.length > 0) throw error[0];
-}
+};
 
 const passwordRules = [
   { regex: /.{8,16}/, error: 'Password length must be 8-16' },
@@ -52,23 +52,19 @@ const passwordRules = [
   }
 ];
 
-const validateEmail=(email: string): void => {
-  const error = emailRules
-    .filter((rule) => !rule.regex.test(email))
-    .map((rule) => rule.error);
+const validateEmail = (email: string): void => {
+  const error = emailRules.filter((rule) => !rule.regex.test(email)).map((rule) => rule.error);
   if (error.length > 0) throw error[0];
-}
+};
 
-
-const validatePassword=(password: string): void =>{
+const validatePassword = (password: string): void => {
   const error = passwordRules
     .filter((rule) => !rule.regex.test(password))
     .map((rule) => rule.error);
   if (error.length > 0) throw error[0];
-}
+};
 
-export const useFormInputValidation = (inputField: ValidationField, value: string) : string | null => {
-
+export const validateFormInput = (inputField: ValidationField, value: string): string | null => {
   const validators: Record<string, (value: string) => void> = {
     usernameRegister: validateUsernameRegister,
     usernameLogin: validateUsernameLogin,
@@ -76,10 +72,10 @@ export const useFormInputValidation = (inputField: ValidationField, value: strin
     password: validatePassword
   };
 
-    try {
-      validators[inputField](value);
-      return null;
-    } catch (error: any) {
-      return error;
-    }
+  try {
+    validators[inputField](value);
+    return null;
+  } catch (error: unknown) {
+    return error instanceof Error ? error.message : String(error);
+  }
 };

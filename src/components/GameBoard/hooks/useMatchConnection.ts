@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import type { MatchDto, MatchResultDto } from "@/gen/director";
+import { useCallback, useEffect, useState } from 'react';
+
+import type { MatchDto, MatchResultDto } from '@/gen/director';
 import {
   connectSocket,
   disconnectSocket,
@@ -7,14 +8,11 @@ import {
   onSocketConnect,
   onSocketDisconnect,
   socket,
-  socketJoinMatch,
-} from "@/shared/api/directorClient";
-import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+  socketJoinMatch
+} from '@/shared/api/directorClient';
+import { useGameSessionStore } from '@/shared/stores/useGameSessionStore';
 
-export function useMatchConnection(
-  matchId: string,
-  username: string,
-) {
+export function useMatchConnection(matchId: string, username: string) {
   const syncMatchState = useGameSessionStore((s) => s.syncMatchState);
   const resetGameSession = useGameSessionStore((s) => s.resetGameSession);
 
@@ -25,7 +23,7 @@ export function useMatchConnection(
 
   const applyMatchState = useCallback(
     (match: MatchDto, result?: MatchResultDto) => {
-      if (match.status === "Completed") {
+      if (match.status === 'Completed') {
         setIsMatchOver(true);
         disconnectSocket();
         if (result) {
@@ -39,7 +37,7 @@ export function useMatchConnection(
 
       syncMatchState(match, username);
     },
-    [syncMatchState, resetGameSession, username],
+    [syncMatchState, resetGameSession, username]
   );
 
   useEffect(() => {
@@ -56,7 +54,7 @@ export function useMatchConnection(
         setErrorMessage(null);
       } catch {
         if (!active) return;
-        setErrorMessage("Unable to join match");
+        setErrorMessage('Unable to join match');
       }
     };
 

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
@@ -38,13 +39,24 @@ export const GameBoard = () => {
   const currentUsername = username.trim();
 
   const [isExitingGame, setIsExitingGame] = useState(false);
-  const [selectedOpponentUsername, setSelectedOpponentUsername] = useState<string | null>(null);
-  const [selection, setSelection] = useState<SelectedCard>({ suit: null, rank: null });
+  const [selectedOpponentUsername, setSelectedOpponentUsername] = useState<
+    string | null
+  >(null);
+  const [selection, setSelection] = useState<SelectedCard>({
+    suit: null,
+    rank: null,
+  });
 
   const { matchResult, errorMessage, isMatchOver, setErrorMessage, resetTurn } =
     useMatchConnection(matchId, currentUsername);
 
-  useAbandonmentGuard(matchId, currentUsername, isExitingGame, isMatchOver, setErrorMessage);
+  useAbandonmentGuard(
+    matchId,
+    currentUsername,
+    isExitingGame,
+    isMatchOver,
+    setErrorMessage,
+  );
 
   const navigateToDashboard = useCallback(async () => {
     if (roomId) {
@@ -60,17 +72,30 @@ export const GameBoard = () => {
     void navigateToDashboard();
   }, [isMatchOver, matchResult, navigateToDashboard]);
 
-  const isMyTurn = seats.find((s) => s.username === currentUsername)?.isTurn ?? false;
+  const isMyTurn =
+    seats.find((s) => s.username === currentUsername)?.isTurn ?? false;
   const isInteractionDisabled = !isMyTurn || isExitingGame;
-  const isSelectionComplete = !!(selection.suit && selection.rank && selectedOpponentUsername);
-  const currentUserCards: Card[] = hands.find((h) => h.username === currentUsername)?.cards ?? [];
+  const isSelectionComplete = !!(
+    selection.suit &&
+    selection.rank &&
+    selectedOpponentUsername
+  );
+  const currentUserCards: Card[] =
+    hands.find((h) => h.username === currentUsername)?.cards ?? [];
 
   const handleUpdate = useCallback((updates: Partial<SelectedCard>) => {
     setSelection((prev) => ({ ...prev, ...updates }));
   }, []);
 
   const handleRequest = useCallback(async () => {
-    if (!isSelectionComplete || !currentUsername || !selectedOpponentUsername || !matchId || isExitingGame) return;
+    if (
+      !isSelectionComplete ||
+      !currentUsername ||
+      !selectedOpponentUsername ||
+      !matchId ||
+      isExitingGame
+    )
+      return;
 
     try {
       await socketAskCardMatch({
@@ -85,7 +110,15 @@ export const GameBoard = () => {
     } catch {
       setErrorMessage("Failed to send request");
     }
-  }, [isSelectionComplete, currentUsername, selectedOpponentUsername, matchId, isExitingGame, selection, setErrorMessage]);
+  }, [
+    isSelectionComplete,
+    currentUsername,
+    selectedOpponentUsername,
+    matchId,
+    isExitingGame,
+    selection,
+    setErrorMessage,
+  ]);
 
   const handleExitGame = useCallback(() => {
     if (!matchId || !currentUsername || isExitingGame) return;
@@ -99,7 +132,14 @@ export const GameBoard = () => {
         disconnectSocket();
         navigate("/dashboard");
       });
-  }, [isExitingGame, matchId, navigate, resetGameSession, resetRoom, currentUsername]);
+  }, [
+    isExitingGame,
+    matchId,
+    navigate,
+    resetGameSession,
+    resetRoom,
+    currentUsername,
+  ]);
 
   const handleResultClose = useCallback(() => {
     resetGameSession();
@@ -139,12 +179,19 @@ export const GameBoard = () => {
             />
           </div>
           <div className="min-h-0">
-            <GamePlayerCard cards={currentUserCards} disabled={isInteractionDisabled} />
+            <GamePlayerCard
+              cards={currentUserCards}
+              disabled={isInteractionDisabled}
+            />
           </div>
         </div>
       </main>
 
-      <GameControlPanel onExitGame={handleExitGame} isExiting={isExitingGame} resetTurn={resetTurn} />
+      <GameControlPanel
+        onExitGame={handleExitGame}
+        isExiting={isExitingGame}
+        resetTurn={resetTurn}
+      />
 
       {matchResult && (
         <GameResultModal result={matchResult} onClose={handleResultClose} />

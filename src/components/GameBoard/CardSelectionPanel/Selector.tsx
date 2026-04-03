@@ -1,10 +1,11 @@
-import { Label } from "@/shared/components/Label";
 import type { ComponentPropsWithoutRef } from "react";
 
+import { Label } from "@/shared/components/Label";
+
 export interface SelectorItem<T extends string> {
-  value: T,
-  label?: string,
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>,
+  value: T;
+  label?: string;
+  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
 export interface SelectorProps<T extends string> extends Omit<
@@ -34,8 +35,7 @@ function Selector<T extends string>({
     <div {...rest} className={`flex flex-col gap-2 ${className}`}>
       {label && (
         <Label className="font-bold tracking-widest text-lg">{label}</Label>
-      )
-      }
+      )}
       <div
         className="grid gap-2 md:gap-3"
         style={{
@@ -44,11 +44,7 @@ function Selector<T extends string>({
         }}
       >
         {items.map((it) => {
-          const {
-            Icon,
-            value: itemValue,
-            label: itemLabel,
-          } = it;
+          const { Icon, value: itemValue, label: itemLabel } = it;
           const isActive = value === itemValue;
 
           return (
@@ -61,9 +57,10 @@ function Selector<T extends string>({
                 flex items-center justify-center transition-all
                 aspect-square p-2 
                 ${disabled ? "opacity-70" : "hover:border-rave-red hover:border-2"}
-                ${isActive
-                  ? "bg-rave-white border-rave-white border "
-                  : "border-rave-white/10 border-2 bg-rave-black"
+                ${
+                  isActive
+                    ? "bg-rave-white border-rave-white border "
+                    : "border-rave-white/10 border-2 bg-rave-black"
                 }
               `}
             >
@@ -78,7 +75,7 @@ function Selector<T extends string>({
           );
         })}
       </div>
-    </div >
+    </div>
   );
 }
 

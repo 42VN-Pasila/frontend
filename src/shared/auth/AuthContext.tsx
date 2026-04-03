@@ -2,6 +2,7 @@ import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { directorClient } from "@/shared/api/directorClient";
+
 import { AuthContext, type AuthContextValue } from "./authContextValue";
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {

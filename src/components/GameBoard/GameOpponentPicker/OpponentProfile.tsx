@@ -1,9 +1,11 @@
 import CardBackImg from "@assets/card-back-2.png";
 
-import type { Opponent } from "../types";
-import Avatar from "./Avatar";
-import Badge from "../Badge";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+
+import Badge from "../Badge";
+import type { Opponent } from "../types";
+
+import Avatar from "./Avatar";
 import TurnIndicator from "./TurnIndicator";
 
 interface OpponentProfileProps extends Opponent {
@@ -61,7 +63,8 @@ const OpponentProfile = ({
 
             // fade out downward like your old gradient
             maskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, black 0%, transparent 100%)",
           }}
         />
 
@@ -97,9 +100,11 @@ const OpponentScore = ({
         w-full rounded-xl px-4 py-2
         flex items-center justify-between
         border transition-all duration-300
-        ${isSelected
-          ? "bg-rave-red text-rave-white border-white/10 shadow-[0_10px_26px_-18px_rgba(0,0,0,0.7)]"
-          : "bg-rave-white/10 text-rave-white/60 border-white/10"}
+        ${
+          isSelected
+            ? "bg-rave-red text-rave-white border-white/10 shadow-[0_10px_26px_-18px_rgba(0,0,0,0.7)]"
+            : "bg-rave-white/10 text-rave-white/60 border-white/10"
+        }
       `}
     >
       <span className="text-[11px] font-semibold tracking-[0.18em] opacity-80">

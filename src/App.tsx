@@ -1,11 +1,13 @@
-import HomePage from "./pages/HomePage/HomePage";
 import React from "react";
+
 import { Route, Routes } from "react-router-dom";
-import RegisterPage from "./pages/Auth/RegisterPage";
-import LoginPage from "./pages/Auth/LoginPage";
-import AboutPage from "./pages/HomePage/AboutPage";
+
 import { Dashboard } from "./components/Dashboard/Dashboard";
 import { GameBoard } from "./components/GameBoard/GameBoard";
+import LoginPage from "./pages/Auth/LoginPage";
+import RegisterPage from "./pages/Auth/RegisterPage";
+import AboutPage from "./pages/HomePage/AboutPage";
+import HomePage from "./pages/HomePage/HomePage";
 import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 
 const App: React.FC = () => {

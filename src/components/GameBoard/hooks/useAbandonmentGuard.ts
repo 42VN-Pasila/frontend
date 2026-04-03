@@ -1,12 +1,13 @@
-import { useEffect } from "react";
-import type { MatchDto } from "@/gen/director";
+import { useEffect } from 'react';
+
+import type { MatchDto } from '@/gen/director';
 import {
   connectSocket,
   disconnectSocket,
   socketJoinMatch,
-  socketLeaveMatch,
-} from "@/shared/api/directorClient";
-import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+  socketLeaveMatch
+} from '@/shared/api/directorClient';
+import { useGameSessionStore } from '@/shared/stores/useGameSessionStore';
 
 const HIDDEN_TAB_LEAVE_DELAY_MS = 30_000;
 
@@ -15,11 +16,11 @@ export function useAbandonmentGuard(
   username: string,
   isExitingGame: boolean,
   isMatchOver: boolean,
-  setErrorMessage: (msg: string | null) => void,
+  setErrorMessage: (msg: string | null) => void
 ) {
   const syncMatchState = useGameSessionStore((s) => s.syncMatchState);
 
-  const canSyncMatchState = (match: MatchDto) => match.status !== "Completed";
+  const canSyncMatchState = (match: MatchDto) => match.status !== 'Completed';
 
   useEffect(() => {
     if (!matchId || !username) return;
@@ -59,7 +60,7 @@ export function useAbandonmentGuard(
         hasLeftMatch = false;
         setErrorMessage(null);
       } catch {
-        setErrorMessage("Unable to rejoin match");
+        setErrorMessage('Unable to rejoin match');
       }
     };
 
@@ -69,7 +70,7 @@ export function useAbandonmentGuard(
         return;
       }
 
-      if (document.visibilityState === "visible") {
+      if (document.visibilityState === 'visible') {
         clearHiddenLeaveTimeout();
         void rejoinAfterTemporaryLeave();
         return;
@@ -86,13 +87,13 @@ export function useAbandonmentGuard(
       void leaveMatchForAbandonment();
     };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("pagehide", handlePageHide);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pagehide', handlePageHide);
 
     return () => {
       clearHiddenLeaveTimeout();
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("pagehide", handlePageHide);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', handlePageHide);
     };
   }, [matchId, username, isExitingGame, isMatchOver, syncMatchState, setErrorMessage]);
 }

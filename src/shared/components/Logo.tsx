@@ -1,5 +1,6 @@
-import logoSrc from "../../assets/jokercard.png";
 import { Link } from "react-router-dom";
+
+import logoSrc from "../../assets/jokercard.png";
 import { useAuth } from "../auth/useAuth";
 
 const Logo = () => {
