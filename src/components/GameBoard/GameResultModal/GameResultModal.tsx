@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import type { MatchResultDto } from "@/gen/director";
 import Button from "@/shared/components/Button";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
@@ -17,8 +18,9 @@ const BASE_INTERVAL_MS = 80;
 const MAX_INTERVAL_MS = 350;
 
 export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
-  const { userId } = useUserStore();
+  const { username } = useUserStore();
   const { opponents } = useGameSessionStore();
+  const currentUsername = username.trim();
 
   const [phase, setPhase] = useState<Phase>(
     result.hasCoWinners ? "picking" : "result",
@@ -27,7 +29,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
   const [fadeIn, setFadeIn] = useState(!result.hasCoWinners);
 
   const players = opponents.length > 0 ? opponents : [];
-  const winnerIdx = players.findIndex((p) => p.id === result.winnerUserId);
+  const winnerIdx = players.findIndex((p) => p.id === result.winnerUsername);
   const totalSteps = players.length * CYCLE_COUNT + Math.max(winnerIdx, 0);
 
   useEffect(() => {
@@ -46,7 +48,8 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
       }
 
       const progress = tick / totalSteps;
-      const delay = BASE_INTERVAL_MS + progress * (MAX_INTERVAL_MS - BASE_INTERVAL_MS);
+      const delay =
+        BASE_INTERVAL_MS + progress * (MAX_INTERVAL_MS - BASE_INTERVAL_MS);
       timeout = setTimeout(step, delay);
     };
 
@@ -65,7 +68,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
     return () => clearTimeout(timeout);
   }, [phase]);
 
-  const isWinner = result.winnerUserId === userId;
+  const isWinner = result.winnerUsername === currentUsername;
   const isAbandoned = result.endedReason === "Abandoned";
 
   const headingText = isAbandoned
@@ -98,12 +101,13 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
               return (
                 <div
                   key={player.id}
-                  className={`flex items-center gap-4 rounded-xl border-2 px-6 py-5 transition-all duration-150 ${isRevealed
-                    ? "scale-105 border-emerald-400 bg-emerald-400/15 shadow-[0_0_24px_-6px_rgba(52,211,153,0.4)]"
-                    : isHighlighted
-                      ? "border-rave-red bg-rave-red/10"
-                      : "border-rave-white/5 bg-transparent"
-                    }`}
+                  className={`flex items-center gap-4 rounded-xl border-2 px-6 py-5 transition-all duration-150 ${
+                    isRevealed
+                      ? "scale-105 border-emerald-400 bg-emerald-400/15 shadow-[0_0_24px_-6px_rgba(52,211,153,0.4)]"
+                      : isHighlighted
+                        ? "border-rave-red bg-rave-red/10"
+                        : "border-rave-white/5 bg-transparent"
+                  }`}
                 >
                   {player.avatarUrl ? (
                     <img
@@ -118,12 +122,13 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
                   )}
 
                   <span
-                    className={`text-2xl font-bold tracking-widest transition-colors duration-150 ${isRevealed
-                      ? "text-emerald-400"
-                      : isHighlighted
-                        ? "text-rave-white"
-                        : "text-rave-white/30"
-                      }`}
+                    className={`text-2xl font-bold tracking-widest transition-colors duration-150 ${
+                      isRevealed
+                        ? "text-emerald-400"
+                        : isHighlighted
+                          ? "text-rave-white"
+                          : "text-rave-white/30"
+                    }`}
                   >
                     {player.username}
                   </span>
@@ -145,18 +150,20 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
-        className={`flex w-full max-w-md flex-col items-center gap-6 border-2 border-rave-white/10 bg-rave-black p-10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)] transition-all duration-500 ${fadeIn ? "scale-100 opacity-100" : "scale-95 opacity-0"
-          }`}
+        className={`flex w-full max-w-md flex-col items-center gap-6 border-2 border-rave-white/10 bg-rave-black p-10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)] transition-all duration-500 ${
+          fadeIn ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}
       >
         {/* Result heading */}
         <div className="flex flex-col items-center gap-2">
           <span
-            className={`text-4xl font-black tracking-widest ${isAbandoned
-              ? "text-amber-400"
-              : isWinner
-                ? "text-emerald-400"
-                : "text-rave-red"
-              }`}
+            className={`text-4xl font-black tracking-widest ${
+              isAbandoned
+                ? "text-amber-400"
+                : isWinner
+                  ? "text-emerald-400"
+                  : "text-rave-red"
+            }`}
           >
             {headingText}
           </span>

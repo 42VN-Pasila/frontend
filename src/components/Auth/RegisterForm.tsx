@@ -1,13 +1,14 @@
+import React from "react";
+
+import { Link } from "react-router-dom";
+
+import { GoogleIcon } from "@/components/Auth/GoogleIcon";
 import { rudexClient } from "@/shared/api/rudexClient";
+
 import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
-import React from "react";
-import { Link } from "react-router-dom";
-import { GoogleIcon } from "@/components/Auth/GoogleIcon";
-import {
-  ValidationField,
-  useFormInputValidation,
-} from "./useFormInputValdiation";
+
+import { ValidationField, validateFormInput } from "./useFormInputValdiation";
 
 export const RegisterForm = () => {
   const [username, setUsername] = React.useState("");
@@ -52,10 +53,7 @@ export const RegisterForm = () => {
         onChange={(e) => setUsername(e.target.value)}
         onBlur={(e) =>
           setUsernameError(
-            useFormInputValidation(
-              ValidationField.usernameRegister,
-              e.target.value,
-            ),
+            validateFormInput(ValidationField.usernameRegister, e.target.value),
           )
         }
         error={usernameError}
@@ -68,7 +66,7 @@ export const RegisterForm = () => {
         onChange={(e) => setEmail(e.target.value)}
         onBlur={(e) =>
           setEmailError(
-            useFormInputValidation(ValidationField.email, e.target.value),
+            validateFormInput(ValidationField.email, e.target.value),
           )
         }
         error={emailError}
@@ -83,7 +81,7 @@ export const RegisterForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           onBlur={(e) =>
             setPasswordError(
-              useFormInputValidation(ValidationField.password, e.target.value),
+              validateFormInput(ValidationField.password, e.target.value),
             )
           }
           error={passwordError}

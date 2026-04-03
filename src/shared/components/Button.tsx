@@ -1,6 +1,12 @@
 import React from "react";
+
 import { twMerge } from "tailwind-merge";
-import type { ComponentEmphasis, ComponentSize, ComponentVariant } from "./types";
+
+import type {
+  ComponentEmphasis,
+  ComponentSize,
+  ComponentVariant,
+} from "./types";
 
 type ButtonGlow = "primary" | "none";
 type ButtonShadow = "on" | "off";
@@ -12,7 +18,10 @@ const BASE_CLASSES = [
   "shadow-sm transition-colors duration-150",
 ];
 
-const VARIANT_EMPHASIS_CLASSES: Record<ComponentVariant, Record<ComponentEmphasis, string>> = {
+const VARIANT_EMPHASIS_CLASSES: Record<
+  ComponentVariant,
+  Record<ComponentEmphasis, string>
+> = {
   primary: {
     high: [
       "bg-rave-red hover:bg-rave-red/80 active:bg-rave-red/60",
@@ -42,7 +51,7 @@ const SIZE_CLASSES: Record<ComponentSize, string> = {
     "text-sm sm:text-md",
     "px-[15px] sm:px-[18px]",
     "h-[40px] sm:h-[48px]",
-    "font-semibold tracking-wide font-chakraBold"
+    "font-semibold tracking-wide font-chakraBold",
   ].join(" "),
 
   medium: [
@@ -50,7 +59,7 @@ const SIZE_CLASSES: Record<ComponentSize, string> = {
     "px-[18px] sm:px-[22px] lg:px-[25px]",
     "h-[50px] sm:h-[56px] lg:h-[60px]",
     "w-[150px] md:w-[180px] lg:w-[200px]",
-    "font-semibold tracking-wide font-chakraBold"
+    "font-semibold tracking-wide font-chakraBold",
   ].join(" "),
 
   large: [
@@ -58,7 +67,7 @@ const SIZE_CLASSES: Record<ComponentSize, string> = {
     "px-[25px] sm:px-[35px] lg:px-[40px]",
     "h-[60px] sm:h-[85px] lg:h-[100px]",
     "w-[150px] md:w-[180px] lg:w-[200px]",
-    "font-semibold tracking-wide font-chakraBold"
+    "font-semibold tracking-wide font-chakraBold",
   ].join(" "),
 };
 
@@ -79,8 +88,7 @@ const SHADOW_CLASSES: Record<ButtonShadow, string> = {
   off: "",
 };
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ComponentVariant;
   size?: ComponentSize;
   emphasis?: ComponentEmphasis;
@@ -104,7 +112,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       fullWidth = false,
       ...rest
     },
-    ref
+    ref,
   ) => {
     const base = VARIANT_EMPHASIS_CLASSES[variant][emphasis];
     const sizeClasses = SIZE_CLASSES[size];
@@ -132,7 +140,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

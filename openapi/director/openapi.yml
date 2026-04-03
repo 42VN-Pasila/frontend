@@ -7,14 +7,18 @@ info:
   x-displayName: Game service
 
 servers:
-  - url: https://app.42pasila.vn/director
+  - url: http://localhost:5000
     description: Production
+
+security:
+  - BearerAuth: []
 
 paths:
   /_ping:
     get:
       summary: Check if the service is running
       description: Endpoint to ping the service
+      security: []
       responses:
         "200":
           description: Service is running
@@ -22,11 +26,12 @@ paths:
             application/json:
               schema:
                 type: string
-  /users:
+  /internal/users:
     post:
       tags:
-        - Users
-      summary: Create a user
+        - Internal
+      summary: Create a user (service-to-service)
+      security: []
       requestBody:
         required: true
         content:
@@ -34,8 +39,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateUserRequestBody"
       responses:
-        "201":
-          description: User created
+        "202":
+          description: User creation job accepted
           content:
             application/json:
               schema:
@@ -52,20 +57,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /users:
     get:
       tags:
         - Users
-      summary: Search by exact user id
-      description: Search for a user by their exact user id
-      operationId: searchByExactUserId
+      summary: Search by exact username
+      description: Search for a user by their exact username
+      operationId: searchByExactUserName
       parameters:
         - in: query
-          name: rudexUserId
-          required: true
-          schema:
-            type: string
-        - in: query
-          name: requesterId
+          name: username
           required: true
           schema:
             type: string
@@ -90,19 +91,39 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /users/{userId}/avatar:
-    patch:
+  /users/{username}:
+    get:
       tags:
         - Users
-      summary: Update user avatar
-      description: Update the avatar of a specific user
-      operationId: updateUserAvatar
+      summary: Get user by username
+      operationId: getUserByUsername
       parameters:
         - in: path
-          name: userId
+          name: username
           required: true
           schema:
             type: string
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDto"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+  /users/avatar:
+    patch:
+      tags:
+        - Users
+      summary: Update authenticated user's avatar
+      operationId: updateUserAvatar
       requestBody:
         required: true
         content:
@@ -128,18 +149,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /users/{userId}/friends:
+  /friends:
     get:
       tags:
         - Friends
-      summary: Get user's friends
+      summary: Get current user's friends (username from JWT)
       operationId: getUserFriends
-      parameters:
-        - in: path
-          name: userId
-          required: true
-          schema:
-            type: string
       responses:
         "200":
           description: User found
@@ -161,18 +176,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /users/{userId}/friends/{otherUserId}:
+  /friends/{otherUserId}:
     delete:
       tags:
         - Friends
-      summary: Remove a friend
+      summary: Remove a friend (username from JWT)
       operationId: removeFriendship
       parameters:
-        - in: path
-          name: userId
-          required: true
-          schema:
-            type: string
         - in: path
           name: otherUserId
           required: true
@@ -181,21 +191,15 @@ paths:
       responses:
         "204":
           description: Friend removed
-  /users/{userId}/friends/requests:
+  /friends/requests:
     get:
       tags:
         - Friends
-      summary: Get incoming/outcoming friend requests
+      summary: Get incoming/outgoing friend requests (username from JWT)
       operationId: getAllFriendRequests
-      parameters:
-        - in: path
-          name: userId
-          required: true
-          schema:
-            type: string
       responses:
         "200":
-          description: User found
+          description: Friend requests list
           content:
             application/json:
               schema:
@@ -205,14 +209,8 @@ paths:
     post:
       tags:
         - Friends
-      summary: Send a friend request
+      summary: Send a friend request (username from JWT)
       operationId: sendFriendRequest
-      parameters:
-        - in: path
-          name: userId
-          required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
@@ -246,18 +244,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /users/{userId}/friends/requests/{otherUserId}:
+  /friends/requests/{otherUserId}:
     patch:
       tags:
         - Friends
-      summary: Respond to a friend request
+      summary: Respond to a friend request (username from JWT)
       operationId: respondToFriendRequest
       parameters:
-        - in: path
-          name: userId
-          required: true
-          schema:
-            type: string
         - in: path
           name: otherUserId
           required: true
@@ -331,13 +324,18 @@ paths:
     post:
       tags:
         - Rooms
-      summary: Create a room
+      summary: Create a room (username derived from JWT)
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateRoomRequestBody"
+              type: object
+              required:
+                - roomName
+              properties:
+                roomName:
+                  type: string
       responses:
         "201":
           description: Room created
@@ -441,7 +439,7 @@ paths:
     post:
       tags:
         - Rooms
-      summary: Connect a user to room
+      summary: Connect authenticated user to room
       operationId: connectRoom
       parameters:
         - in: path
@@ -449,12 +447,6 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ConnectRoomRequest"
       responses:
         "200":
           description: Connected successfully
@@ -491,7 +483,7 @@ paths:
     post:
       tags:
         - Rooms
-      summary: Start a match
+      summary: Start a match (ownerUsername derived from JWT)
       operationId: startMatch
       parameters:
         - in: path
@@ -499,12 +491,6 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/StartMatchRequest"
       responses:
         "200":
           description: Match started
@@ -534,7 +520,7 @@ paths:
     post:
       tags:
         - Rooms
-      summary: Disconnect a user from room
+      summary: Disconnect authenticated user from room
       operationId: disconnectRoom
       parameters:
         - in: path
@@ -542,12 +528,6 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DisconnectRoomRequest"
       responses:
         "204":
           description: Disconnected successfully
@@ -570,20 +550,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /rooms/{roomId}/users/{userId}:
+  /rooms/{roomId}/users/status:
     patch:
       tags:
         - Rooms
-      summary: Update room user status
+      summary: Update authenticated user's room status
       operationId: updateRoomUserStatus
       parameters:
         - in: path
           name: roomId
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: userId
           required: true
           schema:
             type: string
@@ -619,6 +594,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Card:
       type: object
@@ -634,15 +614,15 @@ components:
       type: object
       required:
         - matchId
-        - userId
-        - opponentId
+        - username
+        - opponentUsername
         - card
       properties:
         matchId:
           type: string
-        userId:
+        username:
           type: string
-        opponentId:
+        opponentUsername:
           type: string
         card:
           $ref: "#/components/schemas/Card"
@@ -650,65 +630,65 @@ components:
       type: object
       required:
         - matchId
-        - userId
+        - username
       properties:
         matchId:
           type: string
-        userId:
+        username:
           type: string
     LeaveMatchEvent:
       type: object
       required:
         - matchId
-        - userId
+        - username
       properties:
         matchId:
           type: string
-        userId:
+        username:
           type: string
     CreateMatchEvent:
       type: object
       required:
         - matchId
-        - userId
+        - username
       properties:
         matchId:
           type: string
-        userId:
+        username:
           type: string
     SkipTurnEvent:
       type: object
       required:
         - matchId
-        - userId
+        - username
       properties:
         matchId:
           type: string
-        userId:
+        username:
           type: string
     ExitMatchEvent:
       type: object
       required:
         - matchId
-        - userId
+        - username
       properties:
         matchId:
           type: string
-        userId:
+        username:
           type: string
     CreateUserRequestBody:
       type: object
       required:
-        - rudexUserId
+        - username
       properties:
-        rudexUserId:
+        username:
           type: string
     CreateUserResponse:
       type: object
       required:
-        - userId
+        - jobId
       properties:
-        userId:
+        jobId:
           type: string
     UpdateUserAvatarRequestBody:
       type: object
@@ -720,10 +700,10 @@ components:
     UpdateUserAvatarResponse:
       type: object
       required:
-        - userId
+        - username
         - avatarId
       properties:
-        userId:
+        username:
           type: string
         avatarId:
           type: string
@@ -745,7 +725,8 @@ components:
         - status
         - relationship
         - direction
-        - rudexUserId
+        - username
+        - displayName
       properties:
         id:
           type: string
@@ -762,10 +743,14 @@ components:
           type: string
           enum: ["In", "Out", "None"]
           description: "Direction of the friend request if exists"
-        rudexUserId:
+        username:
           type: string
           nullable: true
-          description: "Rudex User ID for display purposes"
+          description: "Username for display purposes"
+        displayName:
+          type: string
+          nullable: true
+          description: "Display name for frontend rendering"
         requestFriendStatus:
           type: string
           nullable: true
@@ -773,10 +758,10 @@ components:
     UserDto:
       type: object
       required:
-        - id
+        - username
         - status
       properties:
-        id:
+        username:
           type: string
         status:
           type: string
@@ -814,7 +799,7 @@ components:
       required:
         - id
         - name
-        - ownerId
+        - ownerUsername
         - users
         - connectionCount
         - started
@@ -823,7 +808,7 @@ components:
           type: string
         name:
           type: string
-        ownerId:
+        ownerUsername:
           type: string
         users:
           type: array
@@ -839,7 +824,7 @@ components:
       required:
         - id
         - name
-        - ownerId
+        - ownerUsername
         - users
         - connectionCount
         - started
@@ -848,7 +833,7 @@ components:
           type: string
         name:
           type: string
-        ownerId:
+        ownerUsername:
           type: string
         users:
           type: array
@@ -880,42 +865,42 @@ components:
       type: object
       required:
         - cards
-        - userId
+        - username
       properties:
         cards:
           items:
             $ref: "#/components/schemas/Card"
-        userId:
+        username:
           type: string
     BookDto:
       type: object
       required:
         - cards
-        - userId
+        - username
       properties:
         cards:
           type: array
           items:
             $ref: "#/components/schemas/Card"
-        userId:
+        username:
           type: string
     HandCountDto:
       type: object
       required:
-        - userId
+        - username
         - handCount
       properties:
-        userId:
+        username:
           type: string
         handCount:
           type: integer
     BookCountDto:
       type: object
       required:
-        - userId
+        - username
         - count
       properties:
-        userId:
+        username:
           type: string
         count:
           type: integer
@@ -923,12 +908,12 @@ components:
       type: object
       required:
         - order
-        - userId
+        - username
         - isTurn
       properties:
         order:
           type: integer
-        userId:
+        username:
           type: string
         isTurn:
           type: boolean
@@ -981,7 +966,7 @@ components:
       type: object
       required:
         - roomId
-        - winnerUserId
+        - winnerUsername
         - hasCoWinners
         - endedReason
         - startedAt
@@ -989,7 +974,7 @@ components:
       properties:
         roomId:
           type: string
-        winnerUserId:
+        winnerUsername:
           type: string
           nullable: true
         hasCoWinners:
@@ -1000,16 +985,6 @@ components:
           type: string
         endedAt:
           type: string
-    CreateRoomRequestBody:
-      type: object
-      required:
-        - userId
-        - roomName
-      properties:
-        userId:
-          type: string
-        roomName:
-          type: string
     CreateRoomResponse:
       type: object
       required:
@@ -1018,14 +993,6 @@ components:
         room:
           $ref: "#/components/schemas/RoomDto"
 
-    ConnectRoomRequest:
-      type: object
-      required:
-        - userId
-      properties:
-        userId:
-          type: string
-
     ConnectRoomResponse:
       type: object
       required:
@@ -1033,13 +1000,6 @@ components:
       properties:
         room:
           $ref: "#/components/schemas/RoomDto"
-    StartMatchRequest:
-      type: object
-      required:
-        - ownerId
-      properties:
-        ownerId:
-          type: string
     StartMatchResponse:
       type: object
       required:
@@ -1061,26 +1021,18 @@ components:
       type: object
       required:
         - roomId
-        - userId
+        - username
         - status
       properties:
         roomId:
           type: string
-        userId:
+        username:
           type: string
         status:
           type: string
           enum:
             - Ready
             - NotReady
-
-    DisconnectRoomRequest:
-      type: object
-      required:
-        - userId
-      properties:
-        userId:
-          type: string
 
     ErrorResponse:
       type: object

@@ -113,7 +113,6 @@ import type { CardRank, CardSuit } from '../types';
 
 type CardSvgComponent = typeof ASpade;
 
-
 export const CardAssets = {
   ASpade,
   TwoSpade,
@@ -234,10 +233,7 @@ export const CardIconAssets = {
   QueenSpadeIcon
 };
 
-export const CARD_IMAGES: Record<
-  CardSuit,
-  Record<CardRank, CardSvgComponent>
-> = {
+export const CARD_IMAGES: Record<CardSuit, Record<CardRank, CardSvgComponent>> = {
   SPADES: {
     ACE: ASpade,
     TWO: TwoSpade,

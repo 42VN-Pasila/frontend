@@ -1,4 +1,5 @@
 import type { Opponent } from "../types";
+
 import OpponentProfile from "./OpponentProfile";
 
 interface OpponentDisplayProps {

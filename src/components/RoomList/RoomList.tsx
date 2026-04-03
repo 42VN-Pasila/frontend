@@ -1,11 +1,12 @@
 import { useState } from "react";
 
+import { MAX_PLAYERS } from "@/common/constants";
 import type { ListRoomsDto } from "@/gen/director";
 import { useListRoomsQuery } from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
 import { DataDisplayGrid } from "@/shared/components/DataDisplayGrid";
+
 import RoomCard from "./RoomCard";
-import { MAX_PLAYERS } from "@/common/constants";
 
 type RoomStatus = "OPEN" | "FULL";
 
@@ -15,7 +16,6 @@ type Room = {
   userCount: number;
   status: RoomStatus;
 };
-
 
 export const RoomList = () => {
   const [roomCardErrorMessage, setRoomCardErrorMessage] = useState("");
