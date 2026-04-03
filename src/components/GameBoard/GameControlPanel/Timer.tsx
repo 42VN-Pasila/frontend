@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Label } from "@/shared/components/Label";
 import { socketSkipTurn } from "@/shared/api/directorClient";
+import { Label } from "@/shared/components/Label";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
@@ -15,9 +15,11 @@ type TimerProps = {
 export const Timer = ({ isDisabled = false, resetTurn }: TimerProps) => {
   const [timeLeft, setTimeLeft] = useState(TURN_SECONDS);
   const hasEmittedSkipRef = useRef(false);
-  const { userId } = useUserStore();
+  const { username } = useUserStore();
   const { matchId, seats } = useGameSessionStore();
-  const isMyTurn = seats.find((seat) => seat.userId === userId)?.isTurn ?? false;
+  const currentUsername = username.trim();
+  const isMyTurn =
+    seats.find((seat) => seat.username === currentUsername)?.isTurn ?? false;
   const isTimerActive = isMyTurn && !isDisabled;
 
   useEffect(() => {
@@ -36,15 +38,21 @@ export const Timer = ({ isDisabled = false, resetTurn }: TimerProps) => {
   }, [isTimerActive]);
 
   useEffect(() => {
-    if (!isTimerActive || timeLeft > 0 || hasEmittedSkipRef.current || !matchId || !userId) {
+    if (
+      !isTimerActive ||
+      timeLeft > 0 ||
+      hasEmittedSkipRef.current ||
+      !matchId ||
+      !currentUsername
+    ) {
       return;
     }
 
     hasEmittedSkipRef.current = true;
-    void socketSkipTurn({ matchId, userId }).catch(() => {
+    void socketSkipTurn({ matchId, username: currentUsername }).catch(() => {
       hasEmittedSkipRef.current = false;
     });
-  }, [isTimerActive, matchId, timeLeft, userId]);
+  }, [isTimerActive, matchId, timeLeft, currentUsername]);
 
   return (
     <div

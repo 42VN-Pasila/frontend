@@ -1,14 +1,18 @@
-import cardSrc from "../../assets/card-back-2.png";
+import { useEffect, useState } from "react";
+
+import EmailIcon from "@mui/icons-material/Email";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+
+import Footer from "@/shared/components/Footer";
+
 import Ed from "../../assets/Ed.png";
 import Edd from "../../assets/Edd.png";
 import Eddy from "../../assets/Eddy.png";
 import Plank from "../../assets/Plank 1.png";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import EmailIcon from "@mui/icons-material/Email";
-import { useEffect, useState } from "react";
+import cardSrc from "../../assets/card-back-2.png";
+
 import HomePageNavBar from "./HomePageNavBar";
-import Footer from "@/shared/components/Footer";
 
 type AboutCardProps = {
   name: string;
@@ -21,7 +25,6 @@ type AboutCardProps = {
   imagePosition: string;
   flipped: boolean;
 };
-
 
 const AboutCard = ({
   name,
@@ -87,7 +90,6 @@ const AboutCard = ({
             <p className="mt-2 text-md text-white/60 text-center px-6 leading-relaxed">
               {bio}
             </p>
-
           </div>
 
           {/* Bottom */}
@@ -120,14 +122,11 @@ const AboutCard = ({
               <EmailIcon fontSize="medium" />
             </a>
           </div>
-
         </div>
       </div>
     </div>
   );
 };
-
-
 
 type TeamMember = {
   name: string;
@@ -159,7 +158,7 @@ const TEAM: TeamMember[] = [
     github: "https://github.com/huong",
     linkedin: "https://linkedin.com",
     email: "huongemail@gmail.com",
-    imagePosition: "object-top"
+    imagePosition: "object-top",
   },
   {
     name: "Tan",
@@ -183,18 +182,19 @@ const TEAM: TeamMember[] = [
   },
 ];
 
-
 export const AboutPage = () => {
   const [flippedIndex, setFlippedIndex] = useState(-1);
-
 
   useEffect(() => {
     const timers: number[] = [];
 
     TEAM.forEach((_, i) => {
-      const timer = window.setTimeout(() => {
-        setFlippedIndex(i);
-      }, 300 + i * 150);
+      const timer = window.setTimeout(
+        () => {
+          setFlippedIndex(i);
+        },
+        300 + i * 150,
+      );
 
       timers.push(timer);
     });
@@ -210,17 +210,16 @@ export const AboutPage = () => {
       <main className="flex flex-col min-h-[100dvh]">
         <section className="flex-1 flex items-center justify-center px-6">
           <div className="w-full max-w-[1200px]">
-            <div className="
+            <div
+              className="
               grid gap-8 place-items-center
               grid-cols-1
               sm:grid-cols-2
               lg:grid-cols-4
-            ">
+            "
+            >
               {TEAM.map((member, i) => (
-                <AboutCard
-                  {...member}
-                  flipped={i <= flippedIndex}
-                />
+                <AboutCard {...member} flipped={i <= flippedIndex} />
               ))}
             </div>
           </div>

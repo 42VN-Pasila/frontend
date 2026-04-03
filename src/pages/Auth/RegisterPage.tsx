@@ -1,4 +1,4 @@
-import  AuthNavBar  from "@/components/Auth/AuthNavBar";
+import AuthNavBar from "@/components/Auth/AuthNavBar";
 import { RegisterForm } from "@/components/Auth/RegisterForm";
 
 const RegisterPage = () => {

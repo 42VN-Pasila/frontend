@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import type { MatchDto, MatchResultDto } from "@/gen/director";
+import { useCallback, useEffect, useState } from 'react';
+
+import type { MatchDto, MatchResultDto } from '@/gen/director';
 import {
   connectSocket,
   disconnectSocket,
@@ -7,14 +8,11 @@ import {
   onSocketConnect,
   onSocketDisconnect,
   socket,
-  socketJoinMatch,
-} from "@/shared/api/directorClient";
-import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
+  socketJoinMatch
+} from '@/shared/api/directorClient';
+import { useGameSessionStore } from '@/shared/stores/useGameSessionStore';
 
-export function useMatchConnection(
-  matchId: string,
-  userId: string,
-) {
+export function useMatchConnection(matchId: string, username: string) {
   const syncMatchState = useGameSessionStore((s) => s.syncMatchState);
   const resetGameSession = useGameSessionStore((s) => s.resetGameSession);
 
@@ -25,7 +23,7 @@ export function useMatchConnection(
 
   const applyMatchState = useCallback(
     (match: MatchDto, result?: MatchResultDto) => {
-      if (match.status === "Completed") {
+      if (match.status === 'Completed') {
         setIsMatchOver(true);
         disconnectSocket();
         if (result) {
@@ -37,36 +35,31 @@ export function useMatchConnection(
         return;
       }
 
-      syncMatchState(match, userId);
+      syncMatchState(match, username);
     },
-    [syncMatchState, resetGameSession, userId],
+    [syncMatchState, resetGameSession, username]
   );
 
   useEffect(() => {
-    if (!matchId || !userId) return;
+    if (!matchId || !username) return;
 
     setErrorMessage(null);
     let active = true;
 
     const joinAndSync = async () => {
       try {
-        const { match } = await socketJoinMatch({ matchId, userId });
+        const { match } = await socketJoinMatch({ matchId, username });
         if (!active) return;
         applyMatchState(match);
         setErrorMessage(null);
       } catch {
         if (!active) return;
-        setErrorMessage("Unable to join match");
+        setErrorMessage('Unable to join match');
       }
     };
 
-    connectSocket();
-    if (socket.connected) {
-      void joinAndSync();
-    }
-
     const unsubMatchState = onMatchState((match, result) => {
-      if (match.currentSeat?.userId === userId && match.currentSeat?.isTurn) {
+      if (match.currentSeat?.username === username && match.currentSeat?.isTurn) {
         setResetTurn((prev) => !prev);
       }
       applyMatchState(match, result);
@@ -74,6 +67,12 @@ export function useMatchConnection(
 
     const unsubConnect = onSocketConnect(() => void joinAndSync());
     const unsubDisconnect = onSocketDisconnect(() => undefined);
+
+    if (socket.connected) {
+      void joinAndSync();
+    } else {
+      connectSocket();
+    }
 
     return () => {
       active = false;
@@ -83,7 +82,7 @@ export function useMatchConnection(
       disconnectSocket();
       resetGameSession();
     };
-  }, [matchId, userId, applyMatchState, resetGameSession]);
+  }, [matchId, username, applyMatchState, resetGameSession]);
 
   return { matchResult, errorMessage, isMatchOver, setErrorMessage, resetTurn };
 }

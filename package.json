@@ -3,11 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "packageManager": "pnpm@10.11.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test": "vitest run",
     "gen": "pnpm gen:openapi",
     "gen:openapi": "openapi --input openapi/rudex/openapi.yml --output src/gen/rudex --client axios --useOptions && openapi --input openapi/director/openapi.yml --output src/gen/director --client axios --useOptions"
   },
@@ -50,6 +54,7 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.3",
     "vite": "^7.2.2",
-    "vite-plugin-svgr": "^4.5.0"
+    "vite-plugin-svgr": "^4.5.0",
+    "vitest": "^4.1.2"
   }
 }

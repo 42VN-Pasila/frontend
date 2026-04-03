@@ -1,7 +1,6 @@
-
+import CardSvg from "../CardSvg";
 import type { Card } from "../types";
 import { ALL_CARD_RANKS } from "../types";
-import CardSvg from "../CardSvg";
 
 interface GamePlayerCardProps extends React.ComponentPropsWithoutRef<"div"> {
   cards: Card[];
@@ -38,7 +37,7 @@ const GamePlayerCard = ({
           />
         </div>
       ))}
-    </div >
+    </div>
   );
 };
 
