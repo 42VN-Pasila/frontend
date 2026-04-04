@@ -20,6 +20,18 @@ import type { CreateRoomResponse } from '@/gen/director/models/CreateRoomRespons
 
 import { directorClient } from './directorClient';
 
+const getViewerScopedSearchQueryKey = (viewerUsername: string, query: string) =>
+  ['users', viewerUsername, 'search', query] as const;
+
+const getViewerScopedSearchQueryPrefix = (viewerUsername: string) =>
+  ['users', viewerUsername, 'search'] as const;
+
+const getViewerScopedFriendsQueryKey = (viewerUsername: string) =>
+  ['users', viewerUsername, 'friends'] as const;
+
+const getViewerScopedFriendRequestsQueryKey = (viewerUsername: string) =>
+  ['users', viewerUsername, 'friend-requests'] as const;
+
 //------------------------------------------------
 // QUERIES
 //------------------------------------------------
@@ -39,12 +51,18 @@ export const useListAvatarsQuery = () => {
   });
 };
 
-export const useSearchUsersQuery = (query: string, options?: { enabled?: boolean }) => {
+export const useSearchUsersQuery = (
+  query: string,
+  viewerUsername: string,
+  options?: { enabled?: boolean }
+) => {
   const normalizedQuery = query.trim();
+  const normalizedViewerUsername = viewerUsername.trim();
+
   return useQuery<SocialUserDto[]>({
-    queryKey: ['users', 'search', normalizedQuery],
+    queryKey: getViewerScopedSearchQueryKey(normalizedViewerUsername, normalizedQuery),
     queryFn: () => directorClient.searchUsers(normalizedQuery),
-    enabled: options?.enabled ?? Boolean(normalizedQuery)
+    enabled: (options?.enabled ?? true) && Boolean(normalizedViewerUsername && normalizedQuery)
   });
 };
 
@@ -144,8 +162,9 @@ export const useUpdateUserStatusMutation = () => {
   });
 };
 
-export const useSendFriendRequestMutation = () => {
+export const useSendFriendRequestMutation = (viewerUsername: string) => {
   const queryClient = useQueryClient();
+  const normalizedViewerUsername = viewerUsername.trim();
 
   return useMutation<void, Error, { otherUsername: string }>({
     mutationFn: ({ otherUsername }) => {
@@ -153,15 +172,21 @@ export const useSendFriendRequestMutation = () => {
       return directorClient.sendFriendRequest(bodyPayload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users', 'search'] });
-      queryClient.invalidateQueries({ queryKey: ['users', 'friends'] });
-      queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests'] });
+      if (!normalizedViewerUsername) return;
+
+      queryClient.invalidateQueries({
+        queryKey: getViewerScopedSearchQueryPrefix(normalizedViewerUsername)
+      });
+      queryClient.invalidateQueries({
+        queryKey: getViewerScopedFriendRequestsQueryKey(normalizedViewerUsername)
+      });
     }
   });
 };
 
-export const useRespondFriendRequestMutation = () => {
+export const useRespondFriendRequestMutation = (viewerUsername: string) => {
   const queryClient = useQueryClient();
+  const normalizedViewerUsername = viewerUsername.trim();
 
   return useMutation<
     RespondToFriendRequestResponse,
@@ -179,22 +204,33 @@ export const useRespondFriendRequestMutation = () => {
       return directorClient.respondFriendRequest(otherUsername, bodyPayload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests'] });
-      queryClient.invalidateQueries({ queryKey: ['users', 'friends'] });
-      queryClient.invalidateQueries({ queryKey: ['users', 'search'] });
+      if (!normalizedViewerUsername) return;
+
+      queryClient.invalidateQueries({
+        queryKey: getViewerScopedFriendRequestsQueryKey(normalizedViewerUsername)
+      });
+      queryClient.invalidateQueries({
+        queryKey: getViewerScopedFriendsQueryKey(normalizedViewerUsername)
+      });
+      queryClient.invalidateQueries({
+        queryKey: getViewerScopedSearchQueryPrefix(normalizedViewerUsername)
+      });
     }
   });
 };
 
-export const useRemoveFriendshipMutation = () => {
+export const useRemoveFriendshipMutation = (viewerUsername: string) => {
   const queryClient = useQueryClient();
+  const normalizedViewerUsername = viewerUsername.trim();
 
   return useMutation<void, Error, { otherUsername: string }>({
     mutationFn: ({ otherUsername }) => {
       return directorClient.removeFriendship(otherUsername);
     },
     onSuccess: async (_data, variables) => {
-      const friendsQueryKey = ['users', 'friends'] as const;
+      if (!normalizedViewerUsername) return;
+
+      const friendsQueryKey = getViewerScopedFriendsQueryKey(normalizedViewerUsername);
 
       queryClient.setQueryData<SocialUserDto[]>(friendsQueryKey, (prev = []) =>
         prev.filter((friend) => friend.username !== variables.otherUsername)
@@ -202,8 +238,9 @@ export const useRemoveFriendshipMutation = () => {
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: friendsQueryKey }),
-        queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests'] }),
-        queryClient.invalidateQueries({ queryKey: ['users', 'search'] }),
+        queryClient.invalidateQueries({
+          queryKey: getViewerScopedSearchQueryPrefix(normalizedViewerUsername)
+        }),
         queryClient.refetchQueries({ queryKey: friendsQueryKey, type: 'active' })
       ]);
     }
@@ -253,22 +290,26 @@ export const useGetRoomMetaDataQuery = (roomId: string, options?: QueryOptions) 
 // REFETCH QUERIES
 //------------------------------------------------
 
-export const useGetFriendPendingDataQuery = (options?: QueryOptions) => {
+export const useGetFriendPendingDataQuery = (viewerUsername: string, options?: QueryOptions) => {
+  const normalizedViewerUsername = viewerUsername.trim();
+
   return useQuery<SocialUserDto[]>({
-    queryKey: ['users', 'friend-requests'],
+    queryKey: getViewerScopedFriendRequestsQueryKey(normalizedViewerUsername),
     queryFn: () => directorClient.listFriendRequests(),
-    enabled: options?.enabled ?? true,
+    enabled: (options?.enabled ?? true) && Boolean(normalizedViewerUsername),
     refetchInterval: options?.pollingInterval,
     refetchOnWindowFocus: options?.refetchOnWindowFocus,
     refetchOnReconnect: options?.refetchOnReconnect
   });
 };
 
-export const useGetFriendListDataQuery = (options?: QueryOptions) => {
+export const useGetFriendListDataQuery = (viewerUsername: string, options?: QueryOptions) => {
+  const normalizedViewerUsername = viewerUsername.trim();
+
   return useQuery<SocialUserDto[]>({
-    queryKey: ['users', 'friends'],
+    queryKey: getViewerScopedFriendsQueryKey(normalizedViewerUsername),
     queryFn: () => directorClient.listFriends(),
-    enabled: options?.enabled ?? true,
+    enabled: (options?.enabled ?? true) && Boolean(normalizedViewerUsername),
     refetchInterval: options?.pollingInterval,
     refetchOnWindowFocus: options?.refetchOnWindowFocus,
     refetchOnReconnect: options?.refetchOnReconnect

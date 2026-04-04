@@ -53,14 +53,14 @@ export const useFriendPendingRequests = () => {
     isError,
     error,
     refetch: refetchPendingRequests
-  } = useGetFriendPendingDataQuery({
+  } = useGetFriendPendingDataQuery(username, {
     enabled: Boolean(username),
     refetchOnWindowFocus: true,
     refetchOnReconnect: true
   });
 
   const { mutateAsync: respondFriendRequest, isPending: isRespondingRequest } =
-    useRespondFriendRequestMutation();
+    useRespondFriendRequestMutation(username);
 
   const filteredPendingRequests = socialRequests.filter((item) => {
     const normalizedRequestState = String(item.relationship ?? '').toUpperCase();

@@ -36,7 +36,7 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
     isFetching,
     error: searchError,
     refetch
-  } = useSearchUsersQuery(normalizedSearch, {
+  } = useSearchUsersQuery(normalizedSearch, username, {
     enabled: Boolean(username && normalizedSearch)
   });
 
@@ -46,7 +46,7 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
   }, [searchError]);
 
   const { mutateAsync: sendFriendRequest, isPending: isSendingRequest } =
-    useSendFriendRequestMutation();
+    useSendFriendRequestMutation(username);
 
   const handleSearch = () => {
     const trimmed = searchText.trim();

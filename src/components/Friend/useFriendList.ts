@@ -26,13 +26,13 @@ export const useFriendList = () => {
     isError,
     error,
     refetch: refetchFriends
-  } = useGetFriendListDataQuery({
+  } = useGetFriendListDataQuery(username, {
     enabled: Boolean(username),
     refetchOnWindowFocus: true,
     refetchOnReconnect: true
   });
   const { mutateAsync: removeFriendship, isPending: isRemovingFriend } =
-    useRemoveFriendshipMutation();
+    useRemoveFriendshipMutation(username);
 
   const friends: FriendItem[] = socialFriends
     .filter((friend) => Boolean(friend.username?.trim()))
