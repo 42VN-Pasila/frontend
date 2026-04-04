@@ -20,15 +20,15 @@ const STATUS_CLASSES: Record<FriendItem["status"], string> = {
 
 export const useFriendList = () => {
   const [removingFriendId, setRemovingFriendId] = useState<string | null>(null);
-  const { userId } = useUserStore();
+  const username = useUserStore((state) => state.username);
   const {
     data: socialFriends = [],
     isFetching,
     isError,
     error,
     refetch: refetchFriends,
-  } = useGetFriendListDataQuery(userId, {
-    enabled: Boolean(userId),
+  } = useGetFriendListDataQuery({
+    enabled: Boolean(username),
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
@@ -60,13 +60,13 @@ export const useFriendList = () => {
   });
 
   const handleRemoveFriend = async (otherUserId: string) => {
-    if (!userId || !otherUserId) {
+    if (!otherUserId) {
       return;
     }
 
     setRemovingFriendId(otherUserId);
     try {
-      await removeFriendship({ userId, otherUserId });
+      await removeFriendship({ otherUserId });
     } finally {
       setRemovingFriendId(null);
     }

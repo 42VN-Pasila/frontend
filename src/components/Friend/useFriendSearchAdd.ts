@@ -26,7 +26,7 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
   const [submittedSearch, setSubmittedSearch] = useState('');
   const [searchTargetId, setSearchTargetId] = useState<string[]>([]);
   const [requestError, setRequestError] = useState<string | null>(null);
-  const currentUserId = useUserStore((state) => state.userId);
+  const username = useUserStore((state) => state.username);
 
   const normalizedInput = searchText.trim();
   const normalizedSearch = submittedSearch;
@@ -36,8 +36,8 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
     isFetching,
     error: searchError,
     refetch
-  } = useSearchUsersQuery(currentUserId, normalizedSearch, {
-    enabled: Boolean(currentUserId && normalizedSearch)
+  } = useSearchUsersQuery(normalizedSearch, {
+    enabled: Boolean(username && normalizedSearch)
   });
 
   useEffect(() => {
@@ -52,8 +52,8 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
     const trimmed = searchText.trim();
     if (!trimmed) return;
 
-    if (!currentUserId) {
-      setRequestError('Missing requesterId. Please login again before searching.');
+    if (!username) {
+      setRequestError('Session expired. Please login again before searching.');
       return;
     }
 
@@ -61,7 +61,6 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
     setSearchTargetId([]);
 
     if (trimmed === submittedSearch) {
-      //request for the exact same term
       void refetch();
     } else {
       setSubmittedSearch(trimmed);
@@ -69,9 +68,9 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
   };
 
   const handleSendRequest = async (otherUserId: string) => {
-    if (searchTargetId.includes(otherUserId) || !currentUserId) return;
+    if (searchTargetId.includes(otherUserId) || !username) return;
     try {
-      await sendFriendRequest({ userId: currentUserId, otherUserId });
+      await sendFriendRequest({ otherUserId });
       setSearchTargetId((prev) => [...prev, otherUserId]);
     } catch (error) {
       setRequestError(error instanceof Error ? error.message : 'Failed to send request');

@@ -42,7 +42,7 @@ const resolvePendingDirection = (pendingUser: PendingUser): PendingDirection => 
 
 export const useFriendPendingRequests = () => {
   const [pendingActionError, setPendingActionError] = useState('');
-  const { userId } = useUserStore();
+  const username = useUserStore((state) => state.username);
 
   const clearPendingActionError = () => {
     setPendingActionError('');
@@ -54,8 +54,8 @@ export const useFriendPendingRequests = () => {
     isError,
     error,
     refetch: refetchPendingRequests
-  } = useGetFriendPendingDataQuery(userId, {
-    enabled: Boolean(userId),
+  } = useGetFriendPendingDataQuery({
+    enabled: Boolean(username),
     refetchOnWindowFocus: true,
     refetchOnReconnect: true
   });
@@ -90,16 +90,12 @@ export const useFriendPendingRequests = () => {
     otherUserId: string,
     action: 'Accepted' | 'Canceled'
   ) => {
-    if (!userId) return;
-
     setPendingActionError('');
 
     try {
       await respondFriendRequest({
-        userId,
         otherUserId,
-        action,
-        invalidateUserIds: [userId]
+        action
       });
       await refetchPendingRequests();
     } catch (error) {
@@ -112,7 +108,7 @@ export const useFriendPendingRequests = () => {
   };
 
   const handleCancelPendingRequest = async (otherUserId: string) => {
-    if (!userId) {
+    if (!otherUserId) {
       return;
     }
 
@@ -120,10 +116,8 @@ export const useFriendPendingRequests = () => {
 
     try {
       await respondFriendRequest({
-        userId,
         otherUserId,
-        action: 'Canceled',
-        invalidateUserIds: [userId]
+        action: 'Canceled'
       });
       await refetchPendingRequests();
     } catch (error) {

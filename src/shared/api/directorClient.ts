@@ -196,12 +196,10 @@ export const directorClient = {
   async createRoom(body: { roomName: string }) {
     return RoomsService.postRooms({ requestBody: { roomName: body.roomName } });
   },
-  async connectRoom(roomId: string, _body?: { userId?: string }) {
-    void _body;
+  async connectRoom(roomId: string) {
     return RoomsService.connectRoom({ roomId });
   },
-  async startMatch(roomId: string, _body?: { ownerId?: string }) {
-    void _body;
+  async startMatch(roomId: string) {
     return RoomsService.startMatch({ roomId });
   },
   async listRooms() {
@@ -210,52 +208,40 @@ export const directorClient = {
   async listAvatars() {
     return ResourcesService.getResourcesAvatars();
   },
-  async updateUserAvatar(_userId: string, body: UpdateUserAvatarRequestBody) {
+  async updateUserAvatar(body: UpdateUserAvatarRequestBody) {
     return UsersService.updateUserAvatar({ requestBody: body });
   },
   async getRoomStatus(roomId: string) {
     return RoomsService.getRoomStatus({ roomId });
   },
-  async updateUserStatus(roomId: string, _userId: string, body: UpdateRoomUserStatusRequestBody) {
-    void _userId;
+  async updateUserStatus(roomId: string, body: UpdateRoomUserStatusRequestBody) {
     return RoomsService.updateRoomUserStatus({ roomId, requestBody: body });
   },
-  async disconnectRoom(roomId: string, _userId?: string) {
-    void _userId;
+  async disconnectRoom(roomId: string) {
     return RoomsService.disconnectRoom({ roomId });
   },
   async getRoomMetaData(roomId: string) {
     return RoomsService.getRoomMetaData({ roomId });
   },
-  async searchUsers(username: string, _requesterId?: string): Promise<SocialUserDto[]> {
-    void _requesterId;
+  async searchUsers(username: string): Promise<SocialUserDto[]> {
     return UsersService.searchByExactUserName({ username });
   },
-  async sendFriendRequest(_userId: string, body: RequestFriendRequestBody) {
-    void _userId;
+  async sendFriendRequest(body: RequestFriendRequestBody) {
     return FriendsService.sendFriendRequest({ requestBody: body });
   },
-  async listFriends(_userId: string): Promise<SocialUserDto[]> {
-    void _userId;
+  async listFriends(): Promise<SocialUserDto[]> {
     return FriendsService.getUserFriends();
   },
-  async listFriendRequests(_userId: string): Promise<SocialUserDto[]> {
-    void _userId;
+  async listFriendRequests(): Promise<SocialUserDto[]> {
     return FriendsService.getAllFriendRequests();
   },
-  async respondFriendRequest(
-    _userId: string,
-    otherUserId: string,
-    body: RespondToFriendRequestRequestBody
-  ) {
-    void _userId;
+  async respondFriendRequest(otherUserId: string, body: RespondToFriendRequestRequestBody) {
     return FriendsService.respondToFriendRequest({
       otherUserId,
       requestBody: body
     });
   },
-  async removeFriendship(_userId: string, otherUserId: string): Promise<void> {
-    void _userId;
+  async removeFriendship(otherUserId: string): Promise<void> {
     return FriendsService.removeFriendship({ otherUserId });
   }
 };

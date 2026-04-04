@@ -39,16 +39,12 @@ export const useListAvatarsQuery = () => {
   });
 };
 
-export const useSearchUsersQuery = (
-  requesterId: string,
-  query: string,
-  options?: { enabled?: boolean }
-) => {
+export const useSearchUsersQuery = (query: string, options?: { enabled?: boolean }) => {
   const normalizedQuery = query.trim();
   return useQuery<SocialUserDto[]>({
-    queryKey: ['users', 'search', requesterId, normalizedQuery],
-    queryFn: () => directorClient.searchUsers(normalizedQuery, requesterId),
-    enabled: options?.enabled ?? Boolean(requesterId && normalizedQuery)
+    queryKey: ['users', 'search', normalizedQuery],
+    queryFn: () => directorClient.searchUsers(normalizedQuery),
+    enabled: options?.enabled ?? Boolean(normalizedQuery)
   });
 };
 
@@ -59,7 +55,7 @@ export const useSearchUsersQuery = (
 export const useCreateRoomMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<CreateRoomResponse, Error, { userId: string; roomName: string }>({
+  return useMutation<CreateRoomResponse, Error, { roomName: string }>({
     mutationFn: async ({ roomName }) => {
       const bodyPayload: { roomName: string } = { roomName };
       return directorClient.createRoom(bodyPayload);
@@ -73,10 +69,9 @@ export const useCreateRoomMutation = () => {
 export const useConnectRoomMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<ConnectRoomResponse, Error, { roomId: string; userId: string }>({
-    mutationFn: async ({ roomId, userId }) => {
-      const bodyPayload = { userId };
-      return directorClient.connectRoom(roomId, bodyPayload);
+  return useMutation<ConnectRoomResponse, Error, { roomId: string }>({
+    mutationFn: async ({ roomId }) => {
+      return directorClient.connectRoom(roomId);
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
@@ -88,9 +83,9 @@ export const useConnectRoomMutation = () => {
 export const useStartMatchMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<StartMatchResponse, Error, { roomId: string; ownerId: string }>({
-    mutationFn: ({ roomId, ownerId }) => {
-      return directorClient.startMatch(roomId, { ownerId });
+  return useMutation<StartMatchResponse, Error, { roomId: string }>({
+    mutationFn: ({ roomId }) => {
+      return directorClient.startMatch(roomId);
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
@@ -102,10 +97,10 @@ export const useStartMatchMutation = () => {
 export const useUpdateUserAvatarMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<UpdateUserAvatarResponse, Error, { userId: string; avatarId: string }>({
-    mutationFn: ({ userId, avatarId }) => {
+  return useMutation<UpdateUserAvatarResponse, Error, { avatarId: string }>({
+    mutationFn: ({ avatarId }) => {
       const bodyPayload: UpdateUserAvatarRequestBody = { avatarId };
-      return directorClient.updateUserAvatar(userId, bodyPayload);
+      return directorClient.updateUserAvatar(bodyPayload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
@@ -116,9 +111,9 @@ export const useUpdateUserAvatarMutation = () => {
 export const useDisconnectRoomMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, { roomId: string; userId: string }>({
-    mutationFn: ({ roomId, userId }) => {
-      return directorClient.disconnectRoom(roomId, userId);
+  return useMutation<void, Error, { roomId: string }>({
+    mutationFn: ({ roomId }) => {
+      return directorClient.disconnectRoom(roomId);
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
@@ -133,14 +128,14 @@ export const useUpdateUserStatusMutation = () => {
   return useMutation<
     UpdateRoomUserStatusResponse,
     Error,
-    { userId: string; roomId: string; status: 'Ready' | 'NotReady' }
+    { roomId: string; status: 'Ready' | 'NotReady' }
   >({
-    mutationFn: ({ userId, roomId, status }) => {
+    mutationFn: ({ roomId, status }) => {
       const bodyPayload: UpdateRoomUserStatusRequestBody = {
         status: status as UpdateRoomUserStatusRequestBody.status
       };
 
-      return directorClient.updateUserStatus(roomId, userId, bodyPayload);
+      return directorClient.updateUserStatus(roomId, bodyPayload);
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
@@ -152,15 +147,15 @@ export const useUpdateUserStatusMutation = () => {
 export const useSendFriendRequestMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, { userId: string; otherUserId: string }>({
-    mutationFn: ({ userId, otherUserId }) => {
+  return useMutation<void, Error, { otherUserId: string }>({
+    mutationFn: ({ otherUserId }) => {
       const bodyPayload: RequestFriendRequestBody = { otherUserId };
-      return directorClient.sendFriendRequest(userId, bodyPayload);
+      return directorClient.sendFriendRequest(bodyPayload);
     },
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['users', 'search', variables.userId] });
-      queryClient.invalidateQueries({ queryKey: ['users', 'friends', variables.userId] });
-      queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests', variables.userId] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users', 'search'] });
+      queryClient.invalidateQueries({ queryKey: ['users', 'friends'] });
+      queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests'] });
     }
   });
 };
@@ -172,31 +167,21 @@ export const useRespondFriendRequestMutation = () => {
     RespondToFriendRequestResponse,
     Error,
     {
-      userId: string;
       otherUserId: string;
       action: 'Accepted' | 'Canceled';
-      invalidateUserIds?: string[];
     }
   >({
-    mutationFn: ({ userId, otherUserId, action }) => {
+    mutationFn: ({ otherUserId, action }) => {
       const bodyPayload: RespondToFriendRequestRequestBody = {
         action: action as RespondToFriendRequestRequestBody.action
       };
 
-      return directorClient.respondFriendRequest(userId, otherUserId, bodyPayload);
+      return directorClient.respondFriendRequest(otherUserId, bodyPayload);
     },
-    onSuccess: (_data, variables) => {
-      const affectedUserIds = new Set<string>([
-        variables.userId,
-        ...(variables.invalidateUserIds ?? [])
-      ]);
-
-      affectedUserIds.forEach((id) => {
-        queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests', id] });
-        queryClient.invalidateQueries({ queryKey: ['users', 'friends', id] });
-        // queryClient.invalidateQueries({ queryKey: ['users', 'search', id] });
-        queryClient.invalidateQueries({ queryKey: ['users', 'search', id] });
-      });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests'] });
+      queryClient.invalidateQueries({ queryKey: ['users', 'friends'] });
+      queryClient.invalidateQueries({ queryKey: ['users', 'search'] });
     }
   });
 };
@@ -204,12 +189,12 @@ export const useRespondFriendRequestMutation = () => {
 export const useRemoveFriendshipMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, { userId: string; otherUserId: string }>({
-    mutationFn: ({ userId, otherUserId }) => {
-      return directorClient.removeFriendship(userId, otherUserId);
+  return useMutation<void, Error, { otherUserId: string }>({
+    mutationFn: ({ otherUserId }) => {
+      return directorClient.removeFriendship(otherUserId);
     },
     onSuccess: async (_data, variables) => {
-      const friendsQueryKey = ['users', 'friends', variables.userId] as const;
+      const friendsQueryKey = ['users', 'friends'] as const;
 
       queryClient.setQueryData<SocialUserDto[]>(friendsQueryKey, (prev = []) =>
         prev.filter((friend) => friend.id !== variables.otherUserId)
@@ -217,8 +202,8 @@ export const useRemoveFriendshipMutation = () => {
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: friendsQueryKey }),
-        queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests', variables.userId] }),
-        queryClient.invalidateQueries({ queryKey: ['users', 'search', variables.userId] }),
+        queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests'] }),
+        queryClient.invalidateQueries({ queryKey: ['users', 'search'] }),
         queryClient.refetchQueries({ queryKey: friendsQueryKey, type: 'active' })
       ]);
     }
@@ -268,22 +253,22 @@ export const useGetRoomMetaDataQuery = (roomId: string, options?: QueryOptions) 
 // REFETCH QUERIES
 //------------------------------------------------
 
-export const useGetFriendPendingDataQuery = (userId: string, options?: QueryOptions) => {
+export const useGetFriendPendingDataQuery = (options?: QueryOptions) => {
   return useQuery<SocialUserDto[]>({
-    queryKey: ['users', 'friend-requests', userId],
-    queryFn: () => directorClient.listFriendRequests(userId),
-    enabled: options?.enabled ?? Boolean(userId),
+    queryKey: ['users', 'friend-requests'],
+    queryFn: () => directorClient.listFriendRequests(),
+    enabled: options?.enabled ?? true,
     refetchInterval: options?.pollingInterval,
     refetchOnWindowFocus: options?.refetchOnWindowFocus,
     refetchOnReconnect: options?.refetchOnReconnect
   });
 };
 
-export const useGetFriendListDataQuery = (userId: string, options?: QueryOptions) => {
+export const useGetFriendListDataQuery = (options?: QueryOptions) => {
   return useQuery<SocialUserDto[]>({
-    queryKey: ['users', 'friends', userId],
-    queryFn: () => directorClient.listFriends(userId),
-    enabled: options?.enabled ?? Boolean(userId),
+    queryKey: ['users', 'friends'],
+    queryFn: () => directorClient.listFriends(),
+    enabled: options?.enabled ?? true,
     refetchInterval: options?.pollingInterval,
     refetchOnWindowFocus: options?.refetchOnWindowFocus,
     refetchOnReconnect: options?.refetchOnReconnect
