@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
@@ -23,27 +24,39 @@ import { useMatchConnection } from "./hooks/useMatchConnection";
 import type { Card, CardRank, CardSuit } from "./types";
 
 export type GameRequestPayload = {
-  userId: string;
-  opponentId: string;
+  username: string;
+  opponentUsernames: string;
   suit: CardSuit;
   rank: CardRank;
 };
 
 export const GameBoard = () => {
   const navigate = useNavigate();
-  const { userId } = useUserStore();
+  const { username } = useUserStore();
   const { hands, seats, resetGameSession } = useGameSessionStore();
   const { id: roomId, resetRoom } = useRoomStore();
   const matchId = useParams<{ matchId: string }>().matchId ?? "";
+  const currentUsername = username.trim();
 
   const [isExitingGame, setIsExitingGame] = useState(false);
-  const [selectedOpponentId, setSelectedOpponentId] = useState<string | null>(null);
-  const [selection, setSelection] = useState<SelectedCard>({ suit: null, rank: null });
+  const [selectedOpponentUsername, setSelectedOpponentUsername] = useState<
+    string | null
+  >(null);
+  const [selection, setSelection] = useState<SelectedCard>({
+    suit: null,
+    rank: null,
+  });
 
   const { matchResult, errorMessage, isMatchOver, setErrorMessage, resetTurn } =
-    useMatchConnection(matchId, userId);
+    useMatchConnection(matchId, currentUsername);
 
-  useAbandonmentGuard(matchId, userId, isExitingGame, isMatchOver, setErrorMessage);
+  useAbandonmentGuard(
+    matchId,
+    currentUsername,
+    isExitingGame,
+    isMatchOver,
+    setErrorMessage,
+  );
 
   const navigateToDashboard = useCallback(async () => {
     if (roomId) {
@@ -59,38 +72,59 @@ export const GameBoard = () => {
     void navigateToDashboard();
   }, [isMatchOver, matchResult, navigateToDashboard]);
 
-  const isMyTurn = seats.find((s) => s.userId === userId)?.isTurn ?? false;
+  const isMyTurn =
+    seats.find((s) => s.username === currentUsername)?.isTurn ?? false;
   const isInteractionDisabled = !isMyTurn || isExitingGame;
-  const isSelectionComplete = !!(selection.suit && selection.rank && selectedOpponentId);
-  const currentUserCards: Card[] = hands.find((h) => h.userId === userId)?.cards ?? [];
+  const isSelectionComplete = !!(
+    selection.suit &&
+    selection.rank &&
+    selectedOpponentUsername
+  );
+  const currentUserCards: Card[] =
+    hands.find((h) => h.username === currentUsername)?.cards ?? [];
 
   const handleUpdate = useCallback((updates: Partial<SelectedCard>) => {
     setSelection((prev) => ({ ...prev, ...updates }));
   }, []);
 
   const handleRequest = useCallback(async () => {
-    if (!isSelectionComplete || !userId || !selectedOpponentId || !matchId || isExitingGame) return;
+    if (
+      !isSelectionComplete ||
+      !currentUsername ||
+      !selectedOpponentUsername ||
+      !matchId ||
+      isExitingGame
+    )
+      return;
 
     try {
       await socketAskCardMatch({
         matchId,
-        userId,
-        opponentId: selectedOpponentId,
+        username: currentUsername,
+        opponentUsername: selectedOpponentUsername,
         card: { suit: selection.suit!, rank: selection.rank! },
       });
       setErrorMessage(null);
       setSelection({ suit: null, rank: null });
-      setSelectedOpponentId(null);
+      setSelectedOpponentUsername(null);
     } catch {
       setErrorMessage("Failed to send request");
     }
-  }, [isSelectionComplete, userId, selectedOpponentId, matchId, isExitingGame, selection, setErrorMessage]);
+  }, [
+    isSelectionComplete,
+    currentUsername,
+    selectedOpponentUsername,
+    matchId,
+    isExitingGame,
+    selection,
+    setErrorMessage,
+  ]);
 
   const handleExitGame = useCallback(() => {
-    if (!matchId || !userId || isExitingGame) return;
+    if (!matchId || !currentUsername || isExitingGame) return;
 
     setIsExitingGame(true);
-    void socketExitMatch({ matchId, userId })
+    void socketExitMatch({ matchId, username: currentUsername })
       .catch(() => undefined)
       .finally(() => {
         resetGameSession();
@@ -98,7 +132,14 @@ export const GameBoard = () => {
         disconnectSocket();
         navigate("/dashboard");
       });
-  }, [isExitingGame, matchId, navigate, resetGameSession, resetRoom, userId]);
+  }, [
+    isExitingGame,
+    matchId,
+    navigate,
+    resetGameSession,
+    resetRoom,
+    currentUsername,
+  ]);
 
   const handleResultClose = useCallback(() => {
     resetGameSession();
@@ -132,18 +173,25 @@ export const GameBoard = () => {
         <div className="flex-1 min-h-0 grid grid-rows-[7fr_3fr]">
           <div className="border-b-2 border-rave-white/10 min-h-0">
             <GameOpponentPicker
-              selectedOpponentId={selectedOpponentId}
-              onSelectOpponent={setSelectedOpponentId}
+              selectedOpponentUsername={selectedOpponentUsername}
+              onSelectOpponent={setSelectedOpponentUsername}
               disabled={isInteractionDisabled}
             />
           </div>
           <div className="min-h-0">
-            <GamePlayerCard cards={currentUserCards} disabled={isInteractionDisabled} />
+            <GamePlayerCard
+              cards={currentUserCards}
+              disabled={isInteractionDisabled}
+            />
           </div>
         </div>
       </main>
 
-      <GameControlPanel onExitGame={handleExitGame} isExiting={isExitingGame} resetTurn={resetTurn} />
+      <GameControlPanel
+        onExitGame={handleExitGame}
+        isExiting={isExitingGame}
+        resetTurn={resetTurn}
+      />
 
       {matchResult && (
         <GameResultModal result={matchResult} onClose={handleResultClose} />

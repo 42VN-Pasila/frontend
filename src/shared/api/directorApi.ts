@@ -2,8 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
   Avatar,
-  ConnectRoomRequest,
-  CreateRoomRequestBody,
   ListRoomsDto,
   RequestFriendRequestBody,
   RespondToFriendRequestRequestBody,
@@ -26,12 +24,12 @@ import { directorClient } from './directorClient';
 // QUERIES
 //------------------------------------------------
 export const useListRoomsQuery = () => {
-    return useQuery<ListRoomsDto[]>({
-        queryKey: ["rooms"],
-        queryFn: () => directorClient.listRooms(),
-        refetchInterval: 3_000,
-        refetchOnWindowFocus: true,
-    });
+  return useQuery<ListRoomsDto[]>({
+    queryKey: ['rooms'],
+    queryFn: () => directorClient.listRooms(),
+    refetchInterval: 3_000,
+    refetchOnWindowFocus: true
+  });
 };
 
 export const useListAvatarsQuery = () => {
@@ -62,8 +60,8 @@ export const useCreateRoomMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation<CreateRoomResponse, Error, { userId: string; roomName: string }>({
-    mutationFn: async ({ userId, roomName }) => {
-      const bodyPayload: CreateRoomRequestBody = { userId, roomName };
+    mutationFn: async ({ roomName }) => {
+      const bodyPayload: { roomName: string } = { roomName };
       return directorClient.createRoom(bodyPayload);
     },
     onSuccess: () => {
@@ -77,7 +75,7 @@ export const useConnectRoomMutation = () => {
 
   return useMutation<ConnectRoomResponse, Error, { roomId: string; userId: string }>({
     mutationFn: async ({ roomId, userId }) => {
-      const bodyPayload: ConnectRoomRequest = { userId };
+      const bodyPayload = { userId };
       return directorClient.connectRoom(roomId, bodyPayload);
     },
     onSuccess: (_data, variables) => {
@@ -116,17 +114,17 @@ export const useUpdateUserAvatarMutation = () => {
 };
 
 export const useDisconnectRoomMutation = () => {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-    return useMutation<void, Error, { roomId: string; userId: string }>({
-        mutationFn: ({ roomId, userId }) => {
-            return directorClient.disconnectRoom(roomId, userId);
-        },
-        onSuccess: (_data, variables) => {
-            queryClient.invalidateQueries({ queryKey: ["rooms"] });
-            queryClient.invalidateQueries({ queryKey: ["rooms", variables.roomId] });
-        },
-    });
+  return useMutation<void, Error, { roomId: string; userId: string }>({
+    mutationFn: ({ roomId, userId }) => {
+      return directorClient.disconnectRoom(roomId, userId);
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['rooms'] });
+      queryClient.invalidateQueries({ queryKey: ['rooms', variables.roomId] });
+    }
+  });
 };
 
 export const useUpdateUserStatusMutation = () => {
@@ -232,44 +230,38 @@ export const useRemoveFriendshipMutation = () => {
 //------------------------------------------------
 
 type QueryOptions = {
-    enabled?: boolean;
-    pollingInterval?: number;
-    refetchOnWindowFocus?: boolean;
-    refetchOnReconnect?: boolean;
-    refetchOnMount?: boolean | "always";
-    staleTime?: number;
+  enabled?: boolean;
+  pollingInterval?: number;
+  refetchOnWindowFocus?: boolean;
+  refetchOnReconnect?: boolean;
+  refetchOnMount?: boolean | 'always';
+  staleTime?: number;
 };
 
-export const useGetRoomStatusQuery = (
-    roomId: string,
-    options?: QueryOptions,
-) => {
-    return useQuery<RoomDto>({
-        queryKey: ["rooms", roomId],
-        queryFn: () => directorClient.getRoomStatus(roomId),
-        enabled: options?.enabled ?? Boolean(roomId),
-        refetchInterval: options?.pollingInterval,
-        refetchOnWindowFocus: options?.refetchOnWindowFocus,
-        refetchOnReconnect: options?.refetchOnReconnect,
-        refetchOnMount: options?.refetchOnMount,
-        staleTime: options?.staleTime,
-    });
+export const useGetRoomStatusQuery = (roomId: string, options?: QueryOptions) => {
+  return useQuery<RoomDto>({
+    queryKey: ['rooms', roomId],
+    queryFn: () => directorClient.getRoomStatus(roomId),
+    enabled: options?.enabled ?? Boolean(roomId),
+    refetchInterval: options?.pollingInterval,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus,
+    refetchOnReconnect: options?.refetchOnReconnect,
+    refetchOnMount: options?.refetchOnMount,
+    staleTime: options?.staleTime
+  });
 };
 
-export const useGetRoomMetaDataQuery = (
-    roomId: string,
-    options?: QueryOptions,
-) => {
-    return useQuery<RoomMetaDataDto>({
-        queryKey: ["roomMetadata", roomId],
-        queryFn: () => directorClient.getRoomMetaData(roomId),
-        enabled: options?.enabled ?? Boolean(roomId),
-        refetchInterval: options?.pollingInterval,
-        refetchOnWindowFocus: options?.refetchOnWindowFocus,
-        refetchOnReconnect: options?.refetchOnReconnect,
-        refetchOnMount: options?.refetchOnMount,
-        staleTime: options?.staleTime,
-    });
+export const useGetRoomMetaDataQuery = (roomId: string, options?: QueryOptions) => {
+  return useQuery<RoomMetaDataDto>({
+    queryKey: ['roomMetadata', roomId],
+    queryFn: () => directorClient.getRoomMetaData(roomId),
+    enabled: options?.enabled ?? Boolean(roomId),
+    refetchInterval: options?.pollingInterval,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus,
+    refetchOnReconnect: options?.refetchOnReconnect,
+    refetchOnMount: options?.refetchOnMount,
+    staleTime: options?.staleTime
+  });
 };
 
 //------------------------------------------------

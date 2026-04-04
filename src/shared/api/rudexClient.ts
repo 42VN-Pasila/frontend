@@ -1,8 +1,9 @@
 import { OpenAPI } from '@/gen/rudex/core/OpenAPI';
-import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
-import { UserRegistrationService } from '@/gen/rudex/services/UserRegistrationService';
 import type { LoginRequestBody } from '@/gen/rudex/models/LoginRequestBody';
 import type { RegisterRequestBody } from '@/gen/rudex/models/RegisterRequestBody';
+import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
+import { UserRegistrationService } from '@/gen/rudex/services/UserRegistrationService';
+
 import { toDevPath } from './path.dev';
 
 const resolveRudexBaseUrl = () => {
@@ -17,9 +18,7 @@ const resolveRudexBaseUrl = () => {
     return toDevPath(input);
   } catch {
     if (import.meta.env.DEV) {
-      console.warn(
-        `Invalid VITE_RUDEX_URL "${input}". Falling back to "${fallbackUrl}" in dev.`
-      );
+      console.warn(`Invalid VITE_RUDEX_URL "${input}". Falling back to "${fallbackUrl}" in dev.`);
       return fallbackUrl;
     }
     throw new Error(`Invalid VITE_RUDEX_URL: "${input}"`);
@@ -27,6 +26,7 @@ const resolveRudexBaseUrl = () => {
 };
 
 OpenAPI.BASE = resolveRudexBaseUrl();
+OpenAPI.WITH_CREDENTIALS = true;
 
 export const rudexClient = {
   async login(body: LoginRequestBody) {

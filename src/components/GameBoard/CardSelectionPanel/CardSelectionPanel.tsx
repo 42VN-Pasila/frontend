@@ -23,7 +23,7 @@ export const CardSelectionPanel = ({
     <aside className="w-72 lg:w-80 border-r-2 border-rave-white/10 bg-rave-black flex flex-col justify-between gap-10 h-full p-6">
       <CardSelector
         selection={selection}
-        onChange={disabled ? () => { } : onChange}
+        onChange={disabled ? () => {} : onChange}
         disabled={!disabled}
       />
 

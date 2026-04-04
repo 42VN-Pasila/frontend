@@ -1,24 +1,16 @@
-import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { sessionVerify } from "../utils/sessionVerify";
+
+import { useAuth } from "../auth/useAuth";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setAuthenticated] = useState<boolean | null >(null);
+  const { isAuthenticated, isBootstrapping } = useAuth();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const isLoggedIn = await sessionVerify();
-      setAuthenticated(isLoggedIn);
-    };
-    checkAuth();
-  }, []);
-
-  if (isAuthenticated === null){
-    return <div>Loading...</div>
+  if (isBootstrapping) {
+    return <div>Loading...</div>;
   }
 
-  if (isAuthenticated){
+  if (isAuthenticated) {
     return <>{children}</>;
   }
-  return <Navigate to='/login' replace/>;
+  return <Navigate to="/login" replace />;
 };
