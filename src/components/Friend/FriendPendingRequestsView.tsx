@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/shared/components";
+import Avatar from "@/shared/components/Avatar";
 
 import type { PendingRequestItem } from "./useFriendPendingRequests";
 
@@ -126,10 +127,11 @@ export const FriendPendingRequestsView = ({
                   className="flex items-center justify-between rounded-lg border border-rave-white/15 bg-rave-white/5 px-3 py-2"
                 >
                   <div className="flex items-center gap-3">
-                    <img
-                      src={requestUser.avatarUrl ?? ""}
-                      alt={displayName}
-                      className="h-10 w-10 rounded-full object-cover"
+                    <Avatar
+                      src={requestUser.avatarUrl ?? undefined}
+                      alt={requestUser.username}
+                      shape="circle"
+                      wrapperClassName="h-10 w-10 rounded-full object-cover"
                     />
                     <div>
                       <p className="text-sm font-semibold tracking-wide">
