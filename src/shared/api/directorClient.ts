@@ -2,14 +2,18 @@ import { Socket, io } from 'socket.io-client';
 
 import {
   type ExitMatchEvent,
+  FriendsService,
   type JoinMatchEvent,
   type LeaveMatchEvent,
   type MatchDto,
   type MatchResultDto,
   type RequestCardEvent,
+  type RequestFriendRequestBody,
   ResourcesService,
+  RespondToFriendRequestRequestBody,
   RoomsService,
   type SkipTurnEvent,
+  SocialUserDto,
   type UpdateRoomUserStatusRequestBody,
   type UpdateUserAvatarRequestBody
 } from '@/gen/director';
@@ -33,7 +37,7 @@ type MatchPingEvent = {
 const rawDirectorUrl = import.meta.env.VITE_DIRECTOR_URL as string | undefined;
 
 const resolveDirectorBaseUrl = () => {
-  const fallbackUrl = window.location.origin;
+  const fallbackUrl = OpenAPI.BASE;
   const input = rawDirectorUrl?.trim();
 
   if (!input) {
@@ -54,7 +58,14 @@ const resolveDirectorBaseUrl = () => {
 };
 
 const directorBaseUrl = resolveDirectorBaseUrl();
-const directorSocketOrigin = new URL(directorBaseUrl).origin;
+const resolveDirectorSocketOrigin = () => {
+  try {
+    return new URL(directorBaseUrl).origin;
+  } catch {
+    return window.location.origin;
+  }
+};
+const directorSocketOrigin = resolveDirectorSocketOrigin();
 
 export const socket: Socket = io(directorSocketOrigin, {
   transports: ['websocket'],
@@ -179,7 +190,7 @@ export const directorClient = {
     return UsersService.getUserByUsername({ username });
   },
   async createRoom(body: { roomName: string }) {
-    return RoomsService.postRooms({ requestBody: body });
+    return RoomsService.postRooms({ requestBody: { roomName: body.roomName } });
   },
   async connectRoom(roomId: string) {
     return RoomsService.connectRoom({ roomId });
@@ -207,5 +218,26 @@ export const directorClient = {
   },
   async getRoomMetaData(roomId: string) {
     return RoomsService.getRoomMetaData({ roomId });
+  },
+  async searchUsers(username: string): Promise<SocialUserDto[]> {
+    return UsersService.searchByExactUserName({ username });
+  },
+  async sendFriendRequest(body: RequestFriendRequestBody) {
+    return FriendsService.sendFriendRequest({ requestBody: body });
+  },
+  async listFriends(): Promise<SocialUserDto[]> {
+    return FriendsService.getUserFriends();
+  },
+  async listFriendRequests(): Promise<SocialUserDto[]> {
+    return FriendsService.getAllFriendRequests();
+  },
+  async respondFriendRequest(otherUsername: string, body: RespondToFriendRequestRequestBody) {
+    return FriendsService.respondToFriendRequest({
+      otherUsername,
+      requestBody: body
+    });
+  },
+  async removeFriendship(otherUsername: string): Promise<void> {
+    return FriendsService.removeFriendship({ otherUsername });
   }
 };
