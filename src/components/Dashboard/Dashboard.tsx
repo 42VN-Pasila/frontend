@@ -1,9 +1,10 @@
+import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import { useUserStore } from "@/shared/stores/useUserStore";
+
 import { FriendList } from "../Friend/FriendList";
 import { FriendSearchAdd } from "../Friend/FriendSearchAdd";
 import { RoomList } from "../RoomList/RoomList";
 import { RoomModal } from "../RoomModal/RoomModal";
-import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 
 import GameStats from "./GameStats";
 import { UserProfile } from "./UserProfile";
