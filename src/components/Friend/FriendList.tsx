@@ -16,7 +16,7 @@ export const FriendList = () => {
     removingFriendId,
     handleRemoveFriend,
     refetchFriends,
-    STATUS_CLASSES
+    STATUS_CLASSES,
   } = useFriendList();
   const {
     pendingRequestItems,

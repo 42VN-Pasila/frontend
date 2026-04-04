@@ -32,7 +32,7 @@ export const FriendSearchAddView = ({
 }: FriendSearchAddViewProps) => {
   const [showResults, setShowResults] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  
+
   const [displayError, setDisplayError] = useState("");
   useEffect(() => {
     if (requestError) setDisplayError(requestError);
@@ -122,7 +122,7 @@ export const FriendSearchAddView = ({
           !isFetching &&
           searchedUsers.length === 0 && (
             <p className="rounded-lg border border-rave-white/10 bg-rave-white/5 px-3 py-2 text-xs text-rave-white/70">
-            No result.
+              No result.
             </p>
           )}
 

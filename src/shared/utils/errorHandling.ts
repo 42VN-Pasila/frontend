@@ -14,11 +14,9 @@ export const handleConnectRoomError = (err: unknown): void => {
 
     if (status === 404) {
       console.error(`Room not found: ${message}`);
-    } 
-    else if (status === 400) {
+    } else if (status === 400) {
       console.error(`Bad request: ${message}`);
-    }
-    else if (status === 500) {
+    } else if (status === 500) {
       console.error(`Server error: ${message}`);
     } else {
       console.error(`Failed to connect (${String(status)}): ${message}`);

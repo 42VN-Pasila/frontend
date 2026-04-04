@@ -13,7 +13,7 @@ export const FriendSearchAdd = () => {
     setSearchText,
     handleSearch,
     handleSendRequest,
-    requestError
+    requestError,
   } = useFriendSearchAdd();
 
   return (

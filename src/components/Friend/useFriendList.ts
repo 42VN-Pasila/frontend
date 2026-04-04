@@ -1,21 +1,21 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { useGetFriendListDataQuery, useRemoveFriendshipMutation } from "@/shared/api/directorApi";
-import { useUserStore } from "@/shared/stores/useUserStore";
+import { useGetFriendListDataQuery, useRemoveFriendshipMutation } from '@/shared/api/directorApi';
+import { useUserStore } from '@/shared/stores/useUserStore';
 
 export type FriendItem = {
   id: string;
   displayName: string;
   username: string;
   imageUrl: string;
-  status: "ONLINE" | "IN_GAME" | "IN_ROOM" | "OFFLINE";
+  status: 'ONLINE' | 'IN_GAME' | 'IN_ROOM' | 'OFFLINE';
 };
 
-const STATUS_CLASSES: Record<FriendItem["status"], string> = {
-  ONLINE: "border-emerald-400/40 bg-emerald-400/15 text-emerald-300",
-  IN_GAME: "border-rave-red/50 bg-rave-red/20 text-rave-white",
-  IN_ROOM: "border-amber-300/40 bg-amber-300/15 text-amber-200",
-  OFFLINE: "border-rave-white/20 bg-rave-white/10 text-rave-white/60",
+const STATUS_CLASSES: Record<FriendItem['status'], string> = {
+  ONLINE: 'border-emerald-400/40 bg-emerald-400/15 text-emerald-300',
+  IN_GAME: 'border-rave-red/50 bg-rave-red/20 text-rave-white',
+  IN_ROOM: 'border-amber-300/40 bg-amber-300/15 text-amber-200',
+  OFFLINE: 'border-rave-white/20 bg-rave-white/10 text-rave-white/60'
 };
 
 export const useFriendList = () => {
@@ -26,36 +26,34 @@ export const useFriendList = () => {
     isFetching,
     isError,
     error,
-    refetch: refetchFriends,
+    refetch: refetchFriends
   } = useGetFriendListDataQuery({
     enabled: Boolean(username),
     refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
+    refetchOnReconnect: true
   });
   const { mutateAsync: removeFriendship, isPending: isRemovingFriend } =
     useRemoveFriendshipMutation();
 
   const friends: FriendItem[] = socialFriends.map((friend) => {
-    const friendusername =
-      (friend as { username?: string }).username ?? friend.id;
-    const friendDisplayName =
-      (friend as { displayName?: string }).displayName ?? friendusername;
+    const friendusername = (friend as { username?: string }).username ?? friend.id;
+    const friendDisplayName = (friend as { displayName?: string }).displayName ?? friendusername;
     const normalizedStatus = friend.status.toUpperCase();
-    const mappedStatus: FriendItem["status"] =
-      normalizedStatus === "INMATCH"
-        ? "IN_GAME"
-        : normalizedStatus === "INROOM"
-          ? "IN_ROOM"
-          : normalizedStatus === "ONLINE"
-            ? "ONLINE"
-            : "OFFLINE";
+    const mappedStatus: FriendItem['status'] =
+      normalizedStatus === 'INMATCH'
+        ? 'IN_GAME'
+        : normalizedStatus === 'INROOM'
+          ? 'IN_ROOM'
+          : normalizedStatus === 'ONLINE'
+            ? 'ONLINE'
+            : 'OFFLINE';
 
     return {
       id: friend.id,
       displayName: friendDisplayName,
       username: friendusername,
-      imageUrl: friend.avatarUrl ?? "",
-      status: mappedStatus,
+      imageUrl: friend.avatarUrl ?? '',
+      status: mappedStatus
     };
   });
 
@@ -81,6 +79,6 @@ export const useFriendList = () => {
     removingFriendId,
     handleRemoveFriend,
     refetchFriends,
-    STATUS_CLASSES,
+    STATUS_CLASSES
   };
 };

@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/^\/rudex/, '')
-        },
+        }
       }
     }
   };

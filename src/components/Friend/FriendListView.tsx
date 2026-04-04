@@ -73,7 +73,8 @@ export const FriendListView = ({
         ) : (
           friends.map((friend) => {
             const normalizedUsername = friend.username?.trim() || friend.id;
-            const displayName = friend.displayName?.trim() || normalizedUsername;
+            const displayName =
+              friend.displayName?.trim() || normalizedUsername;
 
             return (
               <article
