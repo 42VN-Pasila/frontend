@@ -18,7 +18,6 @@ import {
   type UpdateUserAvatarRequestBody
 } from '@/gen/director';
 import { OpenAPI } from '@/gen/director/core/OpenAPI';
-import type { CreateUserRequestBody } from '@/gen/director/models/CreateUserRequestBody';
 import { UsersService } from '@/gen/director/services/UsersService';
 
 import { toDevPath } from './path.dev';
@@ -189,9 +188,6 @@ OpenAPI.WITH_CREDENTIALS = true;
 export const directorClient = {
   async getUserByUsername(username: string) {
     return UsersService.getUserByUsername({ username });
-  },
-  async createUser(body: CreateUserRequestBody) {
-    return UsersService.postUsers({ requestBody: body });
   },
   async createRoom(body: { roomName: string }) {
     return RoomsService.postRooms({ requestBody: { roomName: body.roomName } });
