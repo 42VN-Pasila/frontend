@@ -10,7 +10,6 @@ import { useUserStore } from '@/shared/stores/useUserStore';
 export type PendingDirection = 'incoming' | 'outgoing' | 'unknown';
 
 type PendingUser = {
-  id: string;
   displayName?: string | null;
   avatarUrl?: string | null;
   relationship?: string;
@@ -75,26 +74,27 @@ export const useFriendPendingRequests = () => {
   const pendingRequestItems: PendingRequestItem[] = pendingRequests.map((item) => {
     const pendingUser = item as PendingUser;
     const direction = resolvePendingDirection(pendingUser);
+    const usernameValue = pendingUser.username?.trim() ?? '';
 
     return {
-      id: item.id,
-      displayName: pendingUser.displayName ?? pendingUser.username ?? item.id,
+      id: usernameValue,
+      displayName: pendingUser.displayName ?? pendingUser.username ?? usernameValue,
       avatarUrl: item.avatarUrl,
       relationship: item.relationship,
-      username: pendingUser.username ?? item.id,
+      username: usernameValue,
       direction
     };
   });
 
   const handleRespondPendingRequest = async (
-    otherUserId: string,
+    otherUsername: string,
     action: 'Accepted' | 'Canceled'
   ) => {
     setPendingActionError('');
 
     try {
       await respondFriendRequest({
-        otherUserId,
+        otherUsername,
         action
       });
       await refetchPendingRequests();
@@ -107,8 +107,8 @@ export const useFriendPendingRequests = () => {
     }
   };
 
-  const handleCancelPendingRequest = async (otherUserId: string) => {
-    if (!otherUserId) {
+  const handleCancelPendingRequest = async (otherUsername: string) => {
+    if (!otherUsername) {
       return;
     }
 
@@ -116,7 +116,7 @@ export const useFriendPendingRequests = () => {
 
     try {
       await respondFriendRequest({
-        otherUserId,
+        otherUsername,
         action: 'Canceled'
       });
       await refetchPendingRequests();

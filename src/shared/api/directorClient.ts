@@ -231,13 +231,13 @@ export const directorClient = {
   async listFriendRequests(): Promise<SocialUserDto[]> {
     return FriendsService.getAllFriendRequests();
   },
-  async respondFriendRequest(otherUserId: string, body: RespondToFriendRequestRequestBody) {
+  async respondFriendRequest(otherUsername: string, body: RespondToFriendRequestRequestBody) {
     return FriendsService.respondToFriendRequest({
-      otherUserId,
+      otherUsername,
       requestBody: body
     });
   },
-  async removeFriendship(otherUserId: string): Promise<void> {
-    return FriendsService.removeFriendship({ otherUserId });
+  async removeFriendship(otherUsername: string): Promise<void> {
+    return FriendsService.removeFriendship({ otherUsername });
   }
 };

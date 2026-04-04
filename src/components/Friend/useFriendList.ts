@@ -4,9 +4,8 @@ import { useGetFriendListDataQuery, useRemoveFriendshipMutation } from '@/shared
 import { useUserStore } from '@/shared/stores/useUserStore';
 
 export type FriendItem = {
-  id: string;
-  displayName: string;
   username: string;
+  displayName: string;
   imageUrl: string;
   status: 'ONLINE' | 'IN_GAME' | 'IN_ROOM' | 'OFFLINE';
 };
@@ -35,9 +34,11 @@ export const useFriendList = () => {
   const { mutateAsync: removeFriendship, isPending: isRemovingFriend } =
     useRemoveFriendshipMutation();
 
-  const friends: FriendItem[] = socialFriends.map((friend) => {
-    const friendusername = (friend as { username?: string }).username ?? friend.id;
-    const friendDisplayName = (friend as { displayName?: string }).displayName ?? friendusername;
+  const friends: FriendItem[] = socialFriends
+    .filter((friend) => Boolean(friend.username?.trim()))
+    .map((friend) => {
+    const friendusername = friend.username?.trim() ?? '';
+    const friendDisplayName = friend.displayName?.trim() ?? friendusername;
     const normalizedStatus = friend.status.toUpperCase();
     const mappedStatus: FriendItem['status'] =
       normalizedStatus === 'INMATCH'
@@ -49,22 +50,21 @@ export const useFriendList = () => {
             : 'OFFLINE';
 
     return {
-      id: friend.id,
-      displayName: friendDisplayName,
       username: friendusername,
+      displayName: friendDisplayName,
       imageUrl: friend.avatarUrl ?? '',
       status: mappedStatus
     };
   });
 
-  const handleRemoveFriend = async (otherUserId: string) => {
-    if (!otherUserId) {
+  const handleRemoveFriend = async (otherUsername: string) => {
+    if (!otherUsername) {
       return;
     }
 
-    setRemovingFriendId(otherUserId);
+    setRemovingFriendId(otherUsername);
     try {
-      await removeFriendship({ otherUserId });
+      await removeFriendship({ otherUsername });
     } finally {
       setRemovingFriendId(null);
     }

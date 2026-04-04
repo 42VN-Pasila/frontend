@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import type { SocialUserDto } from "@/gen/director";
 import { Button } from "@/shared/components";
+import Avatar from "@/shared/components/Avatar";
 
 type FriendSearchAddViewProps = {
   searchText: string;
@@ -14,7 +15,7 @@ type FriendSearchAddViewProps = {
   requestError: string | null;
   onSearchTextChange: (value: string) => void;
   onSearch: () => void;
-  onSendRequest: (otherUserId: string) => Promise<void>;
+  onSendRequest: (otherUsername: string) => Promise<void>;
 };
 
 export const FriendSearchAddView = ({
@@ -130,8 +131,10 @@ export const FriendSearchAddView = ({
           showResults &&
           !isFetching &&
           searchedUsers.map((candidate) => {
-            const normalizedUsername =
-              candidate.username?.trim() || candidate.id;
+            const normalizedUsername = candidate.username?.trim() ?? "";
+            if (!normalizedUsername) {
+              return null;
+            }
             const candidateName =
               (candidate as { displayName?: string }).displayName?.trim() ||
               normalizedUsername;
@@ -140,20 +143,21 @@ export const FriendSearchAddView = ({
             ).toUpperCase();
             const isOutgoing =
               candidate.direction === "Out" ||
-              searchTargetId.includes(candidate.id);
+              searchTargetId.includes(normalizedUsername);
             const isIncoming = candidate.direction === "In";
             const isFriend = relationship === "ACCEPTED";
 
             return (
               <article
-                key={candidate.id}
+                key={candidate.username}
                 className="flex items-center justify-between rounded-lg border border-rave-white/15 bg-rave-white/5 px-3 py-2"
               >
                 <div className="flex items-center gap-3">
-                  <img
+                  <Avatar
                     src={candidate.avatarUrl ?? undefined}
                     alt={candidateName}
-                    className="h-10 w-10 rounded-full object-cover"
+                    shape="circle"
+                    wrapperClassName="h-10 w-10 rounded-full object-cover"
                   />
                   <div>
                     <p className="text-sm font-semibold tracking-wide">
@@ -202,7 +206,7 @@ export const FriendSearchAddView = ({
                       emphasis="high"
                       size="small"
                       disabled={isSendingRequest}
-                      onClick={() => onSendRequest(candidate.id)}
+                      onClick={() => onSendRequest(normalizedUsername)}
                     >
                       Add Friend
                     </Button>

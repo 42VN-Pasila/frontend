@@ -18,7 +18,7 @@ export type FriendSearchAddState = {
 export type FriendSearchAddActions = {
   setSearchText: (value: string) => void;
   handleSearch: () => void;
-  handleSendRequest: (otherUserId: string) => Promise<void>;
+  handleSendRequest: (otherUsername: string) => Promise<void>;
 };
 
 export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActions => {
@@ -67,11 +67,11 @@ export const useFriendSearchAdd = (): FriendSearchAddState & FriendSearchAddActi
     }
   };
 
-  const handleSendRequest = async (otherUserId: string) => {
-    if (searchTargetId.includes(otherUserId) || !username) return;
+  const handleSendRequest = async (otherUsername: string) => {
+    if (searchTargetId.includes(otherUsername) || !username) return;
     try {
-      await sendFriendRequest({ otherUserId });
-      setSearchTargetId((prev) => [...prev, otherUserId]);
+      await sendFriendRequest({ otherUsername });
+      setSearchTargetId((prev) => [...prev, otherUsername]);
     } catch (error) {
       setRequestError(error instanceof Error ? error.message : 'Failed to send request');
     }

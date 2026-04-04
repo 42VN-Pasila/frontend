@@ -11,7 +11,7 @@ type FriendListViewProps = {
   error: Error | null;
   isRemovingFriend: boolean;
   removingFriendId: string | null;
-  onRemoveFriend: (otherUserId: string) => Promise<void>;
+  onRemoveFriend: (otherUsername: string) => Promise<void>;
   statusClasses: Record<FriendItem["status"], string>;
 };
 
@@ -72,13 +72,13 @@ export const FriendListView = ({
           </p>
         ) : (
           friends.map((friend) => {
-            const normalizedUsername = friend.username?.trim() || friend.id;
+            const normalizedUsername = friend.username?.trim() || "";
             const displayName =
               friend.displayName?.trim() || normalizedUsername;
 
             return (
               <article
-                key={friend.id}
+                key={friend.username}
                 className="flex items-center justify-between rounded-lg border border-rave-white/15 bg-rave-white/5 px-3 py-2"
               >
                 <div className="flex items-center gap-3">
@@ -110,10 +110,10 @@ export const FriendListView = ({
                     className="h-8! px-3! text-xs"
                     disabled={isRemovingFriend}
                     onClick={() => {
-                      void onRemoveFriend(friend.id);
+                      void onRemoveFriend(friend.username);
                     }}
                   >
-                    {isRemovingFriend && removingFriendId === friend.id
+                    {isRemovingFriend && removingFriendId === friend.username
                       ? "Deleting..."
                       : "Delete"}
                   </Button>

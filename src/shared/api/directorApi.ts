@@ -147,9 +147,9 @@ export const useUpdateUserStatusMutation = () => {
 export const useSendFriendRequestMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, { otherUserId: string }>({
-    mutationFn: ({ otherUserId }) => {
-      const bodyPayload: RequestFriendRequestBody = { otherUserId };
+  return useMutation<void, Error, { otherUsername: string }>({
+    mutationFn: ({ otherUsername }) => {
+      const bodyPayload: RequestFriendRequestBody = { otherUsername };
       return directorClient.sendFriendRequest(bodyPayload);
     },
     onSuccess: () => {
@@ -167,16 +167,16 @@ export const useRespondFriendRequestMutation = () => {
     RespondToFriendRequestResponse,
     Error,
     {
-      otherUserId: string;
+      otherUsername: string;
       action: 'Accepted' | 'Canceled';
     }
   >({
-    mutationFn: ({ otherUserId, action }) => {
+    mutationFn: ({ otherUsername, action }) => {
       const bodyPayload: RespondToFriendRequestRequestBody = {
         action: action as RespondToFriendRequestRequestBody.action
       };
 
-      return directorClient.respondFriendRequest(otherUserId, bodyPayload);
+      return directorClient.respondFriendRequest(otherUsername, bodyPayload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users', 'friend-requests'] });
@@ -189,15 +189,15 @@ export const useRespondFriendRequestMutation = () => {
 export const useRemoveFriendshipMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, { otherUserId: string }>({
-    mutationFn: ({ otherUserId }) => {
-      return directorClient.removeFriendship(otherUserId);
+  return useMutation<void, Error, { otherUsername: string }>({
+    mutationFn: ({ otherUsername }) => {
+      return directorClient.removeFriendship(otherUsername);
     },
     onSuccess: async (_data, variables) => {
       const friendsQueryKey = ['users', 'friends'] as const;
 
       queryClient.setQueryData<SocialUserDto[]>(friendsQueryKey, (prev = []) =>
-        prev.filter((friend) => friend.id !== variables.otherUserId)
+        prev.filter((friend) => friend.username !== variables.otherUsername)
       );
 
       await Promise.all([
