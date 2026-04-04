@@ -13,7 +13,8 @@ import type {
   UpdateRoomUserStatusRequestBody,
   UpdateRoomUserStatusResponse,
   UpdateUserAvatarRequestBody,
-  UpdateUserAvatarResponse
+  UpdateUserAvatarResponse,
+  UserDto
 } from '@/gen/director';
 import type { ConnectRoomResponse } from '@/gen/director/models/ConnectRoomResponse';
 import type { CreateRoomResponse } from '@/gen/director/models/CreateRoomResponse';
@@ -23,6 +24,14 @@ import { directorClient } from './directorClient';
 //------------------------------------------------
 // QUERIES
 //------------------------------------------------
+
+export const useGetUserByUsernameQuery = (username: string) => {
+  return useQuery<UserDto>({
+    queryKey: ['users', username],
+    queryFn: () => directorClient.getUserByUsername(username)
+  });
+};
+
 export const useListRoomsQuery = () => {
   return useQuery<ListRoomsDto[]>({
     queryKey: ['rooms'],
