@@ -37,25 +37,25 @@ export const useFriendList = () => {
   const friends: FriendItem[] = socialFriends
     .filter((friend) => Boolean(friend.username?.trim()))
     .map((friend) => {
-    const friendusername = friend.username?.trim() ?? '';
-    const friendDisplayName = friend.displayName?.trim() ?? friendusername;
-    const normalizedStatus = friend.status.toUpperCase();
-    const mappedStatus: FriendItem['status'] =
-      normalizedStatus === 'INMATCH'
-        ? 'IN_GAME'
-        : normalizedStatus === 'INROOM'
-          ? 'IN_ROOM'
-          : normalizedStatus === 'ONLINE'
-            ? 'ONLINE'
-            : 'OFFLINE';
+      const friendusername = friend.username?.trim() ?? '';
+      const friendDisplayName = friend.displayName?.trim() ?? friendusername;
+      const normalizedStatus = friend.status.toUpperCase();
+      const mappedStatus: FriendItem['status'] =
+        normalizedStatus === 'INMATCH'
+          ? 'IN_GAME'
+          : normalizedStatus === 'INROOM'
+            ? 'IN_ROOM'
+            : normalizedStatus === 'ONLINE'
+              ? 'ONLINE'
+              : 'OFFLINE';
 
-    return {
-      username: friendusername,
-      displayName: friendDisplayName,
-      imageUrl: friend.avatarUrl ?? '',
-      status: mappedStatus
-    };
-  });
+      return {
+        username: friendusername,
+        displayName: friendDisplayName,
+        imageUrl: friend.avatarUrl ?? '',
+        status: mappedStatus
+      };
+    });
 
   const handleRemoveFriend = async (otherUsername: string) => {
     if (!otherUsername) {
