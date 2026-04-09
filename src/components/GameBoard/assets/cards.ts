@@ -113,7 +113,6 @@ import type { CardRank, CardSuit } from '../types';
 
 type CardSvgComponent = typeof ASpade;
 
-
 export const CardAssets = {
   ASpade,
   TwoSpade,
@@ -234,68 +233,65 @@ export const CardIconAssets = {
   QueenSpadeIcon
 };
 
-export const CARD_IMAGES: Record<
-  CardSuit,
-  Record<CardRank, CardSvgComponent>
-> = {
-  spades: {
-    Ace: ASpade,
-    Two: TwoSpade,
-    Three: ThreeSpade,
-    Four: FourSpade,
-    Five: FiveSpade,
-    Six: SixSpade,
-    Seven: SevenSpade,
-    Eight: EightSpade,
-    Nine: NineSpade,
-    Ten: TenSpade,
-    Jack: JackSpade,
-    Queen: QueenSpade,
-    King: KingSpade
+export const CARD_IMAGES: Record<CardSuit, Record<CardRank, CardSvgComponent>> = {
+  SPADES: {
+    ACE: ASpade,
+    TWO: TwoSpade,
+    THREE: ThreeSpade,
+    FOUR: FourSpade,
+    FIVE: FiveSpade,
+    SIX: SixSpade,
+    SEVEN: SevenSpade,
+    EIGHT: EightSpade,
+    NINE: NineSpade,
+    TEN: TenSpade,
+    JACK: JackSpade,
+    QUEEN: QueenSpade,
+    KING: KingSpade
   },
-  hearts: {
-    Ace: AHeart,
-    Two: TwoHeart,
-    Three: ThreeHeart,
-    Four: FourHeart,
-    Five: FiveHeart,
-    Six: SixHeart,
-    Seven: SevenHeart,
-    Eight: EightHeart,
-    Nine: NineHeart,
-    Ten: TenHeart,
-    Jack: JackHeart,
-    Queen: QueenHeart,
-    King: KingHeart
+  HEARTS: {
+    ACE: AHeart,
+    TWO: TwoHeart,
+    THREE: ThreeHeart,
+    FOUR: FourHeart,
+    FIVE: FiveHeart,
+    SIX: SixHeart,
+    SEVEN: SevenHeart,
+    EIGHT: EightHeart,
+    NINE: NineHeart,
+    TEN: TenHeart,
+    JACK: JackHeart,
+    QUEEN: QueenHeart,
+    KING: KingHeart
   },
-  diamonds: {
-    Ace: ADiamond,
-    Two: TwoDiamond,
-    Three: ThreeDiamond,
-    Four: FourDiamond,
-    Five: FiveDiamond,
-    Six: SixDiamond,
-    Seven: SevenDiamond,
-    Eight: EightDiamond,
-    Nine: NineDiamond,
-    Ten: TenDiamond,
-    Jack: JackDiamond,
-    Queen: QueenDiamond,
-    King: KingDiamond
+  DIAMONDS: {
+    ACE: ADiamond,
+    TWO: TwoDiamond,
+    THREE: ThreeDiamond,
+    FOUR: FourDiamond,
+    FIVE: FiveDiamond,
+    SIX: SixDiamond,
+    SEVEN: SevenDiamond,
+    EIGHT: EightDiamond,
+    NINE: NineDiamond,
+    TEN: TenDiamond,
+    JACK: JackDiamond,
+    QUEEN: QueenDiamond,
+    KING: KingDiamond
   },
-  clubs: {
-    Ace: AClub,
-    Two: TwoClub,
-    Three: ThreeClub,
-    Four: FourClub,
-    Five: FiveClub,
-    Six: SixClub,
-    Seven: SevenClub,
-    Eight: EightClub,
-    Nine: NineClub,
-    Ten: TenClub,
-    Jack: JackClub,
-    Queen: QueenClub,
-    King: KingClub
+  CLUBS: {
+    ACE: AClub,
+    TWO: TwoClub,
+    THREE: ThreeClub,
+    FOUR: FourClub,
+    FIVE: FiveClub,
+    SIX: SixClub,
+    SEVEN: SevenClub,
+    EIGHT: EightClub,
+    NINE: NineClub,
+    TEN: TenClub,
+    JACK: JackClub,
+    QUEEN: QueenClub,
+    KING: KingClub
   }
 };

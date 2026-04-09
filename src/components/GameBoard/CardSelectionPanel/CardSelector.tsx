@@ -1,11 +1,11 @@
 import type { NullableProps } from "@/common/types";
 
+import { CARD_ICONS, SUIT_ICONS } from "../constants";
 import { ALL_CARD_RANKS, ALL_CARD_SUITS } from "../types";
 import type { CardRank, CardSuit } from "../types";
 import type { Card } from "../types";
 
 import Selector, { type SelectorItem } from "./Selector";
-import { CARD_ICONS, SUIT_ICONS } from "../constants";
 
 export type SelectedCard = NullableProps<Card>;
 
@@ -41,7 +41,9 @@ export default function CardSelector({
   const { suit, rank } = selection;
 
   return (
-    <div className={`flex flex-col gap-8 relative shrink-0 ${disabled ? '' : 'pointer-events-none'}`}>
+    <div
+      className={`flex flex-col gap-8 relative shrink-0 ${disabled ? "" : "pointer-events-none"}`}
+    >
       <Selector<CardSuit>
         label="Start with a suit:"
         items={SUIT_ITEMS}

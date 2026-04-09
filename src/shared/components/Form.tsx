@@ -1,20 +1,19 @@
 import React from "react";
+
 import { twMerge } from "tailwind-merge";
+
 import { Button } from "./Button";
 
-export interface FormRootProps
-  extends React.FormHTMLAttributes<HTMLFormElement> {
+export interface FormRootProps extends React.FormHTMLAttributes<HTMLFormElement> {
   gap?: number;
   backgroundColor?: string;
 }
 
-export interface FormLabelProps
-  extends React.LabelHTMLAttributes<HTMLLabelElement> {
+export interface FormLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean;
 }
 
-export interface FormInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   description?: string;
   error?: string | null;
@@ -24,7 +23,10 @@ export type FormButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Root = React.forwardRef<HTMLFormElement, FormRootProps>(
   ({ gap = 16, backgroundColor, className, style, children, ...rest }, ref) => {
-    const composed = twMerge("flex flex-col py-8 px-10 rounded-[10px]", className);
+    const composed = twMerge(
+      "flex flex-col py-8 px-10 rounded-[10px]",
+      className,
+    );
     return (
       <form
         ref={ref}
@@ -39,7 +41,7 @@ const Root = React.forwardRef<HTMLFormElement, FormRootProps>(
         {children}
       </form>
     );
-  }
+  },
 );
 Root.displayName = "Form.Root";
 
@@ -57,14 +59,14 @@ const Label = React.forwardRef<HTMLLabelElement, FormLabelProps>(
         )}
       </label>
     );
-  }
+  },
 );
 Label.displayName = "Form.Label";
 
 const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
   (
     { label, description, error, className, required, type = "text", ...rest },
-    ref
+    ref,
   ) => {
     return (
       <div className="flex flex-col" data-field>
@@ -87,7 +89,7 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
               ? "focus-visible:ring-rave-red"
               : "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rave-red",
             "transition-colors",
-            className
+            className,
           )}
           {...rest}
         />
@@ -103,7 +105,7 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 Input.displayName = "Form.Input";
 
@@ -120,12 +122,11 @@ const FormButton = React.forwardRef<HTMLButtonElement, FormButtonProps>(
         {children}
       </Button>
     );
-  }
+  },
 );
 FormButton.displayName = "Form.Button";
 
-export interface FormTitleProps
-  extends React.HTMLAttributes<HTMLHeadingElement> {
+export interface FormTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
   textSize?: "small" | "medium" | "large";
   textAlign?: "left" | "center" | "right";
 }
@@ -133,7 +134,7 @@ export interface FormTitleProps
 const Title = React.forwardRef<HTMLHeadingElement, FormTitleProps>(
   (
     { textSize = "medium", textAlign = "left", className, children, ...rest },
-    ref
+    ref,
   ) => {
     const sizeMap: Record<string, string> = {
       small: "text-md",
@@ -149,7 +150,7 @@ const Title = React.forwardRef<HTMLHeadingElement, FormTitleProps>(
       "font-semibold text-rave-white-50",
       sizeMap[textSize],
       alignMap[textAlign],
-      className
+      className,
     );
     return (
       <div
@@ -160,7 +161,7 @@ const Title = React.forwardRef<HTMLHeadingElement, FormTitleProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 Title.displayName = "Form.Title";
 

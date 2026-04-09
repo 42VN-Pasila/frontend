@@ -7,12 +7,13 @@ info:
   x-displayName: Authentication service
 
 servers:
-  - url: https://app.42pasila.vn/rudex
+  - url: http://localhost:4000
     description: Production
 
 paths:
   /login:
     post:
+      operationId: loginUser
       summary: Login a user and return authentication tokens
       description: >
         Authenticates a user using email/username and password, returning
@@ -27,11 +28,16 @@ paths:
               $ref: "#/components/schemas/LoginRequestBody"
       responses:
         "200":
-          description: Successful login response
+          description: Successful login (tokens set in httpOnly cookies)
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LoginResponseBody"
+                type: object
+                required:
+                  - username
+                properties:
+                  username:
+                    type: string
         "400":
           $ref: "#/components/responses/APIErrorResponse"
         "401":
@@ -41,6 +47,7 @@ paths:
 
   /register:
     post:
+      operationId: registerUser
       summary: Register a user
       description: >
         Create a new user with provided input.
@@ -54,18 +61,20 @@ paths:
               $ref: "#/components/schemas/RegisterRequestBody"
       responses:
         "201":
-          description: New user created
+          description: Registration created, confirmation email sent
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RegisterResponseBody"
+                type: object
+                properties:
+                  message:
+                    type: string
         "400":
           $ref: "#/components/responses/APIErrorResponse"
         "409":
           $ref: "#/components/responses/APIErrorResponse"
         "500":
           $ref: "#/components/responses/APIErrorResponse"
-
 components:
   parameters:
     rudexUserIdQuery:
@@ -96,27 +105,6 @@ components:
         googleUserId:
           type: string
 
-    LoginResponseBody:
-      type: object
-      required:
-        - accessToken
-        - accessTokenExpiryDate
-        - refreshToken
-        - userId
-      properties:
-        accessToken:
-          type: string
-          description: JWT access token used for authenticated requests.
-        accessTokenExpiryDate:
-          type: string
-          format: date-time
-          description: Expiration date and time of the access token.
-        refreshToken:
-          type: string
-          description: Token used to refresh access tokens.
-        userId:
-          type: string
-
     RegisterRequestBody:
       type: object
       additionalProperties: false
@@ -131,15 +119,6 @@ components:
           type: string
         email:
           type: string
-
-    RegisterResponseBody:
-      type: object
-      additionalProperties: false
-      required:
-        - rudexUserId
-      properties:
-        rudexUserId:
-          $ref: "#/components/schemas/rudexUserId"
 
   responses:
     APIErrorResponse:

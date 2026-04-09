@@ -1,5 +1,7 @@
-import { Button } from "@/shared/components";
 import { Link } from "react-router-dom";
+
+import { Button } from "@/shared/components";
+
 const HomePageButton: React.FC = () => {
   return (
     <div className="flex flex-col gap-5">
@@ -22,11 +24,7 @@ const HomePageButton: React.FC = () => {
         </Link>
 
         <Link to="/login">
-          <Button
-            variant="primary"
-            emphasis="low"
-            size="medium"
-          >
+          <Button variant="primary" emphasis="low" size="medium">
             Learn more!
           </Button>
         </Link>

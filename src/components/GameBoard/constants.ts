@@ -2,74 +2,74 @@ import { CardIconAssets } from './assets/cards';
 import type { CardRank, CardSuit } from './types';
 
 export const SUIT_ICONS: Record<CardSuit, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-  spades: CardIconAssets.SpadeIcon,
-  hearts: CardIconAssets.HeartIcon,
-  diamonds: CardIconAssets.DiamondIcon,
-  clubs: CardIconAssets.ClubIcon
+  SPADES: CardIconAssets.SpadeIcon,
+  HEARTS: CardIconAssets.HeartIcon,
+  DIAMONDS: CardIconAssets.DiamondIcon,
+  CLUBS: CardIconAssets.ClubIcon
 };
 
 export const CARD_ICONS: Record<
   CardSuit,
   Record<CardRank, React.ComponentType<React.SVGProps<SVGSVGElement>>>
 > = {
-  spades: {
-    Ace: CardIconAssets.AceSpadeIcon,
-    Two: CardIconAssets.TwoSpadeIcon,
-    Three: CardIconAssets.ThreeSpadeIcon,
-    Four: CardIconAssets.FourSpadeIcon,
-    Five: CardIconAssets.FiveSpadeIcon,
-    Six: CardIconAssets.SixSpadeIcon,
-    Seven: CardIconAssets.SevenSpadeIcon,
-    Eight: CardIconAssets.EightSpadeIcon,
-    Nine: CardIconAssets.NineSpadeIcon,
-    Ten: CardIconAssets.TenSpadeIcon,
-    Jack: CardIconAssets.JackSpadeIcon,
-    Queen: CardIconAssets.QueenSpadeIcon,
-    King: CardIconAssets.KingSpadeIcon
+  SPADES: {
+    ACE: CardIconAssets.AceSpadeIcon,
+    TWO: CardIconAssets.TwoSpadeIcon,
+    THREE: CardIconAssets.ThreeSpadeIcon,
+    FOUR: CardIconAssets.FourSpadeIcon,
+    FIVE: CardIconAssets.FiveSpadeIcon,
+    SIX: CardIconAssets.SixSpadeIcon,
+    SEVEN: CardIconAssets.SevenSpadeIcon,
+    EIGHT: CardIconAssets.EightSpadeIcon,
+    NINE: CardIconAssets.NineSpadeIcon,
+    TEN: CardIconAssets.TenSpadeIcon,
+    JACK: CardIconAssets.JackSpadeIcon,
+    QUEEN: CardIconAssets.QueenSpadeIcon,
+    KING: CardIconAssets.KingSpadeIcon
   },
-  hearts: {
-    Ace: CardIconAssets.AceHeartIcon,
-    Two: CardIconAssets.TwoHeartIcon,
-    Three: CardIconAssets.ThreeHeartIcon,
-    Four: CardIconAssets.FourHeartIcon,
-    Five: CardIconAssets.FiveHeartIcon,
-    Six: CardIconAssets.SixHeartIcon,
-    Seven: CardIconAssets.SevenHeartIcon,
-    Eight: CardIconAssets.EightHeartIcon,
-    Nine: CardIconAssets.NineHeartIcon,
-    Ten: CardIconAssets.TenHeartIcon,
-    Jack: CardIconAssets.JackHeartIcon,
-    Queen: CardIconAssets.QueenHeartIcon,
-    King: CardIconAssets.KingHeartIcon
+  HEARTS: {
+    ACE: CardIconAssets.AceHeartIcon,
+    TWO: CardIconAssets.TwoHeartIcon,
+    THREE: CardIconAssets.ThreeHeartIcon,
+    FOUR: CardIconAssets.FourHeartIcon,
+    FIVE: CardIconAssets.FiveHeartIcon,
+    SIX: CardIconAssets.SixHeartIcon,
+    SEVEN: CardIconAssets.SevenHeartIcon,
+    EIGHT: CardIconAssets.EightHeartIcon,
+    NINE: CardIconAssets.NineHeartIcon,
+    TEN: CardIconAssets.TenHeartIcon,
+    JACK: CardIconAssets.JackHeartIcon,
+    QUEEN: CardIconAssets.QueenHeartIcon,
+    KING: CardIconAssets.KingHeartIcon
   },
-  diamonds: {
-    Ace: CardIconAssets.AceDiamondIcon,
-    Two: CardIconAssets.TwoDiamondIcon,
-    Three: CardIconAssets.ThreeDiamondIcon,
-    Four: CardIconAssets.FourDiamondIcon,
-    Five: CardIconAssets.FiveDiamondIcon,
-    Six: CardIconAssets.SixDiamondIcon,
-    Seven: CardIconAssets.SevenDiamondIcon,
-    Eight: CardIconAssets.EightDiamondIcon,
-    Nine: CardIconAssets.NineDiamondIcon,
-    Ten: CardIconAssets.TenDiamondIcon,
-    Jack: CardIconAssets.JackDiamondIcon,
-    Queen: CardIconAssets.QueenDiamondIcon,
-    King: CardIconAssets.KingDiamondIcon
+  DIAMONDS: {
+    ACE: CardIconAssets.AceDiamondIcon,
+    TWO: CardIconAssets.TwoDiamondIcon,
+    THREE: CardIconAssets.ThreeDiamondIcon,
+    FOUR: CardIconAssets.FourDiamondIcon,
+    FIVE: CardIconAssets.FiveDiamondIcon,
+    SIX: CardIconAssets.SixDiamondIcon,
+    SEVEN: CardIconAssets.SevenDiamondIcon,
+    EIGHT: CardIconAssets.EightDiamondIcon,
+    NINE: CardIconAssets.NineDiamondIcon,
+    TEN: CardIconAssets.TenDiamondIcon,
+    JACK: CardIconAssets.JackDiamondIcon,
+    QUEEN: CardIconAssets.QueenDiamondIcon,
+    KING: CardIconAssets.KingDiamondIcon
   },
-  clubs: {
-    Ace: CardIconAssets.AceClubIcon,
-    Two: CardIconAssets.TwoClubIcon,
-    Three: CardIconAssets.ThreeClubIcon,
-    Four: CardIconAssets.FourClubIcon,
-    Five: CardIconAssets.FiveClubIcon,
-    Six: CardIconAssets.SixClubIcon,
-    Seven: CardIconAssets.SevenClubIcon,
-    Eight: CardIconAssets.EightClubIcon,
-    Nine: CardIconAssets.NineClubIcon,
-    Ten: CardIconAssets.TenClubIcon,
-    Jack: CardIconAssets.JackClubIcon,
-    Queen: CardIconAssets.QueenClubIcon,
-    King: CardIconAssets.KingClubIcon
+  CLUBS: {
+    ACE: CardIconAssets.AceClubIcon,
+    TWO: CardIconAssets.TwoClubIcon,
+    THREE: CardIconAssets.ThreeClubIcon,
+    FOUR: CardIconAssets.FourClubIcon,
+    FIVE: CardIconAssets.FiveClubIcon,
+    SIX: CardIconAssets.SixClubIcon,
+    SEVEN: CardIconAssets.SevenClubIcon,
+    EIGHT: CardIconAssets.EightClubIcon,
+    NINE: CardIconAssets.NineClubIcon,
+    TEN: CardIconAssets.TenClubIcon,
+    JACK: CardIconAssets.JackClubIcon,
+    QUEEN: CardIconAssets.QueenClubIcon,
+    KING: CardIconAssets.KingClubIcon
   }
 };

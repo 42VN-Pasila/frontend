@@ -1,15 +1,18 @@
+import React from "react";
+
+import { Link, useNavigate } from "react-router-dom";
+
+import { GoogleIcon } from "@/components/Auth/GoogleIcon";
 import { rudexClient } from "@/shared/api/rudexClient";
+import { useAuth } from "@/shared/auth/useAuth";
+import { useUserStore } from "@/shared/stores/useUserStore";
+
 import { Button } from "../../shared/components";
 import Form from "../../shared/components/Form";
-import React from "react";
-import { Link } from "react-router-dom";
-import { GoogleIcon } from "@/components/Auth/GoogleIcon";
-import {
-  ValidationField,
-  useFormInputValidation,
-} from "@/components/Auth/useFormInputValdiation";
 
 export const LoginForm = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -25,17 +28,23 @@ export const LoginForm = () => {
         password,
       });
 
-      localStorage.setItem('accessToken', response.accessToken);
-      localStorage.setItem('accessTokenExpiryDate', response.accessTokenExpiryDate);
-      localStorage.setItem('refreshToken', response.refreshToken);
+      const usernameResponse = response.username;
+      useUserStore.getState().setUsername(usernameResponse);
 
+      login();
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       //Display pop up error noti
+      console.log("Error", error);
     }
   };
 
   return (
-    <Form.Root className="mx-auto bg-[var(--color-form-gray)]" gap={20}>
+    <Form.Root
+      className="mx-auto bg-rave-black"
+      gap={20}
+      onSubmit={handleLogin}
+    >
       <div className="flex flex-col gap-2">
         <Form.Title textAlign="center" textSize="medium">
           Welcome to Blank
@@ -44,7 +53,7 @@ export const LoginForm = () => {
           Don’t have an account?{" "}
           <Link
             to="/register"
-            className="text-[var(--color-primary)] hover:underline cursor-pointer"
+            className="text-rave-red hover:underline cursor-pointer"
           >
             Sign up
           </Link>
@@ -55,15 +64,12 @@ export const LoginForm = () => {
         required
         placeholder="Username"
         value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        onBlur={(e) =>
-          setUsernameError(
-            useFormInputValidation(
-              ValidationField.usernameLogin,
-              e.target.value,
-            ),
-          )
-        }
+        onChange={(e) => {
+          setUsername(e.target.value);
+          if (usernameError) {
+            setUsernameError(null);
+          }
+        }}
         error={usernameError}
       />
       <div className="flex flex-col gap-1">
@@ -79,13 +85,13 @@ export const LoginForm = () => {
         </p>
       </div>
 
-      <Button type="submit" size="medium" fullWidth onClick={handleLogin}>
+      <Button type="submit" size="medium" fullWidth>
         Login
       </Button>
       <div className="flex items-center gap-4">
-        <div className="flex-1 h-px bg-[var(--color-light-gray)]"></div>
+        <div className="flex-1 h-px bg-rave-white/20"></div>
         <span className="test-xs">OR</span>
-        <div className="flex-1 h-px bg-[var(--color-light-gray)]"></div>
+        <div className="flex-1 h-px bg-rave-white/20"></div>
       </div>
       <Button
         type="button"

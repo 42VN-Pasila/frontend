@@ -1,62 +1,65 @@
-import type { Opponent } from "@/components/GameBoard/types"
-import type { BookDto, HandDto } from "@/gen/director";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
+import type { Opponent } from '@/components/GameBoard/types';
+import type { BookDto, HandDto, MatchDto, SeatDto } from '@/gen/director';
 
 type GameSessionState = {
-    roomId: string;
-    matchId: string;
-    opponentIds: string[];
-    opponents: Opponent[];
-    turnOrder: string[];
-    hands: HandDto[];
-    books: BookDto[];
-    setOpponentIds: (opponentIds: string[]) => void;
-    setRoomId: (roomId: string) => void;
-    setMatchId: (matchId: string) => void;
-    setOpponents: (opponents: Opponent[]) => void;
-    setTurnOrder: (turnOrder: string[]) => void;
-    setHands: (hands: HandDto[]) => void;
-    setBooks: (books: BookDto[]) => void;
-    resetGameSession: () => void;
+  matchId: string;
+  opponentUsernames: string[];
+  opponents: Opponent[];
+  seats: SeatDto[];
+  hands: HandDto[];
+  books: BookDto[];
+  syncMatchState: (match: MatchDto, username: string) => void;
+  resetGameSession: () => void;
+};
+
+const initialState = {
+  matchId: '',
+  opponentUsernames: [],
+  opponents: [],
+  seats: [],
+  hands: [],
+  books: []
 };
 
 export const useGameSessionStore = create<GameSessionState>()(
-    persist(
-        (set) => ({
-            roomId: "",
-            matchId: "",
-            opponentIds: [],
-            opponents: [],
-            turnOrder: [],
-            hands: [],
-            books: [],
-            setOpponentIds: (opponentIds: string[]) => set({ opponentIds }),
-            setRoomId: (roomId: string) => set({ roomId }),
-            setMatchId: (matchId: string) => set({ matchId }),
-            setTurnOrder: (turnOrder: string[]) => set({ turnOrder }),
-            setOpponents: (opponents: Opponent[]) => set({ opponents }),
-            setHands: (hands: HandDto[]) => set({ hands }),
-            setBooks: (books: BookDto[]) => set({ books }),
-            resetGameSession: () => set({
-                roomId: "",
-                matchId: "",
-                opponentIds: [],
-                turnOrder: []
-            }),
+  persist(
+    (set, _get, store) => ({
+      ...initialState,
+      syncMatchState: (match: MatchDto, username: string) =>
+        set({
+          matchId: match.id,
+          hands: match.hands,
+          books: match.books,
+          opponentUsernames: match.users
+            .filter((u) => u.username !== username)
+            .map((u) => u.username),
+          seats: match.seats,
+          opponents: match.users
+            .filter((u) => u.username !== username)
+            .map((u) => ({
+              id: u.username,
+              username: u.username,
+              avatarUrl: u.avatarUrl ?? '',
+              cardCount:
+                match.userHandCounts.find((hc) => hc.username === u.username)?.handCount ?? 0
+            }))
         }),
-        {
-            name: "game-session",
-            storage: createJSONStorage(() => localStorage),
-            partialize: (state) => ({
-                opponentIds: state.opponentIds,
-                roomId: state.roomId,
-                matchId: state.matchId,
-                turnOrder: state.turnOrder,
-                opponents: state.opponents,
-                hands: state.hands,
-                books: state.books,
-            }),
-        },
-    ),
+      resetGameSession: () => set(store.getInitialState())
+    }),
+    {
+      name: 'game-session',
+      storage: createJSONStorage(() => sessionStorage),
+      partialize: (state) => ({
+        opponentUsernames: state.opponentUsernames,
+        matchId: state.matchId,
+        seats: state.seats,
+        opponents: state.opponents,
+        hands: state.hands,
+        books: state.books
+      })
+    }
+  )
 );

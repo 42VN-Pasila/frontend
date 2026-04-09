@@ -1,70 +1,92 @@
-import OpponentDisplay from "./OpponentDisplay";
-import type { Opponent } from "../types";
 import { useMemo } from "react";
+
+import type { SeatDto } from "@/gen/director";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
-type Positions = {
-  left: Opponent;
-  top: Opponent;
-  right: Opponent;
-};
+import type { Opponent } from "../types";
 
-function getPositions(opponents: Opponent[], turnOrder: string[], userId: string): Positions | null {
-  if (!userId || opponents.length < 3 || turnOrder.length < 4) {
-    return null;
+import OpponentDisplay from "./OpponentDisplay";
+
+function getOrderedOpponents(
+  opponents: Opponent[],
+  seats: SeatDto[],
+  username: string,
+): Opponent[] {
+  if (!username) {
+    return [];
   }
 
-  const playerIndex = turnOrder.findIndex((id) => id === userId);
+  const orderedSeats = [...seats].sort((a, b) => a.order - b.order);
+  const playerIndex = orderedSeats.findIndex(
+    (seat) => seat.username === username,
+  );
   if (playerIndex === -1) {
-    return null;
+    return opponents.filter((opponent) => opponent.id !== username);
   }
 
-  const positionOrder = [
-    ...turnOrder.slice(playerIndex + 1),
-    ...turnOrder.slice(0, playerIndex),
-  ];
+  const seatOrder = [
+    ...orderedSeats.slice(playerIndex + 1),
+    ...orderedSeats.slice(0, playerIndex),
+  ]
+    .map((seat) => seat.username)
+    .filter((id) => id !== username);
 
-  return {
-    left: opponents.find((o) => o.id === positionOrder[0]) ?? opponents[0],
-    top: opponents.find((o) => o.id === positionOrder[1]) ?? opponents[1],
-    right: opponents.find((o) => o.id === positionOrder[2]) ?? opponents[2],
-  };
+  const orderedOpponents = seatOrder
+    .map((id) => opponents.find((opponent) => opponent.id === id))
+    .filter((opponent): opponent is Opponent => Boolean(opponent));
+
+  const remainingOpponents = opponents.filter(
+    (opponent) =>
+      opponent.id !== username &&
+      !orderedOpponents.some((ordered) => ordered.id === opponent.id),
+  );
+
+  return [...orderedOpponents, ...remainingOpponents];
 }
 
 interface GameOpponentPickerProps extends React.ComponentPropsWithoutRef<"section"> {
-  selectedOpponentId: string | null;
+  selectedOpponentUsername: string | null;
   onSelectOpponent: (id: string) => void;
   disabled: boolean;
 }
 
 const GameOpponentPicker = ({
-  selectedOpponentId,
+  selectedOpponentUsername,
   onSelectOpponent,
   disabled,
   className,
   ...props
 }: GameOpponentPickerProps) => {
-
-  const userId = useUserStore().userId;
+  const currentUsername = useUserStore().username.trim();
   const opponents = useGameSessionStore().opponents;
-  const turnOrder = useGameSessionStore().turnOrder;
+  const seats = useGameSessionStore().seats;
 
-  const sortedPositions = useMemo(() =>
-    getPositions(opponents, turnOrder, userId),
-    [opponents, turnOrder, userId]
+  const orderedOpponents = useMemo(
+    () => getOrderedOpponents(opponents, seats, currentUsername),
+    [opponents, seats, currentUsername],
   );
+  const activeSeat = useMemo(() => seats.find((seat) => seat.isTurn), [seats]);
+  const activeTurnOpponentId = useMemo(() => {
+    const activeUsername = activeSeat?.username;
+    if (!activeUsername || activeUsername === currentUsername) {
+      return null;
+    }
+    return activeUsername;
+  }, [activeSeat?.username, currentUsername]);
 
   return (
     <section
       {...props}
-      className={`${className} flex flex-col bg-rave-black   relative h-full overflow-hidden`}>
-      {sortedPositions && (
+      className={`${className} flex flex-col bg-rave-black   relative h-full overflow-hidden`}
+    >
+      {orderedOpponents.length > 0 && (
         <OpponentDisplay
-          positions={sortedPositions}
-          selectedId={selectedOpponentId}
+          opponents={orderedOpponents}
+          selectedId={selectedOpponentUsername}
           onSelect={(id: string) => onSelectOpponent(id)}
           disabled={disabled}
+          activeTurnOpponentId={activeTurnOpponentId}
         />
       )}
     </section>

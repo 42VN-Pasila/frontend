@@ -1,15 +1,9 @@
-
 interface BadgeProps extends React.ComponentPropsWithoutRef<"div"> {
   count: number;
   imageUrl: string;
 }
 
-const Badge = ({
-  count,
-  imageUrl,
-  className = "",
-  ...props
-}: BadgeProps) => {
+const Badge = ({ count, imageUrl, className = "", ...props }: BadgeProps) => {
   return (
     <div
       {...props}
@@ -24,8 +18,6 @@ const Badge = ({
           {count}
         </span>
       </div>
-
-
     </div>
   );
 };
