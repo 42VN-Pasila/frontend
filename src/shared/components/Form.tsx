@@ -54,9 +54,7 @@ const Label = React.forwardRef<HTMLLabelElement, FormLabelProps>(
         {...rest}
       >
         {children}
-        {required && (
-          <span className="text-rave-red ml-1">*</span>
-        )}
+        {required && <span className="text-rave-red ml-1">*</span>}
       </label>
     );
   },
@@ -93,15 +91,9 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
           )}
           {...rest}
         />
-        {error && (
-          <p className="mt-1 text-xs text-rave-red">
-            {error}
-          </p>
-        )}
+        {error && <p className="mt-1 text-xs text-rave-red">{error}</p>}
         {!error && description && (
-          <p className="mt-1 text-xs text-rave-white/">
-            {description}
-          </p>
+          <p className="mt-1 text-xs text-rave-white/">{description}</p>
         )}
       </div>
     );

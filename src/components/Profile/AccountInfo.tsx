@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { Button } from "@/shared/components";
 import { Form } from "@/shared/components/Form";
 
@@ -6,7 +7,7 @@ type AccountInfoProps = {
   username: string;
   displayname?: string;
   email: string;
-}
+};
 
 const displayNameRules = [
   { regex: /^.{3,16}$/, error: "Display name must be 3–16 characters." },
@@ -30,9 +31,7 @@ const validate = (value: string, rules: typeof passwordRules) => {
 };
 
 export const AccountInfo = (data: AccountInfoProps) => {
-
-  const resolvedDisplayName =
-    data.displayname?.trim() || data.username;
+  const resolvedDisplayName = data.displayname?.trim() || data.username;
 
   const [displayName, setDisplayName] = useState(resolvedDisplayName);
 
@@ -53,13 +52,10 @@ export const AccountInfo = (data: AccountInfoProps) => {
   }, [resolvedDisplayName]);
 
   const newPasswordError =
-    password.new.length > 0
-      ? validate(password.new, passwordRules)
-      : null;
+    password.new.length > 0 ? validate(password.new, passwordRules) : null;
 
   const confirmPasswordError =
-    password.confirm &&
-    password.confirm !== password.new
+    password.confirm && password.confirm !== password.new
       ? "Passwords do not match"
       : null;
 
@@ -96,11 +92,9 @@ export const AccountInfo = (data: AccountInfoProps) => {
     if (!password.current)
       return setSubmitError("Current password is required");
 
-    if (newPasswordError)
-      return setSubmitError(newPasswordError);
+    if (newPasswordError) return setSubmitError(newPasswordError);
 
-    if (confirmPasswordError)
-      return setSubmitError(confirmPasswordError);
+    if (confirmPasswordError) return setSubmitError(confirmPasswordError);
 
     // TODO: API call
     console.log("Password change request", { email: data.email });
@@ -126,7 +120,9 @@ export const AccountInfo = (data: AccountInfoProps) => {
           required
         />
 
-        {displayError && <p className="text-sm text-rave-red">{displayError}</p>}
+        {displayError && (
+          <p className="text-sm text-rave-red">{displayError}</p>
+        )}
         {displayMsg && <p className="text-sm text-green-400">{displayMsg}</p>}
 
         <div className="flex justify-end">
@@ -155,9 +151,7 @@ export const AccountInfo = (data: AccountInfoProps) => {
           label="New Password"
           type="password"
           value={password.new}
-          onChange={(e) =>
-            setPassword((p) => ({ ...p, new: e.target.value }))
-          }
+          onChange={(e) => setPassword((p) => ({ ...p, new: e.target.value }))}
           onBlur={resetSubmitMessages}
           required
           error={newPasswordError}
@@ -186,9 +180,7 @@ export const AccountInfo = (data: AccountInfoProps) => {
           <Button
             size="medium"
             onClick={handlePasswordChange}
-            disabled={
-              !password.current || !password.new || !password.confirm
-            }
+            disabled={!password.current || !password.new || !password.confirm}
           >
             Change
           </Button>

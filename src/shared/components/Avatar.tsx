@@ -1,11 +1,11 @@
-import { createElement } from 'react';
-import type { ComponentPropsWithoutRef } from 'react';
+import { createElement } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
-import { twMerge } from 'tailwind-merge';
+import { twMerge } from "tailwind-merge";
 
-export type AvatarShape = 'square' | 'circle';
+export type AvatarShape = "square" | "circle";
 
-export type AvatarProps = Omit<ComponentPropsWithoutRef<'img'>, 'children'> & {
+export type AvatarProps = Omit<ComponentPropsWithoutRef<"img">, "children"> & {
   shape?: AvatarShape;
   fallbackText?: string;
   wrapperClassName?: string;
@@ -14,40 +14,45 @@ export type AvatarProps = Omit<ComponentPropsWithoutRef<'img'>, 'children'> & {
 export const Avatar = ({
   src,
   alt,
-  shape = 'circle',
+  shape = "circle",
   fallbackText,
   className,
   wrapperClassName,
   ...props
 }: AvatarProps) => {
-  const resolvedFallback = fallbackText ?? (alt?.trim()?.[0]?.toUpperCase() || '?');
-  const shapeClass = shape === 'circle' ? 'rounded-full' : 'rounded-md';
+  const resolvedFallback =
+    fallbackText ?? (alt?.trim()?.[0]?.toUpperCase() || "?");
+  const shapeClass = shape === "circle" ? "rounded-full" : "rounded-md";
 
   const wrapperClasses = twMerge(
-    'inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden border border-rave-white/20 bg-rave-white/5 text-rave-white',
+    "inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden border border-rave-white/20 bg-rave-white/5 text-rave-white",
     shapeClass,
-    wrapperClassName
+    wrapperClassName,
   );
 
-  const imageClasses = twMerge('h-full w-full object-cover', className);
+  const imageClasses = twMerge("h-full w-full object-cover", className);
 
   if (!src) {
     return createElement(
-      'span',
-      { className: wrapperClasses, 'aria-label': alt, role: 'img' },
-      createElement('span', { className: 'text-sm font-bold' }, resolvedFallback)
+      "span",
+      { className: wrapperClasses, "aria-label": alt, role: "img" },
+      createElement(
+        "span",
+        { className: "text-sm font-bold" },
+        resolvedFallback,
+      ),
     );
   }
 
   return createElement(
-    'span',
+    "span",
     { className: wrapperClasses },
-    createElement('img', {
+    createElement("img", {
       src,
       alt,
       className: imageClasses,
-      ...props
-    })
+      ...props,
+    }),
   );
 };
 
