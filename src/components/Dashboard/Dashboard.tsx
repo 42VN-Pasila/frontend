@@ -1,7 +1,8 @@
 import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
-import { FriendList } from "../FriendList/FriendList";
+import { FriendList } from "../Friend/FriendList";
+import { FriendSearchAdd } from "../Friend/FriendSearchAdd";
 import { RoomList } from "../RoomList/RoomList";
 import { RoomModal } from "../RoomModal/RoomModal";
 
@@ -15,7 +16,6 @@ export const Dashboard = () => {
   if (userData) {
     useUserStore.getState().setAvatarUrl(userData.avatarUrl ?? "");
   }
-
   return (
     <div className="min-h-screen bg-rave-black text-rave-white">
       <div className="mx-auto w-full max-w-[90vw] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
@@ -38,6 +38,7 @@ export const Dashboard = () => {
             <RoomList />
           </div>
           <div className="grid grid-cols-1 gap-4 xl:col-span-4 xl:sticky xl:top-6">
+            <FriendSearchAdd />
             <FriendList />
           </div>
         </div>

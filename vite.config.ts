@@ -24,10 +24,17 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       proxy: {
         '/director': {
-          target: env.VITE_DIRECTOR_URL,
+          target: env.VITE_DIRECTOR_PROXY_TARGET || 'http://127.0.0.1:5000',
           changeOrigin: true,
-          secure: true,
-          ws: true
+          secure: false,
+          ws: true,
+          rewrite: (path) => path.replace(/^\/director/, '')
+        },
+        '/rudex': {
+          target: env.VITE_RUDEX_PROXY_TARGET || 'http://127.0.0.1:4000',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/rudex/, '')
         }
       }
     }

@@ -176,7 +176,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /friends/{otherUserId}:
+  /friends/{otherUsername}:
     delete:
       tags:
         - Friends
@@ -184,7 +184,7 @@ paths:
       operationId: removeFriendship
       parameters:
         - in: path
-          name: otherUserId
+          name: otherUsername
           required: true
           schema:
             type: string
@@ -244,7 +244,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /friends/requests/{otherUserId}:
+  /friends/requests/{otherUsername}:
     patch:
       tags:
         - Friends
@@ -252,7 +252,7 @@ paths:
       operationId: respondToFriendRequest
       parameters:
         - in: path
-          name: otherUserId
+          name: otherUsername
           required: true
           schema:
             type: string
@@ -721,15 +721,12 @@ components:
     SocialUserDto:
       type: object
       required:
-        - id
         - status
         - relationship
         - direction
         - username
         - displayName
       properties:
-        id:
-          type: string
         avatarUrl:
           type: string
           nullable: true
@@ -771,9 +768,9 @@ components:
     RequestFriendRequestBody:
       type: object
       required:
-        - otherUserId
+        - otherUsername
       properties:
-        otherUserId:
+        otherUsername:
           type: string
 
     RespondToFriendRequestRequestBody:
