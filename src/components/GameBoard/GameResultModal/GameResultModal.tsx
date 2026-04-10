@@ -18,18 +18,61 @@ const BASE_INTERVAL_MS = 80;
 const MAX_INTERVAL_MS = 350;
 
 export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
-  const { username } = useUserStore();
-  const { opponents } = useGameSessionStore();
+  const { username, avatarUrl } = useUserStore();
+  const { opponents, books } = useGameSessionStore();
   const currentUsername = username.trim();
 
+  const allPlayers = [
+    ...(currentUsername
+      ? [
+          {
+            id: currentUsername,
+            username: currentUsername,
+            avatarUrl: avatarUrl ?? "",
+          },
+        ]
+      : []),
+    ...opponents,
+  ];
+
+  const playersByUsername = new Map(
+    allPlayers.map((player) => [player.username, player] as const),
+  );
+
+  for (const book of books) {
+    if (!playersByUsername.has(book.username)) {
+      playersByUsername.set(book.username, {
+        id: book.username,
+        username: book.username,
+        avatarUrl: "",
+      });
+    }
+  }
+
+  const scoreByUsername = new Map<string, number>();
+  for (const username of playersByUsername.keys()) {
+    scoreByUsername.set(username, 0);
+  }
+  for (const book of books) {
+    scoreByUsername.set(
+      book.username,
+      (scoreByUsername.get(book.username) ?? 0) + 1,
+    );
+  }
+
+  const maxScore = Math.max(...Array.from(scoreByUsername.values()), 0);
+  const players = Array.from(playersByUsername.values()).filter(
+    (player) => (scoreByUsername.get(player.username) ?? 0) === maxScore,
+  );
   const [phase, setPhase] = useState<Phase>(
     result.hasCoWinners ? "picking" : "result",
   );
   const [activeIndex, setActiveIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(!result.hasCoWinners);
 
-  const players = opponents.length > 0 ? opponents : [];
-  const winnerIdx = players.findIndex((p) => p.id === result.winnerUsername);
+  const winnerIdx = players.findIndex(
+    (p) => p.username === result.winnerUsername,
+  );
   const totalSteps = players.length * CYCLE_COUNT + Math.max(winnerIdx, 0);
 
   useEffect(() => {
@@ -100,7 +143,7 @@ export const GameResultModal = ({ result, onClose }: GameResultModalProps) => {
 
               return (
                 <div
-                  key={player.id}
+                  key={player.username}
                   className={`flex items-center gap-4 rounded-xl border-2 px-6 py-5 transition-all duration-150 ${
                     isRevealed
                       ? "scale-105 border-emerald-400 bg-emerald-400/15 shadow-[0_0_24px_-6px_rgba(52,211,153,0.4)]"
