@@ -138,19 +138,13 @@ export const FriendPendingRequestsView = ({
                     <div>
                       <button
                         type="button"
-                        className="text-sm font-semibold tracking-wide hover:text-rave-red transition-colors"
+                        className="text-sm font-semibold tracking-wide hover:text-rave-red transition-colors cursor-pointer"
                         onClick={() => navigateToProfile(normalizedUsername)}
                       >
                         {displayName}
                       </button>
                       <p className="text-[10px] font-semibold tracking-wide text-rave-white/60">
-                        <button
-                          type="button"
-                          className="hover:text-rave-red transition-colors"
-                          onClick={() => navigateToProfile(normalizedUsername)}
-                        >
-                          @{normalizedUsername}
-                        </button>
+                        @{normalizedUsername}
                       </p>
                       <p className="text-[10px] tracking-[0.14em] text-rave-white/60">
                         {actionLabel}

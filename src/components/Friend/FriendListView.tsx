@@ -95,19 +95,13 @@ export const FriendListView = ({
                   <div>
                     <button
                       type="button"
-                      className="text-sm font-semibold tracking-wide hover:text-rave-red transition-colors"
+                      className="text-sm font-semibold tracking-wide hover:text-rave-red transition-colors cursor-pointer"
                       onClick={() => navigateToProfile(normalizedUsername)}
                     >
                       {displayName}
                     </button>
                     <p className="text-[10px] font-semibold tracking-wide text-rave-white/60">
-                      {/* <button
-                        type="button"
-                        className="hover:text-rave-red transition-colors"
-                        onClick={() => navigateToProfile(normalizedUsername)}
-                      >
                         @{normalizedUsername}
-                      </button> */}
                     </p>
                     <span
                       className={`inline-flex border px-2 py-0.5 text-[10px] tracking-[0.15em] ${statusClasses[friend.status]}`}
