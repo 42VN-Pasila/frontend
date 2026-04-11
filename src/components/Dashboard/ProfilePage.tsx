@@ -2,116 +2,198 @@ import { useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
-// later get these after media is merged
-// import {
-//   useSearchUsersQuery,
-//   useSendFriendRequestMutation,
-//   useRespondFriendRequestMutation,
-// } from "@/shared/api/directorApi";
+import { SocialUserDto } from "@/gen/director";
+import {
+  useGetFriendListDataQuery,
+  useGetFriendPendingDataQuery,
+  useGetUserByUsernameQuery,
+  useRemoveFriendshipMutation,
+  useRespondFriendRequestMutation,
+  useSendFriendRequestMutation,
+} from "@/shared/api/directorApi";
 import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
 import NavBar from "@/shared/components/NavBar";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
-type Relationship = "None" | "Pending" | "Accepted";
-type Direction = "In" | "Out";
+type Relationship = SocialUserDto.relationship;
+type Direction = SocialUserDto.direction;
+type DisplayStatus = "ONLINE" | "IN_GAME" | "IN_ROOM" | "OFFLINE";
 
-type MockUser = {
-  id: string;
-  username: string;
-  displayname: string;
-  avatarUrl?: string;
-  status: "ONLINE" | "OFFLINE" | "IN_GAME";
-  relationship: Relationship;
-  direction?: Direction;
-};
-
-const MOCK_USERS: MockUser[] = [
-  {
-    id: "f-001",
-    username: "tan",
-    displayname: "Tan",
-    avatarUrl:
-      "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535d195197053fe1a71f4b_peep-98.png",
-    status: "ONLINE",
-    relationship: "None",
-  },
-  {
-    id: "f-002",
-    username: "triet",
-    displayname: "Triet",
-    avatarUrl:
-      "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535d35550b761a3af880d9_peep-99.png",
-    status: "IN_GAME",
-    relationship: "Pending",
-    direction: "Out",
-  },
-  {
-    id: "f-003",
-    username: "huong",
-    displayname: "Huong",
-    avatarUrl:
-      "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535cfb4600807d898fc75b_peep-97.png",
-    status: "OFFLINE",
-    relationship: "Pending",
-    direction: "In",
-  },
-  {
-    id: "f-004",
-    username: "kha",
-    displayname: "Kha",
-    avatarUrl:
-      "https://cdn.prod.website-files.com/5e51c674258ffe10d286d30a/5e535cfb4600807d898fc75b_peep-97.png",
-    status: "OFFLINE",
-    relationship: "Accepted",
-  },
-];
-
-const STATUS_CLASSES: Record<MockUser["status"], string> = {
+const STATUS_CLASSES: Record<DisplayStatus, string> = {
   ONLINE: "border-emerald-400/40 bg-emerald-400/15 text-emerald-300",
   IN_GAME: "border-rave-red/50 bg-rave-red/20 text-rave-white",
+  IN_ROOM: "border-amber-300/40 bg-amber-300/15 text-amber-200",
   OFFLINE: "border-rave-white/20 bg-rave-white/10 text-rave-white/60",
 };
 
-const useMockUser = (userId?: string) => {
-  const [data, setData] = useState<MockUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+const mapStatus = (status?: string): DisplayStatus => {
+  const normalizedStatus = String(status ?? "").toUpperCase();
 
-  useEffect(() => {
-    setIsLoading(true);
+  if (normalizedStatus === "INMATCH" || normalizedStatus === "IN_MATCH") {
+    return "IN_GAME";
+  }
 
-    const timeout = setTimeout(() => {
-      const foundUser = MOCK_USERS.find((u) => u.id === userId) || null;
-      setData(foundUser);
-      setIsLoading(false);
-    }, 200);
+  if (normalizedStatus === "INROOM" || normalizedStatus === "IN_ROOM") {
+    return "IN_ROOM";
+  }
 
-    return () => clearTimeout(timeout);
-  }, [userId]);
+  if (normalizedStatus === "ONLINE") {
+    return "ONLINE";
+  }
 
-  return { data, isLoading };
+  return "OFFLINE";
 };
 
 export const ProfilePage = () => {
-  const { userId } = useParams();
-  const { data: user, isLoading } = useMockUser(userId);
-  const [relationship, setRelationship] = useState<Relationship>("None");
   const navigate = useNavigate();
+  const { username } = useParams<{ username: string }>();
+  const viewerUsername = useUserStore((state) => state.username).trim();
+  const targetUsername = (username ?? "").trim();
+
+  const {
+    data: userByUsername,
+    isLoading: isLoadingUser,
+    error: userError,
+  } = useGetUserByUsernameQuery(targetUsername, {
+    enabled: Boolean(targetUsername),
+  });
+
+  const { data: friends = [] } = useGetFriendListDataQuery(viewerUsername, {
+    enabled: Boolean(viewerUsername),
+  });
+  const { data: pendingRequests = [] } = useGetFriendPendingDataQuery(
+    viewerUsername,
+    {
+      enabled: Boolean(viewerUsername),
+    },
+  );
+
+  const [relationship, setRelationship] = useState<Relationship>(
+    SocialUserDto.relationship.NONE,
+  );
+  const [direction, setDirection] = useState<Direction>(
+    SocialUserDto.direction.NONE,
+  );
 
   useEffect(() => {
-    if (user) setRelationship(user.relationship);
-  }, [user]);
+    const lowerTargetUsername = targetUsername.toLowerCase();
+    const friend = friends.find(
+      (candidate) =>
+        candidate.username?.trim().toLowerCase() === lowerTargetUsername,
+    );
 
-  if (isLoading) return <p className="mt-10 text-center">Loading...</p>;
-  if (!user) return <p className="mt-10 text-center">User not found</p>;
+    if (friend) {
+      setRelationship(SocialUserDto.relationship.ACCEPTED);
+      setDirection(SocialUserDto.direction.NONE);
+      return;
+    }
 
-  const isIncoming = relationship === "Pending" && user.direction === "In";
-  const isOutgoing = relationship === "Pending" && user.direction === "Out";
+    const pendingRequest = pendingRequests.find(
+      (candidate) =>
+        candidate.username?.trim().toLowerCase() === lowerTargetUsername,
+    );
+
+    setRelationship(
+      (pendingRequest?.relationship as Relationship) ??
+        SocialUserDto.relationship.NONE,
+    );
+    setDirection(
+      (pendingRequest?.direction as Direction) ?? SocialUserDto.direction.NONE,
+    );
+  }, [friends, pendingRequests, targetUsername]);
+
+  const { mutateAsync: sendFriendRequest, isPending: isSendingFriendRequest } =
+    useSendFriendRequestMutation(viewerUsername);
+  const {
+    mutateAsync: respondFriendRequest,
+    isPending: isRespondingFriendRequest,
+  } = useRespondFriendRequestMutation(viewerUsername);
+  const { mutateAsync: removeFriendship, isPending: isRemovingFriendship } =
+    useRemoveFriendshipMutation(viewerUsername);
+
+  const isOwnProfile =
+    Boolean(viewerUsername) &&
+    targetUsername.toLowerCase() === viewerUsername.toLowerCase();
+  const isIncoming =
+    relationship === SocialUserDto.relationship.PENDING &&
+    direction === SocialUserDto.direction.IN;
+  const isOutgoing =
+    relationship === SocialUserDto.relationship.PENDING &&
+    direction === SocialUserDto.direction.OUT;
+  const isMutating =
+    isSendingFriendRequest || isRespondingFriendRequest || isRemovingFriendship;
+
+  const profileUsername = userByUsername?.username?.trim() || targetUsername;
+  const profileDisplayName = userByUsername?.username?.trim() || targetUsername;
+  const profileAvatarUrl = userByUsername?.avatarUrl ?? undefined;
+  const profileStatus = mapStatus(userByUsername?.status);
 
   const handleReturn = () => navigate("/dashboard");
-  const handleAddFriend = () => setRelationship("Accepted");
-  const handleAccept = () => setRelationship("Accepted");
-  const handleReject = () => setRelationship("None");
-  const handleCancel = () => setRelationship("None");
+
+  const handleAddFriend = async () => {
+    if (!profileUsername || !viewerUsername) return;
+
+    await sendFriendRequest({ otherUsername: profileUsername });
+    setRelationship(SocialUserDto.relationship.PENDING);
+    setDirection(SocialUserDto.direction.OUT);
+  };
+
+  const handleAccept = async () => {
+    if (!profileUsername || !viewerUsername) return;
+
+    await respondFriendRequest({
+      otherUsername: profileUsername,
+      action: "Accepted",
+    });
+    setRelationship(SocialUserDto.relationship.ACCEPTED);
+    setDirection(SocialUserDto.direction.NONE);
+  };
+
+  const handleReject = async () => {
+    if (!profileUsername || !viewerUsername) return;
+
+    await respondFriendRequest({
+      otherUsername: profileUsername,
+      action: "Canceled",
+    });
+    setRelationship(SocialUserDto.relationship.NONE);
+    setDirection(SocialUserDto.direction.NONE);
+  };
+
+  const handleCancel = async () => {
+    if (!profileUsername || !viewerUsername) return;
+
+    if (relationship === SocialUserDto.relationship.ACCEPTED) {
+      await removeFriendship({ otherUsername: profileUsername });
+      setRelationship(SocialUserDto.relationship.NONE);
+      setDirection(SocialUserDto.direction.NONE);
+      return;
+    }
+
+    await respondFriendRequest({
+      otherUsername: profileUsername,
+      action: "Canceled",
+    });
+    setRelationship(SocialUserDto.relationship.NONE);
+    setDirection(SocialUserDto.direction.NONE);
+  };
+
+  const hasProfileData = Boolean(userByUsername);
+
+  if (!targetUsername)
+    return <p className="mt-10 text-center">User not found</p>;
+  if (isLoadingUser && !hasProfileData) {
+    return <p className="mt-10 text-center">Loading...</p>;
+  }
+  if (!hasProfileData) {
+    return (
+      <p className="mt-10 text-center">
+        User not found
+        {userError instanceof Error ? `: ${userError.message}` : ""}
+      </p>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-rave-black text-rave-white">
@@ -128,24 +210,23 @@ export const ProfilePage = () => {
           <article className="xl:col-span-8 rounded-lg border-2 border-rave-white/10 bg-rave-black sm:p-8 flex flex-col gap-6 sm:flex-row sm:items-center">
             <div className="flex h-44 w-44 shrink-0 items-center justify-center rounded-full border-2 border-rave-red/80 bg-rave-red/20 p-2">
               <Avatar
-                src={user.avatarUrl}
+                src={profileAvatarUrl}
                 shape="circle"
-                alt={user.username}
-                fallbackText="This will be the first letter of username if no avatar available"
+                alt={profileUsername}
                 wrapperClassName="relative z-10 h-40 w-40 overflow-hidden rounded-full bg-rave-red object-cover"
               />
             </div>
 
             <div className="flex flex-1 flex-col items-center gap-3 text-center sm:items-start sm:text-left">
               <h2 className="text-4xl font-black tracking-[0.12em] text-rave-white sm:text-5xl">
-                {user.displayname || user.username}
+                {profileDisplayName}
               </h2>
-              <p className="text-sm text-rave-white/40">@{user.username}</p>
+              <p className="text-sm text-rave-white/40">@{profileUsername}</p>
               <span
-                className={`inline-flex items-center border px-4 py-2 text-xs font-bold tracking-[0.2em] ${STATUS_CLASSES[user.status]}`}
+                className={`inline-flex items-center border px-4 py-2 text-xs font-bold tracking-[0.2em] ${STATUS_CLASSES[profileStatus]}`}
               >
                 <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-current" />
-                {user.status.replace("_", " ")}
+                {profileStatus.replace("_", " ")}
               </span>
             </div>
           </article>
@@ -156,32 +237,42 @@ export const ProfilePage = () => {
             </h3>
 
             <div className="space-y-3">
-              {relationship === "None" && (
-                <Button
-                  variant="primary"
-                  onClick={handleAddFriend}
-                  size="small"
-                  className="w-full"
-                >
-                  Add Friend
-                </Button>
-              )}
+              {!isOwnProfile &&
+                relationship === SocialUserDto.relationship.NONE && (
+                  <Button
+                    variant="primary"
+                    onClick={() => {
+                      void handleAddFriend();
+                    }}
+                    size="small"
+                    className="w-full"
+                    disabled={isMutating}
+                  >
+                    Add Friend
+                  </Button>
+                )}
 
               {isIncoming && (
                 <>
                   <Button
-                    onClick={handleAccept}
+                    onClick={() => {
+                      void handleAccept();
+                    }}
                     size="small"
                     className="w-full"
+                    disabled={isMutating}
                   >
                     Accept
                   </Button>
                   <Button
-                    onClick={handleReject}
+                    onClick={() => {
+                      void handleReject();
+                    }}
                     variant="inverse"
                     emphasis="low"
                     size="small"
                     className="w-full"
+                    disabled={isMutating}
                   >
                     Reject
                   </Button>
@@ -190,32 +281,39 @@ export const ProfilePage = () => {
 
               {isOutgoing && (
                 <Button
-                  onClick={handleCancel}
+                  onClick={() => {
+                    void handleCancel();
+                  }}
                   variant="inverse"
                   emphasis="low"
                   size="small"
                   className="w-full"
+                  disabled={isMutating}
                 >
                   Cancel
                 </Button>
               )}
 
-              {relationship === "Accepted" && (
-                <>
-                  <Button disabled size="small" className="w-full">
-                    Friends
-                  </Button>
-                  <Button
-                    onClick={handleCancel}
-                    variant="inverse"
-                    emphasis="low"
-                    size="small"
-                    className="w-full"
-                  >
-                    Remove Friend
-                  </Button>
-                </>
-              )}
+              {!isOwnProfile &&
+                relationship === SocialUserDto.relationship.ACCEPTED && (
+                  <>
+                    <Button disabled size="small" className="w-full">
+                      Friends
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        void handleCancel();
+                      }}
+                      variant="inverse"
+                      emphasis="low"
+                      size="small"
+                      className="w-full"
+                      disabled={isMutating}
+                    >
+                      Remove Friend
+                    </Button>
+                  </>
+                )}
             </div>
           </aside>
         </section>

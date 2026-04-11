@@ -2,6 +2,7 @@ import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
 
 import type { FriendItem } from "./useFriendList";
+import { useNavigateToProfile } from "./useNavigateToProfile";
 
 type FriendListViewProps = {
   activeTab: "friends" | "pending";
@@ -28,6 +29,8 @@ export const FriendListView = ({
   onRemoveFriend,
   statusClasses,
 }: FriendListViewProps) => {
+  const navigateToProfile = useNavigateToProfile();
+
   return (
     <section className="rounded-lg border-2 border-rave-white/10 p-6 text-rave-white">
       <header className="mb-4 flex items-center justify-between">
@@ -90,11 +93,21 @@ export const FriendListView = ({
                     wrapperClassName="h-10 w-10 rounded-full object-cover"
                   />
                   <div>
-                    <p className="text-sm font-semibold tracking-wide">
+                    <button
+                      type="button"
+                      className="text-sm font-semibold tracking-wide hover:text-rave-red transition-colors"
+                      onClick={() => navigateToProfile(normalizedUsername)}
+                    >
                       {displayName}
-                    </p>
+                    </button>
                     <p className="text-[10px] font-semibold tracking-wide text-rave-white/60">
-                      @{normalizedUsername}
+                      {/* <button
+                        type="button"
+                        className="hover:text-rave-red transition-colors"
+                        onClick={() => navigateToProfile(normalizedUsername)}
+                      >
+                        @{normalizedUsername}
+                      </button> */}
                     </p>
                     <span
                       className={`inline-flex border px-2 py-0.5 text-[10px] tracking-[0.15em] ${statusClasses[friend.status]}`}

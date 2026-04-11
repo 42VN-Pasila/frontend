@@ -10,9 +10,10 @@ import GameStats from "./GameStats";
 import { UserProfile } from "./UserProfile";
 
 export const Dashboard = () => {
-  const { data: userData } = useGetUserByUsernameQuery(
-    useUserStore.getState().username,
-  );
+  const username = useUserStore((state) => state.username);
+  const { data: userData } = useGetUserByUsernameQuery(username, {
+    enabled: Boolean(username.trim()),
+  });
   if (userData) {
     useUserStore.getState().setAvatarUrl(userData.avatarUrl ?? "");
   }

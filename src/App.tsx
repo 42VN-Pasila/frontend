@@ -38,7 +38,7 @@ const App: React.FC = () => {
           />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/dashboard/settings" element={<SettingsPage />} />
-          <Route path="/profile/:userId" element={<ProfilePage />} />
+          <Route path="/profile/:username" element={<ProfilePage />} />
         </Routes>
       </main>
     </div>

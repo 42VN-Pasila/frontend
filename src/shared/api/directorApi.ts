@@ -37,10 +37,13 @@ const getViewerScopedFriendRequestsQueryKey = (viewerUsername: string) =>
 // QUERIES
 //------------------------------------------------
 
-export const useGetUserByUsernameQuery = (username: string) => {
+export const useGetUserByUsernameQuery = (username: string, options?: { enabled?: boolean }) => {
+  const normalizedUsername = username.trim();
+
   return useQuery<UserDto>({
-    queryKey: ['users', username],
-    queryFn: () => directorClient.getUserByUsername(username)
+    queryKey: ['users', normalizedUsername],
+    queryFn: () => directorClient.getUserByUsername(normalizedUsername),
+    enabled: (options?.enabled ?? true) && Boolean(normalizedUsername)
   });
 };
 
