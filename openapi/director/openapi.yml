@@ -191,6 +191,7 @@ paths:
       responses:
         "204":
           description: Friend removed
+
   /friends/requests:
     get:
       tags:
@@ -673,6 +674,19 @@ components:
         - username
       properties:
         matchId:
+          type: string
+        username:
+          type: string
+    SendMessageEvent:
+      type: object
+      required:
+        - matchId
+        - message
+        - username
+      properties:
+        matchId:
+          type: string
+        message:
           type: string
         username:
           type: string
