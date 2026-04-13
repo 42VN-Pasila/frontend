@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
+import type { UserDto } from "@/gen/director";
 import { Button } from "@/shared/components";
 import { Form } from "@/shared/components/Form";
+import { useUpdateUserDisplayNameMutation } from "@/shared/api/directorApi";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
 type AccountInfoProps = {
   username: string;
-  displayname?: string;
+  displayname: string;
   email: string;
 };
 
@@ -31,7 +35,11 @@ const validate = (value: string, rules: typeof passwordRules) => {
 };
 
 export const AccountInfo = (data: AccountInfoProps) => {
-  const resolvedDisplayName = data.displayname?.trim() || data.username;
+  const resolvedDisplayName = data.displayname?.trim();
+  const queryClient = useQueryClient();
+  const setStoredDisplayName = useUserStore((state) => state.setDisplayName);
+  const { mutateAsync: updateUserDisplayName, isPending: isUpdatingDisplayName } =
+    useUpdateUserDisplayNameMutation();
 
   const [displayName, setDisplayName] = useState(resolvedDisplayName);
 
@@ -69,7 +77,8 @@ export const AccountInfo = (data: AccountInfoProps) => {
     setSubmitMsg(null);
   };
 
-  const handleDisplayNameSave = () => {
+
+  const  handleDisplayNameSave = async () => {
     resetDisplayMessages();
 
     const value = displayName.trim();
@@ -81,9 +90,26 @@ export const AccountInfo = (data: AccountInfoProps) => {
     const error = validate(value, displayNameRules);
     if (error) return setDisplayError(error);
 
-    // TODO: API call
-    setDisplayName(value);
-    setDisplayMsg("Ready to send update to Rudex.");
+    try {
+      const response = await updateUserDisplayName({ displayName: value });
+      const nextDisplayName = response.displayName.trim() || value;
+
+      setDisplayName(nextDisplayName);
+      setStoredDisplayName(nextDisplayName);
+      queryClient.setQueryData<UserDto>(["users", data.username.trim()], (prev) =>
+        prev
+          ? {
+              ...prev,
+              displayName: nextDisplayName,
+            }
+          : prev,
+      );
+      setDisplayMsg("Display name is updated.");
+    } catch (error) {
+      setDisplayError(
+        error instanceof Error ? error.message : "Failed to update display name.",
+      );
+    }
   };
 
   const handlePasswordChange = () => {
@@ -111,12 +137,12 @@ export const AccountInfo = (data: AccountInfoProps) => {
         <Form.Input label="Username" value={data.username} disabled />
         <Form.Input label="Email" value={data.email} disabled />
 
-        {/* Display name */}
         <Form.Input
           label="Display Name"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
           onBlur={resetDisplayMessages}
+          className="text-rave-white"
           required
         />
 
@@ -128,10 +154,12 @@ export const AccountInfo = (data: AccountInfoProps) => {
         <div className="flex justify-end">
           <Button
             size="medium"
-            onClick={handleDisplayNameSave}
-            disabled={!displayName.trim()}
+            onClick={() => {
+              void handleDisplayNameSave();
+            }}
+            disabled={!displayName.trim() || isUpdatingDisplayName}
           >
-            Save
+            {isUpdatingDisplayName ? "Saving..." : "Save"}
           </Button>
         </div>
 

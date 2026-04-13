@@ -15,7 +15,8 @@ import {
   type SkipTurnEvent,
   SocialUserDto,
   type UpdateRoomUserStatusRequestBody,
-  type UpdateUserAvatarRequestBody
+  type UpdateUserAvatarRequestBody,
+  type UpdateUserDisplayNameRequestBody
 } from '@/gen/director';
 import { OpenAPI } from '@/gen/director/core/OpenAPI';
 import { UsersService } from '@/gen/director/services/UsersService';
@@ -188,6 +189,9 @@ OpenAPI.WITH_CREDENTIALS = true;
 export const directorClient = {
   async getUserByUsername(username: string) {
     return UsersService.getUserByUsername({ username });
+  },
+  async updateUserDisplayName(body: UpdateUserDisplayNameRequestBody) {
+    return UsersService.updateUserDisplayName({ requestBody: body });
   },
   async createRoom(body: { roomName: string }) {
     return RoomsService.postRooms({ requestBody: { roomName: body.roomName } });

@@ -2,6 +2,7 @@ import { OpenAPI } from '@/gen/rudex/core/OpenAPI';
 import type { LoginRequestBody } from '@/gen/rudex/models/LoginRequestBody';
 import type { RegisterRequestBody } from '@/gen/rudex/models/RegisterRequestBody';
 import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
+import { UserProfileService } from '@/gen/rudex/services/UserProfileService';
 import { UserRegistrationService } from '@/gen/rudex/services/UserRegistrationService';
 
 import { toDevPath } from './path.dev';
@@ -33,9 +34,13 @@ export const rudexClient = {
     return UserLoginService.loginUser({ requestBody: body });
   },
 
+  async getUserProfile() {
+    return UserProfileService.getUserProfile();
+  },
+
   async register(body: RegisterRequestBody) {
     return UserRegistrationService.registerUser({ requestBody: body });
   }
 };
 
-export const { login, register } = rudexClient;
+export const { login, register, getUserProfile } = rudexClient;

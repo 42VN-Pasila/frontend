@@ -14,6 +14,8 @@ import type {
   UpdateRoomUserStatusResponse,
   UpdateUserAvatarRequestBody,
   UpdateUserAvatarResponse,
+  UpdateUserDisplayNameRequestBody,
+  UpdateUserDisplayNameResponse,
   UserDto
 } from '@/gen/director';
 import type { ConnectRoomResponse } from '@/gen/director/models/ConnectRoomResponse';
@@ -170,6 +172,24 @@ export const useUpdateUserStatusMutation = () => {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
       queryClient.invalidateQueries({ queryKey: ['rooms', variables.roomId] });
+    }
+  });
+};
+
+export const useUpdateUserDisplayNameMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    UpdateUserDisplayNameResponse,
+    Error,
+    { displayName: string }
+  >({
+    mutationFn: ({ displayName }) => {
+      const bodyPayload: UpdateUserDisplayNameRequestBody = { displayName };
+      return directorClient.updateUserDisplayName(bodyPayload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['rooms'] });
     }
   });
 };

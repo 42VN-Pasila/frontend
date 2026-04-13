@@ -1,23 +1,31 @@
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
+import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
+import { rudexClient } from "@/shared/api/rudexClient";
 import NavBar from "@/shared/components/NavBar";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
-// import {
-//   useListAvatarsQuery,
-//   useUpdateUserAvatarMutation,
-// } from "@/shared/api/directorApi";
-// import { useUserStore } from "@/shared/stores/useUserStore";
 import { AccountInfo } from "../Profile/AccountInfo";
 import { AvatarSection } from "../Profile/AvatarSection";
 
-const MOCK_USER = {
-  username: "example-user",
-  displayname: "Example User",
-  email: "user@example.com",
-};
-
 export const SettingsPage = () => {
   const navigate = useNavigate();
+  const username = useUserStore((state) => state.username).trim();
+  const { data: userData } = useGetUserByUsernameQuery(username, {
+    enabled: Boolean(username),
+  });
+  const { data: profileData } = useQuery({
+    queryKey: ["rudex", "profile"],
+    queryFn: () => rudexClient.getUserProfile(),
+    enabled: Boolean(username),
+  });
+
+  const accountInfo = {
+    username: username || "",
+    displayname: userData?.displayName.trim() || username || "",
+    email: profileData?.email || "",
+  };
 
   const handleReturn = () => {
     navigate("/dashboard");
@@ -35,7 +43,7 @@ export const SettingsPage = () => {
       <div className="mx-auto w-full max-w-[72vw] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className="grid grid-cols-1 items-start gap-10 xl:grid-cols-12">
           <div className="grid grid-cols-1 gap-4 xl:col-span-8">
-            <AccountInfo {...MOCK_USER} />
+            <AccountInfo {...accountInfo} />
           </div>
 
           <div className="grid grid-cols-1 gap-4 xl:col-span-4 xl:sticky xl:top-6">

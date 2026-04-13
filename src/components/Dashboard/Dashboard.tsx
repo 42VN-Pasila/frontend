@@ -1,3 +1,4 @@
+import type { UserDto } from "@/gen/director";
 import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
@@ -14,6 +15,14 @@ export const Dashboard = () => {
   const { data: userData } = useGetUserByUsernameQuery(username, {
     enabled: Boolean(username.trim()),
   });
+
+  const currentUser: UserDto = userData ?? {
+    username: username.trim(),
+    displayName: username.trim(),
+    status: "OFFLINE",
+    avatarUrl: undefined,
+  };
+
   if (userData) {
     useUserStore.getState().setAvatarUrl(userData.avatarUrl ?? "");
   }
@@ -29,7 +38,7 @@ export const Dashboard = () => {
               Rooms overview & quick actions
             </p>
           </div>
-          <UserProfile className="self-start sm:self-auto" />
+          <UserProfile user={currentUser} className="self-start sm:self-auto" />
         </div>
 
         <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">

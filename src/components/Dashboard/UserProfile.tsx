@@ -1,7 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
 import Avatar from "@/shared/components/Avatar";
-import { useUserStore } from "@/shared/stores/useUserStore";
+import type { UserDto } from "@/gen/director";
+
+type UserProfileProps = React.ComponentPropsWithoutRef<"button"> & {
+  user: UserDto;
+};
 
 const getInitials = (username: string) =>
   username
@@ -12,12 +16,12 @@ const getInitials = (username: string) =>
     .join("");
 
 export const UserProfile = ({
+  user,
   className = "",
   ...props
-}: React.ComponentPropsWithoutRef<"button">) => {
-  const username = useUserStore((state) => state.username);
-  const avatarUrl = useUserStore((state) => state.avatarUrl);
-  const initials = getInitials(username);
+}: UserProfileProps) => {
+  const label = user.displayName.trim() || user.username.trim();
+  const initials = getInitials(label);
   const navigate = useNavigate();
 
   const handleClick = (initials: string) => {
@@ -33,13 +37,13 @@ export const UserProfile = ({
       {...props}
     >
       <Avatar
-        src={avatarUrl}
-        alt={username}
+        src={user.avatarUrl}
+        alt={label}
         fallbackText={initials}
         className="h-10 w-10"
       />
       <span className="pr-2 text-sm tracking-wide text-rave-white/85 group-hover:text-rave-white">
-        {username}
+        {label}
       </span>
     </button>
   );
