@@ -112,7 +112,7 @@ export const AccountInfo = (data: AccountInfoProps) => {
     }
   };
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = async () => {
     resetSubmitMessages();
 
     if (!password.current)
@@ -123,6 +123,11 @@ export const AccountInfo = (data: AccountInfoProps) => {
     if (confirmPasswordError) return setSubmitError(confirmPasswordError);
 
     // TODO: API call
+    try{
+          const response = await update
+    }catch (error) {
+      set
+    }
     console.log("Password change request", { email: data.email });
 
     setPassword({ current: "", new: "", confirm: "" });
