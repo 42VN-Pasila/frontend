@@ -731,7 +731,27 @@ components:
           type: string
         url:
           type: string
-
+    MatchMessageDto:
+      type: object
+      required:
+        - type
+        - message
+        - matchId
+        - username
+        - createdAt
+      properties:
+        type:
+          type: string
+          enum: [Chat, Notification]
+        message:
+          type: string
+        matchId:
+          type: string
+        username:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
     SocialUserDto:
       type: object
       required:
