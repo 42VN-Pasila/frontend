@@ -16,14 +16,14 @@ export const SettingsPage = () => {
     enabled: Boolean(username),
   });
   const { data: profileData } = useQuery({
-    queryKey: ["rudex", "profile"],
-    queryFn: () => rudexClient.getUserProfile(),
+    queryKey: ["rudex", "profile", username],
+    queryFn: () => rudexClient.getUserInfo(username),
     enabled: Boolean(username),
   });
 
   const accountInfo = {
-    username: username || "",
-    displayname: userData?.displayName.trim() || username || "",
+    username: username,
+    displayname: userData?.displayName.trim() || username,
     email: profileData?.email || "",
   };
 

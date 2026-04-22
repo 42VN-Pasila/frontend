@@ -15,7 +15,6 @@ import type {
   UpdateUserAvatarRequestBody,
   UpdateUserAvatarResponse,
   UpdateUserDisplayNameRequestBody,
-  UpdateUserDisplayNameResponse,
   UserDto
 } from '@/gen/director';
 import type { ConnectRoomResponse } from '@/gen/director/models/ConnectRoomResponse';
@@ -179,11 +178,7 @@ export const useUpdateUserStatusMutation = () => {
 export const useUpdateUserDisplayNameMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    UpdateUserDisplayNameResponse,
-    Error,
-    { displayName: string }
-  >({
+  return useMutation<void, Error, { displayName: string }>({
     mutationFn: ({ displayName }) => {
       const bodyPayload: UpdateUserDisplayNameRequestBody = { displayName };
       return directorClient.updateUserDisplayName(bodyPayload);

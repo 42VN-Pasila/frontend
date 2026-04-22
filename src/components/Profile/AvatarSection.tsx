@@ -9,7 +9,7 @@ import Avatar from "@/shared/components/Avatar";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 export const AvatarSection = () => {
-  const { setAvatarUrl, userId, avatarUrl, username } = useUserStore();
+  const { setAvatarUrl, avatarUrl, username } = useUserStore();
   const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(avatarUrl ?? "");
   const { data: avatars = [], isLoading: isLoadingAvatars } =
     useListAvatarsQuery();
@@ -20,9 +20,8 @@ export const AvatarSection = () => {
     const selectedAvatar = avatars.find(
       (avatar) => avatar.url === selectedAvatarUrl,
     );
-    if (selectedAvatar && userId) {
+    if (selectedAvatar) {
       await updateUserAvatar({
-        userId: userId,
         avatarId: selectedAvatar.id,
       });
     }

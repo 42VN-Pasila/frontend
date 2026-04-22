@@ -162,12 +162,8 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateUserDisplayNameRequestBody'
       responses:
-        '200':
+        '204':
           description: User display name updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UpdateUserDisplayNameResponse'
         '400':
           description: Bad request
           content:
@@ -714,6 +710,19 @@ components:
           type: string
         username:
           type: string
+    SendMessageEvent:
+      type: object
+      required:
+        - matchId
+        - message
+        - username
+      properties:
+        matchId:
+          type: string
+        message:
+          type: string
+        username:
+          type: string
     CreateUserRequestBody:
       type: object
       required:
@@ -752,15 +761,8 @@ components:
       properties:
         displayName:
           type: string
-          minLength: 8
+          minLength: 1
           maxLength: 20
-    UpdateUserDisplayNameResponse:
-      type: object
-      required:
-        - displayName
-      properties:
-        displayName:
-          type: string
     Avatar:
       type: object
       required:

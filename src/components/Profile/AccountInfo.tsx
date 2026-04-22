@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+
 import { useQueryClient } from "@tanstack/react-query";
 
 import type { UserDto } from "@/gen/director";
+import { useUpdateUserDisplayNameMutation } from "@/shared/api/directorApi";
+import { rudexClient } from "@/shared/api/rudexClient";
 import { Button } from "@/shared/components";
 import { Form } from "@/shared/components/Form";
-import { useUpdateUserDisplayNameMutation } from "@/shared/api/directorApi";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 type AccountInfoProps = {
@@ -35,11 +37,13 @@ const validate = (value: string, rules: typeof passwordRules) => {
 };
 
 export const AccountInfo = (data: AccountInfoProps) => {
-  const resolvedDisplayName = data.displayname?.trim();
+  const resolvedDisplayName = data.displayname?.trim() || "";
   const queryClient = useQueryClient();
   const setStoredDisplayName = useUserStore((state) => state.setDisplayName);
-  const { mutateAsync: updateUserDisplayName, isPending: isUpdatingDisplayName } =
-    useUpdateUserDisplayNameMutation();
+  const {
+    mutateAsync: updateUserDisplayName,
+    isPending: isUpdatingDisplayName,
+  } = useUpdateUserDisplayNameMutation();
 
   const [displayName, setDisplayName] = useState(resolvedDisplayName);
 
@@ -76,9 +80,7 @@ export const AccountInfo = (data: AccountInfoProps) => {
     setSubmitError(null);
     setSubmitMsg(null);
   };
-
-
-  const  handleDisplayNameSave = async () => {
+  const handleDisplayNameSave = async () => {
     resetDisplayMessages();
 
     const value = displayName.trim();
@@ -91,23 +93,27 @@ export const AccountInfo = (data: AccountInfoProps) => {
     if (error) return setDisplayError(error);
 
     try {
-      const response = await updateUserDisplayName({ displayName: value });
-      const nextDisplayName = response.displayName.trim() || value;
+      await updateUserDisplayName({ displayName: value });
+      const nextDisplayName = value;
 
       setDisplayName(nextDisplayName);
       setStoredDisplayName(nextDisplayName);
-      queryClient.setQueryData<UserDto>(["users", data.username.trim()], (prev) =>
-        prev
-          ? {
-              ...prev,
-              displayName: nextDisplayName,
-            }
-          : prev,
+      queryClient.setQueryData<UserDto>(
+        ["users", data.username.trim()],
+        (prev) =>
+          prev
+            ? {
+                ...prev,
+                displayName: nextDisplayName,
+              }
+            : prev,
       );
       setDisplayMsg("Display name is updated.");
     } catch (error) {
       setDisplayError(
-        error instanceof Error ? error.message : "Failed to update display name.",
+        error instanceof Error
+          ? error.message
+          : "Failed to update display name.",
       );
     }
   };
@@ -122,16 +128,20 @@ export const AccountInfo = (data: AccountInfoProps) => {
 
     if (confirmPasswordError) return setSubmitError(confirmPasswordError);
 
-    // TODO: API call
-    try{
-          const response = await update
-    }catch (error) {
-      set
+    try {
+      await rudexClient.updatePassword({
+        currentPassword: password.current,
+        newPassword: password.new,
+      });
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to update password.",
+      );
+      return;
     }
-    console.log("Password change request", { email: data.email });
 
     setPassword({ current: "", new: "", confirm: "" });
-    setSubmitMsg("Ready to send password update to Rudex.");
+    setSubmitMsg("Password is updated.");
   };
 
   return (
