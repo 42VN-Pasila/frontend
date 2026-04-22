@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import { rudexClient } from "@/shared/api/rudexClient";

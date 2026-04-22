@@ -2,8 +2,8 @@ import { OpenAPI } from '@/gen/rudex/core/OpenAPI';
 import type { LoginRequestBody } from '@/gen/rudex/models/LoginRequestBody';
 import type { RegisterRequestBody } from '@/gen/rudex/models/RegisterRequestBody';
 import type { UpdatePasswordRequestBody } from '@/gen/rudex/models/UpdatePasswordRequestBody';
-import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
 import { UserInfoService } from '@/gen/rudex/services/UserInfoService';
+import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
 import { UserProfileService } from '@/gen/rudex/services/UserProfileService';
 import { UserRegistrationService } from '@/gen/rudex/services/UserRegistrationService';
 

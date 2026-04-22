@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
-import Avatar from "@/shared/components/Avatar";
 import type { UserDto } from "@/gen/director";
+import Avatar from "@/shared/components/Avatar";
 
 type UserProfileProps = React.ComponentPropsWithoutRef<"button"> & {
   user: UserDto;

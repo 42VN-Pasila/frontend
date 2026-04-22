@@ -101,7 +101,7 @@ export const FriendListView = ({
                       {displayName}
                     </button>
                     <p className="text-[10px] font-semibold tracking-wide text-rave-white/60">
-                        @{normalizedUsername}
+                      @{normalizedUsername}
                     </p>
                     <span
                       className={`inline-flex border px-2 py-0.5 text-[10px] tracking-[0.15em] ${statusClasses[friend.status]}`}
