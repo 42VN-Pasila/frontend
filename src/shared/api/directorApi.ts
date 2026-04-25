@@ -37,10 +37,20 @@ const getViewerScopedFriendRequestsQueryKey = (viewerUsername: string) =>
 // QUERIES
 //------------------------------------------------
 
-export const useGetUserByUsernameQuery = (username: string) => {
+export const useGetUserByUsernameQuery = (
+  username: string,
+  options?: {
+    enabled?: boolean;
+    refetchInterval?: number;
+    refetchOnWindowFocus?: boolean;
+  }
+) => {
   return useQuery<UserDto>({
     queryKey: ['users', username],
-    queryFn: () => directorClient.getUserByUsername(username)
+    queryFn: () => directorClient.getUserByUsername(username),
+    enabled: options?.enabled ?? true,
+    refetchInterval: options?.refetchInterval,
+    refetchOnWindowFocus: options?.refetchOnWindowFocus ?? true
   });
 };
 

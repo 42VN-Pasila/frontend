@@ -1,14 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 
-import { useNavigate } from "react-router-dom";
-
-import { queryClient } from "@/shared/api/queryClient";
-import { useAuth } from "@/shared/auth/useAuth";
-import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
-import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
+import { useAppLogout } from "@/shared/auth/useAppLogout";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
+import NavigationItemUnderline from "../Auth/NavigationItemUnderline";
 import { FriendList } from "../Friend/FriendList";
 import { FriendSearchAdd } from "../Friend/FriendSearchAdd";
 import { RoomList } from "../RoomList/RoomList";
@@ -18,38 +14,33 @@ import GameStats from "./GameStats";
 import { UserProfile } from "./UserProfile";
 
 export const Dashboard = () => {
-  const navigate = useNavigate();
-  const { logout } = useAuth();
-  const resetUser = useUserStore((state) => state.resetUser);
-  const resetRoom = useRoomStore((state) => state.resetRoom);
-  const resetGameSession = useGameSessionStore((state) => state.resetGameSession);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const username = useUserStore((state) => state.username).trim();
+  const { isLoggingOut, logoutAndRedirect } = useAppLogout();
+  const previousStatusRef = useRef<string | undefined>(undefined);
 
-  const { data: userData } = useGetUserByUsernameQuery(
-    useUserStore.getState().username,
-  );
+  const { data: userData } = useGetUserByUsernameQuery(username, {
+    enabled: Boolean(username),
+    refetchInterval: 2000,
+    refetchOnWindowFocus: true,
+  });
 
   if (userData) {
     useUserStore.getState().setAvatarUrl(userData.avatarUrl ?? "");
   }
 
-  const handleLogout = async () => {
-    if (isLoggingOut) {
+  useEffect(() => {
+    const currentStatus = userData?.status;
+    if (!currentStatus) {
       return;
     }
 
-    setIsLoggingOut(true);
-    try {
-      await logout();
-    } finally {
-      resetGameSession();
-      resetRoom();
-      resetUser();
-      queryClient.clear();
-      navigate("/login", { replace: true });
-      setIsLoggingOut(false);
+    const previousStatus = previousStatusRef.current;
+    if (previousStatus && previousStatus !== "Offline" && currentStatus === "Offline") {
+      void logoutAndRedirect();
     }
-  };
+
+    previousStatusRef.current = currentStatus;
+  }, [userData?.status, logoutAndRedirect]);
 
   return (
     <div className="min-h-screen bg-rave-black text-rave-white">
@@ -64,17 +55,19 @@ export const Dashboard = () => {
             </p>
           </div>
           <div className="flex items-center gap-3 self-start sm:self-auto">
-            <UserProfile />
             <button
               type="button"
               onClick={() => {
-                void handleLogout();
+                void logoutAndRedirect();
               }}
               disabled={isLoggingOut}
-              className="inline-flex h-12 items-center justify-center border border-rave-red/70 px-4 text-sm font-chakraBold uppercase tracking-wider text-rave-white transition-colors hover:bg-rave-red/15 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-12 items-center justify-center px-4 text-sm font-chakraBold uppercase tracking-wider text-rave-white cursor-pointer "
             >
-              {isLoggingOut ? "Logging out..." : "Logout"}
+              <NavigationItemUnderline
+                text={isLoggingOut ? "Logging out..." : "Logout"}
+              />
             </button>
+            <UserProfile />
           </div>
         </div>
 
