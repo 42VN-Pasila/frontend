@@ -191,6 +191,7 @@ paths:
       responses:
         "204":
           description: Friend removed
+
   /friends/requests:
     get:
       tags:
@@ -676,6 +677,21 @@ components:
           type: string
         username:
           type: string
+    SendMessageEvent:
+      type: object
+      required:
+        - matchId
+        - message
+        - username
+      properties:
+        matchId:
+          type: string
+        message:
+          type: string
+        username:
+          type: string
+        messageType:
+          $ref: "#/components/schemas/MatchMessageType"
     CreateUserRequestBody:
       type: object
       required:
@@ -717,7 +733,31 @@ components:
           type: string
         url:
           type: string
-
+    MatchMessageType:
+      type: string
+      enum:
+        - Chat
+        - Notification
+    MatchMessageDto:
+      type: object
+      required:
+        - type
+        - message
+        - matchId
+        - username
+        - createdAt
+      properties:
+        type:
+          $ref: "#/components/schemas/MatchMessageType"
+        message:
+          type: string
+        matchId:
+          type: string
+        username:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
     SocialUserDto:
       type: object
       required:

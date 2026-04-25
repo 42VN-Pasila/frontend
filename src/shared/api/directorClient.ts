@@ -6,12 +6,14 @@ import {
   type JoinMatchEvent,
   type LeaveMatchEvent,
   type MatchDto,
+  type MatchMessageDto,
   type MatchResultDto,
   type RequestCardEvent,
   type RequestFriendRequestBody,
   ResourcesService,
   RespondToFriendRequestRequestBody,
   RoomsService,
+  type SendMessageEvent,
   type SkipTurnEvent,
   SocialUserDto,
   type UpdateRoomUserStatusRequestBody,
@@ -167,6 +169,20 @@ export const socketPingMatch = (payload: MatchPingEvent): Promise<void> => {
   });
 };
 
+export const socketSendMatchMessage = (payload: SendMessageEvent): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    socket.emit('match:chat:sendMessage', payload, (res: SocketAck) => {
+      if (!res?.ok) {
+        console.error('send message failed', res?.error);
+        reject(new Error(res?.error || 'SEND_MESSAGE_FAILED'));
+        return;
+      }
+
+      resolve();
+    });
+  });
+};
+
 export const onMatchState = (handler: (match: MatchDto, matchResult?: MatchResultDto) => void) => {
   socket.on('match:state', handler);
   return () => socket.off('match:state', handler);
@@ -180,6 +196,11 @@ export const onSocketConnect = (handler: () => void) => {
 export const onSocketDisconnect = (handler: () => void) => {
   socket.on('disconnect', handler);
   return () => socket.off('disconnect', handler);
+};
+
+export const onLatestChatMessage = (handler: (message: MatchMessageDto) => void) => {
+  socket.on('match:chat:latestMessage', handler);
+  return () => socket.off('match:chat:latestMessage', handler);
 };
 
 OpenAPI.BASE = directorBaseUrl;
