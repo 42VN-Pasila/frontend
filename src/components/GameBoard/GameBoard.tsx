@@ -1,15 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import {
   disconnectSocket,
   socketAskCardMatch,
   socketExitMatch,
 } from "@/shared/api/directorClient";
 import { queryClient } from "@/shared/api/queryClient";
-import { useAppLogout } from "@/shared/auth/useAppLogout";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
 import { useRoomStore } from "@/shared/stores/useRoomStore";
 import { useUserStore } from "@/shared/stores/useUserStore";
@@ -34,18 +32,11 @@ export type GameRequestPayload = {
 
 export const GameBoard = () => {
   const navigate = useNavigate();
-  const { logoutAndRedirect } = useAppLogout();
   const { username } = useUserStore();
   const { hands, seats, resetGameSession } = useGameSessionStore();
   const { id: roomId, resetRoom } = useRoomStore();
   const matchId = useParams<{ matchId: string }>().matchId ?? "";
   const currentUsername = username.trim();
-  const { data: currentUser } = useGetUserByUsernameQuery(currentUsername, {
-    enabled: Boolean(currentUsername),
-    refetchInterval: 2000,
-    refetchOnWindowFocus: true,
-  });
-  const previousStatusRef = useRef<string | undefined>(undefined);
 
   const [isExitingGame, setIsExitingGame] = useState(false);
   const [selectedOpponentUsername, setSelectedOpponentUsername] = useState<
@@ -80,24 +71,6 @@ export const GameBoard = () => {
     if (!isMatchOver || matchResult) return;
     void navigateToDashboard();
   }, [isMatchOver, matchResult, navigateToDashboard]);
-
-  useEffect(() => {
-    const currentStatus = currentUser?.status;
-    if (!currentStatus) {
-      return;
-    }
-
-    const previousStatus = previousStatusRef.current;
-    if (
-      previousStatus &&
-      previousStatus !== "Offline" &&
-      currentStatus === "Offline"
-    ) {
-      void logoutAndRedirect();
-    }
-
-    previousStatusRef.current = currentStatus;
-  }, [currentUser?.status, logoutAndRedirect]);
 
   const isMyTurn =
     seats.find((s) => s.username === currentUsername)?.isTurn ?? false;

@@ -32,7 +32,8 @@ export const useAppLogout = () => {
       resetRoom();
       resetUser();
       queryClient.clear();
-      navigate('/login', { replace: true });
+      localStorage.setItem('app-logout', Date.now().toString());
+      navigate('/', { replace: true });
       setIsLoggingOut(false);
     }
   }, [isLoggingOut, logout, navigate, resetGameSession, resetRoom, resetUser]);

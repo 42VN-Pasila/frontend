@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import { useAppLogout } from "@/shared/auth/useAppLogout";
@@ -16,11 +16,9 @@ import { UserProfile } from "./UserProfile";
 export const Dashboard = () => {
   const username = useUserStore((state) => state.username).trim();
   const { isLoggingOut, logoutAndRedirect } = useAppLogout();
-  const previousStatusRef = useRef<string | undefined>(undefined);
 
   const { data: userData } = useGetUserByUsernameQuery(username, {
     enabled: Boolean(username),
-    refetchInterval: 2000,
     refetchOnWindowFocus: true,
   });
 
@@ -29,22 +27,15 @@ export const Dashboard = () => {
   }
 
   useEffect(() => {
-    const currentStatus = userData?.status;
-    if (!currentStatus) {
-      return;
-    }
+    const handleStorageEvent = (event: StorageEvent) => {
+      if (event.key === "app-logout") {
+        void logoutAndRedirect();
+      }
+    };
 
-    const previousStatus = previousStatusRef.current;
-    if (
-      previousStatus &&
-      previousStatus !== "Offline" &&
-      currentStatus === "Offline"
-    ) {
-      void logoutAndRedirect();
-    }
-
-    previousStatusRef.current = currentStatus;
-  }, [userData?.status, logoutAndRedirect]);
+    window.addEventListener("storage", handleStorageEvent);
+    return () => window.removeEventListener("storage", handleStorageEvent);
+  }, [logoutAndRedirect]);
 
   return (
     <div className="min-h-screen bg-rave-black text-rave-white">
