@@ -690,6 +690,8 @@ components:
           type: string
         username:
           type: string
+        messageType:
+          $ref: "#/components/schemas/MatchMessageType"
     CreateUserRequestBody:
       type: object
       required:
@@ -731,6 +733,11 @@ components:
           type: string
         url:
           type: string
+    MatchMessageType:
+      type: string
+      enum:
+        - Chat
+        - Notification
     MatchMessageDto:
       type: object
       required:
@@ -741,8 +748,7 @@ components:
         - createdAt
       properties:
         type:
-          type: string
-          enum: [Chat, Notification]
+          $ref: "#/components/schemas/MatchMessageType"
         message:
           type: string
         matchId:

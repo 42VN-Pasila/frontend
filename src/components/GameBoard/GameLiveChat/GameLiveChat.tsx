@@ -95,11 +95,11 @@ export const GameLiveChat = ({ initialMessages = [] }: GameLiveChatProps) => {
           messages.map((chatMessage, index) => (
             <div
               key={`${chatMessage.matchId}-${chatMessage.username}-${chatMessage.createdAt}-${index}`}
-              className="max-w-[80%]"
             >
               <ChatMessage
                 senderUserName={chatMessage.username}
                 message={chatMessage.message}
+                messageType={chatMessage.type}
               />
             </div>
           ))
