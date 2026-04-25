@@ -1,5 +1,7 @@
 import { useEffect } from "react";
+
 import { useAppLogout } from "@/shared/auth/useAppLogout";
+
 import NavigationItemUnderline from "../Auth/NavigationItemUnderline";
 import { FriendList } from "../Friend/FriendList";
 import { FriendSearchAdd } from "../Friend/FriendSearchAdd";
