@@ -1,9 +1,5 @@
 import { useEffect } from "react";
-
-import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import { useAppLogout } from "@/shared/auth/useAppLogout";
-import { useUserStore } from "@/shared/stores/useUserStore";
-
 import NavigationItemUnderline from "../Auth/NavigationItemUnderline";
 import { FriendList } from "../Friend/FriendList";
 import { FriendSearchAdd } from "../Friend/FriendSearchAdd";
@@ -14,17 +10,7 @@ import GameStats from "./GameStats";
 import { UserProfile } from "./UserProfile";
 
 export const Dashboard = () => {
-  const username = useUserStore((state) => state.username).trim();
   const { isLoggingOut, logoutAndRedirect } = useAppLogout();
-
-  const { data: userData } = useGetUserByUsernameQuery(username, {
-    enabled: Boolean(username),
-    refetchOnWindowFocus: true,
-  });
-
-  if (userData) {
-    useUserStore.getState().setAvatarUrl(userData.avatarUrl ?? "");
-  }
 
   useEffect(() => {
     const handleStorageEvent = (event: StorageEvent) => {
