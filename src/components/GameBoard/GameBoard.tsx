@@ -2,12 +2,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
+import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import {
   disconnectSocket,
   socketAskCardMatch,
   socketExitMatch,
 } from "@/shared/api/directorClient";
-import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import { queryClient } from "@/shared/api/queryClient";
 import { useAppLogout } from "@/shared/auth/useAppLogout";
 import { useGameSessionStore } from "@/shared/stores/useGameSessionStore";
@@ -88,7 +88,11 @@ export const GameBoard = () => {
     }
 
     const previousStatus = previousStatusRef.current;
-    if (previousStatus && previousStatus !== "Offline" && currentStatus === "Offline") {
+    if (
+      previousStatus &&
+      previousStatus !== "Offline" &&
+      currentStatus === "Offline"
+    ) {
       void logoutAndRedirect();
     }
 

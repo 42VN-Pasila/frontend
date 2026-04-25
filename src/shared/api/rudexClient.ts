@@ -2,10 +2,10 @@ import { OpenAPI } from '@/gen/rudex/core/OpenAPI';
 import type { LoginRequestBody } from '@/gen/rudex/models/LoginRequestBody';
 import type { RegisterRequestBody } from '@/gen/rudex/models/RegisterRequestBody';
 import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
+import { UserLogoutService } from '@/gen/rudex/services/UserLogoutService';
 import { UserRegistrationService } from '@/gen/rudex/services/UserRegistrationService';
 
 import { toDevPath } from './path.dev';
-import { UserLogoutService } from '@/gen/rudex/services/UserLogoutService';
 
 const resolveRudexBaseUrl = () => {
   const fallbackUrl = OpenAPI.BASE;

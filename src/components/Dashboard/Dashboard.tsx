@@ -35,7 +35,11 @@ export const Dashboard = () => {
     }
 
     const previousStatus = previousStatusRef.current;
-    if (previousStatus && previousStatus !== "Offline" && currentStatus === "Offline") {
+    if (
+      previousStatus &&
+      previousStatus !== "Offline" &&
+      currentStatus === "Offline"
+    ) {
       void logoutAndRedirect();
     }
 

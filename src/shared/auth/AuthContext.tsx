@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       await rudexClient.logout();
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.warn('Logout request failed, forcing local sign-out.', error);
+        console.warn("Logout request failed, forcing local sign-out.", error);
       }
     } finally {
       disconnectSocket();
