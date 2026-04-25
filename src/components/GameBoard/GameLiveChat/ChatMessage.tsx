@@ -1,4 +1,4 @@
-import type { MatchMessageType } from "@/gen/director";
+import { MatchMessageType } from "@/gen/director";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
 import { CARD_ICONS, SUIT_ICONS } from "../constants";
@@ -45,7 +45,7 @@ function renderNotificationMessage(message: string) {
 export const ChatMessage = ({
   senderUserName,
   message,
-  messageType = "Chat",
+  messageType = MatchMessageType.CHAT,
 }: ChatMessageProps) => {
   const { username } = useUserStore();
   const isSender = username === senderUserName;

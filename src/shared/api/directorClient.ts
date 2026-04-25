@@ -6,7 +6,7 @@ import {
   type JoinMatchEvent,
   type LeaveMatchEvent,
   type MatchDto,
-  MatchMessageDto,
+  type MatchMessageDto,
   type MatchResultDto,
   type RequestCardEvent,
   type RequestFriendRequestBody,
