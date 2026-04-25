@@ -5,6 +5,7 @@ import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
 import { UserRegistrationService } from '@/gen/rudex/services/UserRegistrationService';
 
 import { toDevPath } from './path.dev';
+import { UserLogoutService } from '@/gen/rudex/services/UserLogoutService';
 
 const resolveRudexBaseUrl = () => {
   const fallbackUrl = OpenAPI.BASE;
@@ -35,7 +36,11 @@ export const rudexClient = {
 
   async register(body: RegisterRequestBody) {
     return UserRegistrationService.registerUser({ requestBody: body });
+  },
+
+  async logout() {
+    return UserLogoutService.logoutUser();
   }
 };
 
-export const { login, register } = rudexClient;
+export const { login, register, logout } = rudexClient;
