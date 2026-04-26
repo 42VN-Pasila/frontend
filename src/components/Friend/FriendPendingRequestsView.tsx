@@ -4,6 +4,7 @@ import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
 
 import type { PendingRequestItem } from "./useFriendPendingRequests";
+import { useNavigateToProfile } from "./useNavigateToProfile";
 
 type FriendPendingRequestsViewProps = {
   activeTab: "friends" | "pending";
@@ -33,6 +34,7 @@ export const FriendPendingRequestsView = ({
   onRespondRequest,
   onCancelRequest,
 }: FriendPendingRequestsViewProps) => {
+  const navigateToProfile = useNavigateToProfile();
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const [pendingErr, setPendingErr] = useState("");
@@ -134,9 +136,13 @@ export const FriendPendingRequestsView = ({
                       wrapperClassName="h-10 w-10 rounded-full object-cover"
                     />
                     <div>
-                      <p className="text-sm font-semibold tracking-wide">
+                      <button
+                        type="button"
+                        className="text-sm font-semibold tracking-wide hover:text-rave-red transition-colors cursor-pointer"
+                        onClick={() => navigateToProfile(normalizedUsername)}
+                      >
                         {displayName}
-                      </p>
+                      </button>
                       <p className="text-[10px] font-semibold tracking-wide text-rave-white/60">
                         @{normalizedUsername}
                       </p>

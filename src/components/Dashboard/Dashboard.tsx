@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+
+import type { UserDto } from "@/gen/director";
 import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
@@ -10,12 +13,30 @@ import GameStats from "./GameStats";
 import { UserProfile } from "./UserProfile";
 
 export const Dashboard = () => {
-  const { data: userData } = useGetUserByUsernameQuery(
-    useUserStore.getState().username,
-  );
-  if (userData) {
-    useUserStore.getState().setAvatarUrl(userData.avatarUrl ?? "");
-  }
+  const username = useUserStore((state) => state.username);
+  const setAvatarUrl = useUserStore((state) => state.setAvatarUrl);
+  const normalizedUsername = username.trim();
+
+  const { data: userData } = useGetUserByUsernameQuery(username, {
+    enabled: Boolean(normalizedUsername),
+  });
+
+  useEffect(() => {
+    if (!userData) return;
+
+    setAvatarUrl(userData.avatarUrl ?? "");
+  }, [setAvatarUrl, userData]);
+
+  const safeUsername = userData?.username?.trim() || normalizedUsername;
+  const safeDisplayName = userData?.displayName?.trim() || safeUsername;
+
+  const currentUser: UserDto = userData ?? {
+    username: safeUsername,
+    displayName: safeDisplayName,
+    status: "OFFLINE",
+    avatarUrl: undefined,
+  };
+
   return (
     <div className="min-h-screen bg-rave-black text-rave-white">
       <div className="mx-auto w-full max-w-[90vw] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
@@ -28,7 +49,7 @@ export const Dashboard = () => {
               Rooms overview & quick actions
             </p>
           </div>
-          <UserProfile className="self-start sm:self-auto" />
+          <UserProfile user={currentUser} className="self-start sm:self-auto" />
         </div>
 
         <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">

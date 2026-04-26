@@ -54,9 +54,7 @@ const Label = React.forwardRef<HTMLLabelElement, FormLabelProps>(
         {...rest}
       >
         {children}
-        {required && (
-          <span className="text-[var(--color-primary)] ml-1">*</span>
-        )}
+        {required && <span className="text-rave-red ml-1">*</span>}
       </label>
     );
   },
@@ -71,7 +69,7 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
     return (
       <div className="flex flex-col" data-field>
         {label && (
-          <Label required={required} className="text-[var(--color-neutral-50)]">
+          <Label required={required} className="text-rave-white/70">
             {label}
           </Label>
         )}
@@ -82,24 +80,20 @@ const Input = React.forwardRef<HTMLInputElement, FormInputProps>(
           className={twMerge(
             "px-3 py-2 rounded-md bg-black/50 border",
             error
-              ? "border-[var(--color-red)]"
-              : "border-[var(--color-neutral-300)] text-[var(--color-neutral-50)]",
-            "placeholder:text-[var(--color-neutral-300)] opacity-50",
+              ? "border-rave-red"
+              : "border-rave-white/30 text-rave-white/50",
+            "placeholder:text-rave-white/50 opacity-50",
             error
-              ? "focus-visible:ring-[var(--color-red)]"
-              : "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]",
+              ? "focus-visible:ring-rave-red"
+              : "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rave-red",
             "transition-colors",
             className,
           )}
           {...rest}
         />
-        {error && (
-          <p className="mt-1 text-xs text-[var(--color-red)]">{error}</p>
-        )}
+        {error && <p className="mt-1 text-xs text-rave-red">{error}</p>}
         {!error && description && (
-          <p className="mt-1 text-xs text-[var(--color-neutral-300)]">
-            {description}
-          </p>
+          <p className="mt-1 text-xs text-rave-white/">{description}</p>
         )}
       </div>
     );
@@ -145,7 +139,7 @@ const Title = React.forwardRef<HTMLHeadingElement, FormTitleProps>(
       right: "text-right",
     };
     const composed = twMerge(
-      "font-semibold text-[var(--color-neutral-50)]",
+      "font-semibold text-rave-white-50",
       sizeMap[textSize],
       alignMap[textAlign],
       className,
