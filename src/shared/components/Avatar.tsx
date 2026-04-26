@@ -1,4 +1,3 @@
-import { createElement } from "react";
 import type { ComponentPropsWithoutRef } from "react";
 
 import { twMerge } from "tailwind-merge";
@@ -33,26 +32,29 @@ export const Avatar = ({
   const imageClasses = twMerge("h-full w-full object-cover", className);
 
   if (!src) {
-    return createElement(
-      "span",
-      { className: wrapperClasses, "aria-label": alt, role: "img" },
-      createElement(
-        "span",
-        { className: "text-sm font-bold" },
-        resolvedFallback,
-      ),
+    return (
+      <span className={wrapperClasses} aria-label={alt} role="img">
+        <svg viewBox="0 0 100 100" className="h-full w-full">
+          <text
+            x="50%"
+            y="50%"
+            dominantBaseline="central"
+            textAnchor="middle"
+            fill="currentColor"
+            className="font-bold text-[45px]"
+            dy=".05em"
+          >
+            {resolvedFallback}
+          </text>
+        </svg>
+      </span>
     );
   }
 
-  return createElement(
-    "span",
-    { className: wrapperClasses },
-    createElement("img", {
-      src,
-      alt,
-      className: imageClasses,
-      ...props,
-    }),
+  return (
+    <span className={wrapperClasses}>
+      <img src={src} alt={alt} className={imageClasses} {...props} />
+    </span>
   );
 };
 

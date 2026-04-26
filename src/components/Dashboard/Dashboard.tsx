@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import type { UserDto } from "@/gen/director";
 import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import { useUserStore } from "@/shared/stores/useUserStore";
@@ -12,20 +14,29 @@ import { UserProfile } from "./UserProfile";
 
 export const Dashboard = () => {
   const username = useUserStore((state) => state.username);
+  const setAvatarUrl = useUserStore((state) => state.setAvatarUrl);
+  const normalizedUsername = username.trim();
+
   const { data: userData } = useGetUserByUsernameQuery(username, {
-    enabled: Boolean(username.trim()),
+    enabled: Boolean(normalizedUsername),
   });
 
+  useEffect(() => {
+    if (!userData) return;
+
+    setAvatarUrl(userData.avatarUrl ?? "");
+  }, [setAvatarUrl, userData]);
+
+  const safeUsername = userData?.username?.trim() || normalizedUsername;
+  const safeDisplayName = userData?.displayName?.trim() || safeUsername;
+
   const currentUser: UserDto = userData ?? {
-    username: username.trim(),
-    displayName: username.trim(),
+    username: safeUsername,
+    displayName: safeDisplayName,
     status: "OFFLINE",
     avatarUrl: undefined,
   };
 
-  if (userData) {
-    useUserStore.getState().setAvatarUrl(userData.avatarUrl ?? "");
-  }
   return (
     <div className="min-h-screen bg-rave-black text-rave-white">
       <div className="mx-auto w-full max-w-[90vw] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">

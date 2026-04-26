@@ -70,18 +70,15 @@ export const BookDisplayModal = () => {
               <div
                 className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-[10px] font-black leading-none tracking-wide transition-colors ${
                   isUser
-                    ? "border-rave-red bg-rave-red/15 text-rave-red"
+                    ? "border-rave-red bg-rave-red/50 text-rave-white"
                     : isOther
-                      ? "border-rave-white/30 bg-rave-white/10 text-rave-white/70"
+                      ? "border-rave-red bg-rave-red/15 text-rave-red"
                       : "border-rave-white/15 bg-rave-white/5 text-rave-white/50"
                 }`}
                 title={rank}
               >
                 {RANK_LABEL[rank]}
               </div>
-              {isUser && (
-                <div className="mt-1 h-1 w-1 rounded-full bg-rave-red" />
-              )}
             </div>
           );
         })}

@@ -20,7 +20,9 @@ export const UserProfile = ({
   className = "",
   ...props
 }: UserProfileProps) => {
-  const label = user.displayName.trim() || user.username.trim();
+  const normalizedDisplayName = user.displayName?.trim() ?? "";
+  const normalizedUsername = user.username?.trim() ?? "";
+  const label = normalizedDisplayName || normalizedUsername || "Player";
   const initials = getInitials(label);
   const navigate = useNavigate();
 

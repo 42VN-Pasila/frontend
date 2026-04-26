@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
   Avatar,
+  AvatarUploadStatusDto,
+  GetPresignedUrlForUploadingAvatarRequestBody,
   ListRoomsDto,
   RequestFriendRequestBody,
   RespondToFriendRequestRequestBody,
@@ -12,6 +14,7 @@ import type {
   StartMatchResponse,
   UpdateRoomUserStatusRequestBody,
   UpdateRoomUserStatusResponse,
+  UpdateUploadedAvatarRequestBody,
   UpdateUserAvatarRequestBody,
   UpdateUserAvatarResponse,
   UpdateUserDisplayNameRequestBody,
@@ -135,6 +138,41 @@ export const useUpdateUserAvatarMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
+      queryClient.invalidateQueries({ queryKey: ['avatars'] });
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    }
+  });
+};
+
+export const useGetPresignedUrlForUploadingAvatarMutation = () => {
+  return useMutation<AvatarUploadStatusDto, Error, GetPresignedUrlForUploadingAvatarRequestBody>({
+    mutationFn: (bodyPayload) => {
+      return directorClient.getPresignedUrlForUploadingAvatar(bodyPayload);
+    }
+  });
+};
+
+export const useUpdateUploadedAvatarMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<AvatarUploadStatusDto, Error, UpdateUploadedAvatarRequestBody>({
+    mutationFn: (bodyPayload) => {
+      return directorClient.updateUploadedAvatar(bodyPayload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['avatars'] });
+    }
+  });
+};
+
+export const useDeleteUploadedAvatarMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, void>({
+    mutationFn: () => {
+      return directorClient.deleteUploadedAvatar();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['avatars'] });
+      queryClient.invalidateQueries({ queryKey: ['users'] });
     }
   });
 };

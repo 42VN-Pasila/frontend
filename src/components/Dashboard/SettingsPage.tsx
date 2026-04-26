@@ -11,7 +11,8 @@ import { AvatarSection } from "../Profile/AvatarSection";
 
 export const SettingsPage = () => {
   const navigate = useNavigate();
-  const username = useUserStore((state) => state.username).trim();
+  const rawUsername = useUserStore((state) => state.username);
+  const username = (rawUsername ?? "").trim();
   const { data: userData } = useGetUserByUsernameQuery(username, {
     enabled: Boolean(username),
   });
@@ -23,7 +24,7 @@ export const SettingsPage = () => {
 
   const accountInfo = {
     username: username,
-    displayname: userData?.displayName.trim() || username,
+    displayname: userData?.displayName?.trim() || username,
     email: profileData?.email || "",
   };
 
