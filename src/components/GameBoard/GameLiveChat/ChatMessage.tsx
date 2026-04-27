@@ -6,6 +6,7 @@ import type { CardRank, CardSuit } from "../types";
 
 export interface ChatMessageProps {
   senderUserName: string;
+  senderDisplayName: string;
   message: string;
   messageType?: MatchMessageType;
 }
@@ -44,11 +45,14 @@ function renderNotificationMessage(message: string) {
 
 export const ChatMessage = ({
   senderUserName,
+  senderDisplayName,
   message,
   messageType = MatchMessageType.CHAT,
 }: ChatMessageProps) => {
   const { username } = useUserStore();
+
   const isSender = username === senderUserName;
+  const displayLabel = isSender ? "You" : senderDisplayName || senderUserName;
 
   return (
     <div
@@ -62,9 +66,7 @@ export const ChatMessage = ({
             : "border border-rave-white/15 bg-rave-white/5 text-left",
         ].join(" ")}
       >
-        <div className="mb-1 text-[10px] opacity-70">
-          {isSender ? "You" : senderUserName}
-        </div>
+        <div className="mb-1 text-[10px] opacity-70">{displayLabel}</div>
 
         <div>
           {messageType === "Notification"

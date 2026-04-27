@@ -42,6 +42,7 @@ export const useGameSessionStore = create<GameSessionState>()(
             .map((u) => ({
               id: u.username,
               username: u.username,
+              displayName: u.displayName,
               avatarUrl: u.avatarUrl ?? '',
               cardCount:
                 match.userHandCounts.find((hc) => hc.username === u.username)?.handCount ?? 0

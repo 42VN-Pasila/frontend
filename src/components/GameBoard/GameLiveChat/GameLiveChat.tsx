@@ -35,6 +35,7 @@ export const GameLiveChat = ({ initialMessages = [] }: GameLiveChatProps) => {
           (m) =>
             m.createdAt === message.createdAt &&
             m.username === message.username &&
+            m.displayName === message.displayName &&
             m.message === message.message &&
             m.matchId === message.matchId,
         );
@@ -98,6 +99,7 @@ export const GameLiveChat = ({ initialMessages = [] }: GameLiveChatProps) => {
             >
               <ChatMessage
                 senderUserName={chatMessage.username}
+                senderDisplayName={chatMessage.displayName}
                 message={chatMessage.message}
                 messageType={chatMessage.type}
               />

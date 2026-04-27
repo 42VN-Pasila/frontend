@@ -18,6 +18,7 @@ import { useUserStore } from "@/shared/stores/useUserStore";
 type SlotStatus = "HOST" | "JOINED" | "EMPTY";
 type Slot = {
   id: string;
+  displayName?: string;
   username: string;
   status: SlotStatus;
   avatarUrl?: string;
@@ -59,7 +60,6 @@ export const RoomSlot = () => {
   const currentOwnerUsername = roomStatus?.ownerUsername ?? ownerUsername;
   const currentUsers = roomStatus?.users ?? users;
   const currentUsername = username.trim();
-  // const currentUserName = username || "You";
   const isHost = currentUsername === currentOwnerUsername;
   const { data: roomMetaData } = useGetRoomMetaDataQuery(roomId, {
     enabled: Boolean(roomId && roomStatus?.started),
@@ -125,6 +125,7 @@ export const RoomSlot = () => {
     {
       id: hostUser.username ?? `host-${currentOwnerUsername || "unknown"}`,
       username: hostUser.username,
+      displayName: hostUser.displayName,
       status: "HOST" as const,
       avatarUrl:
         hostUser.username === currentUsername ? avatarUrl : hostUser.avatarUrl,
@@ -132,6 +133,7 @@ export const RoomSlot = () => {
     ...joinedUsers.map((user) => ({
       id: user.username,
       username: user.username,
+      displayName: user.displayName,
       status: "JOINED" as const,
       avatarUrl: user.username === currentUsername ? avatarUrl : user.avatarUrl,
     })),
@@ -233,11 +235,11 @@ export const RoomSlot = () => {
                   </p>
                   <Avatar
                     src={slot.avatarUrl}
-                    alt={slot.username}
+                    alt={slot.displayName ? slot.displayName : slot.username}
                     className="h-10 w-10"
                   />
                   <p className="mt-2 truncate text-sm font-semibold tracking-wide text-rave-white">
-                    {slot.username}
+                    {slot.displayName ? slot.displayName : slot.username}
                   </p>
                 </div>
               </div>

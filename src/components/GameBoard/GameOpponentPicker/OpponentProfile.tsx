@@ -17,6 +17,7 @@ interface OpponentProfileProps extends Opponent {
 const OpponentProfile = ({
   id,
   username,
+  displayName,
   avatarUrl,
   cardCount,
   selected = false,
@@ -78,7 +79,7 @@ const OpponentProfile = ({
         </div>
 
         <div className="max-w-full px-2 text-center text-2xl font-bold text-rave-white tracking-widest truncate">
-          {username}
+          {displayName ? displayName : username}
         </div>
 
         <OpponentScore score={bookCount} isSelected={selected} />

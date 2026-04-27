@@ -42,6 +42,7 @@ export type Card = {
 export interface Opponent {
   id: string;
   username: string;
+  displayName: string;
   avatarUrl: string;
   cardCount: number;
 }

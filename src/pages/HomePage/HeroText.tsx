@@ -10,7 +10,7 @@ export const HeroText = () => {
         mb-10 sm:mb-3
       "
       >
-        Welcome to Blank!
+        Welcome to Pickpoker!
       </p>
     </div>
   );
@@ -29,8 +29,7 @@ export const HeroSubTitle = () => {
       leading-relaxed
     "
     >
-      Launch into the cosmic arena and prove your ping pong power among the
-      stars.
+      “Ask, collect, and outsmart your opponents, one sneaky pick at a time”
     </h2>
   );
 };

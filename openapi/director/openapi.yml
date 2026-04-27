@@ -653,6 +653,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Avatar upload is already existed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Internal server error
           content:
@@ -901,6 +907,7 @@ components:
         - message
         - matchId
         - username
+        - displayName
         - createdAt
       properties:
         type:
@@ -910,6 +917,8 @@ components:
         matchId:
           type: string
         username:
+          type: string
+        displayName:
           type: string
         createdAt:
           type: string
@@ -1105,11 +1114,14 @@ components:
       required:
         - order
         - username
+        - displayName
         - isTurn
       properties:
         order:
           type: integer
         username:
+          type: string
+        displayName:
           type: string
         isTurn:
           type: boolean

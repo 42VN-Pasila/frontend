@@ -38,7 +38,6 @@ export const AvatarSection = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
-  // State cho Cropper
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -47,7 +46,6 @@ export const AvatarSection = () => {
   );
   const [originalFile, setOriginalFile] = useState<File | null>(null);
 
-  // Dọn dẹp bộ nhớ Blob URL cực kỳ an toàn
   useEffect(() => {
     return () => {
       if (imageToCrop) URL.revokeObjectURL(imageToCrop);
@@ -140,7 +138,6 @@ export const AvatarSection = () => {
         return;
       }
 
-      // 1. Xin presigned URL từ Backend
       const uploadStatus = await getPresignedUrlForUploadingAvatar({
         filename: fileToUpload.name,
         contentType,
@@ -153,7 +150,6 @@ export const AvatarSection = () => {
 
       uploadIdToFail = uploadStatus.id;
 
-      // 2. Upload file trực tiếp lên S3 bằng PUT request
       const uploadResponse = await fetch(uploadStatus.presignedUrl, {
         method: "PUT",
         headers: {
@@ -166,16 +162,14 @@ export const AvatarSection = () => {
         throw new Error("Failed to upload to S3");
       }
 
-      // 3. Báo cho backend ảnh đã upload thành công
       const publicUrl = uploadStatus.presignedUrl.split("?")[0];
       await updateUploadedAvatar({
         uploadId: uploadStatus.id,
         status: "Success" as UpdateUploadedAvatarRequestBody.status,
         url: publicUrl,
       });
-      uploadIdToFail = ""; // Reset
+      uploadIdToFail = "";
 
-      // Làm mới lại danh sách avatars để lấy ảnh vừa upload từ backend về grid
       await queryClient.invalidateQueries({ queryKey: ["avatars"] });
 
       setSelectedAvatarUrl(publicUrl);
@@ -188,7 +182,7 @@ export const AvatarSection = () => {
           url: "",
         }).catch(() => {});
       }
-      setErrorMessage("Upload failed. Please try again.");
+      setErrorMessage("Upload failed. Delete your uploaded avatar and retry.");
     } finally {
       setIsUploadingAvatar(false);
     }
@@ -205,7 +199,6 @@ export const AvatarSection = () => {
       await deleteUploadedAvatar();
       setErrorMessage(null);
 
-      // Nếu ảnh vừa xoá chính là ảnh đang chọn làm Avatar, reset nó về rỗng
       if (selectedAvatarUrl === avatarUrl) {
         setAvatarUrl("");
         setSelectedAvatarUrl("");
@@ -347,7 +340,7 @@ export const AvatarSection = () => {
               />
             </div>
             {errorMessage && (
-              <p className="text-xs text-rave-red" role="alert">
+              <p className="mt-3 text-xs text-rave-red" role="alert">
                 {errorMessage}
               </p>
             )}
