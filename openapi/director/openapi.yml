@@ -57,6 +57,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /internal/logout:
+    post:
+      tags:
+        - Internal
+      summary: Logout a user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InternalLogoutRequestBody"
+      responses:
+        "200":
+          description: Logout successful
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /users:
     get:
       tags:
@@ -705,6 +732,13 @@ components:
         - jobId
       properties:
         jobId:
+          type: string
+    InternalLogoutRequestBody:
+      type: object
+      required:
+        - username
+      properties:
+        username:
           type: string
     UpdateUserAvatarRequestBody:
       type: object

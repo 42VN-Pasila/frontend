@@ -2,6 +2,7 @@ import { OpenAPI } from '@/gen/rudex/core/OpenAPI';
 import type { LoginRequestBody } from '@/gen/rudex/models/LoginRequestBody';
 import type { RegisterRequestBody } from '@/gen/rudex/models/RegisterRequestBody';
 import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
+import { UserLogoutService } from '@/gen/rudex/services/UserLogoutService';
 import { UserRegistrationService } from '@/gen/rudex/services/UserRegistrationService';
 
 import { toDevPath } from './path.dev';
@@ -35,7 +36,11 @@ export const rudexClient = {
 
   async register(body: RegisterRequestBody) {
     return UserRegistrationService.registerUser({ requestBody: body });
+  },
+
+  async logout() {
+    return UserLogoutService.logoutUser();
   }
 };
 
-export const { login, register } = rudexClient;
+export const { login, register, logout } = rudexClient;
