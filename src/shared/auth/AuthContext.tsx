@@ -48,9 +48,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     } catch (error) {
       console.error("Failed to logout", error);
     }
-      setIsAuthenticated(false);
-      setIsBootstrapping(false);
-    
+    setIsAuthenticated(false);
+    setIsBootstrapping(false);
   }, []);
 
   const value = useMemo<AuthContextValue>(
