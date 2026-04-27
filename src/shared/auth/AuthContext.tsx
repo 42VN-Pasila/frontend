@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { directorClient, disconnectSocket } from "@/shared/api/directorClient";
+import { directorClient } from "@/shared/api/directorClient";
 import { rudexClient } from "@/shared/api/rudexClient";
 
 import { AuthContext, type AuthContextValue } from "./authContextValue";
@@ -46,14 +46,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     try {
       await rudexClient.logout();
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.warn("Logout request failed, forcing local sign-out.", error);
-      }
-    } finally {
-      disconnectSocket();
+      console.error("Failed to logout", error);
+    }
       setIsAuthenticated(false);
       setIsBootstrapping(false);
-    }
+    
   }, []);
 
   const value = useMemo<AuthContextValue>(
