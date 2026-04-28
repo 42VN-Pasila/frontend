@@ -31,6 +31,35 @@ type PixelCrop = {
   height: number;
 };
 
+const getReadableErrorMessage = (
+  error: unknown,
+  fallbackMessage: string,
+) => {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  return fallbackMessage;
+};
+
+const buildUploadErrorMessage = (
+  stepLabel: string,
+  error: unknown,
+  fallbackMessage: string,
+) => `${stepLabel}: ${getReadableErrorMessage(error, fallbackMessage)}`;
+
+const withUploadStepError = async <T,>(
+  stepLabel: string,
+  action: () => Promise<T>,
+  fallbackMessage: string,
+) => {
+  try {
+    return await action();
+  } catch (error) {
+    throw new Error(buildUploadErrorMessage(stepLabel, error, fallbackMessage));
+  }
+};
+
 export const AvatarSection = () => {
   const { setAvatarUrl, avatarUrl, username } = useUserStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -124,8 +153,23 @@ export const AvatarSection = () => {
 
     let uploadIdToFail = "";
 
+    const markUploadAsFailed = async () => {
+      if (!uploadIdToFail) return;
+
+      await updateUploadedAvatar({
+        uploadId: uploadIdToFail,
+        status: "Failed" as UpdateUploadedAvatarRequestBody.status,
+        url: "",
+      }).catch(() => {});
+    };
+
     try {
-      const croppedBlob = await getCroppedImg(imageToCrop, croppedAreaPixels);
+      const croppedBlob = await withUploadStepError(
+        "Failed to process image",
+        () => getCroppedImg(imageToCrop, croppedAreaPixels),
+        "Unknown error",
+      );
+
       const fileToUpload = new File(
         [croppedBlob],
         originalFile.name || "avatar.jpg",
@@ -138,51 +182,73 @@ export const AvatarSection = () => {
         return;
       }
 
-      const uploadStatus = await getPresignedUrlForUploadingAvatar({
-        filename: fileToUpload.name,
-        contentType,
-        fileSize: fileToUpload.size,
-      });
+      const uploadStatus = await withUploadStepError(
+        "Failed to get upload credentials",
+        () =>
+          getPresignedUrlForUploadingAvatar({
+            filename: fileToUpload.name,
+            contentType,
+            fileSize: fileToUpload.size,
+          }),
+        "Unknown error",
+      );
 
-      if (!uploadStatus.presignedUrl) {
-        throw new Error("Missing presigned URL from server");
+      const presignedUrl = uploadStatus.presignedUrl;
+
+      if (!presignedUrl) {
+        throw new Error("Server error: No upload credentials provided");
       }
 
       uploadIdToFail = uploadStatus.id;
 
-      const uploadResponse = await fetch(uploadStatus.presignedUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": contentType,
-        },
-        body: fileToUpload,
-      });
+      const uploadResponse = await withUploadStepError(
+        "Failed to upload image",
+        () =>
+          fetch(presignedUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": contentType,
+            },
+            body: fileToUpload,
+          }),
+        "Network error",
+      );
 
       if (!uploadResponse.ok) {
-        throw new Error("Failed to upload to S3");
+        throw new Error(
+          `Upload failed. S3-related error: (${uploadResponse.status}): ${uploadResponse.statusText}`,
+        );
       }
 
-      const publicUrl = uploadStatus.presignedUrl.split("?")[0];
-      await updateUploadedAvatar({
-        uploadId: uploadStatus.id,
-        status: "Success" as UpdateUploadedAvatarRequestBody.status,
-        url: publicUrl,
-      });
+      const publicUrl = presignedUrl.split("?")[0];
+      await withUploadStepError(
+        "Failed to finalize upload",
+        () =>
+          updateUploadedAvatar({
+            uploadId: uploadStatus.id,
+            status: "Success" as UpdateUploadedAvatarRequestBody.status,
+            url: publicUrl,
+          }),
+        "Unknown error",
+      );
+
       uploadIdToFail = "";
 
-      await queryClient.invalidateQueries({ queryKey: ["avatars"] });
+      try {
+        await queryClient.invalidateQueries({ queryKey: ["avatars"] });
+      } catch (error) {
+        console.error("Failed to refresh avatars list", error);
+      }
 
       setSelectedAvatarUrl(publicUrl);
       setImageToCrop(null);
-    } catch {
-      if (uploadIdToFail) {
-        void updateUploadedAvatar({
-          uploadId: uploadIdToFail,
-          status: "Failed" as UpdateUploadedAvatarRequestBody.status,
-          url: "",
-        }).catch(() => {});
-      }
-      setErrorMessage("Upload failed. Delete your uploaded avatar and retry.");
+    } catch (error) {
+      await markUploadAsFailed();
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Upload failed. Please try again.",
+      );
     } finally {
       setIsUploadingAvatar(false);
     }

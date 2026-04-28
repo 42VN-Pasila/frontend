@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { MatchMessageDto, SendMessageEvent } from "@/gen/director";
+import {
+  type MatchMessageDto,
+  MatchMessageType,
+  type SendMessageEvent,
+} from "@/gen/director";
 import {
   onLatestChatMessage,
   socketSendMatchMessage,
@@ -25,6 +29,18 @@ export const GameLiveChat = ({ initialMessages = [] }: GameLiveChatProps) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const { username } = useUserStore();
+
+  const addErrorMessage = (errorMessage: string) => {
+    const errorDto: MatchMessageDto = {
+      matchId: matchId || "",
+      username: "System",
+      displayName: "System",
+      message: errorMessage,
+      type: MatchMessageType.NOTIFICATION,
+      createdAt: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, errorDto]);
+  };
 
   useEffect(() => {
     const unsubscribe = onLatestChatMessage((message) => {
@@ -58,8 +74,9 @@ export const GameLiveChat = ({ initialMessages = [] }: GameLiveChatProps) => {
 
   const handleSend = async () => {
     if (!matchId) {
-      // TODO: Handle error
-      console.error("Cannot send message: matchId is missing");
+      addErrorMessage(
+        "⚠️ Cannot send message: Game session is not ready yet. Please try again.",
+      );
       return;
     }
 
@@ -76,7 +93,9 @@ export const GameLiveChat = ({ initialMessages = [] }: GameLiveChatProps) => {
       await socketSendMatchMessage(payload);
       setInput("");
     } catch (error) {
-      // TODO: Handle error
+      addErrorMessage(
+        "❌ Failed to send message. Please check your connection and try again.",
+      );
       console.error("Failed to send chat message", error);
     } finally {
       setIsSending(false);
