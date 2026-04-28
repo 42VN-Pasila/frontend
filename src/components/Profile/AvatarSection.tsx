@@ -31,10 +31,7 @@ type PixelCrop = {
   height: number;
 };
 
-const getReadableErrorMessage = (
-  error: unknown,
-  fallbackMessage: string,
-) => {
+const getReadableErrorMessage = (error: unknown, fallbackMessage: string) => {
   if (error instanceof Error && error.message) {
     return error.message;
   }
