@@ -2,8 +2,10 @@ import { useEffect } from "react";
 
 import type { UserDto } from "@/gen/director";
 import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
+import { useAppLogout } from "@/shared/auth/useAppLogout";
 import { useUserStore } from "@/shared/stores/useUserStore";
 
+import NavigationItemUnderline from "../Auth/NavigationItemUnderline";
 import { FriendList } from "../Friend/FriendList";
 import { FriendSearchAdd } from "../Friend/FriendSearchAdd";
 import { RoomList } from "../RoomList/RoomList";
@@ -36,6 +38,18 @@ export const Dashboard = () => {
     status: "OFFLINE",
     avatarUrl: undefined,
   };
+  const { isLoggingOut, logoutAndRedirect } = useAppLogout();
+
+  useEffect(() => {
+    const handleStorageEvent = (event: StorageEvent) => {
+      if (event.key === "app-logout") {
+        void logoutAndRedirect();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageEvent);
+    return () => window.removeEventListener("storage", handleStorageEvent);
+  }, [logoutAndRedirect]);
 
   return (
     <div className="min-h-screen bg-rave-black text-rave-white">
@@ -49,7 +63,24 @@ export const Dashboard = () => {
               Rooms overview & quick actions
             </p>
           </div>
-          <UserProfile user={currentUser} className="self-start sm:self-auto" />
+          <div className="flex items-center gap-3 self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={() => {
+                void logoutAndRedirect();
+              }}
+              disabled={isLoggingOut}
+              className="inline-flex h-12 items-center justify-center px-4 text-sm font-chakraBold uppercase tracking-wider text-rave-white cursor-pointer "
+            >
+              <NavigationItemUnderline
+                text={isLoggingOut ? "Logging out..." : "Logout"}
+              />
+            </button>
+            <UserProfile
+              user={currentUser}
+              className="self-start sm:self-auto"
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">

@@ -4,6 +4,7 @@ import type { RegisterRequestBody } from '@/gen/rudex/models/RegisterRequestBody
 import type { UpdatePasswordRequestBody } from '@/gen/rudex/models/UpdatePasswordRequestBody';
 import { UserInfoService } from '@/gen/rudex/services/UserInfoService';
 import { UserLoginService } from '@/gen/rudex/services/UserLoginService';
+import { UserLogoutService } from '@/gen/rudex/services/UserLogoutService';
 import { UserProfileService } from '@/gen/rudex/services/UserProfileService';
 import { UserRegistrationService } from '@/gen/rudex/services/UserRegistrationService';
 
@@ -64,7 +65,11 @@ export const rudexClient = {
 
   async register(body: RegisterRequestBody) {
     return UserRegistrationService.registerUser({ requestBody: body });
+  },
+
+  async logout() {
+    return UserLogoutService.logoutUser();
   }
 };
 
-export const { login, register, getUserInfo, updatePassword } = rudexClient;
+export const { login, register, getUserInfo, updatePassword, logout } = rudexClient;

@@ -2,6 +2,7 @@ import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { directorClient } from "@/shared/api/directorClient";
+import { rudexClient } from "@/shared/api/rudexClient";
 
 import { AuthContext, type AuthContextValue } from "./authContextValue";
 
@@ -41,7 +42,12 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     setIsBootstrapping(false);
   }, []);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    try {
+      await rudexClient.logout();
+    } catch (error) {
+      console.error("Failed to logout", error);
+    }
     setIsAuthenticated(false);
     setIsBootstrapping(false);
   }, []);
