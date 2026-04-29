@@ -7,8 +7,8 @@ info:
   x-displayName: Authentication service
 
 servers:
-  - url: http://localhost:4000
-    description: Production
+  - url: /rudex
+    description: Same-origin nginx route
 
 paths:
   /users/{username}/info:

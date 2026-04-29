@@ -20,6 +20,7 @@ export default defineConfig(({ mode }) => {
       }
     },
     server: {
+      allowedHosts: ['pickpoker.fi'],
       host: '0.0.0.0',
       port: 5173,
       proxy: {
@@ -37,6 +38,11 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/rudex/, '')
         }
       }
+    },
+    preview: {
+      allowedHosts: ['pickpoker.fi'],
+      host: '0.0.0.0',
+      port: 3000
     }
   };
 });
