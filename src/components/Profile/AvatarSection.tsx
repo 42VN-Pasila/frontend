@@ -168,7 +168,7 @@ export const AvatarSection = () => {
         status: "Success" as UpdateUploadedAvatarRequestBody.status,
         url: publicUrl,
       });
-      uploadIdToFail = ""; 
+      uploadIdToFail = "";
 
       await queryClient.invalidateQueries({ queryKey: ["avatars"] });
 
