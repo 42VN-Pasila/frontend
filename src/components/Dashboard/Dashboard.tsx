@@ -10,7 +10,6 @@ import { RoomModal } from "../RoomModal/RoomModal";
 
 import GameStats from "./GameStats";
 import { UserProfile } from "./UserProfile";
-import Footer from "@/shared/components/Footer";
 
 export const Dashboard = () => {
   const { isLoggingOut, logoutAndRedirect } = useAppLogout();
@@ -67,7 +66,6 @@ export const Dashboard = () => {
           </div>
         </div>
       </div>
-      <Footer/>
     </div>
   );
 };

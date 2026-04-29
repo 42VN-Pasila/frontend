@@ -7,11 +7,11 @@ import { GameBoard } from "./components/GameBoard/GameBoard";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import AboutPage from "./pages/HomePage/AboutPage";
-import TermsPage from "./pages/Legal/TermsPage";
-import PrivacyPage from "./pages/Legal/PrivacyPage";
 import HomePage from "./pages/HomePage/HomePage";
-import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 import HowToPlayPage from "./pages/HowToPlayPage";
+import PrivacyPage from "./pages/Legal/PrivacyPage";
+import TermsPage from "./pages/Legal/TermsPage";
+import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 
 const App: React.FC = () => {
   return (
@@ -41,7 +41,6 @@ const App: React.FC = () => {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/how-to-play" element={<HowToPlayPage />} />
-          
         </Routes>
       </main>
     </div>
