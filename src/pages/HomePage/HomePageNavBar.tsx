@@ -41,13 +41,6 @@ const HomePageNavBar = () => {
 
         <div className="hidden lg:flex items-center gap-6 tracking-wide">
           <Link
-            to="/contact"
-            className="tracking-[0.1vw] hover:text-white transition"
-          >
-            <NavigationItemUnderline text="Contact" />
-          </Link>
-
-          <Link
             to="/about"
             className="tracking-[0.1vw] hover:text-white transition"
           >
@@ -83,16 +76,6 @@ const HomePageNavBar = () => {
         `}
         >
           <div className="flex flex-col py-2 text-sm text-white">
-            <Link
-              to="/contact"
-              onClick={() => {
-                setOpen(false);
-              }}
-              className="px-4 py-2 hover:bg-white/5 transition flex items-center text-left w-full"
-            >
-              Contact
-            </Link>
-
             <Link
               to="/about"
               onClick={() => {

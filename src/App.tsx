@@ -10,6 +10,9 @@ import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import AboutPage from "./pages/HomePage/AboutPage";
 import HomePage from "./pages/HomePage/HomePage";
+import HowToPlayPage from "./pages/HowToPlayPage";
+import PrivacyPage from "./pages/Legal/PrivacyPage";
+import TermsPage from "./pages/Legal/TermsPage";
 import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 
 const App: React.FC = () => {
@@ -37,6 +40,9 @@ const App: React.FC = () => {
             }
           />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/how-to-play" element={<HowToPlayPage />} />
           <Route path="/dashboard/settings" element={<SettingsPage />} />
           <Route path="/profile/:username" element={<ProfilePage />} />
         </Routes>
