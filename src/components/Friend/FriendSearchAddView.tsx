@@ -4,6 +4,8 @@ import type { SocialUserDto } from "@/gen/director";
 import { Button } from "@/shared/components";
 import Avatar from "@/shared/components/Avatar";
 
+import { useNavigateToProfile } from "./useNavigateToProfile";
+
 type FriendSearchAddViewProps = {
   searchText: string;
   normalizedInput: string;
@@ -31,6 +33,7 @@ export const FriendSearchAddView = ({
   onSearch,
   onSendRequest,
 }: FriendSearchAddViewProps) => {
+  const navigateToProfile = useNavigateToProfile();
   const [showResults, setShowResults] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -160,9 +163,13 @@ export const FriendSearchAddView = ({
                     wrapperClassName="h-10 w-10 rounded-full object-cover"
                   />
                   <div>
-                    <p className="text-sm font-semibold tracking-wide">
+                    <button
+                      type="button"
+                      className="text-sm font-semibold tracking-wide hover:text-rave-red transition-colors cursor-pointer"
+                      onClick={() => navigateToProfile(normalizedUsername)}
+                    >
                       {candidateName}
-                    </p>
+                    </button>
                     <p className="text-[10px] font-semibold tracking-wide text-rave-white/60">
                       @{normalizedUsername}
                     </p>

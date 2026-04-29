@@ -3,6 +3,7 @@ import { Socket, io } from 'socket.io-client';
 import {
   type ExitMatchEvent,
   FriendsService,
+  type GetPresignedUrlForUploadingAvatarRequestBody,
   type JoinMatchEvent,
   type LeaveMatchEvent,
   type MatchDto,
@@ -17,9 +18,12 @@ import {
   type SkipTurnEvent,
   SocialUserDto,
   type UpdateRoomUserStatusRequestBody,
-  type UpdateUserAvatarRequestBody
+  type UpdateUploadedAvatarRequestBody,
+  type UpdateUserAvatarRequestBody,
+  type UpdateUserDisplayNameRequestBody
 } from '@/gen/director';
 import { OpenAPI } from '@/gen/director/core/OpenAPI';
+import { UploadsService } from '@/gen/director/services/UploadsService';
 import { UsersService } from '@/gen/director/services/UsersService';
 
 import { toDevPath } from './path.dev';
@@ -210,6 +214,9 @@ export const directorClient = {
   async getUserByUsername(username: string) {
     return UsersService.getUserByUsername({ username });
   },
+  async updateUserDisplayName(body: UpdateUserDisplayNameRequestBody) {
+    return UsersService.updateUserDisplayName({ requestBody: body });
+  },
   async createRoom(body: { roomName: string }) {
     return RoomsService.postRooms({ requestBody: { roomName: body.roomName } });
   },
@@ -242,6 +249,15 @@ export const directorClient = {
   },
   async searchUsers(username: string): Promise<SocialUserDto[]> {
     return UsersService.searchByExactUserName({ username });
+  },
+  async getPresignedUrlForUploadingAvatar(body: GetPresignedUrlForUploadingAvatarRequestBody) {
+    return UploadsService.getPresignedUrlForUploadingAvatar({ requestBody: body });
+  },
+  async updateUploadedAvatar(body: UpdateUploadedAvatarRequestBody) {
+    return UploadsService.updateUploadedAvatar({ requestBody: body });
+  },
+  async deleteUploadedAvatar() {
+    return UploadsService.deleteUploadedAvatar();
   },
   async sendFriendRequest(body: RequestFriendRequestBody) {
     return FriendsService.sendFriendRequest({ requestBody: body });

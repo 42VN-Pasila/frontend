@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 
+import type { UserDto } from "@/gen/director";
+import { useGetUserByUsernameQuery } from "@/shared/api/directorApi";
 import { useAppLogout } from "@/shared/auth/useAppLogout";
+import { useUserStore } from "@/shared/stores/useUserStore";
 
 import NavigationItemUnderline from "../Auth/NavigationItemUnderline";
 import { FriendList } from "../Friend/FriendList";
@@ -12,6 +15,29 @@ import GameStats from "./GameStats";
 import { UserProfile } from "./UserProfile";
 
 export const Dashboard = () => {
+  const username = useUserStore((state) => state.username);
+  const setAvatarUrl = useUserStore((state) => state.setAvatarUrl);
+  const normalizedUsername = username.trim();
+
+  const { data: userData } = useGetUserByUsernameQuery(username, {
+    enabled: Boolean(normalizedUsername),
+  });
+
+  useEffect(() => {
+    if (!userData) return;
+
+    setAvatarUrl(userData.avatarUrl ?? "");
+  }, [setAvatarUrl, userData]);
+
+  const safeUsername = userData?.username?.trim() || normalizedUsername;
+  const safeDisplayName = userData?.displayName?.trim() || safeUsername;
+
+  const currentUser: UserDto = userData ?? {
+    username: safeUsername,
+    displayName: safeDisplayName,
+    status: "OFFLINE",
+    avatarUrl: undefined,
+  };
   const { isLoggingOut, logoutAndRedirect } = useAppLogout();
 
   useEffect(() => {
@@ -50,7 +76,10 @@ export const Dashboard = () => {
                 text={isLoggingOut ? "Logging out..." : "Logout"}
               />
             </button>
-            <UserProfile />
+            <UserProfile
+              user={currentUser}
+              className="self-start sm:self-auto"
+            />
           </div>
         </div>
 

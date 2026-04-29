@@ -57,7 +57,6 @@ export const GameLiveChat = ({ initialMessages = [] }: GameLiveChatProps) => {
 
   const handleSend = async () => {
     if (!matchId) {
-      // TODO: Handle error
       console.error("Cannot send message: matchId is missing");
       return;
     }
@@ -75,7 +74,6 @@ export const GameLiveChat = ({ initialMessages = [] }: GameLiveChatProps) => {
       await socketSendMatchMessage(payload);
       setInput("");
     } catch (error) {
-      // TODO: Handle error
       console.error("Failed to send chat message", error);
     } finally {
       setIsSending(false);
