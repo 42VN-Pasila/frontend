@@ -178,7 +178,6 @@ export const AccountInfo = (data: AccountInfoProps) => {
           </Button>
         </div>
 
-        {/* Password */}
         <Form.Input
           label="Current Password"
           type="password"

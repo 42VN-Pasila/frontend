@@ -105,7 +105,6 @@ export const RegisterForm = () => {
         emphasis="low"
         fullWidth
         className="w-full"
-        onClick={() => console.log("LoginGg")}
       >
         <GoogleIcon />
         Continue with Google
