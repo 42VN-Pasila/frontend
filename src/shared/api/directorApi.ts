@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
   Avatar,
+  AvatarUploadStatusDto,
+  GetPresignedUrlForUploadingAvatarRequestBody,
   ListRoomsDto,
   RequestFriendRequestBody,
   RespondToFriendRequestRequestBody,
@@ -12,8 +14,10 @@ import type {
   StartMatchResponse,
   UpdateRoomUserStatusRequestBody,
   UpdateRoomUserStatusResponse,
+  UpdateUploadedAvatarRequestBody,
   UpdateUserAvatarRequestBody,
   UpdateUserAvatarResponse,
+  UpdateUserDisplayNameRequestBody,
   UserDto
 } from '@/gen/director';
 import type { ConnectRoomResponse } from '@/gen/director/models/ConnectRoomResponse';
@@ -37,10 +41,13 @@ const getViewerScopedFriendRequestsQueryKey = (viewerUsername: string) =>
 // QUERIES
 //------------------------------------------------
 
-export const useGetUserByUsernameQuery = (username: string) => {
+export const useGetUserByUsernameQuery = (username: string, options?: { enabled?: boolean }) => {
+  const normalizedUsername = username.trim();
+
   return useQuery<UserDto>({
-    queryKey: ['users', username],
-    queryFn: () => directorClient.getUserByUsername(username)
+    queryKey: ['users', normalizedUsername],
+    queryFn: () => directorClient.getUserByUsername(normalizedUsername),
+    enabled: (options?.enabled ?? true) && Boolean(normalizedUsername)
   });
 };
 
@@ -131,6 +138,41 @@ export const useUpdateUserAvatarMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
+      queryClient.invalidateQueries({ queryKey: ['avatars'] });
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    }
+  });
+};
+
+export const useGetPresignedUrlForUploadingAvatarMutation = () => {
+  return useMutation<AvatarUploadStatusDto, Error, GetPresignedUrlForUploadingAvatarRequestBody>({
+    mutationFn: (bodyPayload) => {
+      return directorClient.getPresignedUrlForUploadingAvatar(bodyPayload);
+    }
+  });
+};
+
+export const useUpdateUploadedAvatarMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<AvatarUploadStatusDto, Error, UpdateUploadedAvatarRequestBody>({
+    mutationFn: (bodyPayload) => {
+      return directorClient.updateUploadedAvatar(bodyPayload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['avatars'] });
+    }
+  });
+};
+
+export const useDeleteUploadedAvatarMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, void>({
+    mutationFn: () => {
+      return directorClient.deleteUploadedAvatar();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['avatars'] });
+      queryClient.invalidateQueries({ queryKey: ['users'] });
     }
   });
 };
@@ -167,6 +209,20 @@ export const useUpdateUserStatusMutation = () => {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['rooms'] });
       queryClient.invalidateQueries({ queryKey: ['rooms', variables.roomId] });
+    }
+  });
+};
+
+export const useUpdateUserDisplayNameMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, { displayName: string }>({
+    mutationFn: ({ displayName }) => {
+      const bodyPayload: UpdateUserDisplayNameRequestBody = { displayName };
+      return directorClient.updateUserDisplayName(bodyPayload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['rooms'] });
     }
   });
 };

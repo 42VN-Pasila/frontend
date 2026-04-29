@@ -34,8 +34,7 @@ export const LoginForm = () => {
       login();
       navigate("/dashboard", { replace: true });
     } catch (error) {
-      //Display pop up error noti
-      console.log("Error", error);
+      console.error("Error", error);
     }
   };
 
@@ -99,7 +98,6 @@ export const LoginForm = () => {
         variant="primary"
         emphasis="low"
         fullWidth
-        onClick={() => console.log("LoginGg")}
       >
         <GoogleIcon />
         Continue with Google

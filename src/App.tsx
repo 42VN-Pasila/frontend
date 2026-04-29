@@ -3,6 +3,8 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { Dashboard } from "./components/Dashboard/Dashboard";
+import { ProfilePage } from "./components/Dashboard/ProfilePage";
+import { SettingsPage } from "./components/Dashboard/SettingsPage";
 import { GameBoard } from "./components/GameBoard/GameBoard";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
@@ -41,6 +43,8 @@ const App: React.FC = () => {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/how-to-play" element={<HowToPlayPage />} />
+          <Route path="/dashboard/settings" element={<SettingsPage />} />
+          <Route path="/profile/:username" element={<ProfilePage />} />
         </Routes>
       </main>
     </div>
