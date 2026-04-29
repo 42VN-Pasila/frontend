@@ -23,9 +23,9 @@ const HomePageButton: React.FC = () => {
           </Button>
         </Link>
 
-        <Link to="/login">
+        <Link to="/how-to-play">
           <Button variant="primary" emphasis="low" size="medium">
-            Learn more!
+            How to play!
           </Button>
         </Link>
       </div>
