@@ -19,7 +19,7 @@ const Logo = () => {
               "
           style={{ WebkitTextStroke: "1px white" }}
         >
-          Blank
+          PickPoker
         </span>
       </Link>
     </div>

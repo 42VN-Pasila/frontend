@@ -176,6 +176,39 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /users/displayName:
+    patch:
+      tags:
+        - Users
+      summary: Update user's display name
+      operationId: updateUserDisplayName
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserDisplayNameRequestBody"
+      responses:
+        "204":
+          description: User display name updated
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /friends:
     get:
       tags:
@@ -621,6 +654,95 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+
+  /uploads/avatar:
+    post:
+      tags:
+        - Uploads
+      summary: Get the presigned url for uploading an avatar image
+      operationId: getPresignedUrlForUploadingAvatar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetPresignedUrlForUploadingAvatarRequestBody"
+      responses:
+        "200":
+          description: Presigned url for uploading an avatar image
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvatarUploadStatusDto"
+        "400":
+          description: Bad request (e.g., missing file)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      tags:
+        - Uploads
+      summary: Update previously uploaded avatar
+      operationId: updateUploadedAvatar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUploadedAvatarRequestBody"
+      responses:
+        "200":
+          description: Uploaded avatar updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvatarUploadStatusDto"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+        - Uploads
+      summary: Delete previously uploaded avatar
+      operationId: deleteUploadedAvatar
+      responses:
+        "204":
+          description: Uploaded avatar deleted successfully
+        "404":
+          description: Uploaded avatar or user not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Avatar upload is still in progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   securitySchemes:
     BearerAuth:
@@ -757,6 +879,15 @@ components:
           type: string
         avatarId:
           type: string
+    UpdateUserDisplayNameRequestBody:
+      type: object
+      required:
+        - displayName
+      properties:
+        displayName:
+          type: string
+          minLength: 1
+          maxLength: 20
     Avatar:
       type: object
       required:
@@ -767,6 +898,31 @@ components:
           type: string
         url:
           type: string
+    UploadAvatarRequestBody:
+      type: object
+      properties:
+        imageFile:
+          type: string
+          format: binary
+          description: The actual image file to upload
+      encoding:
+        imageFile:
+          contentType: image/png, image/jpeg
+    AvatarUploadStatusDto:
+      type: object
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: string
+        avatarId:
+          type: string
+        presignedUrl:
+          type: string
+        status:
+          type: string
+          enum: [Pending, Success, Failed]
     MatchMessageType:
       type: string
       enum:
@@ -830,9 +986,12 @@ components:
       type: object
       required:
         - username
+        - displayName
         - status
       properties:
         username:
+          type: string
+        displayName:
           type: string
         status:
           type: string
@@ -1104,7 +1263,35 @@ components:
           enum:
             - Ready
             - NotReady
-
+    GetPresignedUrlForUploadingAvatarRequestBody:
+      type: object
+      required:
+        - filename
+        - contentType
+        - fileSize
+      properties:
+        filename:
+          type: string
+        contentType:
+          type: string
+        fileSize:
+          type: integer
+    UpdateUploadedAvatarRequestBody:
+      type: object
+      required:
+        - uploadId
+        - status
+        - url
+      properties:
+        uploadId:
+          type: string
+        url:
+          type: string
+        status:
+          type: string
+          enum:
+            - Success
+            - Failed
     ErrorResponse:
       type: object
       required:
@@ -1117,3 +1304,4 @@ components:
           type: string
         info:
           type: object
+          additionalProperties: false

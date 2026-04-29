@@ -1,5 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
+import type { UserDto } from "@/gen/director";
 import Avatar from "@/shared/components/Avatar";
-import { useUserStore } from "@/shared/stores/useUserStore";
+
+type UserProfileProps = React.ComponentPropsWithoutRef<"button"> & {
+  user: UserDto;
+};
 
 const getInitials = (username: string) =>
   username
@@ -10,27 +16,36 @@ const getInitials = (username: string) =>
     .join("");
 
 export const UserProfile = ({
+  user,
   className = "",
   ...props
-}: React.ComponentPropsWithoutRef<"button">) => {
-  const username = useUserStore((state) => state.username);
-  const avatarUrl = useUserStore((state) => state.avatarUrl);
-  const initials = getInitials(username);
+}: UserProfileProps) => {
+  const normalizedDisplayName = user.displayName?.trim() ?? "";
+  const normalizedUsername = user.username?.trim() ?? "";
+  const label = normalizedDisplayName || normalizedUsername || "Player";
+  const initials = getInitials(label);
+  const navigate = useNavigate();
+
+  const handleClick = (initials: string) => {
+    if (!initials) return;
+    navigate("/dashboard/settings");
+  };
 
   return (
     <button
       type="button"
       className={`group inline-flex items-center gap-3 rounded-lg border border-rave-white/20 bg-rave-white/5 px-2 py-2 transition-colors hover:border-rave-red/60 hover:bg-rave-red/10 ${className}`}
+      onClick={() => handleClick(initials)}
       {...props}
     >
       <Avatar
-        src={avatarUrl}
-        alt={username}
+        src={user.avatarUrl}
+        alt={label}
         fallbackText={initials}
         className="h-10 w-10"
       />
       <span className="pr-2 text-sm tracking-wide text-rave-white/85 group-hover:text-rave-white">
-        {username}
+        {label}
       </span>
     </button>
   );

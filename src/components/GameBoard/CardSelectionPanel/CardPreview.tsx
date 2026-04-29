@@ -1,7 +1,6 @@
 import type { NullableProps } from "@/common/types";
 
 import CardSvg, { CardEmptySlot } from "../CardSvg";
-// import type { Card } from "../../../pages/Game/common/types/cards";
 import type { Card } from "../types";
 
 export default function CardPreview({ suit, rank }: NullableProps<Card>) {
